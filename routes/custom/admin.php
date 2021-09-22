@@ -14,4 +14,5 @@
     Route::resource('courses', CourseController::class);
     Route::resource('holidays', HolidayController::class);
     Route::resource('announcement', AnnouncementController::class);
+    Route::resource('notification', NotificationController::class);
     Route::put('/approve/{id}',[StudentController::class,'approval'])->name('students.approve');

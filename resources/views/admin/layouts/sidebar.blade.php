@@ -18,7 +18,7 @@
       <li><a href="#"><i class="fas fa-user-graduate" aria-hidden="true"></i>Report Generation</a></li>
       <li class="{{ Request::is('admin/announcement*') ? 'active' : '' }}"><a href="{{ route('admin.announcement.index') }}"><i class="fas fa-user-graduate" aria-hidden="true"></i>Managing Announcement</a></li>
       <li class="{{ Request::is('admin/holidays*') ? 'active' : '' }}"><a href="{{ route('admin.holidays.index') }}"><i class="fas fa-user-graduate" aria-hidden="true"></i>Managing Holidays</a></li>
-      <li><a href="#"><i class="fas fa-user-graduate" aria-hidden="true"></i>Managing Notification</a></li>
+      <li class="{{ Request::is('admin/notification*') ? 'active' : '' }}"><a href="{{ route('admin.notification.index') }}"><i class="fas fa-user-graduate" aria-hidden="true"></i>Managing Notification</a></li>
       <li class="{{ Request::is('admin/cms*') ? 'active' : '' }}"><a href="{{ route('admin.cms.index') }}"><i class="fas fa-user-graduate" aria-hidden="true"></i>Managing CMS pages/content</a></li>
       <li class="{{ Request::is('admin/banner*') ? 'active' : '' }}"><a href="{{ route('admin.banner.index') }}"><i class="fas fa-user-graduate" aria-hidden="true"></i>Banner management</a></li>
       <li><a href="#"><i class="fas fa-user-graduate" aria-hidden="true"></i>PTM Schedule Management</a></li>
