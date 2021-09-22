@@ -19,16 +19,17 @@ class TeacherController extends Controller
     }
 
     public function updateProfile(Request $request){
-       $test =  $this->validate($request,[
-            'name' => 'required|string|max:255',
+        $this->validate($request,[
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             // 'email' => 'email',
-            // 'mobile' => 'nullable',
+            'mobile' => 'nullable|max:10|min:10',
             'fathers_name' => 'string | max:255|nullable',
             'dob' => 'date|nullable',
             'address' => 'string|max:255|nullable',
             'image' => 'image |mimes:png,jpg'
         ]);
-        dd($test);
+        
         $student = User::find(Auth::id());
 
         if($request->hasFile('image')){
@@ -43,7 +44,8 @@ class TeacherController extends Controller
         }else{
             $imageName = $student->image;
         }
-        $student->name = $request->name;
+        $student->first_name = $request->first_name;
+        $student->last_name = $request->last_name;
         // $student->email = $request->email;
         $student->mobile = $request->mobile;
         $student->dob = $request->dob;
