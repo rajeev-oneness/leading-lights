@@ -12,7 +12,7 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::group(['as'=>'admin.','prefix' => 'admin','middleware' => ['auth','admin']], function(){
+Route::group(['as'=>'admin.','prefix' => 'admin'], function(){
     require 'custom/admin.php';
 });
 
