@@ -7,3 +7,5 @@
     Route::post('update-profile', [TeacherController::class,'updateProfile'])->name('updateProfile');
     Route::get('change-password', [TeacherController::class,'changePassword'])->name('changePassword');
     Route::post('update-password', [TeacherController::class,'updatePassword'])->name('updatePassword');
+    Route::get('home-task',[TeacherController::class,'homeTask'])->name('homeTask');
+    Route::post('upload-home-task',[TeacherController::class,'uploadHomeTask'])->name('uploadHomeTask');

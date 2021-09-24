@@ -1,7 +1,8 @@
 <div class="dashboard-menubar" id="sidebar">
   <div class="image-wrapper logo-wrapper customer-logo">
-      <img src="{{ asset('img/logo.jpg') }}" class="img-fluid logo">
-  </div>
+    <img src="{{ asset('img/logo-inverse.png') }}" class="img-fluid logo">
+</div>
+<img src="{{ asset('assets/img/shadow.png') }}" class="img-fluid mx-auto w-100">
   <nav class="border-top">
 <!-- <button class="toggle-mob-menu" aria-expanded="false" aria-label="open menu">
 <i class="fa fa-bars menu-button"></i>

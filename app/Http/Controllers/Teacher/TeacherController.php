@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Classes;
+use App\Models\HomeTask;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -118,4 +121,38 @@ class TeacherController extends Controller
 
 		return $validator;        
     } 
+
+    public function homeTask(){
+        $classes = Classes::latest()->get();
+        return view('teacher.hometask',compact('classes'));
+    }
+
+    public function uploadHomeTask(Request $request){
+        $this->validate($request,[
+            'class' => 'required',
+            'subject' => 'required',
+            'submission_date' => 'required|date',
+            'submission_time' => 'required',
+            'upload_file' => 'required|mimes:pdf'
+        ]);
+
+        if($request->hasFile('upload_file')){
+            $file = $request->file('upload_file');
+            $fileName = imageUpload($file,'course');
+        }else{
+            $fileName = null;
+        }
+
+        $homeTask = new HomeTask();
+        $homeTask->user_id = Auth::user()->id;
+        $homeTask->class = $request->class;
+        $homeTask->subject = $request->subject;
+        $homeTask->submission_date = $request->submission_date;
+        $homeTask->submission_time = $request->submission_time;
+        $homeTask->upload_file = $fileName;
+        $homeTask->save();
+
+        return redirect()->back()->with('success','Task update successfully');
+
+    }
 }
