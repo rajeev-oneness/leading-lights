@@ -20,6 +20,8 @@ class CreateAdminsTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->string('rand_key')->nullable();
+            $table->string('image')->nullable();
+            $table->string('about_us')->nullable();
             $table->timestamps();
         });
 

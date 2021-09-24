@@ -97,21 +97,11 @@ class ResetPasswordController extends Controller
     public function sendResetLink(Request $request)
     {
     	$user_data = Admin::where('email', $request->email)->first();
-    	
-    	// $not_active_user_data = Admin::where('status',1)->where('email', $request->email)->first();
 
     	if (is_null($user_data)) {
     		Session::flash('error', "Invalid Email ID !!");
         	return redirect()->back();
     	}
-    	
-    	// if (is_null($not_active_user_data)) {
-    	// 	Session::flash('forget_password_warning', "This account is not active!!");
-        // 	return redirect()->back();
-    	// }
-    	
-    	
-    	/////
     	
     	$user_data->rand_key = md5(substr(str_shuffle(str_repeat("0123456789abcdefghijklmnopqrstuvwxyz", 5)), 0, 5))."-".time(); //<-- Create a random key with current timestamp
 
@@ -123,32 +113,6 @@ class ResetPasswordController extends Controller
         );
 
         Notification::route('mail', $request->email)->notify(new AdminPasswordReset($email_data));
-        // CRUDBooster::sendEmail(['to'=>$request->email,'data'=>$email_data,'template'=>'send_password_reset_link']);
-                // $this->sendVerificationMail($user);
-                
-                // Session::flash('type', 'success'); 
-                // Session::flash('message', 'Please wait for admin confirmation!'); 
-    	/////
-
-    // 	$user_data->rand_key = md5(substr(str_shuffle(str_repeat("0123456789abcdefghijklmnopqrstuvwxyz", 5)), 0, 5))."-".time(); //<-- Create a random key with current timestamp
-
-    // 	$user_data->save();
-
-    // 	$user_data->refresh();
-
-    // 	$email_data = array(
-    //         'name'       => $user_data->first_name.' '.$user_data->last_name,
-    //         'email'      => $user_data->email,
-    //         'token'      => $user_data->rand_key,
-    //         'site_email' => $this->site_email,
-    //         'base_url'   => url('/')
-    //     );
-
-    //     Mail::send('emails.reset_password', $email_data,  function ($message) use ($email_data) {
-    //         $message->from($email_data['site_email'], 'Idanyone');
-    //         $message->to( $email_data['email'] )->subject('Reset your password in Idanyone');
-    //     });
-
         Session::flash('success', "Reset password link has been sent on your email id");
         return redirect()->back();
     }

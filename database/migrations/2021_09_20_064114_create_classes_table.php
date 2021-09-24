@@ -18,6 +18,15 @@ class CreateClassesTable extends Migration
             $table->string('name');
             $table->timestamps();
         });
+
+        $data[] = [
+            'name' => 'V',
+        ];
+        $data[] = [
+            'name' => 'VI'
+        ];
+
+        DB::table('classes')->insert($data);
     }
 
     /**

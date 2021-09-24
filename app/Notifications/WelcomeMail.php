@@ -10,15 +10,17 @@ use Illuminate\Notifications\Notification;
 class WelcomeMail extends Notification
 {
     use Queueable;
-
+    public $student;
+    public $password;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($student,$password)
     {
-        //
+        $this->student = $student;
+        $this->password = $password;
     }
 
     /**
@@ -41,8 +43,13 @@ class WelcomeMail extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
+                    ->greeting('Hello '.$this->student['first_name'].' '.$this->student['last_name'])
+                    ->subject('New registration')
+                    ->line('Your login credential is: ')
+                    ->line('Your email id : '.$this->student['email'])
+                    ->line('Your password is :'.$this->password)
+                    ->line('To complete your profile click below')
+                    ->action('Login', route('user.profile') )
                     ->line('Thank you for using our application!');
     }
 

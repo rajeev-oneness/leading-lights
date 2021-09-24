@@ -66,7 +66,7 @@ class StudentController extends Controller
         $student->save();
 
         //Send notification
-
+        // dd($student);
         Notification::route('mail', $request->email)->notify(new WelcomeMail($student,$request->password));
 
         return redirect()->route('admin.students.index')->with('success','Student added');
