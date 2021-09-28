@@ -41,7 +41,7 @@ class BannerManagementController extends Controller
     {
         $this->validate($request,[
             'name' => 'required|string|max:255',
-            'image' => 'nullable | mimes:png,jpg',
+            'image' => 'required| mimes:png,jpg',
         ]);
 
         if($request->hasFile('image')){

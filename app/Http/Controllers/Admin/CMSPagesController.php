@@ -42,7 +42,6 @@ class CMSPagesController extends Controller
         $this->validate($request,[
             'page_title' => 'required|string|max:255',
             'page_content' => 'required',
-            'banner_image' => 'nullable | mimes:png,jpg',
             'image' => 'nullable | mimes:png,jpg',
         ]);
 
@@ -52,17 +51,10 @@ class CMSPagesController extends Controller
         }else{
             $imageName = null;
         }
-        if($request->hasFile('banner_image')){
-            $image = $request->file('banner_image');
-            $bannerImageName = imageUpload($image,'cms');
-        }else{
-            $bannerImageName = null;
-        }
         $cms = new CMS();
         $cms->page_title = $request->page_title;
         $cms->page_slug = Str::slug($request->page_title,'-');
         $cms->page_content = $request->page_content;
-        $cms->banner_image = $bannerImageName;
         $cms->image = $imageName;
         $cms->status = 1;
         $cms->save();
@@ -106,7 +98,6 @@ class CMSPagesController extends Controller
         $this->validate($request,[
             'page_title' => 'required|string|max:255',
             'page_content' => 'required',
-            'banner_image' => 'nullable | mimes:png,jpg',
             'image' => 'nullable | mimes:png,jpg',
         ]);
 

@@ -24,11 +24,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $redirectTo = 'user/dashboard';
+        $redirectTo = 'user/profile';
         switch(Auth::user()->role_id){
             case 1 : $redirectTo = 'admin/dashboard';break;
-            case 3 : $redirectTo = 'teacher/dashboard';break;
-            case 4 : $redirectTo = 'user/dashboard';break;
+            case 3 : $redirectTo = 'teacher/profile';break;
+            case 4 : $redirectTo = 'user/profile';break;
         }
         return redirect($redirectTo);
         // return view('home');

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Models\User;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\Classes;
+use Illuminate\Http\Request;
 use App\Notifications\WelcomeMail;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
@@ -80,8 +81,9 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        $student = User::find($id);
-        return view('admin.student.view',compact('student'));
+        $data['student'] = User::find($id);
+        $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
+        return view('admin.student.view')->with($data);
     }
 
     /**

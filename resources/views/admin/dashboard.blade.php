@@ -15,27 +15,7 @@
 
                     </ul>
                 </div>
-                <div class="col-lg-6">
-                    <div class="search-box-container">
-                        <!-- <div class="form-group search-box top-search-bar"> -->
-                        <!-- <input type="text" name="search-box"  placeholder="Search" -->
-                        <!-- > -->
-                        <!-- <button type="submit"> -->
-                        <!-- <i class="fa fa-search"></i> -->
-                        <!-- </button> -->
-                        <!-- </div> -->
-                        <div class="notification">
-                            <button class="notification-button">
-                                <i class="fa fa-bell"></i>
-                                <span class="badge-number">0</span>
-                            </button>
-                            <div class="user-wrapper mx-3">
-                                <img src="{{ asset('img/user.png') }}" class="img-fluid user-img">
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                @include('admin.layouts.navbar')
             </div>
             <hr>
             <div class="dashboard-body-content-upper p-0">

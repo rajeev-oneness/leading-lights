@@ -21,42 +21,16 @@ class TeacherController extends Controller
         return view('teacher.profile',compact('teacher'));
     }
 
-    public function updateProfile(Request $request){
-        $this->validate($request,[
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            // 'email' => 'email',
-            'mobile' => 'nullable|max:10|min:10',
-            'fathers_name' => 'string | max:255|nullable',
-            'dob' => 'date|nullable',
-            'address' => 'string|max:255|nullable',
-            'image' => 'image |mimes:png,jpg'
-        ]);
-        
-        $student = User::find(Auth::id());
-
-        if($request->hasFile('image')){
-            $image = $request->file('image');
-            if ($student->image !== 'default.png') {
-                $image_name = explode('/', $student->image)[2];
-                if(File::exists('upload/profile_image/'.$image_name)) {
-                    File::delete('upload/profile_image/'.$image_name);
-                }
-            }
-            $imageName = imageUpload($image,'profile_image');
-        }else{
-            $imageName = $student->image;
+    public function updateProfile(Request $request){ 
+        $teacher = User::find(Auth::id());
+        if ($request->qualification) {
+           $teacher->qualification = $request->qualification;
         }
-        $student->first_name = $request->first_name;
-        $student->last_name = $request->last_name;
-        // $student->email = $request->email;
-        $student->mobile = $request->mobile;
-        $student->dob = $request->dob;
-        $student->address = $request->address;
-        $student->fathers_name = $request->fathers_name;
-        $student->image = $imageName;
-        $student->save();
-        return redirect()->route('teacher.profile')->with('success','Profile updated');
+        if ($request->address) {
+           $teacher->address = $request->address;
+        }
+        $teacher->save();
+        return response()->json('success');
     }
 
     public function changePassword()
@@ -124,7 +98,8 @@ class TeacherController extends Controller
 
     public function homeTask(){
         $classes = Classes::latest()->get();
-        return view('teacher.hometask',compact('classes'));
+        // return view('teacher.hometask',compact('classes'));
+        return view('teacher.home_task');
     }
 
     public function uploadHomeTask(Request $request){
@@ -154,5 +129,21 @@ class TeacherController extends Controller
 
         return redirect()->back()->with('success','Task update successfully');
 
+    }
+
+    public function attendance(){
+        return view('teacher.attendance');
+    }
+    public function class(){
+        return view('teacher.access_class');
+    }
+    public function studentSubmission(){
+        return view('teacher.submission_task');
+    }
+    public function videoCall(){
+        return view('teacher.video_call');
+    }
+    public function manageExam(){
+        return view('teacher.exam');
     }
 }

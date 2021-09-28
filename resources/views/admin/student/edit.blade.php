@@ -10,31 +10,12 @@
 						<ul class="breadcrumb p-0">
 							<li><a href="{{ route('admin.dashboard')}}">Home</a></li>
 							<li class="text-white"><i class="fa fa-chevron-right"></i></li>
-							<li><a href="{{ route('admin.students.index')}}">student List</a></li>
+							<li><a href="{{ route('admin.students.index')}}">Student List</a></li>
 							<li class="text-white"><i class="fa fa-chevron-right"></i></li>
 							<li><a href="{{ route('admin.students.edit',$student->id) }}" class="active">Edit student</a></li>
 						</ul>
 					</div>
-					<div class="col-lg-6">
-						<div class="search-box-container">
-							<!-- <div class="form-group search-box top-search-bar"> -->
-								<!-- <input type="text" name="search-box"  placeholder="Search" -->
-								<!-- > -->
-								<!-- <button type="submit"> -->
-									<!-- <i class="fa fa-search"></i> -->
-								<!-- </button> -->
-							<!-- </div> -->
-							<div class="notification">
-								<button class="notification-button">
-									<i class="fa fa-bell"></i>
-									<span class="badge-number">0</span>
-								</button>
-								<div class="user-wrapper mx-3">
-									<!-- <img src="./assets/img/user.png" class="img-fluid user-img"> -->
-								</div>
-							</div>
-						</div>
-					</div>
+					@include('admin.layouts.navbar')
 				</div>
 				<hr>
 				<div class="dashboard-body-content">

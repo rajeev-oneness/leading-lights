@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Student;
 
+use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,45 +15,31 @@ class UserController extends Controller
 {
     public function index(){
         $current_user_id = Auth::user()->id;
-        $student = User::where('id',$current_user_id)->first();
-        return view('student.profile',compact('student'));
+        $data['student'] = User::where('id',$current_user_id)->first();
+        $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
+        return view('student.profile')->with($data);
     }
     
     public function updateProfile(Request $request){
-        $this->validate($request,[
-            'first_name' => 'required |string| max:255',
-            'last_name' => 'required |string| max:255',
-            // 'email' => 'email',
-            'mobile' => 'nullable|min:10|max:10',
-            'fathers_name' => 'string | max:255|nullable',
-            'dob' => 'date|nullable',
-            'address' => 'string|max:255|nullable',
-            'image' => 'image |mimes:png,jpg'
-        ]);
         $student = User::find(Auth::id());
-
-        if($request->hasFile('image')){
-            $image = $request->file('image');
-            if ($student->image !== 'default.png') {
-                $image_name = explode('/', $student->image)[2];
-                if(File::exists('upload/profile_image/'.$image_name)) {
-                    File::delete('upload/profile_image/'.$image_name);
-                }
-            }
-            $imageName = imageUpload($image,'profile_image');
-        }else{
-            $imageName = $student->image;
+        if ($request->dob) {
+            $this->validate($request,[
+                'dob' => 'date|nullable',
+            ]);
+            $student->dob = $request->dob;
         }
-        // $student->email = $request->email;
-        $student->first_name = $request->first_name;
-        $student->last_name = $request->last_name;
-        $student->mobile = $request->mobile;
-        $student->dob = $request->dob;
-        $student->address = $request->address;
-        $student->fathers_name = $request->fathers_name;
-        $student->image = $imageName;
+        if ($request->gender) {
+            $student->gender = $request->gender;
+        }
+        if ($request->bio) {
+            $this->validate($request,[
+                'bio' => 'max:255'
+            ]);
+            $student->about_us = $request->bio;
+        }
+
         $student->save();
-        return redirect()->route('user.profile')->with('success','Profile updated');
+        return response()->json('success');
     }
 
     public function changePassword()
@@ -117,4 +104,25 @@ class UserController extends Controller
 
 		return $validator;        
     } 
+
+
+    public function classes(Request $request){
+        return view('student.classes');
+    }
+
+    public function dairy(Request $request){
+        return view('student.dairy');
+    }
+
+    public function homework(Request $request){
+        return view('student.home_work');
+    }
+
+    public function exam(Request $request){
+        return view('student.exam');
+    }
+
+    public function payment(Request $request){
+        return view('student.payments');
+    }
 }
