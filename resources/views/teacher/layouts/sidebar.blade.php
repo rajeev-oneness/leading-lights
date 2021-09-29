@@ -36,39 +36,39 @@
             </div>
             <img src="{{ asset('frontend/images/shadow.png') }}" class="img-fluid mx-auto w-100">
             <ul class="vertical-nav-menu">
-                <li class="mm-active">
+                <li class="{{ Request::is('teacher/profile') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.profile') }}">
                         <i class="metismenu-icon fa fa-text-height"></i>Teachers Profile
                     </a>
                 </li>
-                <li>
+                <li class="{{ Request::is('teacher/attendance') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.attendance') }}">
                         <i class="metismenu-icon fa fa-users"></i>Attendance
                     </a>
                 </li>
-                <li>
+                <li class="{{ Request::is('teacher/access-class') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.class') }}">
                         <i class="metismenu-icon fa fa-window-restore"></i>Access Class
                     </a>
                 </li>
-                <li>
+                <li class="{{ Request::is('teacher/home-task') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.homeTask') }}">
                         <i class="metismenu-icon fa fa-upload"></i>Upload home task
                     </a>
                 </li>
-                <li>
+                <li class="{{ Request::is('teacher/student-submission') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.studentSubmission') }}">
                         <i class="metismenu-icon fa fa-subscript"></i>Student’s submission
 
                     </a>
                 </li>
-                <li>
+                <li class="{{ Request::is('teacher/video-call') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.videoCall') }}">
                         <i class="metismenu-icon fa fa-play"></i>Arrange video call
 
                     </a>
                 </li>
-                <li>
+                <li class="{{ Request::is('teacher/manage-exam') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.manageExam') }}">
                         <i class="metismenu-icon fa fa-book"></i>Manage Exam
 
