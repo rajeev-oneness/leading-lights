@@ -7,18 +7,19 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WelcomeMail extends Notification
+class NewUserInfo extends Notification
 {
     use Queueable;
-    public $user;
+    public $email_data;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($email_data)
     {
-        $this->user = $user;
+        $this->email_data = $email_data;
     }
 
     /**
@@ -40,13 +41,16 @@ class WelcomeMail extends Notification
      */
     public function toMail($notifiable)
     {
+        $user_type = $this->email_data['user_type'];
         return (new MailMessage)
-                    ->greeting('Hello '.$this->user['first_name'].' '.$this->user['last_name'])
-                    ->subject('Approved your account :)')
-                    ->line('Your login credential is: ')
-                    ->line('Your email id : '.$this->user['email'])
-                    ->line('Your password is : '.$this->user['id_no'])
-                    ->line('Thank you for using our application!');
+                        ->greeting('Hello Admin')
+                        ->subject('New '.$user_type.' registration')
+                        ->line('The '.$user_type.' details is below : ')
+                        ->line('The '.$user_type.' name is  : '.$this->email_data['first_name'].' '.$this->email_data['last_name'])
+                        ->line($user_type.'  email id is : '.$this->email_data['email'])
+                        ->line($user_type.' id is : '.$this->email_data['id_no'])
+                        ->line('Please check and review the '.$user_type.' details')
+                        ->line('Thank you for using our application!');
     }
 
     /**

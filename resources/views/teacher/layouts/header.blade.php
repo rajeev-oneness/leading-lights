@@ -524,7 +524,7 @@
                     <div class="widget-content-wrapper">
                         <div class="widget-content-left header-user-info">
                             <div class="widget-heading"> {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
-                            <div class="widget-subheading"> Member Seans: {{ Auth::user()->created_at ? date('Y',strotime(Auth::user()->created_at)) : 'N/A'}} </div>
+                            <div class="widget-subheading"> Member Seans: {{ Auth::user()->created_at ? date('Y',strtotime(Auth::user()->created_at)) : 'N/A'}} </div>
                         </div>
                         <div class="widget-content-left ml-3">
                             <div class="btn-group">
@@ -557,7 +557,7 @@
                                                         <div class="widget-content-right mr-2">
 
                                                             <a class="btn-pill btn-shadow btn-shine btn btn-focus"
-                                                                href="{{ route('admin.logout') }}" onclick="event.preventDefault();
+                                                                href="{{ route('logout') }}" onclick="event.preventDefault();
                        document.getElementById('logout-form').submit();">
                                                                 {{ __('Logout') }}
                                                             </a>

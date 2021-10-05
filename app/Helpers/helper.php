@@ -22,3 +22,10 @@
 		}
 		return $ret;
 	}
+
+	function getAsiaTime($date){
+		$date = new DateTime($date);
+		$timezone = new DateTimeZone('Asia/Kolkata');
+		$set_timezone =  $date->setTimezone($timezone)->format('h:i');
+		return $set_timezone;
+	}

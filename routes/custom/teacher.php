@@ -15,4 +15,11 @@
     Route::get('student-submission',[TeacherController::class,'studentSubmission'])->name('studentSubmission');
     Route::get('video-call',[TeacherController::class,'videoCall'])->name('videoCall');
     Route::get('manage-exam',[TeacherController::class,'manageExam'])->name('manageExam');
+
+    Route::post('task-review',[TeacherController::class,'taskReview'])->name('taskReview');
+    Route::post('task-comment/{id}',[TeacherController::class,'taskComment'])->name('taskComment');
+
+    Route::post('certificate-upload/',[TeacherController::class,'certificate_upload'])->name('certificate_upload');
+
+    Route::post('arrange-class/',[TeacherController::class,'arrange_class'])->name('arrange_class');
     

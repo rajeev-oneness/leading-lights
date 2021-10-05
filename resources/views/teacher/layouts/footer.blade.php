@@ -1,5 +1,4 @@
-</div>
-</div>
+
 <div class="app-drawer-wrapper">
     <div class="drawer-nav-btn">
         <button type="button" class="hamburger hamburger--elastic is-active">

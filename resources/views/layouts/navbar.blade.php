@@ -1,7 +1,7 @@
 <div class="navbar-wrapper">
     <nav class="navbar navbar-expand-lg wow fadeInDown">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="{{ url('/') }}">
                 <img src="{{ asset('frontend/images/logo.png') }}" class="img-fluid">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav"
@@ -29,7 +29,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{{ route('login') }}">Student</a>
                             <a class="dropdown-item" href="{{ route('login') }}">Hr</a>
-                            <a class="dropdown-item" href="{{ route('login') }}">Teacher</a>
+                            <a class="dropdown-item" href="{{ route('teacher_login') }}">Teacher</a>
                         </div>
 
                     </li>

@@ -3,12 +3,19 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\Classes;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
+
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Admin\Notification;
+use App\Notifications\NewUserInfo;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Notification as FacadesNotification;
 
 class RegisterController extends Controller
 {
@@ -42,6 +49,10 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    public function showRegistrationForm() {
+        $classes = Classes::latest()->get();
+        return view ('auth.register',compact('classes'));
+    }
     /**
      * Get a validator for an incoming registration request.
      *
@@ -54,8 +65,24 @@ class RegisterController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:1', 'confirmed'],
+            'dob' => ['required', 'date'],
+            'gender' => ['required'],
+            'class' => ['required'],
+            'image' => 'required| mimes:png,jpg',
+            'mobile' => ['required']
         ]);
+    }
+
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        // $this->guard()->login($user);
+
+        // Notification::
+        return redirect()->route('login')->with('success','Your registration is successful, waiting for admin approval');
     }
 
     /**
@@ -66,13 +93,35 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        // dd($data);
         $unique_id = $this->getCode();
+        $id_no = 'LLST'.$unique_id;
+
+        $image = $data['image'];
+        $imageName = imageUpload($image,'profile_image');
+
+        $admin_details = User::select('email')->where('role_id',1)->first();
+        $admin_email = $admin_details['email'];
+        $email_data = array(
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'email' => $data['email'],
+            'id_no' => $id_no,
+            'user_type' => 'student'
+        );
+        FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+
         return User::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'id_no' =>  'LLST'.$unique_id
+            'mobile' => $data['mobile'],
+            'id_no' =>  $id_no,
+            'dob'  =>  $data['dob'],
+            'class' => $data['class'],
+            'gender' => $data['gender'],
+            'password' => Hash::make($id_no),
+            'image' => $imageName
         ]);
     }
 
@@ -85,10 +134,57 @@ class RegisterController extends Controller
         return $this->getCode();
     }
 
-    protected function redirectTo()
-    {
-        auth()->logout();
-        session()->flash('error', 'Your account is not active.');
-        return route('login');
+    public function teacher_register(Request $request){
+        if ($request->method() == 'GET'){
+            return view('auth.teacher_register');
+        } else if($request->method() == 'POST'){
+            $this->validate($request,[
+                    'first_name' => ['required', 'string', 'max:255'],
+                    'last_name' => ['required', 'string', 'max:255'],
+                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                    'doj' => ['required', 'date'],
+                    'gender' => ['required'],
+                    'image' => 'required| mimes:png,jpg',
+                    'mobile' => ['required'],
+                    'qualification' => ['required']
+            ]);
+
+            if($request->hasFile('image')){
+                $image = $request->file('image');
+                $imageName = imageUpload($image,'profile_image');
+            }else{
+                $imageName = null;
+            }
+
+            $unique_id = $this->getCode();
+            $id_no = 'LLT'.$unique_id;
+
+            $user = new User();
+            $user->role_id = 3;
+            $user->first_name = $request->first_name;
+            $user->last_name = $request->last_name;
+            $user->email = $request->email;
+            $user->doj = $request->doj;
+            $user->gender = $request->gender;
+            $user->id_no = $id_no;
+            $user->password = Hash::make($id_no);
+            $user->image = $imageName;
+            $user->mobile = $request->mobile;
+            $user->qualification = $request->qualification;
+            $user->save();
+
+            $admin_details = User::select('email')->where('role_id',1)->first();
+            $admin_email = $admin_details['email'];
+            $email_data = array(
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'id_no' => $id_no,
+                'user_type' => 'teacher'
+            );
+            FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+
+            return redirect()->route('teacher_login')->with('success','Your registration is successful, waiting for admin approval');
+        }
     }
 }

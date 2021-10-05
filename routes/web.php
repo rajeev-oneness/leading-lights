@@ -2,6 +2,9 @@
 
 
 namespace App\Http\Controllers;
+
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Auth,Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -9,6 +12,10 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+
+Route::any('teacher/login', [LoginController::class,'teacher_login'])->name('teacher_login');
+Route::any('teacher/register', [RegisterController::class,'teacher_register'])->name('teacher_register');
+Route::any('admin/login', [LoginController::class,'admin_login'])->name('admin_login');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 

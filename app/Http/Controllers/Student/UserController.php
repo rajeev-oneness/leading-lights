@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\HomeTask;
+use App\Models\SubmitHomeTask;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -115,7 +117,9 @@ class UserController extends Controller
     }
 
     public function homework(Request $request){
-        return view('student.home_work');
+        $class = Auth::user()->class;
+        $home_works =  HomeTask::where('class',$class)->latest()->get();
+        return view('student.home_work',compact('home_works'));
     }
 
     public function exam(Request $request){
@@ -124,5 +128,55 @@ class UserController extends Controller
 
     public function payment(Request $request){
         return view('student.payments');
+    }
+
+    public function upload_homework(Request $request){
+        $name = Auth::user()->first_name.' '.Auth::user()->last_name;
+        $class = Auth::user()->class;
+        $id_no = Auth::user()->id_no;
+        $subject = $request->subject;
+        $submission_date = $request->submission_date;
+        $submission_time = $request->submission_time;
+
+        //Check already uploaded or not
+        $already_uploaded = SubmitHomeTask::where('roll_no',$id_no)->where('class',$class)->where('subject',$subject)->where('submission_date',$submission_date)->where('submission_time',$submission_time)->count();
+        // if ($already_uploaded > 0) {
+        //     return redirect()->back()->with('error','Already uploaded home task');
+        // }
+
+        $date = date('m/d/Y');
+        $date1 = date('m/d/Y', strtotime($submission_date));
+        $date2 = date('m/d/Y', strtotime($date));
+
+        $time = getAsiaTime(date('h:m:s'));
+        $time1 = date('h:m:s', strtotime($submission_time));
+        $time2 = date('h:m:s', strtotime($time));
+
+        if ($date1 < $date2) {
+            return redirect()->back()->with('error','This task last submission date has expired');
+        }
+        if ($time1 < $time2) {
+            return redirect()->back()->with('error','This task last submission date and time has expired');
+        }
+        $this->validate($request,[
+            'upload_doc' => 'required|mimes:pdf'
+        ]);
+
+        if($request->hasFile('upload_doc')){
+            $image = $request->file('upload_doc');
+            $fileName = imageUpload($image,'student/home_task');
+        }else{
+            $fileName = null;
+        }
+        $task = new  SubmitHomeTask;
+        $task->name = $name;
+        $task->class = $class;
+        $task->subject = $subject;
+        $task->roll_no = $id_no;
+        $task->upload_doc = $fileName;
+        $task->submission_date = $submission_date;
+        $task->submission_time = $submission_time;
+        $task->save();
+        return redirect()->back()->with('success','Home task uploaded successful');
     }
 }

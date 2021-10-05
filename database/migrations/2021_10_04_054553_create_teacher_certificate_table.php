@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnToUsersTable extends Migration
+class CreateTeacherCertificateTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class AddColumnToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('qualification')->nullable();
-            $table->string('special_subject')->nullable();
+        Schema::create('teacher_certificate', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('user_id');
+            $table->string('image');
+            $table->timestamps();
         });
     }
 
@@ -26,8 +28,6 @@ class AddColumnToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('teacher_certificate');
     }
 }

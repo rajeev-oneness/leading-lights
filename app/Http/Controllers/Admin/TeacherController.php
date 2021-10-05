@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Notifications\WelcomeMail;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
@@ -77,7 +78,7 @@ class TeacherController extends Controller
 
         //Send notification
 
-        Notification::route('mail', $request->email)->notify(new WelcomeMail($teacher,$request->password));
+        // Notification::route('mail', $request->email)->notify(new WelcomeMail($teacher,$request->password));
         return redirect()->route('admin.teachers.index')->with('success','Teacher added');
     }
 
@@ -89,8 +90,9 @@ class TeacherController extends Controller
      */
     public function show($id)
     {
-        $teacher = User::find($id);
-        return view('admin.teacher.view',compact('teacher'));
+        $data['teacher'] = User::find($id);
+        $data['certificates'] = DB::table('teacher_certificate')->where('user_id',$id)->get();
+        return view('admin.teacher.view')->with($data);
     }
 
     /**
@@ -172,5 +174,20 @@ class TeacherController extends Controller
             return $code;
         }
         return $this->getReferralCode();
+    }
+
+    public function approval($id){
+        $user = User::find($id);
+        if ($user->status == 0) {
+            $user->status = 1;
+            $user->save();
+            Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
+            return response()->json(['success' => true,'data' => 'activated']);
+        }
+        if ($user->status == 1) {
+            $user->status = 0;
+            $user->save();
+            return response()->json(['success' => true,'data' => 'inactivated']);
+        }       
     }
 }

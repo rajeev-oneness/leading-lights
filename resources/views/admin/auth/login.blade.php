@@ -46,7 +46,7 @@
                                 </button>
                             </div>
                             @endif
-                            <form method="POST" action="{{ route('admin.login') }}">
+                            <form method="POST" action="{{ route('admin_login') }}">
                                 @csrf
                                 <div class="form-group">
                                     <label for="inputEmail">Email address</label>

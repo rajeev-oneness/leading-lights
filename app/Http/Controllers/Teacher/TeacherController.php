@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use Carbon\Carbon;
 use App\Models\User;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\Classes;
 use App\Models\HomeTask;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Models\SubmitHomeTask;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Validator;
 
 class TeacherController extends Controller
 {
     public function index(){
         $current_user_id = Auth::user()->id;
-        $teacher = User::where('id',$current_user_id)->first();
-        return view('teacher.profile',compact('teacher'));
+        $data['teacher'] = User::where('id',$current_user_id)->first();
+        $data['certificates'] = DB::table('teacher_certificate')->where('user_id',$current_user_id)->get();
+        return view('teacher.profile')->with($data);
     }
 
     public function updateProfile(Request $request){ 
@@ -97,9 +101,10 @@ class TeacherController extends Controller
     } 
 
     public function homeTask(){
-        $classes = Classes::latest()->get();
+        $data['classes'] = Classes::latest()->get();
+        $data['tasks'] = HomeTask::latest()->get();
         // return view('teacher.hometask',compact('classes'));
-        return view('teacher.home_task');
+        return view('teacher.home_task')->with($data);
     }
 
     public function uploadHomeTask(Request $request){
@@ -113,7 +118,7 @@ class TeacherController extends Controller
 
         if($request->hasFile('upload_file')){
             $file = $request->file('upload_file');
-            $fileName = imageUpload($file,'course');
+            $fileName = imageUpload($file,'teacher/home_task');
         }else{
             $fileName = null;
         }
@@ -127,7 +132,7 @@ class TeacherController extends Controller
         $homeTask->upload_file = $fileName;
         $homeTask->save();
 
-        return redirect()->back()->with('success','Task update successfully');
+        return redirect()->back()->with('success','Task upload successfully');
 
     }
 
@@ -135,15 +140,49 @@ class TeacherController extends Controller
         return view('teacher.attendance');
     }
     public function class(){
-        return view('teacher.access_class');
+        $classes = Classes::get();
+        return view('teacher.access_class',compact('classes'));
     }
     public function studentSubmission(){
-        return view('teacher.submission_task');
+        $tasks = SubmitHomeTask::latest()->get();
+        return view('teacher.submission_task',compact('tasks'));
     }
     public function videoCall(){
         return view('teacher.video_call');
     }
     public function manageExam(){
         return view('teacher.exam');
+    }
+
+    public function taskReview(Request $request){
+        $task = SubmitHomeTask::where('id',$request->data['task_id'])->first();
+        $task->review = $request->data['review'];
+        $task->save();
+    }
+    public function taskComment(Request $request,$id){
+        $this->validate($request,[
+            'comment' => 'required|max:255'
+        ]);
+        $task = SubmitHomeTask::where('id',$id)->first();
+        $task->comment = $request->comment;
+        $task->save();
+        return response()->json('success');
+    }
+
+    public function certificate_upload(Request $request){
+        if ($request->ajax()) {
+            $image = $request->file('file');
+            $data['image'] = imageUpload($image,'teacher_certificate');
+
+            $data['user_id'] = Auth::user()->id;
+            
+            DB::table('teacher_certificate')->insert($data);
+
+        }
+    }
+
+    public function arrange_class(Request $request)
+    {
+        dd($request->all());
     }
 }

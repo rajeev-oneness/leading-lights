@@ -15,7 +15,6 @@
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
                         <li><a href="{{ route('admin.students.show', $student->id) }}" class="active">Student
                                 Details</a></li>
-
                     </ul>
                 </div>
                 @include('admin.layouts.navbar')
@@ -144,6 +143,9 @@
                         type: "PUT",
                         data: data,
                         dataType: 'json',
+                        beforeSend:function(){
+		        	        $("#activeAccount").text('Loading...')
+		                },
                         success: function(response) {
                             if (response.data === 'activated') {
                                 $("#activeAccount").text('Approved');

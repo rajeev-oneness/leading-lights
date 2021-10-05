@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Classes;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Notifications\WelcomeMail;
 use App\Http\Controllers\Controller;
@@ -51,16 +52,16 @@ class StudentController extends Controller
             'last_name' => 'required |string| max:255',
             'email' => 'required|email | unique:users',
             'class' => 'required',
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
         $total_students = User::where('role_id',4)->count();
 
+        $password = Str::random(10);
         $student = new User;
         $student->first_name = $request->first_name;
         $student->last_name = $request->last_name;
         $student->email = $request->email;
-        $student->password = Hash::make($request->password);
+        $student->password = Hash::make($password);
         $student->id_no = 'LLST'.$unique_id;
         $student->roll_no = $total_students+1;
         $student->class = $request->class;
@@ -68,7 +69,7 @@ class StudentController extends Controller
 
         //Send notification
         // dd($student);
-        Notification::route('mail', $request->email)->notify(new WelcomeMail($student,$request->password));
+        // Notification::route('mail', $request->email)->notify(new WelcomeMail($student,$password));
 
         return redirect()->route('admin.students.index')->with('success','Student added');
     }
@@ -173,6 +174,7 @@ class StudentController extends Controller
         if ($user->status == 0) {
             $user->status = 1;
             $user->save();
+            Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
             return response()->json(['success' => true,'data' => 'activated']);
         }
         if ($user->status == 1) {

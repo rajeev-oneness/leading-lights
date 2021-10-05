@@ -13,3 +13,5 @@
     Route::get('homework',[UserController::class,'homework'])->name('homework');
     Route::get('exam',[UserController::class,'exam'])->name('exam');
     Route::get('payment',[UserController::class,'payment'])->name('payment');
+
+    Route::post('upload-task',[UserController::class,'upload_homework'])->name('upload_homework');

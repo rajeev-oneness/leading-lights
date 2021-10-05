@@ -55,9 +55,9 @@
 						<td>{{ $teacher->mobile ? $teacher->mobile : 'N/A' }}</td>
 						<td class="text-center">
 							@if ($teacher->status == 1)
-							<span class="badge badge-success">Active</span>
+							<span class="badge badge-success">Approved</span>
 							@else
-							<span class="badge badge-warning">Inactive</span>
+							<span class="badge badge-warning">Pending</span>
 							@endif
 							
 						</td>

@@ -29,6 +29,7 @@
         Route::resource('holidays', HolidayController::class);
         Route::resource('announcement', AnnouncementController::class);
         Route::resource('notification', NotificationController::class);
-        Route::put('/approve/{id}',[StudentController::class,'approval'])->name('students.approve');
+        Route::put('/approve-student/{id}',[StudentController::class,'approval'])->name('students.approve');
+        Route::put('/approve-teacher/{id}',[TeacherController::class,'approval'])->name('teachers.approve');
 
     });

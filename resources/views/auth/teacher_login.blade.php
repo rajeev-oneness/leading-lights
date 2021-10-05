@@ -8,7 +8,7 @@
                 <div class="sign-in-box">
                     <div class="row align-items-center jusify-content-center">
                         <div class="col-lg-5">
-                            <img src="{{ asset('frontend/images/sign-in.png') }}" class="img-fluid">
+                            <img src="{{ asset('frontend/images/sign-in-teacher.png') }}" class="img-fluid">
                         </div>
                         <div class="col-lg-7 form-div wow fadeInRight">
                             <div class="heading">
@@ -18,6 +18,7 @@
                                 and password<span class="ml-3"><img
                                         src="{{ asset('frontend/images/bell.png') }}" class="img-fluid"></span>
                             </p>
+
                             @if (session('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     {{ session('success') }}
@@ -34,8 +35,7 @@
                                     </button>
                                 </div>
                             @endif
-
-                            <form class="cd-form" method="POST" action="{{ route('login') }}">
+                            <form class="cd-form" method="POST" action="{{ route('teacher_login') }}">
                                 @csrf
                                 <div class="form-row">
                                     <div class="form-group col-sm-12">
@@ -72,11 +72,13 @@
                                     </div>
                                 </div>
 
+
                                 <div class="form-row mt-2">
                                     <div class="form-group col-sm-12">
                                         <button class="btn btn-login mt-2">Login Now</button>
-                                        <a href="{{ route('register') }}" class="btn btn-create mt-2" type="button" value="Login"><span><i
-                                                    class="fa fa-plus"></i></span>Get admission</a>
+                                        <a href="{{ route('teacher_register') }}" class="btn btn-create mt-2"
+                                            type="button" value="Login"><span><i class="fa fa-plus"></i></span>Register
+                                            Now</a>
                                     </div>
                                 </div>
                             </form>
