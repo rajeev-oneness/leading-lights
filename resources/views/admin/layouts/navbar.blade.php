@@ -455,7 +455,7 @@
             <div class="widget-content p-0">
                 <div class="widget-content-wrapper">
                     <div class="widget-content-left header-user-info">
-                        <div class="widget-heading"> HI’ Alina Mcloughlin</div>
+                        <div class="widget-heading"> HI’ {{ Auth::user()->first_name }}</div>
                     </div>
                     <div class="widget-content-left ml-3">
                         <div class="btn-group">
@@ -479,7 +479,7 @@
                                                             src="{{ asset('img/1.jpg') }}" alt="">
                                                     </div>
                                                     <div class="widget-content-left">
-                                                        <div class="widget-heading">Alina Mcloughlin</div>
+                                                        <div class="widget-heading">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
                                                         <div class="widget-subheading opacity-8">A short profile
                                                             description</div>
                                                     </div>

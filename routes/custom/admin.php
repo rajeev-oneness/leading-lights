@@ -32,4 +32,7 @@
         Route::put('/approve-student/{id}',[StudentController::class,'approval'])->name('students.approve');
         Route::put('/approve-teacher/{id}',[TeacherController::class,'approval'])->name('teachers.approve');
 
+        Route::get('/arrange-classes',[ClassController::class,'arrange_classes'])->name('arrange_classes');
+        Route::delete('/delete-arrange-classes/{id}',[ClassController::class,'delete_arrange_classes'])->name('delete_arrange_classes');
+
     });

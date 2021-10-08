@@ -20,11 +20,10 @@
                         <img src="{{ asset($student->image ? $student->image :'frontend/assets/images/avata1.jpg') }}" class="img-fluid mx-auto">
                     </div>
                     <div class="col-lg-4 not2">
-                        <p>Joined- {{ Auth::user()->created_at ? date('d-m-Y', strtotime(Auth::user()->created_at)) : 'N/A' }}</p>
                         <h4 class="mb-4">{{ Auth::user()->first_name }}
                             {{ Auth::user()->last_name }}<span class="ml-3">
                                 <!-- <img src="assets/images/edit.png" class="img-fluid mx-auto"> -->
-                            </span></h4>
+                        </span></h4>
                         <div class="row">
                             <div class="col-md-4">
                                 <label>DOB :</label>

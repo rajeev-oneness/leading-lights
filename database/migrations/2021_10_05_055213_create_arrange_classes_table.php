@@ -19,8 +19,8 @@ class CreateArrangeClassesTable extends Migration
             $table->string('class');
             $table->string('subject');
             $table->date('date');
-            $table->time('time');
-            $table->integer('duration');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->string('meeting_url');
             $table->timestamps();
         });

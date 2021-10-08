@@ -58,30 +58,13 @@
 							<select name="class" id="class" class="form-control">
 								<option value="">Please select class</option>
 								@foreach ($classes as $class)
-									<option value="{{ $class->name }}">{{ $class->name }}</option>
-								@endforeach
+                                            <option value="{{ $class->name }}" @if (old('class') == $class->name)
+                                                selected
+                                            @endif>{{ $class->name }}</option>
+                                @endforeach
 							</select>
 							@if ($errors->has('class'))
 							<span style="color: red;">{{ $errors->first('class') }}</span>
-							@endif
-						</div>
-					</div>
-					<div class="col-lg-6">
-						<div class="form-group edit-box">
-							<label for="password">Password<span class="text-danger">*</span></label>
-							<input type="password" class="form-control" id="password" name="password">
-							@if ($errors->has('password'))
-							<span style="color: red;">{{ $errors->first('password') }}</span>
-							@endif
-						</div>
-					</div>
-					<div class="col-lg-6">
-						<div class="form-group edit-box">
-							<label for="password_confirm">Confirm password<span class="text-danger">*</span></label>
-							<input type="password" class="form-control" id="password_confirm"
-							name="password_confirmation">
-							@if ($errors->has('password_confirmation'))
-							<span style="color: red;">{{ $errors->first('password_confirmation') }}</span>
 							@endif
 						</div>
 					</div>

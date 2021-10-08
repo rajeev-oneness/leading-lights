@@ -22,4 +22,6 @@
     Route::post('certificate-upload/',[TeacherController::class,'certificate_upload'])->name('certificate_upload');
 
     Route::post('arrange-class/',[TeacherController::class,'arrange_class'])->name('arrange_class');
+
+    Route::post('class-attendance',[TeacherController::class,'class_attendance'])->name('class_attendance');
     

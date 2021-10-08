@@ -48,7 +48,7 @@
 					<div class="bg-edit2 p-4">
 						<div class="row">
 							<div class="col-lg-5 col-sm-4">
-								<img src="{{ asset($teacher->image ? $teacher->image : 'frontend/assets/images/avata3.jpg') }}" class="img-fluid mx-auto">
+								<img src="{{ asset($teacher->image ? $teacher->image : 'frontend/assets/images/avata3.jpg') }}" class="img-fluid mx-auto" width="60%" height="100%">
 							</div>
 							<div class="col-lg-7 col-sm-8 not2">
 								<p>Joined-
@@ -103,7 +103,7 @@
 										<label>Academic Qualification:</label>
 									</div>
 									<div class="col-lg-6 col-sm-7">
-										<p id="qualification">{{ $teacher->qualification }}</p>
+										<p id="qualification">{{ $teacher->qualification ? $teacher->qualification : 'N/A'}}</p>
 									</div>
 									<div class="col-lg-2 col-sm-2">
 									</div>

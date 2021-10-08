@@ -117,15 +117,17 @@
                             <table class="table table-hover bg-table" id="task_table">
                                 <thead>
                                     <tr>
+                                        <th>Serial no</th>
                                         <th>Class</th>
                                         <th>Subject</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
+                                        <th>Submission Date</th>
+                                        <th>Submission Time</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($tasks as $task)
+                                    @foreach ($tasks as $i => $task)
                                         <tr class="bg-tr">
+                                            <th>{{ $i+1 }}</th>
                                             <th>{{ $task->class }}</th>
                                             <td>{{ $task->subject }}</td>
                                             <td>{{ $task->submission_date }}</td>

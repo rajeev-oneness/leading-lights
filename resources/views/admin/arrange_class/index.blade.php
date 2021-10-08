@@ -21,7 +21,6 @@
             <div class="dashboard-body-content">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5>Classes</h5>
-                    <a href="{{ route('admin.classes.create') }}" class="actionbutton btn btn-sm">ADD CLASS </a>
                 </div>
                 <hr>
                 @if (session('success'))
@@ -37,27 +36,35 @@
                         <thead>
                             <tr>
                                 <th>Serial No</th>
-                                <th>Class Name</th>
-                                <th>Creation Date</th>
+                                <th>User Id</th>
+                                <th>Class</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Meeting URL</th>
                                 <th style="width:100px">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($classes as $key => $class)
+                            @foreach ($arrange_class as $key => $class)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $class->name }}</td>
-                                    <td>{{ date('d/m/Y', strtotime($class->created_at)) }}</td>
+                                    <td>{{ App\models\User::find($class->user_id)->first_name }} {{ App\models\User::find($class->user_id)->last_name }}</td>
+                                    <td>{{ $class->class }}</td>
+                                    <td>{{ $class->subject }}</td>
+                                    <td>{{ $class->date }}</td>
+                                    <td>{{ $class->start_time }}-{{ $class->end_time }}</td>
+                                    <td>{{ $class->meeting_url }}</td>
                                     <td>
                                         {{-- <a href="{{ route('admin.classes.show', $class->id) }}"><i
                                                 class="far fa-eye"></i></a> --}}
-                                        <a href="{{ route('admin.classes.edit', $class->id) }}" class="ml-2"><i
-                                                class="far fa-edit"></i></a>
+                                        {{-- <a href="{{ route('admin.classes.edit', $class->id) }}" class="ml-2"><i
+                                                class="far fa-edit"></i></a> --}}
                                         <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
                                             data-target="#exampleModal" onclick="deleteForm({{ $class->id }})"><i
                                                 class="far fa-trash-alt text-danger"></i></a>
                                         <form id="delete_form_{{ $class->id }}"
-                                            action="{{ route('admin.classes.destroy', $class->id) }}" method="POST">
+                                            action="{{ route('admin.delete_arrange_classes', $class->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                         </form>

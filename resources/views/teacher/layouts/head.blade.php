@@ -15,7 +15,9 @@
     <meta name="msapplication-tap-highlight" content="no">
 
 <link href="{{ asset('frontend/main.d810cf0ae7f39f28f336.css') }}" rel="stylesheet"></head>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+{{-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script> --}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"  type="text/javascript"></script>
+
 
  <!--Data table-->
  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">

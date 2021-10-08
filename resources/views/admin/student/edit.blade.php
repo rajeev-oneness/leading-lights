@@ -63,14 +63,14 @@
 							</div>
 							<div class="row m-0">
 								<div class="col-lg-6 form-group edit-box">
-									<label for="exampleInputEmail1">Date Of Birth</label>
+									<label for="image">Date Of Birth</label>
 									<input type="date" class="form-control" id="exampleInputEmail1" placeholder="Enter date of birth" name="dob"
 									value="{{ $student->dob }}">
 									@if ($errors->has('dob'))
 									   <span style="color: red;">{{ $errors->first('dob') }}</span>
 									@endif
 								  </div>
-								<div class="col-lg-6">
+								{{-- <div class="col-lg-6">
 									<div class="form-group edit-box">
 										<label for="father_name">Father's Name</label>
 										<input type="text" value="{{ $student->fathers_name }}" class="form-control" name="fathers_name">
@@ -78,7 +78,7 @@
 									   		<span style="color: red;">{{ $errors->first('fathers_name') }}</span>
 										@endif
 									</div>
-								</div>
+								</div> --}}
 								<div class="col-lg-6">
 									<div class="form-group edit-box">
 										<label for="gender">Gender</label>
@@ -109,9 +109,16 @@
 										@endif
 									</div>
 								</div>
+								<div class="col-lg-6 form-group edit-box">
+									<label for="exampleInputEmail1">Upload picture</label>
+									<input type="file" class="form-control" id="image" name="image">
+									@if ($errors->has('image'))
+									   <span style="color: red;">{{ $errors->first('image') }}</span>
+									@endif
+								</div>
 					
 							</div>
-							<h5 class="text-blue">Status</h5>
+							{{-- <h5 class="text-blue">Status</h5>
 							<div class="row m-0 pt-3">
 								<div class="form-group edit-box col-lg-6">
 									<label for="name">Status</label>
@@ -120,10 +127,10 @@
 										<option value="0" @if($student->status == 0) selected @endif>Inactive</option>
 									</select>
 								</div>
-							</div>
+							</div> --}}
 							<h5 class="text-blue">Address</h5>
 							<div class="row m-0 pt-3">
-								<div class="col-lg-4">
+								<div class="col-lg-6">
 									<div class="form-group edit-box">
 										<label for="address">Address</label>
 										<input type="text" class="form-control" id="address" value="{{ $student->address }}">

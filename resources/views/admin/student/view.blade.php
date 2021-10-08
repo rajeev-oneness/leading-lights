@@ -47,7 +47,7 @@
                     <div class="bg-edit p-4">
                         <div class="row">
                             <div class="col-lg-3">
-                                <img src="{{ asset('frontend/assets/images/avata1.jpg') }}" class="img-fluid mx-auto">
+                                <img src="{{ asset($student->image ? $student->image : 'frontend/assets/images/avata3.jpg')}}" class="img-fluid mx-auto">
                             </div>
                             <div class="col-lg-4 not2
 							">
@@ -101,10 +101,10 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label>Roll No :</label>
+                                        <label>Student Id :</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{ $student->roll_no ? $student->roll_no : 'N/A' }}</p>
+                                        <p>{{ $student->id_no ? $student->id_no : 'N/A' }}</p>
                                     </div>
                                     <div class="col-md-2">
                                         <!-- <img src="assets/images/edit.png" class="img-fluid mx-auto"> -->

@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\Classes;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ArrangeClass;
+use App\Models\ClassAttendance;
 use Illuminate\Support\Facades\File;
 
 class ClassController extends Controller
@@ -107,5 +109,16 @@ class ClassController extends Controller
     {
        Classes::find($id)->delete();
        return redirect()->route('admin.classes.index')->with('success','Class deleted');
+    }
+
+    public function arrange_classes(){
+        $arrange_class = ArrangeClass::latest()->get();
+        return view('admin.arrange_class.index',compact('arrange_class'));
+    }
+
+    public function delete_arrange_classes($id){
+        ArrangeClass::find($id)->delete();
+        ClassAttendance::where('class_id',$id)->delete();
+        return redirect()->back()->with('success','Class deleted');
     }
 }

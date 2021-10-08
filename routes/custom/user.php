@@ -15,3 +15,4 @@
     Route::get('payment',[UserController::class,'payment'])->name('payment');
 
     Route::post('upload-task',[UserController::class,'upload_homework'])->name('upload_homework');
+    Route::post('class-attendance',[UserController::class,'class_attendance'])->name('class_attendance');

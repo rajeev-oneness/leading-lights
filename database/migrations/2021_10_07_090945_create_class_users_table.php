@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubmitHomeTaskTable extends Migration
+class CreateClassUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,12 @@ class CreateSubmitHomeTaskTable extends Migration
      */
     public function up()
     {
-        Schema::create('submit_home_task', function (Blueprint $table) {
+        Schema::create('class_users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('class');
-            $table->string('subject');
-            $table->string('roll_no');
-            $table->string('review')->nullable();
+            $table->bigInteger('user_id');
+            $table->bigInteger('class_id');
+            $table->tinyInteger('is_attended');
             $table->string('comment')->nullable();
-            $table->string('upload_doc');
-            $table->bigInteger('task_id');
             $table->timestamps();
         });
     }
@@ -34,6 +30,6 @@ class CreateSubmitHomeTaskTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('submit_home_task');
+        Schema::dropIfExists('class_users');
     }
 }

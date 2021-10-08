@@ -43,37 +43,22 @@ class TeacherController extends Controller
     public function store(Request $request)
     {
         $unique_id = $this->getCode();
+        $id_no = 'LLT'.$unique_id;
         $this->validate($request,[
             'first_name' => 'required | string| max:255',
             'last_name' => 'required | string| max:255',
             'email' => 'required|email | unique:users',
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
-            'mobile' => 'max:10',
-            'dob' => 'date|nullable',
-            'address' => 'max:255',
-            'image' => 'image |mimes:png,jpg'
+            'doj' => 'required',
         ]);
 
         $teacher = new User;
-        if($request->hasFile('image')){
-            $image = $request->file('image');
-            $imageName = imageUpload($image,'profile_image');
-        }else{
-            $imageName = 'default.png';
-        }
         $teacher->first_name = $request->first_name;
         $teacher->last_name = $request->last_name;
-        $teacher->gender = $request->gender;
-        $teacher->class = $request->class;
-        $teacher->section = $request->section;
         $teacher->email = $request->email;
-        $teacher->password = Hash::make($request->password);
-        $teacher->mobile = $request->mobile;
-        $teacher->dob = $request->dob;
-        $teacher->address = $request->address;
-        $teacher->image = $imageName;
+        $teacher->password = Hash::make($id_no);
+        $teacher->doj = $request->doj;
         $teacher->role_id = 3;
-        $teacher->id_no = 'LLT'.$unique_id;
+        $teacher->id_no = $id_no;
         $teacher->save();
 
         //Send notification
@@ -119,9 +104,8 @@ class TeacherController extends Controller
         $this->validate($request,[
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
-            // 'email' => 'email',
             'mobile' => 'max:10',
-            'dob' => 'date|nullable',
+            'doj' => 'required',
             'address' => 'max:255',
             'image' => 'image |mimes:png,jpg',
         ]);
@@ -129,7 +113,7 @@ class TeacherController extends Controller
 
         if($request->hasFile('image')){
             $image = $request->file('image');
-            if ($teacher->image !== 'default.png') {
+            if ($teacher->image) {
                 $image_name = explode('/', $teacher->image)[2];
                 if(File::exists('upload/profile_image/'.$image_name)) {
                     File::delete('upload/profile_image/'.$image_name);
@@ -142,15 +126,10 @@ class TeacherController extends Controller
         $teacher->first_name = $request->first_name;
         $teacher->last_name = $request->last_name;
         $teacher->gender = $request->gender;
-        $teacher->class = $request->class;
-        $teacher->section = $request->section;
-        // $teacher->email = $request->email;
         $teacher->mobile = $request->mobile;
-        $teacher->dob = $request->dob;
+        $teacher->doj = $request->doj;
         $teacher->address = $request->address;
         $teacher->image = $imageName;
-        $teacher->status = $request->status;
-        $teacher->fathers_name = $request->fathers_name;
         $teacher->save();
         return redirect()->route('admin.teachers.index')->with('success','Teacher updated');
     }

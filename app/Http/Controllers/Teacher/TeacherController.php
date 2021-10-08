@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Models\SubmitHomeTask;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\ArrangeClass;
+use App\Models\ClassAttendance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -140,8 +142,9 @@ class TeacherController extends Controller
         return view('teacher.attendance');
     }
     public function class(){
-        $classes = Classes::get();
-        return view('teacher.access_class',compact('classes'));
+        $data['classes'] = Classes::get();
+        $data['arrange_classes'] = ArrangeClass::where('user_id',Auth::user()->id)->latest()->get();
+        return view('teacher.access_class')->with($data);
     }
     public function studentSubmission(){
         $tasks = SubmitHomeTask::latest()->get();
@@ -158,6 +161,7 @@ class TeacherController extends Controller
         $task = SubmitHomeTask::where('id',$request->data['task_id'])->first();
         $task->review = $request->data['review'];
         $task->save();
+        return response()->json('success');
     }
     public function taskComment(Request $request,$id){
         $this->validate($request,[
@@ -183,6 +187,40 @@ class TeacherController extends Controller
 
     public function arrange_class(Request $request)
     {
-        dd($request->all());
+        $arrange_class = new ArrangeClass();
+        $arrange_class->user_id = Auth::user()->id;
+        $arrange_class->subject = $request->subject;
+        $arrange_class->class = $request->class;
+        $arrange_class->date = $request->date;
+        $arrange_class->start_time = $request->start_time;
+        $arrange_class->end_time = $request->end_time;
+        $arrange_class->meeting_url = $request->meeting_url;
+        $arrange_class->save();
+        return response()->json(array(
+            'success' => 'Data save successfully',
+        ));
+    }
+
+    public function class_attendance(Request $request){
+        $class_id = $request->class_id;
+        $user_id = Auth::user()->id;
+        $already_joined = ClassAttendance::where('class_id',$class_id)->where('user_id',$user_id)->first();
+
+        $class = new ClassAttendance();
+        if (!$already_joined) {
+            if ($request->comment) {
+                $class->class_id = $class_id;
+                $class->user_id = $user_id;
+                $class->is_attended = 0;
+                $class->comment = $request->comment;
+                $class->save();
+            }else{
+                $class->class_id = $class_id;
+                $class->user_id = $user_id;
+                $class->is_attended = 1;
+                $class->save();
+            }       
+        }
+        return response()->json('success');
     }
 }

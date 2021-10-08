@@ -228,6 +228,7 @@
 font-size: 17px;
     font-weight: 600;
     color: #192146;
+    flex: 0 0 50%;
 }
 .items{
   margin-bottom: 30px;

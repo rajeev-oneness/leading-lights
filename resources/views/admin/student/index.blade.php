@@ -38,7 +38,7 @@
                             <tr>
                                 <th>Serial No</th>
                                 <th>Student Id</th>
-                                <th>Roll No</th>
+                                <th>Class</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
@@ -51,7 +51,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $student->id_no }}</td>
-                                    <td>{{ $student->roll_no }}</td>
+                                    <td>{{ $student->class }}</td>
                                     <td>{{ $student->first_name }} {{ $student->last_name }}</td>
                                     <td>{{ $student->email }}</td>
                                     <td>{{ $student->mobile ? $student->mobile : 'N/A' }}</td>

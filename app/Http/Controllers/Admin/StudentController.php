@@ -47,6 +47,7 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         $unique_id = $this->getCode();
+        $id_no = 'LLST'.$unique_id;
         $this->validate($request,[
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
@@ -54,16 +55,13 @@ class StudentController extends Controller
             'class' => 'required',
         ]);
 
-        $total_students = User::where('role_id',4)->count();
-
-        $password = Str::random(10);
+        // $password = Str::random(10);
         $student = new User;
         $student->first_name = $request->first_name;
         $student->last_name = $request->last_name;
         $student->email = $request->email;
-        $student->password = Hash::make($password);
-        $student->id_no = 'LLST'.$unique_id;
-        $student->roll_no = $total_students+1;
+        $student->password = Hash::make($id_no);
+        $student->id_no = $id_no;
         $student->class = $request->class;
         $student->save();
 
@@ -114,10 +112,9 @@ class StudentController extends Controller
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
             'mobile' => 'max:10',
-            'dob' => 'date|nullable',
-            'fathers_name' => 'max:255',
+            'dob' => 'nullable',
             'address' => 'max:255',
-            'image' => 'image |mimes:png,jpg'
+            'image' => 'mimes:png,jpg'
         ]);
         $student = User::find($id);
 
@@ -142,8 +139,8 @@ class StudentController extends Controller
         $student->dob = $request->dob;
         $student->address = $request->address;
         $student->image = $imageName;
-        $student->fathers_name = $request->fathers_name;
-        $student->status = $request->status;
+        // $student->fathers_name = $request->fathers_name;
+        // $student->status = $request->status;
         $student->save();
         return redirect()->route('admin.students.index')->with('success','Student updated');
     }

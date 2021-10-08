@@ -47,9 +47,10 @@
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label for="mobile">Phone Number<span class="text-danger">*</span></label>
-                                        <input class=" form-control" type="number" name="mobile" id="mobile" value="{{ old('mobile') }}">
+                                        <input class=" form-control" type="number" name="mobile" id="mobile" value="{{ old('mobile') }}" onkeyup="mobileValidation()">
+                                        <span style="color: red;" id="digit_error"></span>
                                         @error('mobile')
-                                             <span class="text-danger">{{ $message }}</span>
+                                             <span class="text-danger" id="mobile_err">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
@@ -89,7 +90,7 @@
                             </div>
                             <div class="form-row mt-2">
                                 <div class="form-group col-sm-12">
-                                    <button class="btn btn-login mt-2 float-right" type="submit"
+                                    <button class="btn btn-login mt-2 float-right" type="submit" id="submit"
                                     >Submit</button>
                                     <a href="{{ route('teacher_login') }}" class="btn btn-create mt-2" type="button" value="Login"><span></span>Back to login</a>
                                 </div>
@@ -101,4 +102,19 @@
         </div>
     </div>
 </div>
+<script>
+    	function mobileValidation() {
+	    if($('[name=mobile]').val().length > 10){
+	        $('#digit_error').html('Please enter 10 digit number');
+	        $('#mobile').focus();
+            $('#mobile_err').html('');
+	        document.getElementById("submit").disabled = true;
+	        document.getElementById("submit").style.cursor = 'no-drop';
+	    }else{
+	        $('#digit_error').html('');
+	        document.getElementById("submit").disabled = false;
+	        document.getElementById("submit").style.cursor = 'pointer';
+	    }
+    }
+</script>
 @endsection
