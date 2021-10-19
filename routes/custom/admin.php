@@ -29,10 +29,13 @@
         Route::resource('holidays', HolidayController::class);
         Route::resource('announcement', AnnouncementController::class);
         Route::resource('notification', NotificationController::class);
+        Route::resource('exams', ExamController::class);
         Route::put('/approve-student/{id}',[StudentController::class,'approval'])->name('students.approve');
         Route::put('/approve-teacher/{id}',[TeacherController::class,'approval'])->name('teachers.approve');
 
         Route::get('/arrange-classes',[ClassController::class,'arrange_classes'])->name('arrange_classes');
         Route::delete('/delete-arrange-classes/{id}',[ClassController::class,'delete_arrange_classes'])->name('delete_arrange_classes');
+
+        Route::post('view-participation',[ClassController::class,'view_participation'])->name('view_participation');
 
     });

@@ -431,5 +431,11 @@
 <div class="app-drawer-overlay d-none animated fadeIn"></div><script type="text/javascript" src="{{ asset('frontend/assets/scripts/main.d810cf0ae7f39f28f336.js') }}"></script></body>
 
 <!-- Mirrored from demo.dashboardpack.com/architectui-html-pro/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 13 Sep 2021 10:20:24 GMT -->
-
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
+        }
+    });
+</script>
 </html>

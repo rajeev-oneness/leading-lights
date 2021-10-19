@@ -47,9 +47,9 @@
                                     <td>{{ $arrange_class->end_time }}</td>
                                     <td>
                                         @php
-                                            $minutes_to_add = 5;
+                                            $minutes_to_add = 55;
                                             $today_date = date('Y-m-d');
-                                            $today_time = getAsiaTime(date('Y-m-d H:i:s'));
+                                            $today_time = getAsiaTime24(date('Y-m-d H:i:s'));
                                             $time = new DateTime($arrange_class->date . $arrange_class->start_time);
                                             $time->add(new DateInterval('PT' . $minutes_to_add . 'M'));
                                             
@@ -62,38 +62,47 @@
                                         @endphp
                                         <input type="hidden" name="meeting_url" id="meeting_url"
                                             value="{{ $arrange_class->meeting_url }}">
+                                        @if ($arrange_class->date > $today_date)
+                                            <button class="btn-pill btn-transition btn btn-success"><i
+                                                    class="fa fa-dot-circle"> Upcoming</i></button>
+                                        @elseif($arrange_class->date < $today_date) <button
+                                                class="btn-pill btn-transition btn btn-danger"><i class="fa fa-dot-circle">
+                                                    Expired</i></button>
+                                            @elseif ($arrange_class->date == $today_date && ($today_time >=
+                                                $arrange_class->start_time && $today_time <= $new_time)) @if ($already_joined && $already_joined->comment)
+                                                    <span data-toggle="tooltip" data-placement="top"
+                                                        title="{{ $already_joined->comment }}">{{ \Illuminate\Support\Str::limit($already_joined->comment, 15) }}</span>
+                                                @elseif ($already_joined && $already_joined->is_attended == 1)
+                                                    <span class="btn btn-success">Joined</span>
+                                                @else
 
-                                        @if ($arrange_class->date == $today_date && ($today_time >= $arrange_class->start_time && $today_time <= $new_time))
+                                                    <button onclick="assignClass({{ $arrange_class->id }})"
+                                                        class="btn-pill btn btn-dark btn-lg">Join Now</button>
 
-                                            @if ($already_joined && $already_joined->comment)
-                                                <span data-toggle="tooltip" data-placement="top"
-                                                    title="{{ $already_joined->comment }}">{{ \Illuminate\Support\Str::limit($already_joined->comment, 15) }}</span>
-                                            @elseif ($already_joined && $already_joined->is_attended == 1)
-                                                <span class="btn btn-success">Joined</span>
-                                            @else
+                                                    <button
+                                                        class="btn-pill btn-transition btn btn-outline-dark btn-lg comment_section"
+                                                        data-toggle="modal" data-target=".bd-example-modal-sm"
+                                                        data-toggle="tooltip" title=""
+                                                        data-original-title="Attach Proper Reason"
+                                                        data-id="{{ $arrange_class->id }}">Not Join !</button>
 
-                                                <button onclick="assignClass({{ $arrange_class->id }})"
-                                                    class="btn-pill btn btn-dark btn-lg">Join Now</button>
-
-                                                <button
-                                                    class="btn-pill btn-transition btn btn-outline-dark btn-lg comment_section"
-                                                    data-toggle="modal" data-target=".bd-example-modal-sm"
-                                                    data-toggle="tooltip" title=""
-                                                    data-original-title="Attach Proper Reason"
-                                                    data-id="{{ $arrange_class->id }}">Not Join !</button>
-
-                                            @endif
-
-                                        @elseif ($arrange_class->date == $today_date)
-                                            <button class="btn-pill btn-transition btn btn-danger"><i
-                                                    class="fa fa-dot-circle"> Expired</i></button>
                                         @endif
-                                        @if ($arrange_class->date !== $today_date)
+                                    @elseif ($arrange_class->date == $today_date && $today_time <= $arrange_class->
+                                            start_time)
+                                            <button class="btn-pill btn-transition btn btn-success"><i
+                                                    class="fa fa-dot-circle">
+                                                    Upcoming</i></button>
+                                        @else
                                             <button class="btn-pill btn-transition btn btn-danger"><i
-                                                    class="fa fa-dot-circle"> Expired</i></button>
-                                        @endif
-                                    </td>
-                                </tr>
+                                                    class="fa fa-dot-circle">
+                                                    Expired</i></button>
+                            @endif
+                            <button type="button" class="btn-pill btn-transition btn btn-info openBtn" data-toggle="modal"
+                                data-target="#view_classroom" title="View Class Room"
+                                data-id="{{ $arrange_class->id }}"><i class="fa fa-eye"></i>
+                            </button>
+                            </td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -119,7 +128,7 @@
     </div>
     </div>
     </div>
-    <!-- Modal -->
+    <!-- Modal for arrange class-->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -196,6 +205,7 @@
             </div>
         </div>
     </div>
+    <!-- For Not Join a class -->
     <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-sm">
@@ -218,10 +228,80 @@
             </div>
         </div>
     </div>
+    <!-- View classroom -->
+    <!-- Modal -->
+    <div class="modal fade" id="view_classroom" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">View Class Room</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover bg-table" id="attendance_table">
+                        <thead>
+                            <tr>
+                                <th>Serial No</th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="myTable">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         $(document).ready(function() {
             $('#class_table').DataTable();
+            $('#attendance_table').DataTable();
+            $('.openBtn').on('click', function() {
+
+                var prop_id = $(this).data('id');
+                var fragment="";
+                $.ajax({
+                        type: 'POST',
+                        url: "{{ route('teacher.view_participation') }}" ,
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                             prop_id : prop_id},
+                        dataType: 'json',
+
+                        success: function(data) {
+
+                        },
+                    }).then(data => {
+                        $("#myTable").empty();
+                        $.each(data,function (i,value) {
+                            var email = value.email;
+                            var name = value.first_name +' '+ value.last_name;
+                            if (value.comment) {
+                                var comment = value.comment;
+                            } else {
+                                var comment = 'N/A';
+                            }
+                            
+                            // console.log();
+                            fragment +="<tr> <td>"+(i+1)+"</td> <td>"+email+"</td> <td>"+name+" </td><td>"+comment+"</td> </tr>";
+                        })
+                        $("#myTable").append(fragment);
+                    })
+                    .catch(error => {
+                        var xhr = $.ajax();
+                        console.log(xhr);
+                        console.log(error);
+                    })
+
+            });
         });
+        
 
         function arrange_class() {
             let subject = $('#subject').val();

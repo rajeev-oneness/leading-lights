@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Student;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\HomeTask;
+use Barryvdh\DomPDF\Facade as PDF;
+
+use App\Models\SubmitExam;
+use App\Models\ArrangeExam;
 use App\Models\ArrangeClass;
 use Illuminate\Http\Request;
 use App\Models\SubmitHomeTask;
@@ -127,7 +131,8 @@ class UserController extends Controller
     }
 
     public function exam(Request $request){
-        return view('student.exam');
+        $all_exams = ArrangeExam::latest()->get();
+        return view('student.exam',compact('all_exams'));
     }
 
     public function payment(Request $request){
@@ -141,7 +146,7 @@ class UserController extends Controller
         $subject = $request->subject;
 
         $file = $request->file('file');
-        $fileName = imageUpload($file,'home_task');
+        $fileName = imageUpload($file,'student/home_task');
 
         $task = new  SubmitHomeTask;
         $task->name = $name;
@@ -175,5 +180,45 @@ class UserController extends Controller
             }       
         }
         return response()->json('success');
+    }
+
+    public function upload_exam(Request $request){
+        $name = Auth::user()->first_name.' '.Auth::user()->last_name;
+        $class = Auth::user()->class;
+        $id_no = Auth::user()->id_no;
+        $subject = $request->subject;
+
+        $file = $request->file('file');
+        $fileName = imageUpload($file,'student/exam');
+
+        $exam = new  SubmitExam();
+        $exam->name = $name;
+        $exam->class = $class;
+        $exam->subject = $subject;
+        $exam->roll_no = $id_no;
+        $exam->upload_doc = $fileName;
+        $exam->exam_id = $request->exam_id;
+        $exam->save();
+        return response()->json('success');
+    }
+
+    public function report_generate(Request $request){
+        $roll_no = Auth::user()->id_no;
+        $data['user_details'] = User::where('id_no',$roll_no)->first();
+        $data['all_result'] = SubmitExam::where('roll_no',$roll_no)
+        ->where('marks','!=','')
+        ->join('arrange_exams','arrange_exams.id','=','submit_exams.exam_id')
+        ->get();
+        $data['total_marks'] = SubmitExam::where('roll_no',$roll_no)
+        ->where('marks','!=','')
+        ->join('arrange_exams','arrange_exams.id','=','submit_exams.exam_id')
+        ->sum('marks');
+        $data['total_full_marks'] = SubmitExam::where('roll_no',$roll_no)
+        ->where('marks','!=','')
+        ->join('arrange_exams','arrange_exams.id','=','submit_exams.exam_id')
+        ->sum('full_marks');
+        $pdf = PDF::loadView('student.report',$data);
+        return $pdf->download($roll_no.'.pdf');
+
     }
 }

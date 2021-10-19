@@ -11,12 +11,17 @@ use App\Models\SubmitHomeTask;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\ArrangeClass;
+use App\Models\ArrangeExam;
 use App\Models\ClassAttendance;
+use App\Models\SubmitExam;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade as PDF;
+
+use function GuzzleHttp\Promise\task;
 
 class TeacherController extends Controller
 {
@@ -104,7 +109,7 @@ class TeacherController extends Controller
 
     public function homeTask(){
         $data['classes'] = Classes::latest()->get();
-        $data['tasks'] = HomeTask::latest()->get();
+        $data['tasks'] = HomeTask::where('user_id',Auth::user()->id)->latest()->get();
         // return view('teacher.hometask',compact('classes'));
         return view('teacher.home_task')->with($data);
     }
@@ -147,18 +152,24 @@ class TeacherController extends Controller
         return view('teacher.access_class')->with($data);
     }
     public function studentSubmission(){
-        $tasks = SubmitHomeTask::latest()->get();
+        // $tasks = SubmitHomeTask::latest()->get();
+        $tasks = DB::table('submit_home_task')
+                    ->where('user_id',Auth::user()->id)
+                    ->join('home_task','submit_home_task.task_id','=','home_task.id')
+                    ->get();
         return view('teacher.submission_task',compact('tasks'));
     }
     public function videoCall(){
         return view('teacher.video_call');
     }
     public function manageExam(){
-        return view('teacher.exam');
+        $data['classes'] = Classes::get();
+        $data['assign_exam'] = ArrangeExam::where('user_id',Auth::user()->id)->latest()->get();
+        return view('teacher.exam')->with($data);;
     }
 
     public function taskReview(Request $request){
-        $task = SubmitHomeTask::where('id',$request->data['task_id'])->first();
+        $task = SubmitHomeTask::where('task_id',$request->data['task_id'])->first();
         $task->review = $request->data['review'];
         $task->save();
         return response()->json('success');
@@ -167,7 +178,7 @@ class TeacherController extends Controller
         $this->validate($request,[
             'comment' => 'required|max:255'
         ]);
-        $task = SubmitHomeTask::where('id',$id)->first();
+        $task = SubmitHomeTask::where('task_id',$id)->first();
         $task->comment = $request->comment;
         $task->save();
         return response()->json('success');
@@ -222,5 +233,148 @@ class TeacherController extends Controller
             }       
         }
         return response()->json('success');
+    }
+
+    public function assignExam(Request $request){
+        $this->validate($request,[
+            'class' => 'required',
+            'subject' => 'required',
+            'date' => 'required|date',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'full_marks' => 'required',
+            'result_date' => 'required',
+            'upload_file' => 'required|mimes:pdf'
+        ]);
+
+        if($request->hasFile('upload_file')){
+            $file = $request->file('upload_file');
+            $fileName = imageUpload($file,'teacher/exam');
+        }else{
+            $fileName = null;
+        }
+
+        $exam = new ArrangeExam();
+        $exam->user_id = Auth::user()->id;
+        $exam->class = $request->class;
+        $exam->subject = $request->subject;
+        $exam->date = $request->date;
+        $exam->start_time = $request->start_time;
+        $exam->end_time = $request->end_time;
+        $exam->full_marks = $request->full_marks;
+        $exam->result_date = $request->result_date;
+        $exam->upload_file = $fileName;
+        $exam->save();
+
+        return redirect()->back()->with('success','Exam upload successfully');
+
+    }
+
+    public function examSubmission(){
+        $data['classes'] = Classes::latest()->get();
+        $data['users'] = User::where('role_id',4)->latest()->get();
+        return view('teacher.submission_exam_filter')->with($data);
+    }
+    public function studentExamSubmission(Request $request ){
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $submitted_exams_detail = SubmitExam::
+                    where('user_id',Auth::user()->id)
+                    ->join('arrange_exams','submit_exams.exam_id','=','arrange_exams.id')
+                    ->orderBy('submit_exams.created_at','DESC')
+                    ->get();
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['student_wise_result'])) {
+                $this->validate($request,[
+                    'student_id' => 'required',
+                    'class_name' => 'required'
+                ]);
+
+                Validator::make($request->all(), [
+                    'student_id' => 'required',
+                    'class_name' => 'required'
+                ],$messages = [
+                    'class_name.required' => 'The class field is required.',
+                ])->validate();
+
+                $student_id = $request->student_id;
+                $data['user_details'] = User::where('id_no',$student_id)->first();
+                $data['all_result'] = SubmitExam::where('roll_no',$student_id)
+                ->where('marks','!=','')
+                ->join('arrange_exams','arrange_exams.id','=','submit_exams.exam_id')
+                ->get();
+                $data['total_marks'] = SubmitExam::where('roll_no',$student_id)
+                ->where('marks','!=','')
+                ->join('arrange_exams','arrange_exams.id','=','submit_exams.exam_id')
+                ->sum('marks');
+                $data['total_full_marks'] = SubmitExam::where('roll_no',$student_id)
+                ->where('marks','!=','')
+                ->join('arrange_exams','arrange_exams.id','=','submit_exams.exam_id')
+                ->sum('full_marks');
+                $pdf = PDF::loadView('student.report',$data);
+                return $pdf->download($student_id.'.pdf');
+            }
+            if (isset($_POST['class_wise_result'])) {
+                Validator::make($request->all(), [
+                    'class_name1' => 'required'
+                ],$messages = [
+                    'required' => 'The class field is required.',
+                ])->validate();
+
+
+                $data['class'] = $request->class_name1;
+                $data['all_result'] = SubmitExam::
+                where('arrange_exams.user_id',Auth::user()->id)
+                ->where('arrange_exams.class',$request->class_name1)
+                ->where('marks','!=','')
+                ->join('arrange_exams','arrange_exams.id','=','submit_exams.exam_id')
+                // ->join('users','users.id_no','=','submit_exams.roll_no')
+                ->get();
+                $pdf = PDF::loadView('teacher.report',$data);
+                return $pdf->download($request->class_name1.'-results'.'.pdf');
+
+            }
+            if (isset($_POST['view_submission'])) {
+                $this->validate($request,[
+                    'subject' => 'required',
+                    'class' => 'required'
+                ]);
+                $submitted_exams_detail = SubmitExam::
+                        where('user_id',Auth::user()->id)
+                        ->where('submit_exams.class',$request->class)
+                        ->where('arrange_exams.subject',$request->subject)
+                        ->join('arrange_exams','submit_exams.exam_id','=','arrange_exams.id')
+                        ->orderBy('submit_exams.created_at','DESC')
+                        ->get();
+            }
+        }
+        return view('teacher.submission_exam',compact('submitted_exams_detail'));
+    }
+
+    public function examMarks(Request $request,$id)
+    {
+        $exam_detail = SubmitExam::where('exam_id',$id)->first();
+        $exam_detail->marks = $request->marks;
+        $exam_detail->save();
+        return redirect()->back();
+    }
+
+    public function examComment(Request $request,$id){
+        $this->validate($request,[
+            'comment' => 'required|max:255'
+        ]);
+        $exam = SubmitExam::where('exam_id',$id)->first();
+        $exam->comment = $request->comment;
+        $exam->save();
+        return response()->json('success');
+    }
+
+    public function view_participation(Request $request){
+        $participation = ClassAttendance::where('class_id',$request->prop_id)
+                        ->where('role_id',4)
+                        ->join('users','users.id','=','class_users.user_id')
+                        ->get();
+                        // dd($participation);
+        return response()->json($participation);
     }
 }

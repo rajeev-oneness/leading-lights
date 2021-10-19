@@ -22,7 +22,7 @@
                         </div>
                         <div class="col-lg-7 col-sm-8 not2">
                             <p>Joined-
-                                {{ Auth::user()->created_at ? date('d-m-Y', strotime(Auth::user()->created_at)) : 'N/A' }}
+                                {{ Auth::user()->created_at ? date('d-m-Y', strtotime(Auth::user()->created_at)) : 'N/A' }}
                             </p>
                             <h4 class="mb-4">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}<span
                                     class="ml-3">

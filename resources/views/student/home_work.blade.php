@@ -57,35 +57,41 @@
                                         <td>{{ $home_work->submission_time }}</td>
                                         <td>
                                             @php
-                                                 $upload_task = App\Models\SubmitHomeTask::where('task_id',$home_work->id)->first();
+                                                $upload_task = App\Models\SubmitHomeTask::where('task_id',$home_work->id)->where('roll_no',Auth::user()->id_no)->first();
 
-                                                $date = date('m/d/Y');
-                                                $date1 = date('m/d/Y', strtotime($home_work->submission_date));
-                                                $date2 = date('m/d/Y', strtotime($date));
+                                                $today_date = date('Y-m-d');
+                                                $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
 
-                                                $time = getAsiaTime(date('h:m:s'));
-                                                $time1 = date('h:m:s', strtotime($home_work->submission_time));
-                                                $time2 = date('h:m:s', strtotime($time));
+                                                $submission_date = $home_work->submission_date;
+                                                $submission_time = $home_work->submission_time;
                                             @endphp
-                                            @if (!$upload_task && $date1 > $date2 )
+                                            @if($submission_date == $today_date && ($current_time > $submission_time))
+                                            <span class="btn-pill btn btn-danger"><i class="fa fa-dot-circle"> Expired</i> </span>
+                                            @elseif (!$upload_task && $submission_date == $today_date && ($current_time <= $submission_time))
                                                 <a href="{{ asset($home_work->upload_file) }}" download="">
                                                     <button class="btn-pill btn btn-primary mb-1"><i class="fas fa-download"></i>
                                                         Download Task</button>
                                                 </a>
-                                                {{-- <form action="{{ route('user.upload_homework') }}" method="POST"
-                                                enctype="multipart/form-data">
-                                                @csrf --}}
                                                 <input class="btn-pill btn btn-primary" type="file" placeholder="Upload"
-                                                    name="upload_doc" id="upload_doc">
+                                                    name="upload_doc" id="{{ $home_work->id }}">
                                                 
-                                                <input type="hidden" name="task_id" id="task_id" value="{{ $home_work->id }}">
-                                                <input type="hidden" name="subject" id="subject" value="{{ $home_work->subject }}">
-                                                {{-- <button class="btn-pill btn btn-primary" type="submit">Submit task</button>
-                                            </form> --}}
-                                            @elseif ($date1 < $date2)
-                                            <span class=" btn btn-danger"><i class="fa fa-dot-circle"></i> Expired</span>
+                                                <input type="hidden" name="task_id" id="task_id{{ $home_work->id }}" value="{{ $home_work->id }}">
+                                                <input type="hidden" name="subject" id="subject{{ $home_work->id }}" value="{{ $home_work->subject }}">
+                                            
+                                            @elseif (!$upload_task && $submission_date >= $today_date)
+                                            <a href="{{ asset($home_work->upload_file) }}" download="">
+                                                <button class="btn-pill btn btn-primary mb-1"><i class="fas fa-download"></i>
+                                                    Download Task</button>
+                                            </a>
+                                            <input class="btn-pill btn btn-primary" type="file" placeholder="Upload"
+                                                name="upload_doc" id="{{ $home_work->id }}">
+                                            
+                                            <input type="hidden" name="task_id" id="task_id{{ $home_work->id }}" value="{{ $home_work->id }}">
+                                            <input type="hidden" name="subject" id="subject{{ $home_work->id }}" value="{{ $home_work->subject }}">
+                                            @elseif ($upload_task)
+                                            <span class="btn-pill btn btn-success"><i class="fa fa-check"></i> Submitted</span>
                                             @else
-                                                <span class=" btn btn-success"><i class="fa fa-check"></i> Submitted</span>
+                                            <span class="btn-pill btn btn-danger"><i class="fa fa-dot-circle"> Expired</i> </span>
                                             @endif
                                         </td>
                                         <td> 
@@ -132,57 +138,46 @@
     <script>
         $(document).ready(function() {
             $('#task_table').DataTable();
-            let task_id = $('#task_id').val();
-            console.log(task_id);
-            // $.ajax({
-            //         url: "{{ route('teacher.updateProfile') }}",
-            //         data: {
-            //             _token: "{{ csrf_token() }}",
-                        
-            //         },
-            //         dataType: 'json',
-            //         type: 'post',
-            //         success: function(response) {
-            //             location.reload();
-            //         }
-            // });
         });
-        $("#upload_doc").on('change',function(ev) {
- 
-            var filedata=this.files[0];
-            var imgtype=filedata.type;
+        $(document).on('change', 'input[name^="upload_doc"]', function(ev) {
+                let task_id = ev.target.id;
+                var filedata = this.files[0];
+                var imgtype = filedata.type;
 
-            if(!(imgtype=== 'application/pdf')){
-                $('#mgs_ta').html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            Please select pdf file type
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>`);
- 
-            }else{
-                $('#mgs_ta').empty();
+                if (!(imgtype === 'application/pdf')) {
+                    $('#mgs_ta').html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                 Please select pdf file type
+                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                 </button>
+             </div>`);
 
-                  //upload
- 
-                var postData=new FormData();
-                postData.append('file',this.files[0]);
-                postData.append('task_id',$("#task_id").val())
-                postData.append('subject',$("#subject").val())
- 
-                $.ajax({
-                    headers:{'X-CSRF-Token':$('meta[name=csrf-token]').attr('content')},
-                    async:true,
-                    type:"post",
-                    url:"{{ route('user.upload_homework') }}",
-                    data: postData,
-                    contentType:false,
-                    processData:false,
-                    success:function(){
-                        location.reload();
-                    }
-                });
-            }
-        })
+                } else {
+                    $('#mgs_ta').empty();
+
+                    //upload
+
+                    var postData = new FormData();
+                    postData.append('file', this.files[0]);
+                    postData.append('task_id', $("#task_id"+task_id).val())
+                    postData.append('subject', $("#subject"+task_id).val())
+                    console.log($("#task_id"+task_id).val(),$("#subject"+task_id).val());
+
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')
+                        },
+                        async: true,
+                        type: "post",
+                        url: "{{ route('user.upload_homework') }}",
+                        data: postData,
+                        contentType: false,
+                        processData: false,
+                        success: function() {
+                            location.reload();
+                        }
+                    });
+                }
+        });
     </script>
 @endsection

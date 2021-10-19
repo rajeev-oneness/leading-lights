@@ -36,7 +36,7 @@
                         <thead>
                             <tr>
                                 <th>Serial No</th>
-                                <th>User Id</th>
+                                <th>Teacher name</th>
                                 <th>Class</th>
                                 <th>Subject</th>
                                 <th>Date</th>
@@ -49,22 +49,24 @@
                             @foreach ($arrange_class as $key => $class)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ App\models\User::find($class->user_id)->first_name }} {{ App\models\User::find($class->user_id)->last_name }}</td>
+                                    <td>{{ App\models\User::find($class->user_id)->first_name }}
+                                        {{ App\models\User::find($class->user_id)->last_name }}</td>
                                     <td>{{ $class->class }}</td>
                                     <td>{{ $class->subject }}</td>
                                     <td>{{ $class->date }}</td>
                                     <td>{{ $class->start_time }}-{{ $class->end_time }}</td>
                                     <td>{{ $class->meeting_url }}</td>
                                     <td>
-                                        {{-- <a href="{{ route('admin.classes.show', $class->id) }}"><i
-                                                class="far fa-eye"></i></a> --}}
+                                        <a data-toggle="modal" data-target="#view_classroom" title="View Class Room"
+                                            data-id="{{ $class->id }}" class="openBtn"><i class="far fa-eye"></i></a>
                                         {{-- <a href="{{ route('admin.classes.edit', $class->id) }}" class="ml-2"><i
                                                 class="far fa-edit"></i></a> --}}
                                         <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
                                             data-target="#exampleModal" onclick="deleteForm({{ $class->id }})"><i
                                                 class="far fa-trash-alt text-danger"></i></a>
                                         <form id="delete_form_{{ $class->id }}"
-                                            action="{{ route('admin.delete_arrange_classes', $class->id) }}" method="POST">
+                                            action="{{ route('admin.delete_arrange_classes', $class->id) }}"
+                                            method="POST">
                                             @csrf
                                             @method('DELETE')
                                         </form>
@@ -78,9 +80,80 @@
             </div>
         </div>
     </div>
+    <!-- View classroom -->
+    <!-- Modal -->
+    <div class="modal fade" id="view_classroom" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">View Class Room</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover" id="attendance_table">
+                        <thead>
+                            <tr>
+                                <th>Serial No</th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="myTable">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         $(document).ready(function() {
             $('#teacher_table').DataTable();
+            $('#attendance_table').DataTable();
+            $('.openBtn').on('click', function() {
+
+                var prop_id = $(this).data('id');
+                var fragment = "";
+                $.ajax({
+                        type: 'POST',
+                        url: "{{ route('admin.view_participation') }}",
+                        data : {
+                            _token: "{{ csrf_token() }}",
+                            prop_id : prop_id
+                        },
+                        dataType: 'json',
+
+                        success: function(data) {
+
+                        },
+                    }).then(data => {
+                        $("#myTable").empty();
+                        $.each(data, function(i, value) {
+                            var email = value.email;
+                            var name = value.first_name + ' ' + value.last_name;
+                            if (value.comment) {
+                                var comment = value.comment;
+                            } else {
+                                var comment = 'N/A';
+                            }
+
+                            // console.log();
+                            fragment += "<tr> <td>" + (i + 1) + "</td> <td>" + email +
+                                "</td> <td>" + name + " </td><td>" + comment + "</td> </tr>";
+                        })
+                        $("#myTable").append(fragment);
+                    })
+                    .catch(error => {
+                        var xhr = $.ajax();
+                        console.log(xhr);
+                        console.log(error);
+                    })
+
+            });
         });
 
         function deleteForm(id) {

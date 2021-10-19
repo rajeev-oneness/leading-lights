@@ -16,3 +16,6 @@
 
     Route::post('upload-task',[UserController::class,'upload_homework'])->name('upload_homework');
     Route::post('class-attendance',[UserController::class,'class_attendance'])->name('class_attendance');
+    Route::post('upload-exam',[UserController::class,'upload_exam'])->name('upload_exam');
+
+    Route::get('report-generate',[UserController::class,'report_generate'])->name('report_generate');

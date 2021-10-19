@@ -58,7 +58,7 @@
                 </li>
                 <li class="{{ Request::is('teacher/student-submission') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.studentSubmission') }}">
-                        <i class="metismenu-icon fa fa-subscript"></i>Student’s submission
+                        <i class="metismenu-icon fa fa-subscript"></i>Student’s Task submission
 
                     </a>
                 </li>
@@ -71,6 +71,12 @@
                 <li class="{{ Request::is('teacher/manage-exam') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.manageExam') }}">
                         <i class="metismenu-icon fa fa-book"></i>Manage Exam
+
+                    </a>
+                </li>
+                <li class="{{ Request::is('teacher/exam-submission*') ? 'mm-active' : '' }}">
+                    <a href="{{ route('teacher.examSubmission') }}">
+                        <i class="metismenu-icon fa fa-subscript"></i>Student’s Exam submission
 
                     </a>
                 </li>

@@ -39,9 +39,7 @@
                                                 {{ $class->name }}</option>
                                         @endforeach
                                     </select>
-                                    @if ($errors->has('class'))
-                                        <span style="color: red;">{{ $errors->first('class') }}</span>
-                                    @endif
+
 
                                     <select class="form-control" id="subject" name="subject">
                                         <option value="" selected>Subject</option>
@@ -49,32 +47,42 @@
                                         <option value="Chemistry" @if (old('subject') == 'Chemistry') selected @endif>Chemistry</option>
                                         <option value="History" @if (old('subject') == 'History') selected @endif>History</option>
                                     </select>
+
+                                </div>
+                                <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                                    @if ($errors->has('class'))
+                                        <span style="color: red;">{{ $errors->first('class') }}</span>
+                                    @endif
                                     @if ($errors->has('subject'))
                                         <span style="color: red;">{{ $errors->first('subject') }}</span>
                                     @endif
                                 </div>
-                                <div class="d-sm-flex align-items-center justify-content-between  mb-4">
+                                <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                     <div class="d-sm-flex align-items-baseline">
                                         <p class="des  mr-2"><span class="mr-2"><i
                                                     class="fa fa-circle"></i></span>Submission Date</p>
                                         <input type="date" name="submission_date" id="submission_date"
                                             class="form-control" value="{{ old('submission_date') }}">
-                                        @if ($errors->has('submission_date'))
-                                            <span style="color: red;">{{ $errors->first('submission_date') }}</span>
-                                        @endif
+
                                     </div>
                                     <div class="d-sm-flex align-items-baseline">
                                         <p class="des  mr-2"><span class="mr-2"><i
                                                     class="fa fa-circle"></i>Submitted by</span></p>
                                         <input type="time" name="submission_time" id="submission_time"
                                             class="form-control" value="{{ old('submission_time') }}">
-                                        @if ($errors->has('submission_time'))
-                                            <span style="color: red;">{{ $errors->first('submission_time') }}</span>
-                                        @endif
+
                                     </div>
                                 </div>
+                                <div class="d-sm-flex align-items-center justify-content-between">
+                                    @if ($errors->has('submission_date'))
+                                        <span style="color: red;">{{ $errors->first('submission_date') }}</span>
+                                    @endif
+                                    @if ($errors->has('submission_time'))
+                                        <span style="color: red;">{{ $errors->first('submission_time') }}</span>
+                                    @endif
+                                </div>
                                 <!--  <p class="des dec"><span class="mr-2"><i class="fa fa-circle"></i></span>Set Quiestion Mannually</p>
-                            <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea> -->
+                                <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea> -->
                                 <div class="card-header-title mb-4">
                                     Upload Quiestion Paper as a Document (Only accept pdf format)</div>
                                 <div class="file-upload">
@@ -95,8 +103,9 @@
                                         </div>
                                     </div>
                                     @if ($errors->has('upload_file'))
-                                        <span style="color: red;">{{ $errors->first('upload_file') }}</span>
+                                        <span style="color: red;" id="file_err">{{ $errors->first('upload_file') }}</span>
                                     @endif
+                                    <span id="choose_file"></span>
                                 </div>
                                 {{-- <div class="form-group col-sm-12">
                                     <div class="chiller_cb">
@@ -111,31 +120,32 @@
                                 <button type="submit" class="btn-pill btn btn-dark mt-4" name="submit">Assign Now</button>
 
                             </form>
-                        </div>
-                        <div class="card-header-title mb-4 mt-4"> History Of Task </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover bg-table" id="task_table">
-                                <thead>
-                                    <tr>
-                                        <th>Serial no</th>
-                                        <th>Class</th>
-                                        <th>Subject</th>
-                                        <th>Submission Date</th>
-                                        <th>Submission Time</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($tasks as $i => $task)
-                                        <tr class="bg-tr">
-                                            <th>{{ $i+1 }}</th>
-                                            <th>{{ $task->class }}</th>
-                                            <td>{{ $task->subject }}</td>
-                                            <td>{{ $task->submission_date }}</td>
-                                            <td>{{ $task->submission_time }}</td>
+
+                            <div class="card-header-title mb-4 mt-4"> History Of Task </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover bg-table" id="task_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Serial no</th>
+                                            <th>Class</th>
+                                            <th>Subject</th>
+                                            <th>Submission Date</th>
+                                            <th>Submission Time</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($tasks as $i => $task)
+                                            <tr class="bg-tr">
+                                                <th>{{ $i + 1 }}</th>
+                                                <th>{{ $task->class }}</th>
+                                                <td>{{ $task->subject }}</td>
+                                                <td>{{ $task->submission_date }}</td>
+                                                <td>{{ $task->submission_time }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -160,6 +170,11 @@
     <script>
         $(document).ready(function() {
             $('#task_table').DataTable();
+        });
+        $(document).on('change', 'input[name^="upload_file"]', function(ev) {
+            var file_name = this.files[0].name;
+            $('#file_err').html('');
+            $("#choose_file").html(`One file chosen: <span class="text-info">${file_name}</span>`);
         });
     </script>
 @endsection

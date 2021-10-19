@@ -8,7 +8,7 @@
                     <div class="page-title-icon">
                         <i class="fa fa-subscript"></i>
                     </div>
-                    <div>Task Submission
+                    <div>Exam Submission
                     </div>
                 </div>
             </div>
@@ -17,7 +17,7 @@
             <table  class="table table-hover bg-table" id="task_table">
                 <thead>
                     <tr>
-                        <th>Serial No</th>
+                        <th>Sl. No</th>
                         <th>Name</th>
                         <th>Class</th>
                         <th>Subject</th>
@@ -25,52 +25,50 @@
                         <th>Date</th>
                         <th>Time</th>
                         <th>Action</th>
-                        <th>Review</th>
+                        <th>Marks</th>
+                        <th>Full Marks</th>
                         <th>Comment</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($tasks as $key => $task)
+                    @foreach ($submitted_exams_detail as $i => $exam)
                     <tr class="bg-tr">
-                        <th>{{ $key+1 }}</th>
-                        <td>{{ $task->name }}</td>
-                        <th>{{ $task->class }}</th>
-                        <td>{{ $task->subject }}</td>
-                        <td>{{ $task->roll_no }}</td>
-                        <td>{{ date('Y-m-d',strtotime($task->created_at)) }}</td>
-                        <td>{{ getAsiaTime24($task->created_at) }}</td>
+                        <td>{{ $i+1 }}</td>
+                        <td>{{ $exam->name }}</td>
+                        <th>{{ $exam->class }}</th>
+                        <td>{{ $exam->subject }}</td>
+                        <td>{{ $exam->roll_no }}</td>
+                        <td>{{ $exam->created_at->format('d-m-Y') }}</td>
+                        <td>{{ getAsiaTime24($exam->created_at) }}</td>
                         <td>
-                            <a href="{{ asset($task->upload_doc) }}" download="">
+                            <a href="{{ asset($exam->upload_doc) }}" download="">
                                 <button class="btn-pill btn-transition btn btn-outline-dark"><span class="mr-2"><i class="fa fa-download"></i></span>Download Task</button>
                             </a>
                         </td>
                         <td>
-                        @if ($task->review)
-                        <span>{{ $task->review }}</span>
+                        @if ($exam->marks)
+                        <span>{{ $exam->marks }}</span>
                         @else
-                        <form method="POST" action="{{ route('teacher.taskReview') }}">
+                        <form method="POST" action="{{ route('teacher.examMarks',$exam->id) }}">
                             @csrf
                             <div class="form-group">
-                                {{-- <label>Remarks</label> --}}
-                                <select class="form-control" id="review{{ $task->id }}" name="review" onchange="changeReview({{ $task->id }})">
-                                    <option value="">Please select</option>
-                                    <option value="Bad">Bad</option>
-                                    <option value="Good">Good</option>
-                                    <option value="Very Good">Very Good</option>
-                                    <option value="Outstanding">Outstanding</option>
-                                </select>
+                                <input type="number" name="marks" id="marks" class="form-control">
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i></button>
                             </div>
                         </form>
                         @endif
                         </td>
                         <td>
-                            @if ($task->comment)
-                                <span data-toggle="tooltip" data-placement="top" title="{{ $task->comment }}">{{  \Illuminate\Support\Str::limit($task->comment,15)  }}</span>
+                            {{ $exam->full_marks }}
+                        </td>
+                        <td>
+                            @if ($exam->comment)
+                                <span data-toggle="tooltip" data-placement="top" title="{{ $exam->comment }}">{{  \Illuminate\Support\Str::limit($exam->comment,15)  }}</span>
                             @else
                             <button class="btn-pill btn-transition btn btn-outline-dark btn-lg comment_section"
                             data-toggle="modal" data-target=".bd-example-modal-sm"
                             data-toggle="tooltip" title=""
-                            data-original-title="Add comment" data-id="{{$task->id}}"><i class="fa fa-plus"></i> Add Comment</button>
+                            data-original-title="Add comment" data-id="{{$exam->id}}"><i class="fa fa-plus"></i> Add Comment</button>
                                 {{-- <form action="{{ route('teacher.taskComment',$task->id) }}" method="POST">
                                     @csrf
                                     <input type="text" class="form-control-sm" name="comment">
@@ -98,7 +96,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <input type="hidden" name="task_id" id="task_id">
+                <input type="hidden" name="exam_id" id="exam_id">
                 {{-- <form action="{{ route('teacher.taskComment',$task->id) }}" method="POST">
                     @csrf --}}
                     <div class="form-group">
@@ -121,35 +119,14 @@
         });
 
         $(document).on("click", ".comment_section", function () {
-            var task_id = $(this).data('id');
-            $(".modal-body #task_id").val( task_id );
+            var exam_id = $(this).data('id');
+            $(".modal-body #exam_id").val( exam_id );
         });
-        // if (comment == '') {
-        //     $('#')
-        // }
-        function changeReview(task_id) {
-            var review = $('#review'+task_id).val();
-            $.ajax({
-                    url: "{{ route('teacher.taskReview') }}",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        data: {
-                            'review' : review,
-                            'task_id' : task_id
-                        }
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function(response) {
-                        location.reload();
-                    }
-                });
-        }
         function saveComment() {
-            var task_id = $('#task_id').val();
+            var exam_id = $('#exam_id').val();
             var comment = document.getElementById("comment").value;
             var baseUrl = '<?=url('');?>';
-            var url = baseUrl+'/teacher/task-comment/'+task_id;
+            var url = baseUrl+'/teacher/exam-comment/'+exam_id;
             if (comment == '') {
                 $('#err_txt').text('This field can\'t be empty!');
                 return false;

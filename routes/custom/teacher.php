@@ -9,6 +9,7 @@
     Route::post('update-password', [TeacherController::class,'updatePassword'])->name('updatePassword');
     Route::get('home-task',[TeacherController::class,'homeTask'])->name('homeTask');
     Route::post('upload-home-task',[TeacherController::class,'uploadHomeTask'])->name('uploadHomeTask');
+    Route::post('assign-exam',[TeacherController::class,'assignExam'])->name('assignExam');
 
     Route::get('attendance',[TeacherController::class,'attendance'])->name('attendance');
     Route::get('access-class',[TeacherController::class,'class'])->name('class');
@@ -24,4 +25,12 @@
     Route::post('arrange-class/',[TeacherController::class,'arrange_class'])->name('arrange_class');
 
     Route::post('class-attendance',[TeacherController::class,'class_attendance'])->name('class_attendance');
-    
+
+    Route::get('exam-submission',[TeacherController::class,'examSubmission'])->name('examSubmission');
+    Route::any('exam-submission/details',[TeacherController::class,'studentExamSubmission'])->name('studentExamSubmission');
+    Route::post('exam-marks/{id}',[TeacherController::class,'examMarks'])->name('examMarks');  
+    Route::post('exam-comment/{id}',[TeacherController::class,'examComment'])->name('examComment');
+
+    Route::post('view-participation',[TeacherController::class,'view_participation'])->name('view_participation');
+
+

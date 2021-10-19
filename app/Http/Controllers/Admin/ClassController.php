@@ -121,4 +121,13 @@ class ClassController extends Controller
         ClassAttendance::where('class_id',$id)->delete();
         return redirect()->back()->with('success','Class deleted');
     }
+
+    public function view_participation(Request $request){
+        $participation = ClassAttendance::where('class_id',$request->prop_id)
+                        // ->where('role_id',4)
+                        ->join('users','users.id','=','class_users.user_id')
+                        ->get();
+                        // dd($participation);
+        return response()->json($participation);
+    }
 }
