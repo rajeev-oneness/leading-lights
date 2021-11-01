@@ -16,8 +16,8 @@ class CreateHomeTaskTable extends Migration
         Schema::create('home_task', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id');
-            $table->string('class');
-            $table->string('subject');
+            $table->integer('class');
+            $table->integer('subject');
             $table->date('submission_date');
             $table->time('submission_time');
             $table->string('upload_file');

@@ -16,8 +16,8 @@ class CreateArrangeClassesTable extends Migration
         Schema::create('arrange_classes', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id');
-            $table->string('class');
-            $table->string('subject');
+            $table->integer('class')->nullable();
+            $table->integer('subject');
             $table->date('date');
             $table->time('start_time');
             $table->time('end_time');

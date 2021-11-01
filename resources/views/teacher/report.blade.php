@@ -13,9 +13,10 @@
         <img src="{{ public_path('img/logo.jpg') }}">
     </div>
     @php
-        $current_time = getAsiaTime24(date('Y-m-d H:i:s'))
+        $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
+        $class_details = App\Models\Classes::where('id',$class)->first('name')
     @endphp
-    <p><strong>Class :</strong> {{ $class }}</span>
+    <p><strong>Class :</strong> {{ $class_details->name }}</span>
     <p><strong>Update On: </strong>{{ date('Y-m-d') }} {{ $current_time }}</p>
     <table class="table table-bordered">
         <thead>
@@ -33,8 +34,11 @@
             @forelse ($all_result as $i => $result)
                 <tr>
                     <td>{{ $i + 1 }}</td>
-                    <td>{{ $result->roll_no }}</td>
+                    <td>{{ $result->id_no }}</td>
                     <td>{{ $result->name }}</td>
+                    @php
+                        $subject_details = App\Models\Subject::find($result->subject);
+                    @endphp
                     <td>{{ $result->subject }}</td>
                     <td>{{ $result->date }}</td>
                     <td>{{ $result->marks }}</td>

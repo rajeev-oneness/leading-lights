@@ -34,11 +34,20 @@
                             @if ($student->status == 0)
                                 <a href="{{ route('admin.students.approve', $student->id) }}"
                                     class="btn btn-info pull-right" onclick="activeAccount({{ $student->id }})"
-                                    id="activeAccount">Pending</a>
+                                    id="activeAccount" data-toggl="tooltip" title="This account is not approved">Pending</a>
+                                @if ($student->rejected == 0)
+                                    <a href="{{ route('admin.students.reject', $student->id) }}"
+                                        class="btn btn-info pull-right mr-2" onclick="rejectAccount({{ $student->id }})"
+                                        id="rejectAccount" data-toggl="tooltip" title="This account is not rejected">Reject</a>
+                                @else
+                                    <button class="btn btn-info pull-right mr-2" data-toggle="tooltip" data-placement="top" title="This account is  rejected">Rejected</button>
+                                @endif
                             @else
                                 <a href="{{ route('admin.students.approve', $student->id) }}"
                                     class="btn btn-info pull-right" onclick="activeAccount({{ $student->id }})"
-                                    id="activeAccount">Approved</a>
+                                    id="activeAccount" data-toggl="tooltip" title="This account is approved">Approved</a>
+                                <a href="#" class="btn btn-info pull-right ml-2" id="RejectedAccount"
+                                    style="display: none;">Rejected</a>
                             @endif
                         </div>
                     </div>
@@ -47,12 +56,14 @@
                     <div class="bg-edit p-4">
                         <div class="row">
                             <div class="col-lg-3">
-                                <img src="{{ asset($student->image ? $student->image : 'frontend/assets/images/avata3.jpg')}}" class="img-fluid mx-auto">
+                                <img src="{{ asset($student->image ? $student->image : 'frontend/assets/images/avata3.jpg') }}"
+                                    class="img-fluid mx-auto">
                             </div>
                             <div class="col-lg-4 not2
 							">
-                                <p>{{ date('d-m-Y',strtotime($student->created_at)) }}</p>
-                                <h4 class="mb-4">{{ $student->first_name.' '.$student->last_name }}<span class="ml-3">
+                                <p>{{ date('d-m-Y', strtotime($student->created_at)) }}</p>
+                                <h4 class="mb-4">{{ $student->first_name . ' ' . $student->last_name }}<span
+                                        class="ml-3">
                                         <!-- <img src="assets/images/edit.png" class="img-fluid mx-auto"> -->
                                     </span></h4>
                                 <div class="row">
@@ -60,7 +71,7 @@
                                         <label>DOB :</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{ $student->dob ?  $student->dob : 'N/A'}}</p>
+                                        <p>{{ $student->dob ? $student->dob : 'N/A' }}</p>
                                     </div>
                                     <div class="col-md-2">
                                         {{-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> --}}
@@ -71,7 +82,7 @@
                                         <label>Age :</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{  $student_age }}</p>
+                                        <p>{{ $student_age }}</p>
                                     </div>
                                     <div class="col-md-2">
                                         {{-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> --}}
@@ -93,7 +104,10 @@
                                         <label>Class :</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{ $student->class ? $student->class : 'N/A' }}</p>
+                                        <?php
+                                        $class_details = App\Models\Classes::find($student->class);
+                                        ?>
+                                        <p>{{ $class_details->name ? $class_details->name : 'N/A' }}</p>
                                     </div>
                                     <div class="col-md-2">
                                         <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> -->
@@ -126,6 +140,34 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-4">
+                            <div class="col-lg-12">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div class="card-header-title font-size-lg text-capitalize mb-4">
+                                            Documents
+                                        </div>
+                                        <ul class="list">
+                                            @forelse ($certificates as $certificate)
+                                                <li>
+                                                    {{-- <img src="{{ asset($certificate->image) }}"
+                                            class="img-fluid mx-auto w-100"> --}}
+                                                    <a href="{{ asset($certificate->image) }}" target="_blank">View
+                                                        documents <i class="fas fa-arrow-right"></i></a>
+                                                </li>
+                                            @empty
+                                                <li>Not Available</li>
+                                            @endforelse
+                                        </ul>
+                                        {{-- <div class="d-sm-flex align-items-baseline justify-content-between">
+											<label class="check">PRESENT<span class="ml-2"><i
+														class="fa fa-check-circle text-success"></i></span></label>
+										</div> --}}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -143,14 +185,37 @@
                         type: "PUT",
                         data: data,
                         dataType: 'json',
-                        beforeSend:function(){
-		        	        $("#activeAccount").text('Loading...')
-		                },
+                        beforeSend: function() {
+                            $("#activeAccount").text('Loading...')
+                        },
                         success: function(response) {
                             if (response.data === 'activated') {
-                                $("#activeAccount").text('Approved');
+                                location.reload();
                             } else {
-                                $("#activeAccount").text('Pending');
+                                location.reload();
+                            }
+                        }
+                    })
+
+                }
+
+                function rejectAccount(student_id) {
+                    event.preventDefault();
+                    let url = $("#rejectAccount").attr('href');
+                    let data = {
+                        student_id: student_id
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "PUT",
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#rejectAccount").text('Loading...')
+                        },
+                        success: function(response) {
+                            if (response.data === 'rejected') {
+                                location.reload();
                             }
                         }
                     })

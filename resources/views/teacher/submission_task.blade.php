@@ -34,9 +34,15 @@
                     <tr class="bg-tr">
                         <th>{{ $key+1 }}</th>
                         <td>{{ $task->name }}</td>
-                        <th>{{ $task->class }}</th>
-                        <td>{{ $task->subject }}</td>
-                        <td>{{ $task->roll_no }}</td>
+                        @php
+                            if ($task->class) {
+                                $class_details = App\Models\Classes::find($task->class);
+                            }
+                            $subject_details = App\Models\Subject::find($task->subject);
+                        @endphp
+                        <th>{{ $class_details->name }}</th>
+                        <td>{{ $subject_details->name }}</td>
+                        <td>{{ $task->id_no }}</td>
                         <td>{{ date('Y-m-d',strtotime($task->created_at)) }}</td>
                         <td>{{ getAsiaTime24($task->created_at) }}</td>
                         <td>
@@ -85,6 +91,7 @@
             
         </div>
     </div>
+    @include('teacher.layouts.static_footer')
 </div>
 </div>
     <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"

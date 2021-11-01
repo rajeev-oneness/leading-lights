@@ -555,7 +555,7 @@
                                                                 alt="">
                                                         </div>
                                                         <div class="widget-content-left">
-                                                            <div class="widget-heading">Alina Mcloughlin</div>
+                                                            <div class="widget-heading">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
                                                             <div class="widget-subheading opacity-8">A short
                                                                 profile description</div>
                                                         </div>
@@ -586,10 +586,12 @@
                                                         </div>
                                                     </a>
                                                 </li>
+                                                @if (Auth::user()->status === 1)
                                                 <li class="nav-item">
-                                                    <a href="javascript:void(0);" class="nav-link">Recover
+                                                    <a href="{{ route('user.changePassword') }}" class="nav-link">Recover
                                                         Password</a>
                                                 </li>
+                                                @endif
                                                 <li class="nav-item-header nav-item">My Account
                                                 </li>
                                                 <li class="nav-item">

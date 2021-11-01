@@ -16,9 +16,9 @@ class CreateSubmitExamsTable extends Migration
         Schema::create('submit_exams', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('class');
-            $table->string('subject');
-            $table->string('roll_no');
+            $table->integer('class');
+            $table->integer('subject');
+            $table->string('id_no');
             $table->integer('marks')->nullable();
             $table->string('comment')->nullable();
             $table->string('upload_doc');

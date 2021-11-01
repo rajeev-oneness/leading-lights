@@ -53,14 +53,14 @@
                                                 class="far fa-eye"></i></a> --}}
                                         <a href="{{ route('admin.classes.edit', $class->id) }}" class="ml-2"><i
                                                 class="far fa-edit"></i></a>
-                                        <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
+                                        {{-- <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
                                             data-target="#exampleModal" onclick="deleteForm({{ $class->id }})"><i
                                                 class="far fa-trash-alt text-danger"></i></a>
                                         <form id="delete_form_{{ $class->id }}"
                                             action="{{ route('admin.classes.destroy', $class->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                        </form>
+                                        </form> --}}
                                     </td>
                                     </td>
                                 </tr>

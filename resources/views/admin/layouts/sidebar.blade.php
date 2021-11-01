@@ -23,6 +23,10 @@
                     aria-hidden="true"></i>Free/Paid video management</a></li>
         <li class="{{ Request::is('admin/classes*') ? 'active' : '' }}"><a
                 href="{{ route('admin.classes.index') }}"><i class="fas fa-chalkboard"></i>Student Class management</a></li>
+        <li class="{{ Request::is('admin/subjects*') ? 'active' : '' }}"><a
+                href="{{ route('admin.subjects.index') }}"><i class="fas fa-book-open"></i>Student Subject management</a></li>
+        <li class="{{ Request::is('admin/groups*') ? 'active' : '' }}"><a
+                href="{{ route('admin.groups.index') }}"><i class="fas fa-users"></i>Student Group management</a></li>
         <li class="{{ Request::is('admin/arrange-classes*') ? 'active' : '' }}"><a
                 href="{{ route('admin.arrange_classes') }}"><i class="fas fa-chalkboard"></i>Arrange Class management</a></li>
         <li class="{{ Request::is('admin/exams*') ? 'active' : '' }}"><a

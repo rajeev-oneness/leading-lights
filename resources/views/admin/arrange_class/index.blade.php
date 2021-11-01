@@ -37,7 +37,7 @@
                             <tr>
                                 <th>Serial No</th>
                                 <th>Teacher name</th>
-                                <th>Class</th>
+                                <th>Class/Group</th>
                                 <th>Subject</th>
                                 <th>Date</th>
                                 <th>Time</th>
@@ -51,8 +51,25 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ App\models\User::find($class->user_id)->first_name }}
                                         {{ App\models\User::find($class->user_id)->last_name }}</td>
-                                    <td>{{ $class->class }}</td>
-                                    <td>{{ $class->subject }}</td>
+                                        @php
+                                        if ($class->group_id) {
+                                            $group_details = App\Models\Group::find($class->group_id);
+
+                                        }
+                                        if ($class->class) {
+                                            $class_details = App\Models\Classes::find($class->class);
+                                        }
+                                        $subject_details = App\Models\Subject::find($class->subject);
+                                    @endphp
+                                    <td>
+                                        @if ($class->class)
+                                            {{ $class_details->name }} <span class="badge badge-info">Class</span>
+                                        @else
+                                            {{ $group_details->name }} <span class="badge badge-info">Group</span>
+                                        @endif
+                                        {{-- {{ $class->class ?  $class->class : $group_details->name}} --}}
+                                    </td>
+                                    <td>{{ $subject_details->name }}</td>
                                     <td>{{ $class->date }}</td>
                                     <td>{{ $class->start_time }}-{{ $class->end_time }}</td>
                                     <td>{{ $class->meeting_url }}</td>

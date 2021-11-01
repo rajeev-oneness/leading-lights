@@ -29,7 +29,7 @@
                             <tr>
                                 <th>Serial No</th>
                                 <th>Subject</th>
-                                <th>Class</th>
+                                <th>Class/Groups</th>
                                 <th>Date</th>
                                 <th>Start Time</th>
                                 <th>End Time</th>
@@ -40,14 +40,30 @@
                             @foreach ($arrange_classes as $i => $arrange_class)
                                 <tr class="bg-tr">
                                     <td>{{ $i + 1 }}</td>
-                                    <td>{{ $arrange_class->subject }}</td>
-                                    <td>{{ $arrange_class->class }}</td>
+                                    @php
+                                        if ($arrange_class->group_id) {
+                                            $group_details = App\Models\Group::find($arrange_class->group_id);
+                                        }
+                                        if ($arrange_class->class) {
+                                            $class_details = App\Models\Classes::find($arrange_class->class);
+                                        }
+                                        $subject_details = App\Models\Subject::find($arrange_class->subject);
+                                    @endphp
+                                    <td>{{ $subject_details->name }}</td>
+                                    <td>
+                                        @if ($arrange_class->class)
+                                            {{ $class_details->name }} <span class="badge badge-secondary">Class</span>
+                                        @else
+                                            {{ $group_details->name }} <span class="badge badge-secondary">Group</span>
+                                        @endif
+                                        {{-- {{ $arrange_class->class ?  $arrange_class->class : $group_details->name}} --}}
+                                    </td>
                                     <td>{{ $arrange_class->date }}</td>
-                                    <td>{{ $arrange_class->start_time }}</td>
-                                    <td>{{ $arrange_class->end_time }}</td>
+                                    <td>{{ (date('h:i A',strtotime($arrange_class->start_time)))}}</td>
+                                    <td>{{ (date('h:i A',strtotime($arrange_class->end_time)))}}</td>
                                     <td>
                                         @php
-                                            $minutes_to_add = 55;
+                                            $minutes_to_add = 15;
                                             $today_date = date('Y-m-d');
                                             $today_time = getAsiaTime24(date('Y-m-d H:i:s'));
                                             $time = new DateTime($arrange_class->date . $arrange_class->start_time);
@@ -59,6 +75,7 @@
                                                 ->where('class_id', $arrange_class->id)
                                                 ->where('user_id', Auth::user()->id)
                                                 ->first();
+                                            $class_start_time = date('H:i',strtotime($arrange_class->start_time));
                                         @endphp
                                         <input type="hidden" name="meeting_url" id="meeting_url"
                                             value="{{ $arrange_class->meeting_url }}">
@@ -69,7 +86,7 @@
                                                 class="btn-pill btn-transition btn btn-danger"><i class="fa fa-dot-circle">
                                                     Expired</i></button>
                                             @elseif ($arrange_class->date == $today_date && ($today_time >=
-                                                $arrange_class->start_time && $today_time <= $new_time)) @if ($already_joined && $already_joined->comment)
+                                                $class_start_time && $today_time <= $new_time)) @if ($already_joined && $already_joined->comment)
                                                     <span data-toggle="tooltip" data-placement="top"
                                                         title="{{ $already_joined->comment }}">{{ \Illuminate\Support\Str::limit($already_joined->comment, 15) }}</span>
                                                 @elseif ($already_joined && $already_joined->is_attended == 1)
@@ -87,8 +104,7 @@
                                                         data-id="{{ $arrange_class->id }}">Not Join !</button>
 
                                         @endif
-                                    @elseif ($arrange_class->date == $today_date && $today_time <= $arrange_class->
-                                            start_time)
+                                    @elseif ($arrange_class->date == $today_date && $today_time <= $class_start_time)
                                             <button class="btn-pill btn-transition btn btn-success"><i
                                                     class="fa fa-dot-circle">
                                                     Upcoming</i></button>
@@ -110,21 +126,7 @@
 
             </div>
         </div>
-        <div class="app-wrapper-footer">
-            <div class="app-footer">
-                <div class="app-footer__inner">
-                    <div class="app-footer-right">
-                        <ul class="header-megamenu nav">
-                            <li class="nav-item">
-                                <a class="nav-link">
-                                    Copyright &copy; 2021 | All Right Reserved
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('teacher.layouts.static_footer')
     </div>
     </div>
     </div>
@@ -147,21 +149,23 @@
                                     <label for="">Subject</label>
                                     <select name="subject" id="subject" class="form-control">
                                         <option value="">Select subject</option>
-                                        <option value="Math">Math</option>
-                                        <option value="Physics">Physics</option>
-                                        <option value="Chemistry">Chemistry</option>
-                                        <option value="History">History</option>
+                                        @foreach ($subjects as $subject)
+                                            <option value="{{ $subject->id }}">{{ $subject->name }}</option>
+                                        @endforeach
                                     </select>
                                     <span class="text-danger" id="sub_error"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="class_name">Class</label>
+                                    <label for="class_name">Class/Groups</label>
                                     <select name="class_name" id="class_name" class="form-control">
-                                        <option value="">Select classes</option>
+                                        <option value="">Select Class/Groups</option>
+                                        @foreach ($groups as $group)
+                                            <option value="{{ $group->id . "-group"}}">{{ $group->name }}</option>
+                                        @endforeach
                                         @foreach ($classes as $class)
-                                            <option value="{{ $class->name }}">{{ $class->name }}</option>
+                                            <option value="{{ $class->id . "-class"}}">{{ $class->name }}</option>
                                         @endforeach
                                     </select>
                                     <span class="text-danger" id="class_error"></span>

@@ -56,21 +56,25 @@
                                 @foreach ($all_exams as $id => $exam)
                                     <tr class="bg-tr">
                                         <td>{{ $id + 1 }}</td>
-                                        <td>{{ $exam->subject }}</td>
+                                        @php
+                                            $subject_details = App\Models\Subject::find($exam->subject);
+                                        @endphp
+                                        <td>{{ $subject_details->name }}</td>
                                         <td>{{ $exam->date }}</td>
                                         <td>{{ date('H:i',strtotime($exam->start_time)) }} <span class="text-success">to</span>  {{ date('H:i',strtotime($exam->end_time)) }}</td>
                                         <td>
                                             @php
-                                                $already_upload = App\Models\SubmitExam::where('exam_id',$exam->id)->where('roll_no',Auth::user()->id_no)->first();
+                                                $already_upload = App\Models\SubmitExam::where('exam_id',$exam->id)->where('id_no',Auth::user()->id_no)->first();
                                                 $today_date = date('Y-m-d');
                                                 $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
 
                                                 $exam_date = $exam->date;
                                                 $start_time = $exam->start_time;
                                                 $end_time = $exam->end_time;
+                                                $exam_start_time = date('H:i',strtotime($exam->start_time));
                                             @endphp
                                     
-                                            @if (!$already_upload && $exam_date == $today_date && ($current_time >= $start_time && $current_time <= $end_time))
+                                            @if (!$already_upload && $exam_date == $today_date && ($current_time >= $exam_start_time && $current_time <= $end_time))
                                                 <a href="{{ asset($exam->upload_file) }}" download="">
                                                     <button class="btn-pill btn btn-primary mb-1"><i
                                                             class="fas fa-download"></i>
@@ -83,6 +87,8 @@
                                                     value="{{ $exam->id }}">
                                                 <input type="hidden" name="subject" id="subject{{ $exam->id }}"
                                                     value="{{ $exam->subject }}">
+                                            @elseif ($exam_date == $today_date && $current_time < $exam_start_time)
+                                            <button class="btn-pill btn-transition btn btn-success"><i class="fa fa-dot-circle"> Upcoming</i></button>
                                             @elseif ($already_upload)
                                             <button class="btn-pill btn-transition btn btn-success"><i class="fa fa-check"> Submitted</i></button>
                                             @elseif($exam_date > $today_date)
@@ -118,21 +124,7 @@
             </div>
 
         </div>
-        <div class="app-wrapper-footer">
-            <div class="app-footer">
-                <div class="app-footer__inner">
-                    <div class="app-footer-right">
-                        <ul class="header-megamenu nav">
-                            <li class="nav-item">
-                                <a class="nav-link">
-                                    Copyright &copy; 2021 | All Right Reserved
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('teacher.layouts.static_footer')
     </div>
     <script>
         $(document).ready(function() {

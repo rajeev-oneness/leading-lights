@@ -58,7 +58,7 @@
 							<select name="class" id="class" class="form-control">
 								<option value="">Please select class</option>
 								@foreach ($classes as $class)
-                                            <option value="{{ $class->name }}" @if (old('class') == $class->name)
+                                            <option value="{{ $class->id }}" @if (old('class') == $class->id)
                                                 selected
                                             @endif>{{ $class->name }}</option>
                                 @endforeach

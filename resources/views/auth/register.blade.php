@@ -75,7 +75,7 @@
                                     <label for="">Class<span class="text-danger">*</span></label>
                                     <select name="class" class="form-control">
                                         @foreach ($classes as $class)
-                                            <option value="{{ $class->name }}" @if (old('class') == $class->name)
+                                            <option value="{{ $class->id }}" @if (old('class') == $class->name)
                                                 selected
                                             @endif>{{ $class->name }}</option>
                                         @endforeach
@@ -85,9 +85,16 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label for="image">Upload Picture<span class="text-danger">*</span></label>
-                                    <input type="file" class="form-control" name="image">
+                                    <label for="image">Upload Picture(png,jpg,jpeg only)<span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control" name="image" value="{{ old('image') }}">
                                      @error('image')
+                                             <span class="text-danger">{{ $message }}</span>
+                                      @enderror
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="certificate">Upload Documents(pdf only)<span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control" name="certificate" value="{{ old('certificate') }}">
+                                     @error('certificate')
                                              <span class="text-danger">{{ $message }}</span>
                                       @enderror
                                 </div>

@@ -6,14 +6,16 @@ use App\Models\User;
 use App\Models\Classes;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Notifications\NewUserInfo;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
-
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Admin\Notification;
-use App\Notifications\NewUserInfo;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Notification as FacadesNotification;
 
@@ -68,8 +70,9 @@ class RegisterController extends Controller
             'dob' => ['required', 'date'],
             'gender' => ['required'],
             'class' => ['required'],
-            'image' => 'required| mimes:png,jpg',
-            'mobile' => ['required']
+            'image' => 'required| mimes:png,jpg,jpeg',
+            'mobile' => ['required'],
+            'certificate' => ['required','mimes:pdf']
         ]);
     }
 
@@ -110,8 +113,8 @@ class RegisterController extends Controller
             'user_type' => 'student'
         );
         FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
-
-        return User::create([
+        
+        $user_creation =  User::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
@@ -123,6 +126,16 @@ class RegisterController extends Controller
             'password' => Hash::make($id_no),
             'image' => $imageName
         ]);
+
+        //Store certificate 
+        $certificate_data['image'] =  imageUpload($data['certificate'],'student_certificate');
+
+        $certificate_data['user_id'] = $user_creation->id;
+        $certificate_data['created_at'] = date('Y-m-d H:i:s');
+        $certificate_data['updated_at'] = date('Y-m-d H:i:s');
+
+        DB::table('certificate')->insert($certificate_data);
+        return $user_creation;
     }
 
     public function getCode(){

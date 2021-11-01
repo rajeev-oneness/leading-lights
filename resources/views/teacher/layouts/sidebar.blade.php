@@ -43,7 +43,12 @@
                 </li>
                 <li class="{{ Request::is('teacher/attendance') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.attendance') }}">
-                        <i class="metismenu-icon fa fa-users"></i>Attendance
+                        <i class="metismenu-icon fa fa-history"></i>Attendance
+                    </a>
+                </li>
+                <li class="{{ Request::is('teacher/assigned-groups') ? 'mm-active' : '' }}">
+                    <a href="{{ route('teacher.assigned_groups') }}">
+                        <i class="metismenu-icon fa fa-users"></i>Assigned Groups
                     </a>
                 </li>
                 <li class="{{ Request::is('teacher/access-class') ? 'mm-active' : '' }}">
@@ -80,8 +85,8 @@
 
                     </a>
                 </li>
-                <li>
-                    <a href="#">
+                <li class="{{ Request::is('teacher/change-password') ? 'mm-active' : '' }}">
+                    <a href="{{ route('teacher.changePassword') }}">
                         <i class="metismenu-icon fa fa-cog"></i>Settings
                     </a>
                 </li>

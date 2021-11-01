@@ -51,8 +51,12 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ App\models\User::find($exam->user_id)->first_name }} {{ App\models\User::find($exam->user_id)->last_name }}</td>
-                                    <td>{{ $exam->class }}</td>
-                                    <td>{{ $exam->subject }}</td>
+                                    @php
+                                        $subject_details = App\Models\Subject::find($exam->subject);
+                                        $class_details = App\Models\Classes::find($exam->class);
+                                    @endphp
+                                    <td>{{ $class_details->name }}</td>
+                                    <td>{{ $subject_details->name }}</td>
                                     <td>{{ $exam->full_marks }}</td>
                                     <td>{{ $exam->date }}</td>
                                     <td>{{ date('H:i',strtotime($exam->start_time)) }} <span class="text-success">to</span>  {{ date('H:i',strtotime($exam->end_time)) }}</td>

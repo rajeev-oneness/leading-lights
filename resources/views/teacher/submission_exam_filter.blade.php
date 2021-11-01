@@ -36,15 +36,15 @@
                                 <select class="form-control" id="class" name="class">
                                     <option value="" selected>Class</option>
                                     @foreach ($classes as $class)
-                                        <option value="{{ $class->name }}" @if (old('class') == $class->name) selected @endif>
+                                        <option value="{{ $class->id }}" @if (old('class') == $class->id) selected @endif>
                                             {{ $class->name }}</option>
                                     @endforeach
                                 </select>
                                 <select class="form-control" id="subject" name="subject">
                                     <option value="" selected>Subject</option>
-                                    <option value="Physics" @if (old('subject') == 'Physics') selected @endif>Physics</option>
-                                    <option value="Chemistry" @if (old('subject') == 'Chemistry') selected @endif>Chemistry</option>
-                                    <option value="History" @if (old('subject') == 'History') selected @endif>History</option>
+                                    @foreach ($subjects as $subject)
+                                            <option value="{{ $subject->id }}" @if (old('subject') == $subject->id) selected @endif>{{ $subject->name }}</option>
+                                    @endforeach
                                 </select>
 
                             </div>
@@ -86,7 +86,7 @@
                                 <select class="form-control" id="class_name" name="class_name">
                                     <option value="" selected>Class</option>
                                     @foreach ($classes as $class)
-                                        <option value="{{ $class->name }}" @if (old('class') == $class->name) selected @endif>
+                                        <option value="{{ $class->id }}" @if (old('class') == $class->id) selected @endif>
                                             {{ $class->name }}</option>
                                     @endforeach
                                 </select>
@@ -136,7 +136,7 @@
                                 <select class="form-control" id="class_name1" name="class_name1">
                                     <option value="" selected>Class</option>
                                     @foreach ($classes as $class)
-                                        <option value="{{ $class->name }}" @if (old('class') == $class->name) selected @endif>
+                                        <option value="{{ $class->id }}" @if (old('class') == $class->id) selected @endif>
                                             {{ $class->name }}</option>
                                     @endforeach
                                 </select>
@@ -156,6 +156,6 @@
         </div>
     </div>
     </div>
-</div>
+    @include('teacher.layouts.static_footer')
 </div>
 @endsection

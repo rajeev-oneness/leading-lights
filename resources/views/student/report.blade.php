@@ -12,7 +12,10 @@
     </div>
     <p><strong>Name of Student:</strong> {{ $user_details->first_name }} {{ $user_details->last_name }}</p>
     <p><strong>Student Id :</strong> {{ $user_details->id_no }}</p>
-    <p><strong>Class :</strong> {{ $user_details->class }}</span>
+    @php
+        $class_details = App\Models\Classes::where('id',$user_details->class)->first('name')
+    @endphp
+    <p><strong>Class :</strong> {{ $class_details->name }}</span>
     <table class="table table-bordered">
     <thead>
       <tr>
@@ -26,7 +29,10 @@
         @foreach ($all_result as $i => $result)
             <tr>
                 <td>{{ $i + 1 }}</td>
-                <td>{{ $result->subject }}</td>
+                @php
+                    $subject_details = App\Models\Subject::find($result->subject);
+                @endphp
+                <td>{{ $subject_details->name }}</td>
                 <td>{{ $result->marks }}</td>   
                 <td>{{ $result->full_marks }}</td>
             </tr>

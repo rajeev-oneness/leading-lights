@@ -42,6 +42,12 @@
                         <i class="fa fa-graduation-cap metismenu-icon"></i>Students Profile
                     </a>
                 </li>
+                @if (Auth::user()->status == 1)
+                <li class="{{ Request::is('user/attendance') ? 'mm-active' : '' }}">
+                    <a href="{{ route('user.attendance') }}">
+                        <i class="metismenu-icon fa fa-history"></i>Attendance
+                    </a>
+                </li>
                 <li class="{{ Request::is('user/classes') ? 'mm-active' : '' }}">
                     <a href="{{ route('user.classes') }}">
                         <i class="metismenu-icon fa fa-users"></i>Classes
@@ -62,16 +68,19 @@
                         <i class="metismenu-icon fa fa-desktop"></i>Exam
                     </a>
                 </li>
+                @endif
                 <li class="{{ Request::is('user/payment') ? 'mm-active' : '' }}">
                     <a href="{{ route('user.payment') }}">
                         <i class="metismenu-icon fa fa-credit-card"></i>Payments
                     </a>
                 </li>
-                <li>
-                    <a href="#">
+                @if (Auth::user()->status == 1)
+                <li class="{{ Request::is('user/change-password') ? 'mm-active' : '' }}">
+                    <a href="{{ route('user.changePassword') }}">
                         <i class="metismenu-icon fa fa-cog"></i>Settings
                     </a>
                 </li>
+                @endif
 
             </ul>
         </div>

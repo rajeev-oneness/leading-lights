@@ -16,9 +16,9 @@ class CreateSubmitHomeTaskTable extends Migration
         Schema::create('submit_home_task', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('class');
-            $table->string('subject');
-            $table->string('roll_no');
+            $table->integer('class');
+            $table->integer('subject');
+            $table->string('id_no');
             $table->string('review')->nullable();
             $table->string('comment')->nullable();
             $table->string('upload_doc');

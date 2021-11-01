@@ -57,7 +57,13 @@
                                 <label>Class :</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{ $student->class ? $student->class : 'N/A' }}</p>
+                            <?php 
+                                if ($student->class) {
+                                    $class_details = App\Models\Classes::find($student->class);
+                                }
+                                
+                            ?>
+                            <p>{{ $class_details->name ? $class_details->name : 'N/A' }}</p>
                             </div>
                             <div class="col-md-2">
                                 <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> -->
@@ -87,6 +93,7 @@
                             <div class="card-body">
                                 <p><span id="bio">{{ $student->about_us ? $student->about_us : 'N/A' }}</span>
                                     <span class="text-danger" id="err_msg"></span>
+                                    @if ($student->status == 1)
                                     <span>
                                         <img src="https://img.icons8.com/ios-glyphs/30/000000/save--v1.png"
                                             style="display: none;float: right;" id="save_bio"
@@ -100,12 +107,57 @@
                                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z">
                                             </path>
                                         </svg></span>
+                                    @endif
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
+                @if ($student->rejected == 1 && $student->status == 0 && $certificates->created_at !== $certificates->updated_at)
+                <div>
+            <h5 class="text-warning">N:B: Your document upload successfully.You will be notified once approved your account</h5>
+        </div>
+            @endif
+            
+            @if ($student->rejected == 1 && $student->status == 0 && $certificates->created_at === $certificates->updated_at)
+            <div class="row mt-4">
+                <div class="col-lg-12">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="card-header-title font-size-lg text-capitalize mb-4">
+                                Attach Documents(PDF only)
+                            </div>
+                            <div class="file-upload">
+                                <button class="file-upload-btn" type="button"
+                                    onclick="$('.file-upload-input').trigger( 'click' )">Add File</button>
+                                {{-- <button class="file-upload-btn" type="button">Add Image</button> --}}
+
+                                <div class="image-upload-wrap">
+                                    <input class="file-upload-input" type='file'
+                                        accept="pdf/*" id="img_upload" name="image"/>
+                                    <div class="drag-text">
+                                        <h3>Drag and drop a file or select add file</h3>
+                                    </div>
+                                </div>
+                                <div class="file-upload-content">
+                                    <img class="file-upload-image" src="#" alt="your image" />
+                                    {{-- <div class="image-title-wrap">
+                                        <button type="button" onclick="removeUpload()" class="remove-image">Remove
+                                            <span class="image-title">Uploaded Image</span></button>
+                                    </div> --}}
+                                    {{-- <img id="img_prv" style="max-width: 150px;max-height: 150px" class="img-thumbnail" src=""> --}}
+                                </div>
+                                <span id="mgs_ta">
+                            </div>  
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+            @if ($student->status === 1)
             <div class="row mt-5">
                 <div class="col-lg-7">
                     <div class="card">
@@ -114,6 +166,7 @@
                                 My Classes
                             </div>
                             <div class="row mt-5">
+                                @forelse($classes as $class)
                                 <div class="col-md-12 col-lg-6 col-xl-6">
                                     <div class="card-shadow-primary profile-responsive card-border mb-3 card">
                                         <div class="dropdown-menu-header">
@@ -130,7 +183,7 @@
                                                     <div class="widget-content-wrapper justify-content-between">
                                                         <div class="widget-content-left mr-3">
                                                             <div class="icon-wrapper m-0">
-                                                                <span class="head">Drawing</span>
+                                                                <span class="head">{{ $class->name }}</span>
                                                             </div>
                                                         </div>
 
@@ -140,8 +193,7 @@
                                                                     class="img-fluid mx-auto"></div>
                                                             <div class="widget-subheading">
 
-                                                                Today<br /><span class="text">7:30
-                                                                    pm</span>
+                                                                Today<br /><span class="text">{{ (date('h:i A',strtotime($class->start_time)))}}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -150,42 +202,11 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="col-md-12 col-lg-6 col-xl-6">
-                                    <div class="card-shadow-primary profile-responsive card-border mb-3 card">
-                                        <div class="dropdown-menu-header">
-                                            <div class="dropdown-menu-header-inner">
-
-                                                <img src="{{ asset('frontend/assets/images/pro2.png') }}"
-                                                    class="img-fluid mx-auto d-block w-100">
-
-                                            </div>
-                                        </div>
-                                        <ul class="list-group list-group-flush">
-                                            <li class="bg-warm-flame list-group-item">
-                                                <div class="widget-content p-0">
-                                                    <div class="widget-content-wrapper justify-content-between">
-                                                        <div class="widget-content-left mr-3">
-                                                            <div class="icon-wrapper m-0">
-                                                                <span class="head">Abacus</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="widget-content-left d-sm-flex align-items-center">
-                                                            <div class="widget-heading text-dark"><img
-                                                                    src="{{ asset('frontend/assets/images/calander.png') }}"
-                                                                    class="img-fluid mx-auto"></div>
-                                                            <div class="widget-subheading">
-
-                                                                Today<br /><span class="text">7:30
-                                                                    pm</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                @empty
+                                <div class="col-md-12">
+                                    <p class="alert alert-warning">No class available for today</p>
                                 </div>
+                                @endforelse
                                 <!--  <div class="col-md-12 col-lg-6 col-xl-4">
                             <div class="card-shadow-primary profile-responsive card-border mb-3 card">
                                 <div class="dropdown-menu-header">
@@ -365,24 +386,10 @@
                     </div>
                 </div>
             </div>
-
+            @endif
         </div>
     </div>
-    <div class="app-wrapper-footer">
-        <div class="app-footer">
-            <div class="app-footer__inner">
-                <div class="app-footer-right">
-                    <ul class="header-megamenu nav">
-                        <li class="nav-item">
-                            <a class="nav-link">
-                                Copyright &copy; 2021 | All Right Reserved
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('teacher.layouts.static_footer')
 </div>
 </div>
 </div>
@@ -417,5 +424,46 @@
         }
 
     }
+
+    $("#img_upload").on('change',function(ev) {
+ 
+            var filedata=this.files[0];
+            var imgtype=filedata.type;
+
+            if(imgtype !== 'application/pdf'){
+                $('#mgs_ta').html('<p style="color:red">Please select a valid type file.Only pdf allowed</p>');
+ 
+            }else{
+                $('#mgs_ta').empty();
+
+                 //---image preview
+                var reader=new FileReader();
+ 
+                reader.onload=function(ev){
+                $('#img_prv').attr('src',ev.target.result).css('width','150px').css('height','150px');
+                }
+
+                reader.readAsDataURL(this.files[0]);
+                 /// preview end
+
+                  //upload
+ 
+                var postData=new FormData();
+                postData.append('file',this.files[0]);
+ 
+                $.ajax({
+                    headers:{'X-CSRF-Token':$('meta[name=csrf-token]').attr('content')},
+                    async:true,
+                    type:"post",
+                    url:"{{ route('user.certificate_upload') }}",
+                    data: postData,
+                    contentType:false,
+                    processData:false,
+                    success:function(){
+                        location.reload();
+                    }
+                });
+            }
+        })
 </script>
 @endsection

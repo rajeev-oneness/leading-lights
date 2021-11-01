@@ -30,7 +30,10 @@
         Route::resource('announcement', AnnouncementController::class);
         Route::resource('notification', NotificationController::class);
         Route::resource('exams', ExamController::class);
+        Route::resource('subjects', SubjectController::class);
+        Route::resource('groups', GroupController::class);
         Route::put('/approve-student/{id}',[StudentController::class,'approval'])->name('students.approve');
+        Route::put('/reject-student/{id}',[StudentController::class,'reject_student'])->name('students.reject');
         Route::put('/approve-teacher/{id}',[TeacherController::class,'approval'])->name('teachers.approve');
 
         Route::get('/arrange-classes',[ClassController::class,'arrange_classes'])->name('arrange_classes');

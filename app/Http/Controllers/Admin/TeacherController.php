@@ -76,7 +76,7 @@ class TeacherController extends Controller
     public function show($id)
     {
         $data['teacher'] = User::find($id);
-        $data['certificates'] = DB::table('teacher_certificate')->where('user_id',$id)->get();
+        $data['certificates'] = DB::table('certificate')->where('user_id',$id)->get();
         return view('admin.teacher.view')->with($data);
     }
 

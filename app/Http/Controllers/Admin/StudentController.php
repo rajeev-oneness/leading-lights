@@ -8,7 +8,9 @@ use App\Models\Classes;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Notifications\WelcomeMail;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Notifications\RejectionMail;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
@@ -82,6 +84,7 @@ class StudentController extends Controller
     {
         $data['student'] = User::find($id);
         $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
+        $data['certificates'] = DB::table('certificate')->where('user_id',$id)->get();
         return view('admin.student.view')->with($data);
     }
 
@@ -170,6 +173,7 @@ class StudentController extends Controller
         $user = User::find($id);
         if ($user->status == 0) {
             $user->status = 1;
+            $user->rejected = 0;
             $user->save();
             Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
             return response()->json(['success' => true,'data' => 'activated']);
@@ -179,5 +183,15 @@ class StudentController extends Controller
             $user->save();
             return response()->json(['success' => true,'data' => 'inactivated']);
         }       
+    }
+
+    public function reject_student($id){
+        $user = User::find($id);
+        if ($user->rejected == 0) {
+            $user->rejected = 1;
+            $user->save();
+            Notification::route('mail', $user->email)->notify(new RejectionMail($user));
+            return response()->json(['success' => true,'data' => 'rejected']);
+        }
     }
 }

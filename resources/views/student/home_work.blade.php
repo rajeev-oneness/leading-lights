@@ -52,12 +52,15 @@
                                 @foreach ($home_works as $id => $home_work)
                                     <tr class="bg-tr">
                                         <td>{{ $id+1 }}</td>
-                                        <td>{{ $home_work->subject }}</td>
+                                        @php
+                                            $subject_details = App\Models\Subject::find($home_work->subject);
+                                        @endphp
+                                        <td>{{ $subject_details->name }}</td>
                                         <td>{{ $home_work->submission_date }}</td>
                                         <td>{{ $home_work->submission_time }}</td>
                                         <td>
                                             @php
-                                                $upload_task = App\Models\SubmitHomeTask::where('task_id',$home_work->id)->where('roll_no',Auth::user()->id_no)->first();
+                                                $upload_task = App\Models\SubmitHomeTask::where('task_id',$home_work->id)->where('id_no',Auth::user()->id_no)->first();
 
                                                 $today_date = date('Y-m-d');
                                                 $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
@@ -119,21 +122,7 @@
             </div>
 
         </div>
-        <div class="app-wrapper-footer">
-            <div class="app-footer">
-                <div class="app-footer__inner">
-                    <div class="app-footer-right">
-                        <ul class="header-megamenu nav">
-                            <li class="nav-item">
-                                <a class="nav-link">
-                                    Copyright &copy; 2021 | All Right Reserved
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('teacher.layouts.static_footer')
     </div>
     <script>
         $(document).ready(function() {

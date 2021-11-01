@@ -35,7 +35,7 @@
                                     <select class="form-control" id="class" name="class">
                                         <option value="" selected>Class</option>
                                         @foreach ($classes as $class)
-                                            <option value="{{ $class->name }}" @if (old('class') == $class->name) selected @endif>
+                                            <option value="{{ $class->id }}" @if (old('class') == $class->id) selected @endif>
                                                 {{ $class->name }}</option>
                                         @endforeach
                                     </select>
@@ -43,9 +43,9 @@
 
                                     <select class="form-control" id="subject" name="subject">
                                         <option value="" selected>Subject</option>
-                                        <option value="Physics" @if (old('subject') == 'Physics') selected @endif>Physics</option>
-                                        <option value="Chemistry" @if (old('subject') == 'Chemistry') selected @endif>Chemistry</option>
-                                        <option value="History" @if (old('subject') == 'History') selected @endif>History</option>
+                                        @foreach ($subjects as $subject)
+                                            <option value="{{ $subject->id }}" @if (old('subject') == $subject->id) selected @endif>{{ $subject->name }}</option>
+                                        @endforeach
                                     </select>
 
                                 </div>
@@ -137,8 +137,12 @@
                                         @foreach ($tasks as $i => $task)
                                             <tr class="bg-tr">
                                                 <th>{{ $i + 1 }}</th>
-                                                <th>{{ $task->class }}</th>
-                                                <td>{{ $task->subject }}</td>
+                                                @php
+                                            $class_details = App\Models\Classes::find($task->class);
+                                            $subject_details = App\Models\Subject::find($task->subject);
+                                                @endphp
+                                                <th>{{ $class_details->name }}</th>
+                                                <td>{{ $subject_details->name }}</td>
                                                 <td>{{ $task->submission_date }}</td>
                                                 <td>{{ $task->submission_time }}</td>
                                             </tr>
@@ -151,21 +155,7 @@
                 </div>
             </div>
         </div>
-        <div class="app-wrapper-footer">
-            <div class="app-footer">
-                <div class="app-footer__inner">
-                    <div class="app-footer-right">
-                        <ul class="header-megamenu nav">
-                            <li class="nav-item">
-                                <a class="nav-link">
-                                    Copyright &copy; 2021 | All Right Reserved
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('teacher.layouts.static_footer')
     </div>
     <script>
         $(document).ready(function() {

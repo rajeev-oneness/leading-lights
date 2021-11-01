@@ -11,7 +11,7 @@
     Route::post('upload-home-task',[TeacherController::class,'uploadHomeTask'])->name('uploadHomeTask');
     Route::post('assign-exam',[TeacherController::class,'assignExam'])->name('assignExam');
 
-    Route::get('attendance',[TeacherController::class,'attendance'])->name('attendance');
+    Route::any('attendance',[TeacherController::class,'attendance'])->name('attendance');
     Route::get('access-class',[TeacherController::class,'class'])->name('class');
     Route::get('student-submission',[TeacherController::class,'studentSubmission'])->name('studentSubmission');
     Route::get('video-call',[TeacherController::class,'videoCall'])->name('videoCall');
@@ -32,5 +32,7 @@
     Route::post('exam-comment/{id}',[TeacherController::class,'examComment'])->name('examComment');
 
     Route::post('view-participation',[TeacherController::class,'view_participation'])->name('view_participation');
+
+    Route::get('assigned-groups',[TeacherController::class,'assigned_groups'])->name('assigned_groups');
 
 

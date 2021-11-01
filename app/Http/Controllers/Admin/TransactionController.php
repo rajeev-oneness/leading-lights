@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
@@ -15,8 +16,8 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::latest()->get();
-        return view('admin.transaction.index',compact('transactions'));
+        $all_payments = Payment::latest()->get();
+        return view('admin.transaction.index',compact('all_payments'));
     }
 
     /**
@@ -82,6 +83,7 @@ class TransactionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Payment::find($id)->delete();
+        return redirect()->back()->with('success','Payment history is deleted');
     }
 }

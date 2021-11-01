@@ -28,7 +28,8 @@ class User extends Authenticatable
         'class',
         'gender',
         'image',
-        'mobile'
+        'mobile',
+        'last_login_time'
     ];
 
     /**
@@ -52,5 +53,9 @@ class User extends Authenticatable
 
     public function role(){
         return $this->belongsTo(Role::class);
+     }
+
+     public function payment(){
+         return $this->hasMany(Payment::class);
      }
 }

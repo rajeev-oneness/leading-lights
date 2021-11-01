@@ -27,6 +27,7 @@ class HomeController extends Controller
         $redirectTo = 'user/profile';
         switch(Auth::user()->role_id){
             case 1 : $redirectTo = 'admin/dashboard';break;
+            case 2 : $redirectTo = 'hr/profile';break;
             case 3 : $redirectTo = 'teacher/profile';break;
             case 4 : $redirectTo = 'user/profile';break;
         }

@@ -41,7 +41,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="image-replace cd-email" for="signin-email">E-mail Address</label>
                                         <input class="full-width has-padding has-border" id="signin-email"
-                                            type="E-mail Address" placeholder="E-mail" name="email">
+                                            type="E-mail Address" placeholder="E-mail" name="email" value="{{ old('email') }}">
                                         @error('email')
                                             <span class="text-danger">{{ $message }}</span>
                                             </span>
@@ -53,7 +53,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="image-replace cd-password" for="signin-password">Password</label>
                                         <input class="full-width has-padding has-border" id="signin-password"
-                                            type="password" placeholder="Password" name="password">
+                                            type="password" placeholder="Password" name="password" value="{{ old('password') }}">
                                         @error('password')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror

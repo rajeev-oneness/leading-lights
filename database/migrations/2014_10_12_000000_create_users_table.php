@@ -25,12 +25,12 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('fathers_name')->nullable();
             $table->string('gender')->nullable();
-            $table->string('class')->nullable();
+            $table->integer('class')->nullable();
+            $table->string('group_ids')->nullable();
             $table->string('mobile')->nullable();
             $table->string('address')->nullable();
             $table->string('dob')->nullable()->comment('Date of Birth');
             $table->string('doj')->nullable()->comment('Date of Joining');
-            $table->string('latest_certificate')->nullable();
             $table->string('qualification')->nullable();
             $table->string('special_subject')->nullable();
             $table->string('id_no')->unique();
@@ -48,7 +48,8 @@ class CreateUsersTable extends Migration
             'email' => 'admin@gmail.com',
             'password' => Hash::make('123'),
             'status' => 1,
-            'id_no' => 'LLA005003'
+            'id_no' => 'LLA005003',
+            'class' => null,
         ];
         $data[] = [
             'role_id' => 2,
@@ -57,7 +58,8 @@ class CreateUsersTable extends Migration
             'email' => 'hr@gmail.com',
             'password' => Hash::make('123'),
             'status' => 1,
-            'id_no' => 'LLHR003897'
+            'id_no' => 'LLHR003897',
+            'class' => null,
         ];
         $data[] = [
             'role_id' => 3,
@@ -66,7 +68,8 @@ class CreateUsersTable extends Migration
             'email' => 'teacher@gmail.com',
             'password' => Hash::make('123'),
             'status' => 1,
-            'id_no' => 'LLT003456'
+            'id_no' => 'LLT003456',
+            'class' => null,
         ];
         $data[] = [
             'role_id' => 4,
@@ -75,7 +78,8 @@ class CreateUsersTable extends Migration
             'email' => 'student@gmail.com',
             'password' => Hash::make('123'),
             'status' => 1,
-            'id_no' => 'LLST003567'
+            'id_no' => 'LLST003567',
+            'class' => 1,
         ];
         DB::table('users')->insert($data);
     }

@@ -51,7 +51,12 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $student->id_no }}</td>
-                                    <td>{{ $student->class }}</td>
+                                    <td>
+                                        <?php 
+                                           $class_details = App\Models\Classes::find($student->class);
+                                        ?>
+                                        {{ $class_details->name }}
+                                    </td>
                                     <td>{{ $student->first_name }} {{ $student->last_name }}</td>
                                     <td>{{ $student->email }}</td>
                                     <td>{{ $student->mobile ? $student->mobile : 'N/A' }}</td>

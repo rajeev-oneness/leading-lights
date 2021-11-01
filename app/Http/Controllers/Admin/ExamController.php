@@ -84,7 +84,7 @@ class ExamController extends Controller
     public function destroy($id)
     {
         ArrangeExam::find($id)->delete();
-        SubmitExam::find($id)->delete();
+        SubmitExam::where('exam_id',$id)->delete();
         return redirect()->back()->with('success','Exam deleted');
     }
 }

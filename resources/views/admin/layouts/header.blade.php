@@ -21,7 +21,15 @@
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 	<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
 
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+	<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+
 	<title>Leading Lights</title>
+	<style>
+		.choices__input.choices__input--cloned{
+			width: 100% !important;
+		}
+	</style>
 </head>
 
 <body>

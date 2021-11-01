@@ -15,6 +15,7 @@ Auth::routes();
 
 Route::any('teacher/login', [LoginController::class,'teacher_login'])->name('teacher_login');
 Route::any('teacher/register', [RegisterController::class,'teacher_register'])->name('teacher_register');
+Route::any('hr/login', [LoginController::class,'hr_login'])->name('hr_login');
 Route::any('admin/login', [LoginController::class,'admin_login'])->name('admin_login');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -29,4 +30,8 @@ Route::group(['as'=>'user.','prefix' => 'user','middleware' => ['auth','student'
 
 Route::group(['as'=>'teacher.','prefix' => 'teacher','middleware' => ['auth','teacher']], function (){
     require 'custom/teacher.php';
+});
+
+Route::group(['as'=>'hr.','prefix' => 'hr','middleware' => ['auth']], function (){
+    require 'custom/hr.php';
 });

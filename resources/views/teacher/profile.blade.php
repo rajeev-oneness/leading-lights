@@ -170,14 +170,15 @@
                                     My Classes
                                 </div>
                                 <div class="row mt-5">
-                                    <div class="col-lg-6 col-sm-6">
+                                    @forelse($classes as $class)
+                                    <div class="col-md-12 col-lg-6 col-xl-6">
                                         <div class="card-shadow-primary profile-responsive card-border mb-3 card">
                                             <div class="dropdown-menu-header">
                                                 <div class="dropdown-menu-header-inner">
-
-                                                    <img src="{{ asset('frontend/images/teacher1.jpg') }}"
+    
+                                                    <img src="{{ asset('frontend/assets/images/pro1.png') }}"
                                                         class="img-fluid mx-auto d-block w-100">
-
+    
                                                 </div>
                                             </div>
                                             <ul class="list-group list-group-flush">
@@ -186,18 +187,17 @@
                                                         <div class="widget-content-wrapper justify-content-between">
                                                             <div class="widget-content-left mr-3">
                                                                 <div class="icon-wrapper m-0">
-                                                                    <span class="head">Drawing</span>
+                                                                    <span class="head">{{ $class->name }}</span>
                                                                 </div>
                                                             </div>
-
+    
                                                             <div class="widget-content-left d-sm-flex align-items-center">
                                                                 <div class="widget-heading text-dark"><img
                                                                         src="{{ asset('frontend/assets/images/calander.png') }}"
                                                                         class="img-fluid mx-auto"></div>
                                                                 <div class="widget-subheading">
-
-                                                                    Today<br /><span class="text">7:30
-                                                                        pm</span>
+    
+                                                                    Today<br /><span class="text">{{ (date('h:i A',strtotime($class->start_time)))}}</span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -206,210 +206,171 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-sm-6">
-                                        <div class="card-shadow-primary profile-responsive card-border mb-3 card">
-                                            <div class="dropdown-menu-header">
-                                                <div class="dropdown-menu-header-inner">
-
-                                                    <img src="{{ asset('frontend/images/teacher2.jpg') }}"
-                                                        class="img-fluid mx-auto d-block w-100">
-
-                                                </div>
-                                            </div>
-                                            <ul class="list-group list-group-flush">
-                                                <li class="bg-warm-flame list-group-item">
-                                                    <div class="widget-content p-0">
-                                                        <div class="widget-content-wrapper justify-content-between">
-                                                            <div class="widget-content-left mr-3">
-                                                                <div class="icon-wrapper m-0">
-                                                                    <span class="head">Abacus</span>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="widget-content-left d-sm-flex align-items-center">
-                                                                <div class="widget-heading text-dark"><img
-                                                                        src="{{ asset('frontend/assets/images/calander.png') }}"
-                                                                        class="img-fluid mx-auto"></div>
-                                                                <div class="widget-subheading">
-
-                                                                    Today<br /><span class="text">7:30
-                                                                        pm</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                    @empty
+                                    <div class="col-md-12">
+                                        <p class="alert alert-warning">No class available for today</p>
                                     </div>
+                                    @endforelse
                                     <!--  <div class="col-md-12 col-lg-6 col-xl-4">
-                                          <div class="card-shadow-primary profile-responsive card-border mb-3 card">
-                                              <div class="dropdown-menu-header">
-                                                  <div class="dropdown-menu-header-inner">
-                                                      
-                                                          <img src="assets/images/pro3.png" class="img-fluid mx-auto d-block w-100">
-                                                      
-                                                  </div>
-                                              </div>
-                                              <ul class="list-group list-group-flush">
-                                                  <li class="bg-warm-flame list-group-item">
-                                                      <div class="widget-content p-0">
-                                                          <div class="widget-content-wrapper justify-content-between">
-                                                              <div class="widget-content-left mr-3">
-                                                                  <div class="icon-wrapper m-0">
-                                                                      <span class="head">Live Class</span>
-                                                                  </div>
-                                                              </div>
-                                                              
-                                                              <div class="widget-content-left d-sm-flex align-items-center">
-                                                                  <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
-                                                                  <div class="widget-subheading">
-                                                                      
-                                                                        Today<br/><span class="text">7:30 pm</span>
-                                                                  </div>
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  </li>                                   
-                                              </ul>
-                                          </div>                            
-                                      </div> -->
+                                <div class="card-shadow-primary profile-responsive card-border mb-3 card">
+                                    <div class="dropdown-menu-header">
+                                        <div class="dropdown-menu-header-inner">
+                                            
+                                                <img src="assets/images/pro3.png" class="img-fluid mx-auto d-block w-100">
+                                            
+                                        </div>
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="bg-warm-flame list-group-item">
+                                            <div class="widget-content p-0">
+                                                <div class="widget-content-wrapper justify-content-between">
+                                                    <div class="widget-content-left mr-3">
+                                                        <div class="icon-wrapper m-0">
+                                                            <span class="head">Live Class</span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="widget-content-left d-sm-flex align-items-center">
+                                                        <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
+                                                        <div class="widget-subheading">
+                                                            
+                                                                Today<br/><span class="text">7:30 pm</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>                                   
+                                    </ul>
+                                </div>                            
+                            </div> -->
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-12 col-lg-5">
-                        <div class="card-hover-shadow-2x mb-3 card bg-card2">
+                        <div class="card-hover-shadow-2x mb-3 card bg-card">
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal not">
                                     Notifications
                                 </div>
-
+    
                             </div>
                             <div class="scroll-area-lg">
                                 <div class="scrollbar-container ps ps--active-y">
                                     <div class="p-2">
                                         <ul class="todo-list-wrapper list-group list-group-flush">
                                             <li class="list-group-item">
-
+    
                                                 <div class="widget-content p-0">
                                                     <div class="d-sm-flex align-items-center not">
                                                         <div class="">
-                                                                  <img src="
-                                                            {{ asset('frontend/assets/images/alart.png') }} " class="
-                                                            
-                                                            
-                                                            
-                                                            img-fluid">
-
+                                                                        <img src="
+                                                            {{ asset('frontend/assets/images/alart.png') }}"
+                                                            class="img-fluid">
+    
                                                         </div>
                                                         <div class="ml-3">
-                                                            <div class="widget-subheading"><i>Proin gravida nibh
-                                                                    vel velit auctor aliquet. sollicitudin, lorem
-                                                                    quis bibendum auctor, nisi elit consequat</i>
-                                                            </div>
-
+                                                            <div class="widget-subheading"><i>Proin gravida
+                                                                    nibh vel velit auctor aliquet. sollicitudin,
+                                                                    lorem quis bibendum auctor, nisi elit
+                                                                    consequat</i></div>
+    
                                                             <div class="d-sm-flex align-items-center">
-
+    
                                                                 <div class="widget-subheading">
-
+    
                                                                     Today<br><span class="text">7:30
                                                                         pm</span>
                                                                 </div>
                                                             </div>
-
+    
                                                         </div>
                                                     </div>
                                                 </div>
                                             </li>
                                             <li class="list-group-item">
-
+    
                                                 <div class="widget-content p-0">
                                                     <div class="d-sm-flex align-items-center not">
                                                         <div class="">
-                                                                  <img src="
-                                                            {{ asset('frontend/assets/images/alart.png') }} " class="
-                                                            
-                                                            
-                                                            
-                                                            img-fluid">
-
+                                                                        <img src="
+                                                            {{ asset('frontend/assets/images/alart.png') }}"
+                                                            class="img-fluid">
+    
                                                         </div>
                                                         <div class="ml-3">
-                                                            <div class="widget-subheading"><i>Proin gravida nibh
-                                                                    vel velit auctor aliquet. sollicitudin, lorem
-                                                                    quis bibendum auctor, nisi elit consequat</i>
-                                                            </div>
-
+                                                            <div class="widget-subheading"><i>Proin gravida
+                                                                    nibh vel velit auctor aliquet. sollicitudin,
+                                                                    lorem quis bibendum auctor, nisi elit
+                                                                    consequat</i></div>
+    
                                                             <div class="d-sm-flex align-items-center">
-
+    
                                                                 <div class="widget-subheading">
-
+    
                                                                     Today<br><span class="text">7:30
                                                                         pm</span>
                                                                 </div>
                                                             </div>
-
+    
                                                         </div>
                                                     </div>
                                                 </div>
                                             </li>
                                             <li class="list-group-item">
-
+    
                                                 <div class="widget-content p-0">
                                                     <div class="d-sm-flex align-items-center not">
                                                         <div class="">
-                                                                  <img src="
-                                                            {{ asset('frontend/assets/images/alart.png') }} " class="
-                                                            
-                                                            
-                                                            
-                                                            img-fluid">
-
+                                                                        <img src="
+                                                            {{ asset('frontend/assets/images/alart.png') }}"
+                                                            class="img-fluid">
+    
                                                         </div>
                                                         <div class="ml-3">
-                                                            <div class="widget-subheading"><i>Proin gravida nibh
-                                                                    vel velit auctor aliquet. sollicitudin, lorem
-                                                                    quis bibendum auctor, nisi elit consequat</i>
-                                                            </div>
-
+                                                            <div class="widget-subheading"><i>Proin gravida
+                                                                    nibh vel velit auctor aliquet. sollicitudin,
+                                                                    lorem quis bibendum auctor, nisi elit
+                                                                    consequat</i></div>
+    
                                                             <div class="d-sm-flex align-items-center">
-
+    
                                                                 <div class="widget-subheading">
-
+    
                                                                     Today<br><span class="text">7:30
                                                                         pm</span>
                                                                 </div>
                                                             </div>
-
+    
                                                         </div>
                                                     </div>
                                                 </div>
                                             </li>
                                             <li class="list-group-item">
-
+    
                                                 <div class="widget-content p-0">
                                                     <div class="d-sm-flex align-items-center not">
                                                         <div class="">
-                                                                  <img src="
-                                                            {{ asset('frontend/assets/images/alart.png') }} " class="img-fluid">
-
+                                                                        <img src="
+                                                            {{ asset('frontend/assets/images/alart.png') }}"
+                                                            class="img-fluid">
+    
                                                         </div>
                                                         <div class="ml-3">
-                                                            <div class="widget-subheading"><i>Proin gravida nibh
-                                                                    vel velit auctor aliquet. sollicitudin, lorem
-                                                                    quis bibendum auctor, nisi elit consequat</i>
-                                                            </div>
-
+                                                            <div class="widget-subheading"><i>Proin gravida
+                                                                    nibh vel velit auctor aliquet. sollicitudin,
+                                                                    lorem quis bibendum auctor, nisi elit
+                                                                    consequat</i></div>
+    
                                                             <div class="d-sm-flex align-items-center">
-
+    
                                                                 <div class="widget-subheading">
-
+    
                                                                     Today<br><span class="text">7:30
                                                                         pm</span>
                                                                 </div>
                                                             </div>
-
+    
                                                         </div>
                                                     </div>
                                                 </div>
@@ -432,21 +393,7 @@
 
             </div>
         </div>
-        <div class="app-wrapper-footer">
-            <div class="app-footer">
-                <div class="app-footer__inner">
-                    <div class="app-footer-right">
-                        <ul class="header-megamenu nav">
-                            <li class="nav-item">
-                                <a class="nav-link">
-                                    Copyright &copy; 2021 | All Right Reserved
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('teacher.layouts.static_footer')
     </div>
 
     <script>
