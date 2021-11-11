@@ -16,7 +16,10 @@ use App\Models\ClassAttendance;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Certificate;
+use App\Models\Classes;
 use App\Models\Payment;
+use App\Models\SpecialCourse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -147,31 +150,72 @@ class UserController extends Controller
 
     public function homework(Request $request)
     {
-        $class = Auth::user()->class;
-        $data['home_works'] =  HomeTask::where('class', $class)->latest()->get();
+        $data['class_wise_home_works'] =  HomeTask::where('class',  Auth::user()->class)->latest()->get();
+        $data['group_wise_home_works'] =  HomeTask::where('group_id', Auth::user()->group_ids)->where('group_id','!=',null)->latest()->get();
         return view('student.home_work')->with($data);
     }
 
     public function exam(Request $request)
     {
-        $all_exams = ArrangeExam::latest()->get();
-        return view('student.exam', compact('all_exams'));
+        $data['class_wise_exam'] = ArrangeExam::where('class',  Auth::user()->class)->latest()->get();
+        $data['group_wise_exam'] = ArrangeExam::where('group_id', Auth::user()->group_ids)->where('group_id','!=',null)->latest()->get();
+        return view('student.exam')->with($data);
     }
 
     public function payment(Request $request)
     {
-        $payment_details = Payment::where('user_id',Auth::user()->id)->first();
-        return view('student.payments',compact('payment_details'));
+        $current_user_id = Auth::user()->id;
+        $previous_payment = Payment::where('user_id',$current_user_id)->orderBy('id', 'desc')->first();
+        
+        if (!empty($previous_payment)) {
+            //Next date for payment 
+            $next_due_date = $previous_payment->next_due_date;
+            $today_date = date('Y-m-d');
+
+            if ($today_date > $next_due_date) {
+                $date1=date_create($next_due_date);
+                $date2=date_create($today_date);
+                $diff=date_diff($date1,$date2);
+                $extra_date = $diff->format("%a");
+                $data['extra_date'] = $extra_date;
+            }
+        }
+        $data['class_details'] = Classes::where('id',Auth::user()->class)->first();
+        $data['admission_payment_details'] = Payment::where('user_id',$current_user_id)->where('fees_type','admission_fee')->first();
+        $data['monthly_payment_details'] = Payment::where('user_id',$current_user_id)->where('fees_type','monthly_fees')->latest()->get();
+        $data['previous_payment'] = Payment::where('user_id',$current_user_id)->orderBy('id', 'desc')->first();
+        //Check students belong to special class
+        $data['special_course_details'] = SpecialCourse::where('id',Auth::user()->special_course_id)->first();
+        return view('student.payments')->with($data);
     }
 
     public function upload_homework(Request $request)
     {
+        $validation = Validator::make($request->all(), [
+            'upload_doc' => 'required|mimes:pdf'
+        ],$messages = [
+            'required' => 'Please upload a document!',
+            'mimes' => 'The document must be pdf format' 
+        ]);
+        $validationError = $validation->errors();
+        
+
+        if ($validation->fails()) {
+            if ($_POST['submit_btn'] === 'special_task') {
+                return redirect()->back()
+                ->withErrors($validationError, 'special_task_upload_error');
+            } else {
+                return redirect()->back()
+                ->withErrors($validationError, 'regular_task_upload_error');
+            }
+        }
+
         $name = Auth::user()->first_name . ' ' . Auth::user()->last_name;
         $class = Auth::user()->class;
         $id_no = Auth::user()->id_no;
         $subject = $request->subject;
 
-        $file = $request->file('file');
+        $file = $request->file('upload_doc');
         $fileName = imageUpload($file, 'student/home_task');
 
         $task = new  SubmitHomeTask;
@@ -182,7 +226,11 @@ class UserController extends Controller
         $task->upload_doc = $fileName;
         $task->task_id = $request->task_id;
         $task->save();
-        return response()->json('success');
+        if ($_POST['submit_btn'] === 'special_task'){
+            return redirect()->back()->with('special_task_upload_success','Home task uploaded successfully');
+        }else{
+            return redirect()->back()->with('regular_task_upload_success','Home task uploaded successfully');
+        }
     }
 
     public function class_attendance(Request $request)
@@ -223,12 +271,29 @@ class UserController extends Controller
 
     public function upload_exam(Request $request)
     {
+        $validation = Validator::make($request->all(), [
+            'upload_doc' => 'required|mimes:pdf'
+        ],$messages = [
+            'required' => 'Please upload a document!',
+            'mimes' => 'The document must be pdf format' 
+        ]);
+        $validationError = $validation->errors();
+
+        if ($validation->fails()) {
+            if ($_POST['submit_btn'] === 'special_exam') {
+                return redirect()->back()
+                ->withErrors($validationError, 'special_exam_upload_error');
+            } else {
+                return redirect()->back()
+                ->withErrors($validationError, 'regular_exam_upload_error');
+            }
+        }
         $name = Auth::user()->first_name . ' ' . Auth::user()->last_name;
         $class = Auth::user()->class;
         $id_no = Auth::user()->id_no;
         $subject = $request->subject;
 
-        $file = $request->file('file');
+        $file = $request->file('upload_doc');
         $fileName = imageUpload($file, 'student/exam');
 
         $exam = new  SubmitExam();
@@ -239,7 +304,11 @@ class UserController extends Controller
         $exam->upload_doc = $fileName;
         $exam->exam_id = $request->exam_id;
         $exam->save();
-        return response()->json('success');
+        if ($_POST['submit_btn'] === 'special_exam'){
+            return redirect()->back()->with('special_exam_upload_success','Exam uploaded successfully');
+        }else{
+            return redirect()->back()->with('regular_exam_upload_success','Exam uploaded successfully');
+        }
     }
 
     public function report_generate(Request $request)
@@ -302,19 +371,21 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             $image = $request->file('file');
-            $data['image'] = imageUpload($image, 'student_certificate');
+            $fileName = imageUpload($image, 'student_certificate');
 
             $data['user_id'] = Auth::user()->id;
             $data['updated_at'] = date('Y-m-d H:i:s');
 
-            DB::table('certificate')->where('user_id',$data['user_id'])->update($data);
+            $certificate = new Certificate();
+            $certificate->user_id = Auth::user()->id;
+            $certificate->image = $fileName;
+            $certificate->save();
         }
     }
 
-    public function payment_receipt(Request $request){
+    public function payment_receipt(Request $request,$payment_id){
         $current_user_id = Auth::user()->id;
-        $data['payment_details'] = Payment::where('user_id',$current_user_id)
-        ->first();
+        $data['payment_details'] = Payment::find($payment_id);
         $data['user_details'] = User::find($current_user_id);
         $pdf = PDF::loadView('student.payment_receipt', $data);
         return $pdf->download(Auth::user()->id_no . '.pdf');

@@ -44,12 +44,28 @@
                                         <option value="{{ $teacher->id }}" @if ($teacher->id == $group->teacher_id)
                                             selected
                                         @endif>{{ $teacher->first_name }}
-                                            {{ $teacher->last_name }}</option>
+                                            {{ $teacher->last_name }} - {{ $teacher->id_no }}</option>
                                     @endforeach
                                 </select>
                                 @if ($errors->has('teacher_id'))
                                 <span style="color: red;">{{ $errors->first('teacher_id') }}</span>
                             @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group edit-box">
+                                <label for="class_id">Class</label>
+                                <select class="form-control" name="class_id" id="class_id">
+                                    <option value="">Select Class</option>
+                                    @foreach ($classes as $class)
+                                        <option value="{{ $class->id }}" @if ($class->id === $group->class_id)
+                                            selected
+                                        @endif>{{ $class->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('class_id'))
+                                    <span style="color: red;">{{ $errors->first('class_id') }}</span>
+                                @endif
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -67,7 +83,8 @@
                                 ?>
                                 <select  id="choices-multiple-remove-button"  name="student_ids[]" multiple>
                                     @foreach ($students as $student)
-                                    <option value="{{ $student->id }}" <?php echo in_array($student->id,$ids)?"selected" :"" ;?> >{{  ucfirst($student->first_name) }} {{  ucfirst($student->last_name) }}</option>  
+                                    <option value="{{ $student->user_id }}" <?php echo in_array($student->user_id,$ids)?"selected" :"" ;?> >{{ $student->first_name }}
+                                        {{ $student->last_name }} - {{ $student->id_no }}</option>  
                                     @endforeach
                                 </select>
                                 @if ($errors->has('student_ids'))

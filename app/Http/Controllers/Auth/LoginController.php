@@ -86,9 +86,17 @@ class LoginController extends Controller
             $check_attendance->save();
         }
 
-        auth()->guard()->logout();
-        $request->session()->invalidate();
-        return redirect('/');
+        if (Auth::check() && Auth::user()->role_id == 3) {
+            auth()->guard()->logout();
+            $request->session()->invalidate();
+            return redirect()->route('teacher_login');
+        }
+        if (Auth::check() && Auth::user()->role_id == 4) {
+            auth()->guard()->logout();
+            $request->session()->invalidate();
+            return redirect()->route('login');
+        }
+        
     }
 
     public function teacher_login(Request $request)

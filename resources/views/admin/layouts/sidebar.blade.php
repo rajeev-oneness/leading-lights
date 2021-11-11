@@ -31,6 +31,9 @@
                 href="{{ route('admin.arrange_classes') }}"><i class="fas fa-chalkboard"></i>Arrange Class management</a></li>
         <li class="{{ Request::is('admin/exams*') ? 'active' : '' }}"><a
                 href="{{ route('admin.exams.index') }}"><i class="fas fa-chalkboard"></i>Manage Exams</a></li>
+        <li class="{{ Request::is('admin/special-courses*') ? 'active' : '' }}"><a
+                href="{{ route('admin.special-courses.index') }}"><i class="fas fa-book-open"></i>Course Management</a>
+        </li>
         <li class="{{ Request::is('admin/courses*') ? 'active' : '' }}"><a
                 href="{{ route('admin.courses.index') }}"><i class="fas fa-book-open"></i>Flash Course Management</a>
         </li>

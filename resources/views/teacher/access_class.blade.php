@@ -59,8 +59,8 @@
                                         {{-- {{ $arrange_class->class ?  $arrange_class->class : $group_details->name}} --}}
                                     </td>
                                     <td>{{ $arrange_class->date }}</td>
-                                    <td>{{ (date('h:i A',strtotime($arrange_class->start_time)))}}</td>
-                                    <td>{{ (date('h:i A',strtotime($arrange_class->end_time)))}}</td>
+                                    <td>{{ date('h:i A', strtotime($arrange_class->start_time)) }}</td>
+                                    <td>{{ date('h:i A', strtotime($arrange_class->end_time)) }}</td>
                                     <td>
                                         @php
                                             $minutes_to_add = 15;
@@ -75,7 +75,7 @@
                                                 ->where('class_id', $arrange_class->id)
                                                 ->where('user_id', Auth::user()->id)
                                                 ->first();
-                                            $class_start_time = date('H:i',strtotime($arrange_class->start_time));
+                                            $class_start_time = date('H:i', strtotime($arrange_class->start_time));
                                         @endphp
                                         <input type="hidden" name="meeting_url" id="meeting_url"
                                             value="{{ $arrange_class->meeting_url }}">
@@ -106,8 +106,8 @@
                                         @endif
                                     @elseif ($arrange_class->date == $today_date && $today_time <= $class_start_time)
                                             <button class="btn-pill btn-transition btn btn-success"><i
-                                                    class="fa fa-dot-circle">
-                                                    Upcoming</i></button>
+                                                class="fa fa-dot-circle">
+                                                Upcoming</i></button>
                                         @else
                                             <button class="btn-pill btn-transition btn btn-danger"><i
                                                     class="fa fa-dot-circle">
@@ -162,10 +162,11 @@
                                     <select name="class_name" id="class_name" class="form-control">
                                         <option value="">Select Class/Groups</option>
                                         @foreach ($groups as $group)
-                                            <option value="{{ $group->id . "-group"}}">{{ $group->name }}</option>
+                                            <option value="{{ $group->id . '-group' }}" class="text-primary">
+                                                {{ $group->name }}</option>
                                         @endforeach
                                         @foreach ($classes as $class)
-                                            <option value="{{ $class->id . "-class"}}">{{ $class->name }}</option>
+                                            <option value="{{ $class->id . '-class' }}">{{ $class->name }}</option>
                                         @endforeach
                                     </select>
                                     <span class="text-danger" id="class_error"></span>
@@ -174,7 +175,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="date">Date</label>
-                                    <input type="date" class="form-control" name="date" id="date">
+                                    <input type="text" class="form-control datepicker" name="date" id="date">
                                     <span class="text-danger" id="date_error"></span>
                                 </div>
                             </div>
@@ -269,13 +270,14 @@
             $('.openBtn').on('click', function() {
 
                 var prop_id = $(this).data('id');
-                var fragment="";
+                var fragment = "";
                 $.ajax({
                         type: 'POST',
-                        url: "{{ route('teacher.view_participation') }}" ,
+                        url: "{{ route('teacher.view_participation') }}",
                         data: {
                             _token: "{{ csrf_token() }}",
-                             prop_id : prop_id},
+                            prop_id: prop_id
+                        },
                         dataType: 'json',
 
                         success: function(data) {
@@ -283,17 +285,18 @@
                         },
                     }).then(data => {
                         $("#myTable").empty();
-                        $.each(data,function (i,value) {
+                        $.each(data, function(i, value) {
                             var email = value.email;
-                            var name = value.first_name +' '+ value.last_name;
+                            var name = value.first_name + ' ' + value.last_name;
                             if (value.comment) {
                                 var comment = value.comment;
                             } else {
                                 var comment = 'N/A';
                             }
-                            
+
                             // console.log();
-                            fragment +="<tr> <td>"+(i+1)+"</td> <td>"+email+"</td> <td>"+name+" </td><td>"+comment+"</td> </tr>";
+                            fragment += "<tr> <td>" + (i + 1) + "</td> <td>" + email +
+                                "</td> <td>" + name + " </td><td>" + comment + "</td> </tr>";
                         })
                         $("#myTable").append(fragment);
                     })
@@ -305,7 +308,7 @@
 
             });
         });
-        
+
 
         function arrange_class() {
             let subject = $('#subject').val();
@@ -440,5 +443,29 @@
             });
 
         }
+
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: new Date,
+            daysOfWeekDisabled: [0]
+        });
+
+        $('#class_name').on('click', function() {
+            var class_name = $('#class_name').val();
+            var after_split = class_name.split("-")[1];
+            if (after_split === 'group') {
+                $('.datepicker').datepicker('destroy').datepicker({
+                    format: 'yyyy-mm-dd',
+                    startDate: new Date(),
+                    // daysOfWeekDisabled: [0]
+                });
+            } else {
+                $('.datepicker').datepicker('destroy').datepicker({
+                    format: 'yyyy-mm-dd',
+                    startDate: new Date(),
+                    daysOfWeekDisabled: [0]
+                });
+            }
+        })
     </script>
 @endsection

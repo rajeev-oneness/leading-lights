@@ -29,7 +29,8 @@ class User extends Authenticatable
         'gender',
         'image',
         'mobile',
-        'last_login_time'
+        'last_login_time',
+        'special_course_id'
     ];
 
     /**

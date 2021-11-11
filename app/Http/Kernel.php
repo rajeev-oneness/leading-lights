@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\CheckStudentPayment;
+use App\Http\Middleware\SessionTimeOut;
 use App\Http\Middleware\StudentMiddleware;
 use App\Http\Middleware\TeacherMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -41,6 +42,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\SessionTimeOut::class
         ],
 
         'api' => [
@@ -70,6 +72,6 @@ class Kernel extends HttpKernel
         'admin' => AdminMiddleware::class,
         'student' => StudentMiddleware::class,
         'teacher' => TeacherMiddleware::class,
-        'payment.confirm' => CheckStudentPayment::class
+        'payment.confirm' => CheckStudentPayment::class,
     ];
 }

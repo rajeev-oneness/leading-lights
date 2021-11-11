@@ -37,7 +37,7 @@
                             <tr>
                                 <th>Serial No</th>
                                 <th>Organized By</th>
-                                <th>Class</th>
+                                <th>Class/Group</th>
                                 <th>Subject</th>
                                 <th>Full Marks</th>
                                 <th>Exam Date</th>
@@ -50,16 +50,30 @@
                             @foreach ($all_exams as $key => $exam)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ App\models\User::find($exam->user_id)->first_name }} {{ App\models\User::find($exam->user_id)->last_name }}</td>
+                                    <td>{{ App\models\User::find($exam->user_id)->first_name }}
+                                        {{ App\models\User::find($exam->user_id)->last_name }}</td>
                                     @php
+                                        if ($exam->group_id) {
+                                            $group_details = App\Models\Group::find($exam->group_id);
+                                        }
+                                        if ($exam->class) {
+                                            $class_details = App\Models\Classes::find($exam->class);
+                                        }
                                         $subject_details = App\Models\Subject::find($exam->subject);
-                                        $class_details = App\Models\Classes::find($exam->class);
                                     @endphp
-                                    <td>{{ $class_details->name }}</td>
+                                    <td>
+                                        @if ($exam->class)
+                                            {{ $class_details->name }} <span class="badge badge-info">Class</span>
+                                        @else
+                                            {{ $group_details->name }} <span class="badge badge-info">Group</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $subject_details->name }}</td>
                                     <td>{{ $exam->full_marks }}</td>
                                     <td>{{ $exam->date }}</td>
-                                    <td>{{ date('H:i',strtotime($exam->start_time)) }} <span class="text-success">to</span>  {{ date('H:i',strtotime($exam->end_time)) }}</td>
+                                    <td>{{ date('H:i', strtotime($exam->start_time)) }} <span
+                                            class="text-success">to</span> {{ date('H:i', strtotime($exam->end_time)) }}
+                                    </td>
                                     <td>{{ $exam->result_date }}</td>
                                     <td>
                                         {{-- <a href="{{ route('admin.exams.show', $exam->id) }}"><i

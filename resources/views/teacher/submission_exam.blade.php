@@ -1,5 +1,10 @@
 @extends('teacher.layouts.master')
 @section('content')
+<style>
+    .table thead th {
+        font-size: 14px !important;
+    }
+</style>
     <div class="app-main__outer">
         <div class="app-main__inner">
             <div class="app-page-title">
@@ -44,12 +49,23 @@
                                 <td>{{ $i + 1 }}</td>
                                 <td>{{ $exam->name }}</td>
                                 @php
-                                    if ($exam->class) {
-                                        $class_details = App\Models\Classes::find($exam->class);
-                                    }
-                                    $subject_details = App\Models\Subject::find($exam->subject);
-                                @endphp
-                                <th>{{ $class_details->name }}</th>
+                                if ($exam->group_id) {
+                                    $group_details = App\Models\Group::find($exam->group_id);
+                                }
+                                if ($exam->class) {
+                                    $class_details = App\Models\Classes::find($exam->class);
+                                }
+                                $subject_details = App\Models\Subject::find($exam->subject);
+                            @endphp
+                            <td>
+                                @if ($exam->class)
+                                    {{ $class_details->name }} <span
+                                        class="badge badge-secondary">Class</span>
+                                @else
+                                    {{ $group_details->name }} <span
+                                        class="badge badge-secondary">Group</span>
+                                @endif
+                            </td>
                                 <td>{{ $subject_details->name }}</td>
                                 <td>{{ $exam->id_no }}</td>
                                 <td>{{ $exam->created_at->format('d-m-Y') }}</td>

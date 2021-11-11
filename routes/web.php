@@ -20,6 +20,11 @@ Route::any('admin/login', [LoginController::class,'admin_login'])->name('admin_l
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+//Common Function
+Route::post('get-fees-by-class',[CommonController::class,'getFeesByClass'])->name('getFeesByClass');
+Route::post('get-course-by-class',[CommonController::class,'getCourseByClass'])->name('getCourseByClass');
+Route::post('get-student-by-class',[CommonController::class,'getStudentByClass'])->name('getStudentByClass');
+
 Route::group(['as'=>'admin.','prefix' => 'admin'], function(){
     require 'custom/admin.php';
 });

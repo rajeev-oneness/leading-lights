@@ -40,26 +40,40 @@
                                     <option value="">Select Teacher</option>
                                     @foreach ($teachers as $teacher)
                                         <option value="{{ $teacher->id }}">{{ $teacher->first_name }}
-                                            {{ $teacher->last_name }}</option>
+                                            {{ $teacher->last_name }} - {{ $teacher->id_no }}</option>
                                     @endforeach
                                 </select>
                                 @if ($errors->has('teacher_id'))
-                                <span style="color: red;">{{ $errors->first('teacher_id') }}</span>
-                            @endif
+                                    <span style="color: red;">{{ $errors->first('teacher_id') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group edit-box">
+                                <label for="class_id">Class</label>
+                                <select class="form-control" name="class_id" id="class_id">
+                                    <option value="">Select Class</option>
+                                    @foreach ($classes as $class)
+                                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('class_id'))
+                                    <span style="color: red;">{{ $errors->first('class_id') }}</span>
+                                @endif
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="name">Students Name</label>
-                                <select id="choices-multiple-remove-button" multiple name="student_ids[]">
+                                <select id="choices-multiple-remove-button" multiple name="student_ids[]" class="student_ids">
                                     @foreach ($students as $student)
-                                        <option value="{{ $student->id }}">{{ $student->first_name }}
-                                            {{ $student->last_name }}</option>
+                                        <option value="{{ $student->user_id }}">{{ $student->first_name }}
+                                            {{ $student->last_name }} - {{ $student->id_no }}</option>
                                     @endforeach
                                 </select>
                                 @if ($errors->has('student_ids'))
-                                <span style="color: red;">{{ $errors->first('student_ids') }}</span>
-                            @endif
+                                    <span style="color: red;">{{ $errors->first('student_ids') }}</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -79,8 +93,28 @@
                 // searchResultLimit:5,
                 // renderChoiceLimit:5
             });
-
-
+        });
+        $('#class_id').on('change', function() {
+            let class_id = $('#class_id').val();
+            $(".choices-multiple-remove-button").html('<option value="">** Loading...</option>');
+            $(".choices-multiple-remove-button").html('<option value="">--Select a Country--</option>');
+            $.ajax({
+                url: "{{ route('admin.getStudentsByClass') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    class_id: class_id
+                },
+                dataType: 'json',
+                type: 'post',
+                beforeSend:function(){
+		        	$(".choices-multiple-remove-button").html('<option value="">** Loading....</option>');	
+		        },
+                success: function(response) {
+                    if(response.msg == 'success'){
+                        $('#choices-multiple-remove-button').html('');
+                    }
+                }
+            });
         });
     </script>
 @endsection

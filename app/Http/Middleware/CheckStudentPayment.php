@@ -18,16 +18,19 @@ class CheckStudentPayment
      */
     public function handle(Request $request, Closure $next)
     {
-
         $payment_details = Payment::where('user_id',Auth::user()->id)->first();
         if (Auth::check() && Auth::user()->role->id == 4) {
-            if (isset($payment_details) && Auth::user()->status == 1) {
+            if ($payment_details && Auth::user()->status == 1) {
+                $next_due_date = $payment_details->next_due_date;
+                $additional_next_due_date = date('Y-m-d',strtotime($next_due_date.'+2 day'));
+                if ($additional_next_due_date < date('Y-m-d') && Auth::user()->special_course_id) {
+                    return redirect()->route('user.payment');
+                }
                 return $next($request);
-            }else{
-                return redirect()->route('user.payment');
-            }           
-        } else {
-            return redirect()->route('login');
+            }
+            return redirect()->route('user.payment');
+          
         }
+        return redirect()->route('login');
     }
 }

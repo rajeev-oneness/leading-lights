@@ -47,8 +47,8 @@ class RejectionMail extends Notification
                     ->line('Your account is rejected by admin due to insufficient documents')
                     ->line('We are providing a section where you can upload your documents')
                     ->line('Your login credential is: ')
-                    ->line('Your email id : '.$this->user['email'])
-                    ->line('Your password is : '.$this->user['id_no'])
+                    ->line('User id : '.$this->user['email'])
+                    ->line('Password : '.$this->user['id_no'])
                     ->line('Thank you for using our application!');
     }
 

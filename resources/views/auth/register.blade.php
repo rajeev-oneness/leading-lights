@@ -73,7 +73,8 @@
                             <div class="form-row">
                                 <div class="form-group col-sm-6">
                                     <label for="">Class<span class="text-danger">*</span></label>
-                                    <select name="class" class="form-control">
+                                    <select name="class" class="form-control" id="class" >
+                                        <option value="">Select Class</option>
                                         @foreach ($classes as $class)
                                             <option value="{{ $class->id }}" @if (old('class') == $class->name)
                                                 selected
@@ -82,6 +83,12 @@
                                         @error('class')
                                              <span class="text-danger">{{ $message }}</span>
                                         @enderror
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="">Special Course</label>
+                                    <select  class="form-control" id="course_id" name="course_id">
+                                      
                                     </select>
                                 </div>
                                 <div class="form-group col-sm-6">
@@ -113,6 +120,7 @@
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     function mobileValidation() {
         if($('[name=mobile]').val().length > 10){
@@ -127,5 +135,36 @@
             document.getElementById("submit").style.cursor = 'pointer';
         }
     }
+
+    $('#class').on('change', function() {
+            let class_id = $('#class').val();
+            // $(".choices-multiple-remove-button").html('<option value="">** Loading...</option>');
+            // $(".choices-multiple-remove-button").html('<option value="">--Select a Country--</option>');
+            $.ajax({
+                url: "{{ route('getCourseByClass') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    class_id: class_id
+                },
+                dataType: 'json',
+                type: 'post',
+                beforeSend:function(){
+		        	$("#course_id").html('<option value="">** Loading....</option>');	
+		        },
+                success: function(response) {
+                    if(response.msg == 'success'){
+                        $("#course_id").html('');
+                        var option = '<option value="">Select a course</option>';
+                        $.each( response.result, function( i ) {
+                            option +='<option value="'+response.result[i].id+'">'+response.result[i].title+'</option>';
+                        });
+
+		                $("#course_id").append(option);
+                    }else{
+		            $("#course_id").html('<option value="">No Course Found</option>');
+		          }
+                }
+            });
+        });
 </script>
 @endsection

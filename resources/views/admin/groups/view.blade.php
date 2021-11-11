@@ -35,15 +35,22 @@
 								@php
 									$teacher = App\Models\User::where('id',$group->teacher_id)->first();
 								@endphp
-								<input type="text" class="form-control" value="{{ $teacher->first_name }} {{ $teacher->last_name }}">
+								<input type="text" class="form-control" value="{{ $teacher->first_name }} {{ $teacher->last_name }}" disabled>
                             </div>
                         </div>
+                        <div class="col-lg-6">
+                            <div class="form-group edit-box">
+                                <label for="class">Class</label>
+								<input type="text" class="form-control" value="{{ $classes->name }}" disabled>
+                            </div>
+                        </div>
+
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="name">Students Name</label>
 									@foreach ($student_details as $key => $student_detail)
 										<div class="col-md-6">
-											<strong>{{ $key + 1 }}.</strong> {{ $student_detail->first_name }} {{ $student_detail->last_name }}
+											<strong>{{ $key + 1 }}.</strong> {{ $student_detail->first_name }} {{ $student_detail->last_name }} - {{ $student_detail->id_no }}
 										</div>	
 									@endforeach
                             </div>

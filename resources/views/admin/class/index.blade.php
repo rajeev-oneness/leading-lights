@@ -38,7 +38,8 @@
                             <tr>
                                 <th>Serial No</th>
                                 <th>Class Name</th>
-                                <th>Creation Date</th>
+                                <th>Admission Fees(&#8377;)</th>
+                                <th>Monthly Fees(&#8377;)</th>
                                 <th style="width:100px">Action</th>
                             </tr>
                         </thead>
@@ -47,7 +48,8 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $class->name }}</td>
-                                    <td>{{ date('d/m/Y', strtotime($class->created_at)) }}</td>
+                                    <td>{{ $class->admission_fees }}</td>
+                                    <td>{{ $class->monthly_fees }}</td>
                                     <td>
                                         {{-- <a href="{{ route('admin.classes.show', $class->id) }}"><i
                                                 class="far fa-eye"></i></a> --}}

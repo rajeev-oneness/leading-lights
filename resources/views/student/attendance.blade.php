@@ -105,8 +105,9 @@
                                             @endforeach 
                                             @else
                                             <tr>
+                                                <td>1</td>
                                                 <td>{{ $date }}</td>
-                                                <td>N/A</td>
+                                                {{-- <td>N/A</td> --}}
                                                 {{-- <td>{{ $first_login_time }}</td>
                                                 <td>{{ $last_login_time }}</td> --}}
                                                 <td>

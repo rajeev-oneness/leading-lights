@@ -39,6 +39,7 @@
                                 <th>Serial No</th>
                                 <th>Student Id</th>
                                 <th>Class</th>
+                                <th>Special Course</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
@@ -51,12 +52,18 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $student->id_no }}</td>
-                                    <td>
-                                        <?php 
+                                    <?php 
                                            $class_details = App\Models\Classes::find($student->class);
+                                           $course_details = App\Models\SpecialCourse::find($student->special_course_id);
+                                           if (isset($course_details)) {
+                                              $course_title = $course_details->title;
+                                           }else{
+                                            $course_title = 'N/A'; 
+                                           }
                                         ?>
-                                        {{ $class_details->name }}
-                                    </td>
+                                    <td><span class="text-success">{{ $class_details->name }}</span></td>
+                                    <td><span class="text-info">{{ $course_title }}</span></td>
+                                    {{-- <td>{{ $course_details->title ? $course_details->title : 'N/A' }}</td> --}}
                                     <td>{{ $student->first_name }} {{ $student->last_name }}</td>
                                     <td>{{ $student->email }}</td>
                                     <td>{{ $student->mobile ? $student->mobile : 'N/A' }}</td>

@@ -52,7 +52,7 @@ class RegisterController extends Controller
     }
 
     public function showRegistrationForm() {
-        $classes = Classes::latest()->get();
+        $classes = Classes::orderBy('name')->get();
         return view ('auth.register',compact('classes'));
     }
     /**
@@ -124,7 +124,8 @@ class RegisterController extends Controller
             'class' => $data['class'],
             'gender' => $data['gender'],
             'password' => Hash::make($id_no),
-            'image' => $imageName
+            'image' => $imageName,
+            'special_course_id' => $data['course_id']
         ]);
 
         //Store certificate 

@@ -1,5 +1,12 @@
 @extends('teacher.layouts.master')
 @section('content')
+    <style>
+        .popover,
+        .tooltip {
+            opacity: unset;
+        }
+
+    </style>
     <div class="app-main__outer">
         <div class="app-main__inner">
             <div class="app-page-title">
@@ -40,17 +47,29 @@
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="d-sm-flex align-items-center justify-content-between">
-                                    <select class="form-control" id="class" name="class">
+                                    {{-- <select class="form-control" id="class" name="class">
                                         <option value="" selected>Class</option>
                                         @foreach ($classes as $class)
                                             <option value="{{ $class->id }}" @if (old('class') == $class->id) selected @endif>
+                                                {{ $class->name }}</option>
+                                        @endforeach
+                                    </select> --}}
+                                    <select name="class" id="class_name" class="form-control">
+                                        <option value="">Select Class/Groups</option>
+                                        @foreach ($groups as $group)
+                                            <option value="{{ $group->id . '-group' }}" class="text-info">
+                                                {{ $group->name }}</option>
+                                        @endforeach
+                                        @foreach ($classes as $class)
+                                            <option value="{{ $class->id . '-class' }}" @if (old('class') == $class->id) selected @endif>
                                                 {{ $class->name }}</option>
                                         @endforeach
                                     </select>
                                     <select class="form-control" id="subject" name="subject">
                                         <option value="" selected>Subject</option>
                                         @foreach ($subjects as $subject)
-                                            <option value="{{ $subject->id }}" @if (old('subject') == $subject->id) selected @endif>{{ $subject->name }}</option>
+                                            <option value="{{ $subject->id }}" @if (old('subject') == $subject->id) selected @endif>
+                                                {{ $subject->name }}</option>
                                         @endforeach
                                     </select>
 
@@ -67,21 +86,32 @@
                                     <div class="d-sm-flex align-items-baseline ">
                                         <p class="des  mr-2"><span class="mr-2"><i
                                                     class="fa fa-circle"></i></span>Exam Date</p>
-                                        <input type="date" name="date" id="date" class="form-control"
+                                        <input type="text" name="date" id="date" class="form-control datepicker"
                                             value="{{ old('date') }}">
 
                                     </div>
                                     <div class="d-sm-flex align-items-baseline ">
                                         <p class="des  mr-2"><span class="mr-2"><i
                                                     class="fa fa-circle"></i></span>Starting Time</p>
-                                        <input type="time" name="start_time" id="start_time" class="form-control"
-                                            value="{{ old('start_time') }}">
+                                        <div class="input-group clockpicker">
+                                            <input type="text" class="form-control" value="{{ old('start_time') }}"
+                                                name="start_time">
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-time"></span>
+                                            </span>
+                                        </div>
                                     </div>
                                     <div class="d-sm-flex align-items-baseline ">
                                         <p class="des  mr-2"><span class="mr-2"><i
                                                     class="fa fa-circle"></i></span>Ending time</p>
-                                        <input type="time" name="end_time" id="end_time" class="form-control"
-                                            value="{{ old('end_time') }}">
+
+                                        <div class="input-group clockpicker">
+                                            <input type="text" class="form-control" value="{{ old('end_time') }}"
+                                                name="end_time">
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-time"></span>
+                                            </span>
+                                        </div>
 
                                     </div>
                                 </div>
@@ -107,8 +137,8 @@
                                     <div class="d-sm-flex align-items-baseline">
                                         <p class="des  mr-2"><span class="mr-2"><i
                                                     class="fa fa-circle"></i></span>Expected Result Date</p>
-                                        <input type="date" name="result_date" id="result_date" class="form-control"
-                                            value="{{ old('result_date') }}">
+                                        <input type="text" name="result_date" id="result_date"
+                                            class="form-control datepicker1" value="{{ old('result_date') }}">
 
                                     </div>
                                 </div>
@@ -121,7 +151,7 @@
                                     @endif
                                 </div>
                                 <!--  <p class="des dec"><span class="mr-2"><i class="fa fa-circle"></i></span>Set Quiestion Mannually</p>
-                                <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea> -->
+                                    <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea> -->
                                 <div class="card-header-title mb-4">
                                     Upload Quiestion Paper as a Document </div>
                                 <div class="file-upload">
@@ -129,7 +159,7 @@
                                         onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
                                     <div class="image-upload-wrap">
                                         <input class="file-upload-input" id="upload_file" name="upload_file" type='file'
-                                             accept="image/*" />
+                                            accept="image/*" />
                                         <div class="drag-text">
                                             <h3>Drag and drop a file or select add Image</h3>
                                         </div>
@@ -143,7 +173,8 @@
                                     </div>
                                     <span id="choose_file"></span>
                                     @if ($errors->has('upload_file'))
-                                        <span style="color: red;" id="file_err">{{ $errors->first('upload_file') }}</span>
+                                        <span style="color: red;"
+                                            id="file_err">{{ $errors->first('upload_file') }}</span>
                                     @endif
                                 </div>
                                 <button class="btn-pill btn btn-dark mt-4">Assign Now</button>
@@ -154,7 +185,7 @@
                                     <thead>
                                         <tr>
                                             <th>Serial no</th>
-                                            <th>Class</th>
+                                            <th>Class/Group Name</th>
                                             <th>Subject</th>
                                             <th>Full Marks</th>
                                             <th>Exam Date</th>
@@ -167,18 +198,29 @@
                                             <tr class="bg-tr">
                                                 <th>{{ $i + 1 }}</th>
                                                 @php
-                                                if ($exam->class) {
-                                            $class_details = App\Models\Classes::find($exam->class);
-                                        }
-                                        $subject_details = App\Models\Subject::find($exam->subject);
+                                                    if ($exam->group_id) {
+                                                        $group_details = App\Models\Group::find($exam->group_id);
+                                                    }
+                                                    if ($exam->class) {
+                                                        $class_details = App\Models\Classes::find($exam->class);
+                                                    }
+                                                    $subject_details = App\Models\Subject::find($exam->subject);
                                                 @endphp
-                                                <th>{{ $class_details->name }}</th>
+                                                <td>
+                                                    @if ($exam->class)
+                                                        {{ $class_details->name }} <span
+                                                            class="badge badge-secondary">Class</span>
+                                                    @else
+                                                        {{ $group_details->name }} <span
+                                                            class="badge badge-secondary">Group</span>
+                                                    @endif
+                                                </td>
                                                 <td>{{ $subject_details->name }}</td>
                                                 <td>{{ $exam->full_marks }}</td>
                                                 <td>{{ $exam->date }}</td>
-                                                <td>{{ date('H:i', strtotime($exam->start_time)) }} <span
+                                                <td>{{ date('h:i A', strtotime($exam->start_time)) }} <span
                                                         class="text-success">to</span>
-                                                    {{ date('H:i', strtotime($exam->end_time)) }}</td>
+                                                    {{ date('h:i A', strtotime($exam->end_time)) }}</td>
                                                 <td>{{ $exam->result_date }}</td>
                                             </tr>
                                         @endforeach
@@ -193,6 +235,27 @@
         @include('teacher.layouts.static_footer')
     </div>
     <script>
+        $('#class_name').on('click', function() {
+            var class_name = $('#class_name').val();
+            var after_split = class_name.split("-")[1];
+            if (after_split === 'group') {
+                $('.datepicker').datepicker('destroy').datepicker({
+                    format: 'yyyy-mm-dd',
+                    startDate: new Date(),
+                    // daysOfWeekDisabled: [0]
+                });
+            } else {
+                $('.datepicker').datepicker('destroy').datepicker({
+                    format: 'yyyy-mm-dd',
+                    startDate: new Date(),
+                    daysOfWeekDisabled: [0]
+                });
+            }
+        })
+        setTimeout(() => {
+            $('.alert-success').css('display', 'none');
+            $('.alert-warning').css('display', 'none');
+        }, 4000);
         $(document).ready(function() {
             $('#exam_table').DataTable();
         });
@@ -200,6 +263,23 @@
             var file_name = this.files[0].name;
             $('#file_err').html('');
             $("#choose_file").html(`One file chosen: <span class="text-info">${file_name}</span>`);
+        });
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: new Date(),
+            daysOfWeekDisabled: [0]
+        });
+        $('.datepicker1').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: '+20d',
+            daysOfWeekDisabled: [0]
+        });
+        $('.clockpicker').clockpicker({
+            placement: 'bottom',
+            align: 'right',
+            donetext: 'Done',
+            'default': 'now',
+            // autoclose: true,
         });
     </script>
 @endsection

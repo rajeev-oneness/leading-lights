@@ -107,7 +107,7 @@
                     </div>                     
                   
                 </div>
-                <h5>Special Classes</h5>
+                <h5>Group Wise Classes</h5>
                 <div class="tabs-animation">  
                     <div class="card mb-3">                            
                         <div class="card-body">

@@ -43,9 +43,11 @@ class WelcomeMail extends Notification
         return (new MailMessage)
                     ->greeting('Hello '.$this->user['first_name'].' '.$this->user['last_name'])
                     ->subject('Approved your account :)')
+                    ->line('Your account has been APPROVED')
+                    ->line('You can now access leading light web portal.')
                     ->line('Your login credential is: ')
-                    ->line('Your email id : '.$this->user['email'])
-                    ->line('Your password is : '.$this->user['id_no'])
+                    ->line('User id : '.$this->user['email'])
+                    ->line('Password : '.$this->user['id_no'])
                     ->line('Thank you for using our application!');
     }
 

@@ -24,7 +24,7 @@
                 <form action="{{ route('admin.classes.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row m-0 pt-3">
-                        <div class="col-lg-12">
+                        <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="name">Class Name</label>
                                 <input type="text" name="name" class="form-control" id="name" value="{{ old('name') }}">
@@ -33,10 +33,31 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="col-lg-6">
+                            <div class="form-group edit-box">
+                                <label for="admission_fees">Admission Fees(&#8377;)</label>
+                                <input type="number" name="admission_fees" class="form-control" id="admission_fees"
+                                    value="{{ old('admission_fees') }}" min="1">
+                                @if ($errors->has('admission_fees'))
+                                    <span style="color: red;">{{ $errors->first('admission_fees') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group edit-box">
+                                <label for="monthly_fees">Monthly Fees(&#8377;)</label>
+                                <input type="number" name="monthly_fees" class="form-control" id="monthly_fees"
+                                    value="{{ old('monthly_fees') }}" min="1">
+                                @if ($errors->has('monthly_fees'))
+                                    <span style="color: red;">{{ $errors->first('monthly_fees') }}</span>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group d-flex justify-content-end">
                         <button type="submit" class="actionbutton">SAVE</button>
                     </div>
+
                 </form>
             </div>
         </div>

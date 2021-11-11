@@ -71,6 +71,25 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4">
+                                <label>Course :</label>
+                            </div>
+                            <div class="col-md-6">
+                                <?php
+                                $courses_details = App\Models\SpecialCourse::find($student->special_course_id);
+                                if (isset($courses_details)) {
+                                      $course_title = $courses_details->title;
+                                   }else{
+                                    $course_title = 'N/A'; 
+                                   }
+                                ?>
+                                <p>{{ $course_title }}</p>
+                            </div>
+                            <div class="col-md-2">
+                                <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
                                 <label>Student Id :</label>
                             </div>
                             <div class="col-md-6">
@@ -117,7 +136,7 @@
             
                 @if ($student->rejected == 1 && $student->status == 0 && $certificates->created_at !== $certificates->updated_at)
                 <div>
-            <h5 class="text-warning">N:B: Your document upload successfully.You will be notified once approved your account</h5>
+            <h5 class="text-warning">N:B: Your documents have been uploaded successfully. You will be notified once ADMIN approved your account.</h5>
         </div>
             @endif
             

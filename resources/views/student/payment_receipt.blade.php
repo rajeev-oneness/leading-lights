@@ -20,6 +20,11 @@
     <p><strong>Class :</strong> {{ $class_details->name }}</span>
     <p><strong class="text-success">Your payment details is below: </strong> </p>
     <p><strong>Payment Id: </strong> {{ $payment_details->invoice_no }}</p>
+    @if ($user_details->special_course_id)
+    <p><strong>Payment For: </strong> {{ $payment_details->fees_type === 'monthly_fees' ? 'Monthly Fees for '.date('F',strtotime($payment_details->payment_month)) : 'Admission Fees'}}</p>  
+    @else
+    <p><strong>Payment For: </strong> {{ $payment_details->fees_type === 'monthly_fees' ? 'Monthly Fees for '.date('F',strtotime($payment_details->payment_month)) : 'Admission Fees with 1 month advance'}}</p>   
+    @endif
     <p><strong>Amount: Rs</strong>{{ $payment_details->amount }}</p>
     <p><strong>Payment Method: </strong>{{ $payment_details->payment_method }}</p>
     <p><strong>Date: </strong>{{ date('Y-m-d',strtotime($payment_details->created_at)) }}</p>

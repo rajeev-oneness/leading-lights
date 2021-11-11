@@ -6,6 +6,8 @@
     <meta charset="utf-8">
     <link rel="icon" href="images/favicon.png" type="image/png" sizes="40x19">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/style.css') }}">
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -16,7 +18,7 @@
         integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('frontend/css/style.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/animate.css') }}">
-    <link href="{{ asset('frontend/css/responsive.css') }}" rel="stylesheet" media="all">
+    {{-- <link href="{{ asset('frontend/css/responsive.css') }}" rel="stylesheet" media="all"> --}}
 </head>
 
 <body id="bg-body">

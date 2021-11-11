@@ -38,6 +38,7 @@
                             <tr>
                                 <th>Serial No</th>
                                 <th>Group Name</th>
+                                <th>Class</th>
                                 <th>Assigned Teacher</th>
                                 <th style="width:100px">Action</th>
                             </tr>
@@ -47,6 +48,10 @@
                                 <tr>
                                     <td>{{ $i + 1 }}</td>
                                     <td>{{ $group->name }}</td>
+                                    <td>
+                                        <?php $class = App\Models\Classes::where('id',$group->class_id)->first();?>
+                                        {{ $class->name }}
+                                    </td>
                                     <td>
                                         <?php $user = App\Models\User::where('id',$group->teacher_id)->first();?>
                                         {{ $user->first_name }} {{ $user->last_name }}

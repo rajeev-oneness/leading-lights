@@ -2,7 +2,8 @@
     namespace App\Http\Controllers\Admin;
     use App\Http\Controllers\Admin\Auth\LoginController;
     use App\Http\Controllers\Admin\Auth\ResetPasswordController;
-    use Illuminate\Support\Facades\Auth,Illuminate\Support\Facades\Route;
+use App\Models\SpecialCourse;
+use Illuminate\Support\Facades\Auth,Illuminate\Support\Facades\Route;
 
     Route::get('/login', [LoginController::class,'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class,'login']);
@@ -32,6 +33,7 @@
         Route::resource('exams', ExamController::class);
         Route::resource('subjects', SubjectController::class);
         Route::resource('groups', GroupController::class);
+        Route::resource('special-courses', SpecialCoursesController::class);
         Route::put('/approve-student/{id}',[StudentController::class,'approval'])->name('students.approve');
         Route::put('/reject-student/{id}',[StudentController::class,'reject_student'])->name('students.reject');
         Route::put('/approve-teacher/{id}',[TeacherController::class,'approval'])->name('teachers.approve');
@@ -40,5 +42,10 @@
         Route::delete('/delete-arrange-classes/{id}',[ClassController::class,'delete_arrange_classes'])->name('delete_arrange_classes');
 
         Route::post('view-participation',[ClassController::class,'view_participation'])->name('view_participation');
+
+        Route::post('get-students-by-class',[ClassController::class,'getStudentsByClass'])->name('getStudentsByClass');
+
+        //Send email user who not payment yet for special courses
+        Route::post('monthly-payment-check/{id}',[ClassController::class,'monthly_payment_check'])->name('monthly_payment_check');
 
     });
