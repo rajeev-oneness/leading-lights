@@ -22,6 +22,10 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.css" />
 
+    <link rel="stylesheet" href="{{ asset('frontend/css/owl.carousel.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('frontend/css/style.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('frontend/css/animate.css') }}">
+
     {{-- Full Calender --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
@@ -42,6 +46,13 @@
 
         table.dataTable thead .sorting {
             background-image: none !important;
+        }
+        .table thead th {
+        font-size: 14px !important;
+        }
+
+        .owl-carousel{
+            display: block;
         }
 
     </style>

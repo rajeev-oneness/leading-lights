@@ -457,7 +457,7 @@
                     <div class="widget-content-left header-user-info">
                         <div class="widget-heading"> HI’ {{ Auth::user()->first_name }}</div>
                     </div>
-                    <div class="widget-content-left ml-3">
+                    <div class="widget-content-left ml-3 responsive-top">
                         <div class="btn-group">
                             <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                 class="p-0 btn">

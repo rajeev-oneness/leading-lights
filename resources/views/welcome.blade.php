@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
     <div id="myCarousel" class="carousel slide carousel-fade" data-ride="carousel">
         <div class="container">
             <ol class="carousel-indicators carousel-indicators-numbers">
@@ -16,7 +17,7 @@
                                     <div class="banner-text">
                                         <div class="">
                                             <img src="
-                                            {{ asset('frontend/images/light.png') }}" class="img-fluid">
+                                                    {{ asset('frontend/images/light.png') }}" class="img-fluid">
                                             <p class="head">QUALITY <span class="bold">EARLY
                                                     EDUCATION</span> IS NOT
                                                 A LUXURY, BUT A <span class="color">NECESSITY</span> <span
@@ -47,7 +48,7 @@
                                     <div class="banner-text">
                                         <div class="">
                                             <img src="
-                                            {{ asset('frontend/images/light.png') }}" class="img-fluid">
+                                                    {{ asset('frontend/images/light.png') }}" class="img-fluid">
                                             <p class="head">QUALITY <span class="bold">EARLY
                                                     EDUCATION</span> IS NOT
                                                 A LUXURY, BUT A <span class="color">NECESSITY</span> <span
@@ -66,11 +67,11 @@
                                         <!-- <div class="ripple" style="animation-delay: 0s"></div> -->
                                     </div>
                                     <!-- <div class="banner-img">
-                                 <img src="images/1.png" class="img-fluid mx-auto pos-ab">
-                                 <img src="images/2.png" class="img-fluid mx-auto pos-ab">
-                                 <img src="images/3.png" class="img-fluid mx-auto pos-ab">
-                                
-                           </div>   -->
+                                         <img src="images/1.png" class="img-fluid mx-auto pos-ab">
+                                         <img src="images/2.png" class="img-fluid mx-auto pos-ab">
+                                         <img src="images/3.png" class="img-fluid mx-auto pos-ab">
+                                        
+                                   </div>   -->
                                 </div>
                             </div>
                         </div>
@@ -206,8 +207,8 @@
                         <div class="item">
                             <div class="features-box">
                                 <div class="">
-                      <img src="
-                                    {{ asset('frontend/images/course1.jpg') }}" class="img-fluid mx-auto">
+                                    <img src="
+                                            {{ asset('frontend/images/course1.jpg') }}" class="img-fluid mx-auto">
                                 </div>
                                 <div class="features-text">
                                     <h6>Drawing</h6>
@@ -219,9 +220,8 @@
                         <div class="item">
                             <div class="features-box">
                                 <div class="">
-                      <img src="
-                                    {{ asset('frontend/images/course2.jpg') }} "
-                                                class="   img-fluid mx-auto">
+                                    <img src="
+                                            {{ asset('frontend/images/course2.jpg') }} " class="   img-fluid mx-auto">
                                 </div>
                                 <div class="features-text">
                                     <h6>Abacus</h6>
@@ -233,8 +233,8 @@
                         <div class="item">
                             <div class="features-box">
                                 <div class="">
-                      <img src="
-                                    {{ asset('frontend/images/course3.jpg') }}" class="img-fluid mx-auto">
+                                    <img src="
+                                            {{ asset('frontend/images/course3.jpg') }}" class="img-fluid mx-auto">
                                 </div>
                                 <div class="features-text">
                                     <h6>Online Coaching</h6>
@@ -246,8 +246,8 @@
                         <div class="item">
                             <div class="features-box">
                                 <div class="">
-                      <img src="
-                                    {{ asset('frontend/images/course1.jpg') }}" class="img-fluid mx-auto">
+                                    <img src="
+                                            {{ asset('frontend/images/course1.jpg') }}" class="img-fluid mx-auto">
                                 </div>
                                 <div class="features-text">
                                     <h6>Drawing</h6>
@@ -323,8 +323,8 @@
                         <div class="item">
                             <div class="media p-3 align-items-center img">
                                 <!-- <div class="quote">
-                                     <img src="images/quote.png" class="img-fluid">
-                                </div> -->
+                                             <img src="images/quote.png" class="img-fluid">
+                                        </div> -->
                                 <img src="{{ asset('frontend/images/img-1.jpg') }}" alt="John Doe"
                                     class="img-fluid">
                                 <div class="media-body">
@@ -397,24 +397,36 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="owl-carousel owl-theme events-boxes">
-                        <div class="item">
-                            <div class="features-box">
-                                <div class="">
-                      <img src="
-                                    {{ asset('frontend/images/event1.jpg') }}" class="img-fluid mx-auto">
-                                </div>
-                                <div class="features-text">
-                                    <h6>Summer Camp</h6>
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum.Ipsum is simply dummy text of the printing.</p>
+                        @foreach ($events as $event)
+                            <div class="item">
+                                <div class="features-box">
+                                    <div class="">
+                                        <img src="
+                                            {{ $event->image }}" class="img-fluid mx-auto" style="width: 343px;height:236px">
+                                    </div>
+                                    <div class="features-text">
+                                        <h6>{{ $event->title }}</h6>
+                                        <span class="text-success">{{ date('M d, Y', strtotime($event->start_date)) }}
+                                            @if ($event->end_date)
+                                                - {{ date('M d, Y', strtotime($event->end_date)) }}
+                                            @endif
+                                        </span>
+                                        <br>
+                                        <span class="text-success">{{ date('h:i A', strtotime($event->start_time)) }}
+                                            @if ($event->end_time)
+                                                - {{ date('h:i A', strtotime($event->end_time)) }}
+                                            @endif
+                                        </span>
+                                        {!! $event->desc !!}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="item">
+                        @endforeach
+                        {{-- <div class="item">
                             <div class="features-box">
                                 <div class="">
-                      <img src="
-                                    {{ asset('frontend/images/event2.jpg') }}" class="img-fluid mx-auto">
+                                    <img src="
+                                        {{ asset('frontend/images/event2.jpg') }}" class="img-fluid mx-auto">
                                 </div>
                                 <div class="features-text">
                                     <h6>Annual Sports</h6>
@@ -426,8 +438,8 @@
                         <div class="item">
                             <div class="features-box">
                                 <div class="">
-                      <img src="
-                                    {{ asset('frontend/images/event3.jpg') }}" class="img-fluid mx-auto">
+                                    <img src="
+                                        {{ asset('frontend/images/event3.jpg') }}" class="img-fluid mx-auto">
                                 </div>
                                 <div class="features-text">
                                     <h6>Parents Meeting</h6>
@@ -439,8 +451,8 @@
                         <div class="item">
                             <div class="features-box">
                                 <div class="">
-                      <img src="
-                                    {{ asset('frontend/images/event2.jpg') }}" class="img-fluid mx-auto">
+                                    <img src="
+                                        {{ asset('frontend/images/event2.jpg') }}" class="img-fluid mx-auto">
                                 </div>
                                 <div class="features-text">
                                     <h6>Parents Meeting</h6>
@@ -448,7 +460,7 @@
                                         Ipsum.Ipsum is simply dummy text of the printing.</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Student;
 
 use Razorpay\Api\Api;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Payment;
+use App\Notifications\PaymentSuccessMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Notification;
 
 class RazorpayController extends Controller
 {
@@ -53,7 +55,9 @@ class RazorpayController extends Controller
                         $payment->next_due_date = $next_date;
                     } 
                     $payment->status = 1;
-                    $payment->save(); 
+                    $payment->save();
+                    
+                    Notification::route('mail', Auth::user()->email)->notify(new PaymentSuccessMail($payment));
                    
                 }
 

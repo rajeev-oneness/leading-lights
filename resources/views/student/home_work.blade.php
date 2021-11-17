@@ -1,5 +1,11 @@
 @extends('student.layouts.master')
 @section('content')
+    <style>
+        .table thead th {
+            font-size: 14px !important;
+        }
+
+    </style>
     <div class="app-main__outer">
         <div class="app-main__inner">
             <div class="app-page-title">
@@ -34,75 +40,60 @@
                     @endif
                     <span class="text-danger" id="mgs_ta"></span>
                     <div class="card-body">
-                        <table class="table table-hover" id="task_table">
-                            <thead>
-                                <tr>
-                                    <th>Serial no</th>
-                                    <th>Subject</th>
-                                    <th>Submission Date</th>
-                                    <th>Submission Time</th>
-                                    <th>Action</th>
-                                    <th>Feedback</th>
-                                    <th>Comment</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($class_wise_home_works as $id => $home_work)
-                                    <tr class="bg-tr">
-                                        <td>{{ $id + 1 }}</td>
-                                        @php
-                                            $subject_details = App\Models\Subject::find($home_work->subject);
-                                        @endphp
-                                        <td>{{ $subject_details->name }}</td>
-                                        <td>{{ $home_work->submission_date }}</td>
-                                        <td>{{ $home_work->submission_time }}</td>
-                                        <td>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="task_table">
+                                <thead>
+                                    <tr>
+                                        <th>Serial no</th>
+                                        <th>Subject</th>
+                                        <th>Submission Date</th>
+                                        <th>Submission Time</th>
+                                        <th>Action</th>
+                                        <th>Feedback</th>
+                                        <th>Comment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($class_wise_home_works as $id => $home_work)
+                                        <tr class="bg-tr">
+                                            <td>{{ $id + 1 }}</td>
                                             @php
-                                                $upload_task = App\Models\SubmitHomeTask::where('task_id', $home_work->id)
-                                                    ->where('id_no', Auth::user()->id_no)
-                                                    ->first();
-                                                
-                                                $today_date = date('Y-m-d');
-                                                $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
-                                                
-                                                $submission_date = $home_work->submission_date;
-                                                $submission_time = $home_work->submission_time;
+                                                $subject_details = App\Models\Subject::find($home_work->subject);
                                             @endphp
-                                            @if ($submission_date == $today_date && $current_time > $submission_time)
-                                                <span class="btn-pill btn btn-danger"><i class="fa fa-dot-circle">
-                                                        Expired</i> </span>
-                                            @elseif (!$upload_task && $submission_date == $today_date && ($current_time
-                                                <= $submission_time)) <form action="{{ route('user.upload_homework') }}"
-                                                    method="POST" enctype="multipart/form-data">
-                                                    @csrf
-                                                    <a href="{{ asset($home_work->upload_file) }}" download="">
-                                                        <button class="btn-pill btn btn-primary mb-1"><i
-                                                                class="fas fa-download"></i>
-                                                            Download Task</button>
-                                                    </a>
-                                                    <input class="btn-pill btn btn-primary" type="file" placeholder="Upload"
-                                                        name="upload_doc" id="{{ $home_work->id }}">
-
-
-                                                    <input type="hidden" name="task_id" id="task_id{{ $home_work->id }}"
-                                                        value="{{ $home_work->id }}">
-                                                    <input type="hidden" name="subject" id="subject{{ $home_work->id }}"
-                                                        value="{{ $home_work->subject }}">
-                                                    <button type="submit" class="btn btn-primary" id="upload_doc"
-                                                        value="regular_task" name="submit_btn">Submit</button>
-                                                    </form>
-                                                @elseif (!$upload_task && $submission_date >= $today_date)
-                                                    <a href="{{ asset($home_work->upload_file) }}" download="">
-                                                        <button class="btn-pill btn btn-primary mb-1"><i
-                                                                class="fas fa-download"></i>
-                                                            Download Task</button>
-                                                    </a>
-                                                    <form action="{{ route('user.upload_homework') }}" method="POST"
+                                            <td>{{ $subject_details->name }}</td>
+                                            <td>{{ $home_work->submission_date }}</td>
+                                            <td>{{ $home_work->submission_time }}</td>
+                                            <td>
+                                                @php
+                                                    $upload_task = App\Models\SubmitHomeTask::where('task_id', $home_work->id)
+                                                        ->where('id_no', Auth::user()->id_no)
+                                                        ->first();
+                                                    
+                                                    $today_date = date('Y-m-d');
+                                                    $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
+                                                    
+                                                    $submission_date = $home_work->submission_date;
+                                                    $submission_time = $home_work->submission_time;
+                                                @endphp
+                                                @if ($submission_date == $today_date && $current_time > $submission_time)
+                                                    <span class="btn-pill btn btn-danger"><i class="fa fa-dot-circle">
+                                                            Expired</i> </span>
+                                                @elseif (!$upload_task && $submission_date == $today_date &&
+                                                    ($current_time
+                                                    <= $submission_time)) <form
+                                                        action="{{ route('user.upload_homework') }}" method="POST"
                                                         enctype="multipart/form-data">
                                                         @csrf
+                                                        <a href="{{ asset($home_work->upload_file) }}" download="">
+                                                            <button class="btn-pill btn btn-primary mb-1"><i
+                                                                    class="fas fa-download"></i>
+                                                                Download Task</button>
+                                                        </a>
                                                         <input class="btn-pill btn btn-primary" type="file"
                                                             placeholder="Upload" name="upload_doc"
                                                             id="{{ $home_work->id }}">
+
+
                                                         <input type="hidden" name="task_id"
                                                             id="task_id{{ $home_work->id }}"
                                                             value="{{ $home_work->id }}">
@@ -111,35 +102,58 @@
                                                             value="{{ $home_work->subject }}">
                                                         <button type="submit" class="btn btn-primary" id="upload_doc"
                                                             value="regular_task" name="submit_btn">Submit</button>
-                                                    </form>
-                                                @elseif ($upload_task)
-                                                    <span class="btn-pill btn btn-success"><i class="fa fa-check"></i>
-                                                        Submitted</span>
+                                                        </form>
+                                                    @elseif (!$upload_task && $submission_date >= $today_date)
+                                                        <a href="{{ asset($home_work->upload_file) }}" download="">
+                                                            <button class="btn-pill btn btn-primary mb-1"><i
+                                                                    class="fas fa-download"></i>
+                                                                Download Task</button>
+                                                        </a>
+                                                        <form action="{{ route('user.upload_homework') }}" method="POST"
+                                                            enctype="multipart/form-data">
+                                                            @csrf
+                                                            <input class="btn-pill btn btn-primary" type="file"
+                                                                placeholder="Upload" name="upload_doc"
+                                                                id="{{ $home_work->id }}">
+                                                            <input type="hidden" name="task_id"
+                                                                id="task_id{{ $home_work->id }}"
+                                                                value="{{ $home_work->id }}">
+                                                            <input type="hidden" name="subject"
+                                                                id="subject{{ $home_work->id }}"
+                                                                value="{{ $home_work->subject }}">
+                                                            <button type="submit" class="btn btn-primary" id="upload_doc"
+                                                                value="regular_task" name="submit_btn">Submit</button>
+                                                        </form>
+                                                    @elseif ($upload_task)
+                                                        <span class="btn-pill btn btn-success"><i
+                                                                class="fa fa-check"></i>
+                                                            Submitted</span>
+                                                    @else
+                                                        <span class="btn-pill btn btn-danger"><i class="fa fa-dot-circle">
+                                                                Expired</i> </span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($upload_task && $upload_task->review)
+                                                    <span> {{ $upload_task->review }}</span>
                                                 @else
-                                                    <span class="btn-pill btn btn-danger"><i class="fa fa-dot-circle">
-                                                            Expired</i> </span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($upload_task && $upload_task->review)
-                                                <span> {{ $upload_task->review }}</span>
-                                            @else
-                                                <span>N/A</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($upload_task && $upload_task->comment)
-                                                <span data-toggle="tooltip" data-placement="top"
-                                                    title="{{ $upload_task->comment }}">{{ \Illuminate\Support\Str::limit($upload_task->comment, 15) }}</span>
-                                            @else
-                                                <span>N/A</span>
-                                            @endif
+                                                    <span>N/A</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($upload_task && $upload_task->comment)
+                                                    <span data-toggle="tooltip" data-placement="top"
+                                                        title="{{ $upload_task->comment }}">{{ \Illuminate\Support\Str::limit($upload_task->comment, 15) }}</span>
+                                                @else
+                                                    <span>N/A</span>
+                                                @endif
 
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -168,74 +182,58 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                     <div class="card-body">
-                        <table class="table table-hover" id="task_table1">
-                            <thead>
-                                <tr>
-                                    <th>Serial no</th>
-                                    <th>Group Name</th>
-                                    <th>Subject</th>
-                                    <th>Submission Date</th>
-                                    <th>Submission Time</th>
-                                    <th>Action</th>
-                                    <th>Feedback</th>
-                                    <th>Comment</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($group_wise_home_works as $id => $home_work)
-                                    <tr class="bg-tr">
-                                        <td>{{ $id + 1 }}</td>
-                                        @php
-                                            $group_details = App\Models\Group::find($home_work->group_id);
-                                            $subject_details = App\Models\Subject::find($home_work->subject);
-                                        @endphp
-                                        <td><span class="badge badge-info">{{ $group_details->name }}</span></td>
-                                        <td>{{ $subject_details->name }}</td>
-                                        <td>{{ $home_work->submission_date }}</td>
-                                        <td>{{ $home_work->submission_time }}</td>
-                                        <td>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="task_table1">
+                                <thead>
+                                    <tr>
+                                        <th>Serial no</th>
+                                        <th>Group Name</th>
+                                        <th>Subject</th>
+                                        <th>Submission Date</th>
+                                        <th>Submission Time</th>
+                                        <th>Action</th>
+                                        <th>Feedback</th>
+                                        <th>Comment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($group_wise_home_works as $id => $home_work)
+                                        <tr class="bg-tr">
+                                            <td>{{ $id + 1 }}</td>
                                             @php
-                                                $upload_task = App\Models\SubmitHomeTask::where('task_id', $home_work->id)
-                                                    ->where('id_no', Auth::user()->id_no)
-                                                    ->first();
-                                                
-                                                $today_date = date('Y-m-d');
-                                                $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
-                                                
-                                                $submission_date = $home_work->submission_date;
-                                                $submission_time = $home_work->submission_time;
+                                                $group_details = App\Models\Group::find($home_work->group_id);
+                                                $subject_details = App\Models\Subject::find($home_work->subject);
                                             @endphp
-                                            @if ($submission_date == $today_date && $current_time > $submission_time)
-                                                <span class="btn-pill btn btn-danger"><i class="fa fa-dot-circle">
-                                                        Expired</i> </span>
-                                            @elseif (!$upload_task && $submission_date == $today_date && ($current_time
-                                                <= $submission_time)) <form action="{{ route('user.upload_homework') }}"
-                                                    method="POST" enctype="multipart/form-data">
-                                                    @csrf
-                                                    <a href="{{ asset($home_work->upload_file) }}" download="">
-                                                        <button class="btn-pill btn btn-primary mb-1"><i
-                                                                class="fas fa-download"></i>
-                                                            Download Task</button>
-                                                    </a>
-                                                    <input class="btn-pill btn btn-primary" type="file" placeholder="Upload"
-                                                        name="upload_doc" id="{{ $home_work->id }}">
-
-                                                    <input type="hidden" name="task_id" id="task_id{{ $home_work->id }}"
-                                                        value="{{ $home_work->id }}">
-                                                    <input type="hidden" name="subject" id="subject{{ $home_work->id }}"
-                                                        value="{{ $home_work->subject }}">
-                                                    <button type="submit" class="btn btn-primary" id="upload_doc"
-                                                        value="special_task" name="submit_btn">Submit</button>
-                                                    </form>
-                                                @elseif (!$upload_task && $submission_date >= $today_date)
-                                                    <a href="{{ asset($home_work->upload_file) }}" download="">
-                                                        <button class="btn-pill btn btn-primary mb-1"><i
-                                                                class="fas fa-download"></i>
-                                                            Download Task</button>
-                                                    </a>
-                                                    <form action="{{ route('user.upload_homework') }}" method="POST"
+                                            <td><span class="badge badge-info">{{ $group_details->name }}</span></td>
+                                            <td>{{ $subject_details->name }}</td>
+                                            <td>{{ $home_work->submission_date }}</td>
+                                            <td>{{ $home_work->submission_time }}</td>
+                                            <td>
+                                                @php
+                                                    $upload_task = App\Models\SubmitHomeTask::where('task_id', $home_work->id)
+                                                        ->where('id_no', Auth::user()->id_no)
+                                                        ->first();
+                                                    
+                                                    $today_date = date('Y-m-d');
+                                                    $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
+                                                    
+                                                    $submission_date = $home_work->submission_date;
+                                                    $submission_time = $home_work->submission_time;
+                                                @endphp
+                                                @if ($submission_date == $today_date && $current_time > $submission_time)
+                                                    <span class="btn-pill btn btn-danger"><i class="fa fa-dot-circle">
+                                                            Expired</i> </span>
+                                                @elseif (!$upload_task && $submission_date == $today_date &&
+                                                    ($current_time
+                                                    <= $submission_time)) <form
+                                                        action="{{ route('user.upload_homework') }}" method="POST"
                                                         enctype="multipart/form-data">
                                                         @csrf
+                                                        <a href="{{ asset($home_work->upload_file) }}" download="">
+                                                            <button class="btn-pill btn btn-primary mb-1"><i
+                                                                    class="fas fa-download"></i>
+                                                                Download Task</button>
+                                                        </a>
                                                         <input class="btn-pill btn btn-primary" type="file"
                                                             placeholder="Upload" name="upload_doc"
                                                             id="{{ $home_work->id }}">
@@ -248,35 +246,59 @@
                                                             value="{{ $home_work->subject }}">
                                                         <button type="submit" class="btn btn-primary" id="upload_doc"
                                                             value="special_task" name="submit_btn">Submit</button>
-                                                    </form>
-                                                @elseif ($upload_task)
-                                                    <span class="btn-pill btn btn-success"><i class="fa fa-check"></i>
-                                                        Submitted</span>
-                                                @else
-                                                    <span class="btn-pill btn btn-danger"><i class="fa fa-dot-circle">
-                                                            Expired</i> </span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($upload_task && $upload_task->review)
-                                                <span> {{ $upload_task->review }}</span>
-                                            @else
-                                                <span>N/A</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($upload_task && $upload_task->comment)
-                                                <span data-toggle="tooltip" data-placement="top"
-                                                    title="{{ $upload_task->comment }}">{{ \Illuminate\Support\Str::limit($upload_task->comment, 15) }}</span>
-                                            @else
-                                                <span>N/A</span>
-                                            @endif
+                                                        </form>
+                                                    @elseif (!$upload_task && $submission_date >= $today_date)
+                                                        <a href="{{ asset($home_work->upload_file) }}" download="">
+                                                            <button class="btn-pill btn btn-primary mb-1"><i
+                                                                    class="fas fa-download"></i>
+                                                                Download Task</button>
+                                                        </a>
+                                                        <form action="{{ route('user.upload_homework') }}" method="POST"
+                                                            enctype="multipart/form-data">
+                                                            @csrf
+                                                            <input class="btn-pill btn btn-primary" type="file"
+                                                                placeholder="Upload" name="upload_doc"
+                                                                id="{{ $home_work->id }}">
 
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                                            <input type="hidden" name="task_id"
+                                                                id="task_id{{ $home_work->id }}"
+                                                                value="{{ $home_work->id }}">
+                                                            <input type="hidden" name="subject"
+                                                                id="subject{{ $home_work->id }}"
+                                                                value="{{ $home_work->subject }}">
+                                                            <button type="submit" class="btn btn-primary" id="upload_doc"
+                                                                value="special_task" name="submit_btn">Submit</button>
+                                                        </form>
+                                                    @elseif ($upload_task)
+                                                        <span class="btn-pill btn btn-success"><i
+                                                                class="fa fa-check"></i>
+                                                            Submitted</span>
+                                                    @else
+                                                        <span class="btn-pill btn btn-danger"><i class="fa fa-dot-circle">
+                                                                Expired</i> </span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($upload_task && $upload_task->review)
+                                                    <span> {{ $upload_task->review }}</span>
+                                                @else
+                                                    <span>N/A</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($upload_task && $upload_task->comment)
+                                                    <span data-toggle="tooltip" data-placement="top"
+                                                        title="{{ $upload_task->comment }}">{{ \Illuminate\Support\Str::limit($upload_task->comment, 15) }}</span>
+                                                @else
+                                                    <span>N/A</span>
+                                                @endif
+
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 

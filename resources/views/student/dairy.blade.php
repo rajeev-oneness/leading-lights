@@ -21,15 +21,26 @@
                         </div>
                     </div>
                 </div>
+                {{-- @foreach ($events as $event)
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-header">
                             <div class="media flex-wrap w-100 align-items-center">
                                 <div class="media-body">
-                                    <a href="javascript:void(0)">Summer Camp</a>
+                                    <a href="javascript:void(0)">{{ $event->title }}</a>
                                 </div>
-                                <div class="text-muted small">
-                                    <div><strong>01/12/2017</strong></div>
+                                <div>
+                                    <span>{{ date('M d, Y', strtotime($event->start_date)) }}
+                                        @if ($event->end_date)
+                                            - {{ date('M d, Y', strtotime($event->end_date)) }}
+                                        @endif
+                                    </span>
+                                    <br>
+                                    <span class="text-success">{{ date('h:i A', strtotime($event->start_time)) }}
+                                        @if ($event->end_time)
+                                            - {{ date('h:i A', strtotime($event->end_time)) }}
+                                        @endif
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -44,6 +55,38 @@
                                 fermentum nunc. Etiam pharetra, erat sed fermentum feugiat, velit mauris egestas quam, ut
                                 aliquam massa nisl quis neque. Suspendisse in orci enim. </p>
                         </div>
+                    </div>
+                </div>
+                @endforeach --}}
+                {{-- <p>Latest Events</p> --}}
+                <div class="col-lg-6">
+                    <h3>Latest Events</h3>
+                    <div class="owl-carousel owl-theme events-boxes">
+                        @foreach ($events as $event)
+                            <div class="item">
+                                <div class="features-box">
+                                    <div class="">
+                                        <img src="
+                                            {{ asset($event->image) }}" class="img-fluid mx-auto" style="width: 343px;height:236px">
+                                    </div>
+                                    <div class="features-text">
+                                        <h6>{{ $event->title }}</h6>
+                                        <span>{{ date('M d, Y', strtotime($event->start_date)) }}
+                                            @if ($event->end_date)
+                                                - {{ date('M d, Y', strtotime($event->end_date)) }}
+                                            @endif
+                                        </span>
+                                        <br>
+                                        <span>{{ date('h:i A', strtotime($event->start_time)) }}
+                                            @if ($event->end_time)
+                                                - {{ date('h:i A', strtotime($event->end_time)) }}
+                                            @endif
+                                        </span>
+                                        {!! $event->desc !!}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

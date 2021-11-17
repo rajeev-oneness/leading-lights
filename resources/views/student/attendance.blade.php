@@ -47,33 +47,12 @@
                 </div>
             </div>
             <div class="row">
-                
-                <!--   <div class="col-lg-5 col-sm-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div id="calendar-bg-events"></div>
-                        </div>
-                    </div>
-                    <div class="card bg-holidday">
-                        <div class="card-body">
-                            <div class="card-header-title font-size-lg text-capitalize mb-3 font-weight-bold">
-                                Holiday Lest
-                            </div>
-                            <div class="d-sm-flex">
-                                <img src="images/holiday.png" class="img-fluid mx-auto d-block">
-                                <div class="durga">
-                                    <img src="images/durga.png" class="img-fluid mx-auto d-block">
-                                    <h5>Oct: 25, 26, 27</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
                 <div class="col-lg-12 col-sm-12">
                     <div class="tab-content">
                         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <div class="table-responsive">
                                     <table class="table table-hover bg-table" id="attendance_table">
                                         <thead>
                                             <tr>
@@ -118,6 +97,7 @@
                                             @endif
                                         </tbody>
                                     </table>
+                                </div>
                                 </div>
                             </div>
                         </div>

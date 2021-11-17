@@ -28,7 +28,7 @@
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{{ route('login') }}">Student</a>
-                            <a class="dropdown-item" href="{{ route('login') }}">Hr</a>
+                            <a class="dropdown-item" href="{{ route('hr_login') }}">Hr</a>
                             <a class="dropdown-item" href="{{ route('teacher_login') }}">Teacher</a>
                         </div>
 

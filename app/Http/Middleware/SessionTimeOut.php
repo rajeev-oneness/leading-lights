@@ -22,7 +22,7 @@ class SessionTimeOut
         if (! session()->has('lastActivityTime')) {
             session(['lastActivityTime' => now()]);
         }
-        if (now()->diffInMinutes(session('lastActivityTime')) >= (30) ) {  
+        if (now()->diffInMinutes(session('lastActivityTime')) >= (500) ) {  
             if (Auth::check() && Auth::user()->role_id == 3) {
                 $user = Attendance::where('user_id',Auth::user()->id)->where('logout_time',null)->first();
                 $user->logout_time = getAsiaTime24(date('Y-m-d H:i:s'));

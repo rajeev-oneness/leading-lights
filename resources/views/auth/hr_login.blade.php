@@ -75,6 +75,9 @@
                                 <div class="form-row mt-2">
                                     <div class="form-group col-sm-12">
                                         <button class="btn btn-login mt-2">Login Now</button>
+                                        <a href="{{ route('hr_register') }}" class="btn btn-create mt-2"
+                                            type="button" value="Login"><span><i class="fa fa-plus"></i></span>Register
+                                            Now</a>
                                         {{-- <a href="{{ route('register') }}" class="btn btn-create mt-2" type="button" value="Login"><span><i
                                                     class="fa fa-plus"></i></span>Get admission</a> --}}
                                     </div>

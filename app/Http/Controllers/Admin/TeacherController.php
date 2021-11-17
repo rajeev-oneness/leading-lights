@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Notifications\WelcomeMail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Notifications\AccountDeactivateMail;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
@@ -166,6 +167,7 @@ class TeacherController extends Controller
         if ($user->status == 1) {
             $user->status = 0;
             $user->save();
+            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
             return response()->json(['success' => true,'data' => 'inactivated']);
         }       
     }

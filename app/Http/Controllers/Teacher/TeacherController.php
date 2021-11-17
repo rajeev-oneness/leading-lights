@@ -140,7 +140,7 @@ class TeacherController extends Controller
             'class' => 'required',
             'subject' => 'required',
             'submission_date' => 'required|date',
-            'submission_time' => 'required',
+            'submission_time' => 'required|date_format:H:i',
             'upload_file' => 'required|mimes:pdf'
         ]);
 
@@ -273,7 +273,7 @@ class TeacherController extends Controller
     {
         $data['groups'] = Group::latest()->where('teacher_id', Auth::user()->id)->get();
         $data['subjects'] = Subject::latest()->get();
-        $data['classes'] = Classes::latest()->get();
+        $data['classes'] = Classes::orderBy('name')->get();
         $data['assign_exam'] = ArrangeExam::where('user_id', Auth::user()->id)->latest()->get();
         return view('teacher.exam')->with($data);;
     }
@@ -385,23 +385,49 @@ class TeacherController extends Controller
     public function assignExam(Request $request)
     {
         $this->validate($request, [
-            'class' => 'required',
-            'subject' => 'required',
+            // 'class' => 'required',
+            // 'subject' => 'required',
             'date' => 'required|date',
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'full_marks' => 'required',
-            'result_date' => 'required',
-            'upload_file' => 'required|mimes:pdf'
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i',
+            // 'full_marks' => 'required',
+            // 'result_date' => 'required',
+            // 'upload_file' => 'required|mimes:pdf'
         ]);
 
         $exam_start_time = date('H:i', strtotime($request->start_time));
-        $arrange_exam = ArrangeExam::where('class', $request->class)
-            ->where('date', $request->date)
-            ->whereTime('start_time', '<=', $exam_start_time)
-            ->whereTime('end_time', '>=', $exam_start_time)
-            ->count();
-        if ($arrange_exam == 0) {
+        $exam_end_time = date('H:i', strtotime($request->end_time));
+
+        $minutes_to_add = 180;
+        $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
+        $time = new DateTime($request->date . $request->start_time);
+        $time->add(new DateInterval('PT' . $minutes_to_add . 'M'));
+        
+        $new_time = $time->format('H:i');
+        // dd($new_time);
+        if ($exam_start_time > $exam_end_time) {
+            return redirect()->back()->with('error', 'Please choose valid end time')->withInput();;
+        }
+
+        $after_explode_class = explode('-', $request->class);
+
+        $arrange_exam = ArrangeExam::where('class', $after_explode_class[0])
+        ->where('date', $request->date)
+        ->whereTime('start_time', '<=', $exam_start_time)
+        ->whereTime('end_time', '>=', $exam_start_time)
+        ->count();
+        $group_arrange_exam = ArrangeExam::where('group_id', $after_explode_class[0])
+        ->where('date', $request->date)
+        ->whereTime('start_time', '<=', $exam_start_time)
+        ->whereTime('end_time', '>=', $exam_start_time)
+        ->count();
+
+        // $arrange_exam = ArrangeExam::where('class', $request->class)
+        //     ->where('date', $request->date)
+        //     ->whereTime('start_time', '<=', $exam_start_time)
+        //     ->whereTime('end_time', '>=', $exam_start_time)
+        //     ->count();
+        if ($arrange_exam == 0 && $group_arrange_exam == 0) {
             if ($request->hasFile('upload_file')) {
                 $file = $request->file('upload_file');
                 $fileName = imageUpload($file, 'teacher/exam');
@@ -555,11 +581,13 @@ class TeacherController extends Controller
         $exam_detail = SubmitExam::where('exam_id', $id)
             ->join('arrange_exams', 'arrange_exams.id', '=', 'submit_exams.exam_id')
             ->first();
+        // dd($exam_detail->marks);
         if ($request->marks > $exam_detail->full_marks) {
             return redirect()->back()->with('error', 'Please enter valid marks');
         }
-        $exam_detail->marks = $request->marks;
-        $exam_detail->save();
+        $exam = SubmitExam::where('exam_id', $id)->first();
+        $exam->marks = $request->marks;
+        $exam->save();
         return redirect()->back();
     }
 
@@ -588,5 +616,10 @@ class TeacherController extends Controller
     {
         $groups = Group::where('teacher_id', Auth::user()->id)->latest()->get();
         return view('teacher.assigned_group', compact('groups'));
+    }
+
+    //Whiteboard
+    public function whiteboard(){
+        return view('teacher.whiteboard');
     }
 }

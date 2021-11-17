@@ -21,6 +21,7 @@
                             data-target="#exampleModal">
                             Arrange Class
                         </button>
+                        <a href="{{ route('teacher.whiteboard') }}" target="_blank" class="btn-pill btn btn-dark btn-lg mb-4">Whiteboard</a>
                     </div>
                 </div>
                 <div class="table-responsive">

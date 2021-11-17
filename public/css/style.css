@@ -782,14 +782,13 @@ margin-left: 10px;
 }
 #sidebar {
     width: 300px;
-    position: fixed;
     top: 0;
     left: 0;
-    height: 100vh;
+    height: 100%;
     z-index: 999;
     transition: all 0.3s;
     border-top-right-radius: 12px;
-    position: relative;
+    position: fixed;
 }
 /*.dashboard-menubar{
 	position: relative;
@@ -804,7 +803,7 @@ margin-left: 10px;
     left: -21%;
 }*/
 #sidebar.active {
-    margin-left: -230px;
+    margin-left: -302px;
 }
 #content {
     width: calc(100% - 300px);
@@ -877,7 +876,7 @@ margin-left: 10px;
 
 @media (max-width: 768px) {
     #sidebar {
-        margin-left: -250px;
+        margin-left: -302px;
     }
     #sidebar.active {
         margin-left: 0;

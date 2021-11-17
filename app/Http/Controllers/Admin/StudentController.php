@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Notifications\WelcomeMail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
+use App\Notifications\AccountDeactivateMail;
 use App\Notifications\RejectionMail;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -157,6 +159,7 @@ class StudentController extends Controller
     public function destroy($id)
     {
         User::find($id)->delete();
+        Payment::where('user_id',$id)->delete();
         return redirect()->route('admin.students.index')->with('success','Student deleted');
     }
 
@@ -181,6 +184,7 @@ class StudentController extends Controller
         if ($user->status == 1) {
             $user->status = 0;
             $user->save();
+            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
             return response()->json(['success' => true,'data' => 'inactivated']);
         }       
     }
@@ -189,6 +193,7 @@ class StudentController extends Controller
         $user = User::find($id);
         if ($user->rejected == 0) {
             $user->rejected = 1;
+            $user->is_rejected_document_uploaded = 0;
             $user->save();
             Notification::route('mail', $user->email)->notify(new RejectionMail($user));
             return response()->json(['success' => true,'data' => 'rejected']);

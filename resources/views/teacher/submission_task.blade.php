@@ -14,93 +14,96 @@
                 </div>
             </div>
             <div class="tabs-animation">
-                <table class="table table-hover bg-table" id="task_table">
-                    <thead>
-                        <tr>
-                            <th>Serial No</th>
-                            <th>Name</th>
-                            <th>Class</th>
-                            <th>Subject</th>
-                            <th>Student Id</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Action</th>
-                            <th>Review</th>
-                            <th>Comment</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($tasks as $key => $task)
-                            <tr class="bg-tr">
-                                <th>{{ $key + 1 }}</th>
-                                <td>{{ $task->name }}</td>
-                                @php
-                                    if ($task->group_id) {
-                                        $group_details = App\Models\Group::find($task->group_id);
-                                    }
-                                    if ($task->class) {
-                                        $class_details = App\Models\Classes::find($task->class);
-                                    }
-                                    $subject_details = App\Models\Subject::find($task->subject);
-                                @endphp
-                                <td>
-                                    @if ($task->class)
-                                        {{ $class_details->name }} <span class="badge badge-secondary">Class</span>
-                                    @else
-                                        {{ $group_details->name }} <span class="badge badge-secondary">Group</span>
-                                    @endif
-                                </td>
-                                <td>{{ $subject_details->name }}</td>
-                                <td>{{ $task->id_no }}</td>
-                                <td>{{ date('Y-m-d', strtotime($task->created_at)) }}</td>
-                                <td>{{ getAsiaTime24($task->created_at) }}</td>
-                                <td>
-                                    <a href="{{ asset($task->upload_doc) }}" download="">
-                                        <button class="btn-pill btn-transition btn btn-outline-dark"><span
-                                                class="mr-2"><i class="fa fa-download"></i></span>Download
-                                            Task</button>
-                                    </a>
-                                </td>
-                                <td>
-                                    @if ($task->review)
-                                        <span>{{ $task->review }}</span>
-                                    @else
-                                        <form method="POST" action="{{ route('teacher.taskReview') }}">
-                                            @csrf
-                                            <div class="form-group">
-                                                {{-- <label>Remarks</label> --}}
-                                                <select class="form-control" id="review{{ $task->id }}" name="review"
-                                                    onchange="changeReview({{ $task->id }})">
-                                                    <option value="">Please select</option>
-                                                    <option value="Bad">Bad</option>
-                                                    <option value="Good">Good</option>
-                                                    <option value="Very Good">Very Good</option>
-                                                    <option value="Outstanding">Outstanding</option>
-                                                </select>
-                                            </div>
-                                        </form>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($task->comment)
-                                        <span data-toggle="tooltip" data-placement="top"
-                                            title="{{ $task->comment }}">{{ \Illuminate\Support\Str::limit($task->comment, 15) }}</span>
-                                    @else
-                                        <button class="btn-pill btn-transition btn btn-outline-dark btn-lg comment_section"
-                                            data-toggle="modal" data-target=".bd-example-modal-sm" data-toggle="tooltip"
-                                            title="" data-original-title="Add comment" data-id="{{ $task->id }}"><i
-                                                class="fa fa-plus"></i> Add Comment</button>
-                                        {{-- <form action="{{ route('teacher.taskComment',$task->id) }}" method="POST">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="task_table">
+                        <thead>
+                            <tr>
+                                <th>Serial No</th>
+                                <th>Name</th>
+                                <th>Class</th>
+                                <th>Subject</th>
+                                <th>Student Id</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Action</th>
+                                <th>Review</th>
+                                <th>Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($tasks as $key => $task)
+                                <tr class="bg-tr">
+                                    <th>{{ $key + 1 }}</th>
+                                    <td>{{ $task->name }}</td>
+                                    @php
+                                        if ($task->group_id) {
+                                            $group_details = App\Models\Group::find($task->group_id);
+                                        }
+                                        if ($task->class) {
+                                            $class_details = App\Models\Classes::find($task->class);
+                                        }
+                                        $subject_details = App\Models\Subject::find($task->subject);
+                                    @endphp
+                                    <td>
+                                        @if ($task->class)
+                                            {{ $class_details->name }} <span class="badge badge-secondary">Class</span>
+                                        @else
+                                            {{ $group_details->name }} <span class="badge badge-secondary">Group</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $subject_details->name }}</td>
+                                    <td>{{ $task->id_no }}</td>
+                                    <td>{{ date('Y-m-d', strtotime($task->created_at)) }}</td>
+                                    <td>{{ getAsiaTime24($task->created_at) }}</td>
+                                    <td>
+                                        <a href="{{ asset($task->upload_doc) }}" download="">
+                                            <button class="btn-pill btn-transition btn btn-outline-dark"><span
+                                                    class="mr-2"><i class="fa fa-download"></i></span>Download
+                                                Task</button>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @if ($task->review)
+                                            <span>{{ $task->review }}</span>
+                                        @else
+                                            <form method="POST" action="{{ route('teacher.taskReview') }}">
+                                                @csrf
+                                                <div class="form-group">
+                                                    {{-- <label>Remarks</label> --}}
+                                                    <select class="form-control" id="review{{ $task->id }}"
+                                                        name="review" onchange="changeReview({{ $task->id }})">
+                                                        <option value="">Please select</option>
+                                                        <option value="Bad">Bad</option>
+                                                        <option value="Good">Good</option>
+                                                        <option value="Very Good">Very Good</option>
+                                                        <option value="Outstanding">Outstanding</option>
+                                                    </select>
+                                                </div>
+                                            </form>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($task->comment)
+                                            <span data-toggle="tooltip" data-placement="top"
+                                                title="{{ $task->comment }}">{{ \Illuminate\Support\Str::limit($task->comment, 15) }}</span>
+                                        @else
+                                            <button
+                                                class="btn-pill btn-transition btn btn-outline-dark btn-lg comment_section"
+                                                data-toggle="modal" data-target=".bd-example-modal-sm" data-toggle="tooltip"
+                                                title="" data-original-title="Add comment" data-id="{{ $task->id }}"><i
+                                                    class="fa fa-plus"></i> Add Comment</button>
+                                            {{-- <form action="{{ route('teacher.taskComment',$task->id) }}" method="POST">
                                     @csrf
                                     <input type="text" class="form-control-sm" name="comment">
                                     <button class="btn btn-success">Save</button>
                                 </form> --}}
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
         </div>

@@ -46,7 +46,7 @@
                             <form class="form" action="{{ route('teacher.assignExam') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
-                                <div class="d-sm-flex align-items-center justify-content-between">
+                                <div class="d-sm-flex align-items-top justify-content-between mb-5">
                                     {{-- <select class="form-control" id="class" name="class">
                                         <option value="" selected>Class</option>
                                         @foreach ($classes as $class)
@@ -54,39 +54,48 @@
                                                 {{ $class->name }}</option>
                                         @endforeach
                                     </select> --}}
-                                    <select name="class" id="class_name" class="form-control">
-                                        <option value="">Select Class/Groups</option>
-                                        @foreach ($groups as $group)
-                                            <option value="{{ $group->id . '-group' }}" class="text-info">
-                                                {{ $group->name }}</option>
-                                        @endforeach
-                                        @foreach ($classes as $class)
-                                            <option value="{{ $class->id . '-class' }}" @if (old('class') == $class->id) selected @endif>
-                                                {{ $class->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <select class="form-control" id="subject" name="subject">
-                                        <option value="" selected>Subject</option>
-                                        @foreach ($subjects as $subject)
-                                            <option value="{{ $subject->id }}" @if (old('subject') == $subject->id) selected @endif>
-                                                {{ $subject->name }}</option>
-                                        @endforeach
-                                    </select>
-
+                                    <div class="responsive-error">
+                                        <select name="class" id="class_name" class="form-control">
+                                            <option value="">Select Class/Groups</option>
+                                            @foreach ($groups as $group)
+                                                <option value="{{ $group->id . '-group' }}" class="text-info">
+                                                    {{ $group->name }}</option>
+                                            @endforeach
+                                            @foreach ($classes as $class)
+                                                <option value="{{ $class->id . '-class' }}" @if (old('class') == $class->id) selected @endif>
+                                                    {{ $class->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('class'))
+                                            <span style="color: red;">{{ $errors->first('class') }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="responsive-error">
+                                        <select class="form-control" id="subject" name="subject">
+                                            <option value="" selected>Subject</option>
+                                            @foreach ($subjects as $subject)
+                                                <option value="{{ $subject->id }}" @if (old('subject') == $subject->id) selected @endif>
+                                                    {{ $subject->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('subject'))
+                                            <span style="color: red;">{{ $errors->first('subject') }}</span>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                {{-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                     @if ($errors->has('class'))
                                         <span style="color: red;">{{ $errors->first('class') }}</span>
                                     @endif
                                     @if ($errors->has('subject'))
                                         <span style="color: red;">{{ $errors->first('subject') }}</span>
                                     @endif
-                                </div>
+                                </div> --}}
                                 <div class="d-sm-flex align-items-center justify-content-between">
                                     <div class="d-sm-flex align-items-baseline ">
                                         <p class="des  mr-2"><span class="mr-2"><i
                                                     class="fa fa-circle"></i></span>Exam Date</p>
-                                        <input type="text" name="date" id="date" class="form-control datepicker"
+                                        <input type="text" name="date" id="exam_date" class="form-control datepicker"
                                             value="{{ old('date') }}">
 
                                     </div>
@@ -151,17 +160,17 @@
                                     @endif
                                 </div>
                                 <!--  <p class="des dec"><span class="mr-2"><i class="fa fa-circle"></i></span>Set Quiestion Mannually</p>
-                                    <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea> -->
+                                        <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea> -->
                                 <div class="card-header-title mb-4">
-                                    Upload Quiestion Paper as a Document </div>
+                                    Upload Quiestion Paper as a Document(Only accept PDF) </div>
                                 <div class="file-upload">
                                     <button class="file-upload-btn" type="button"
-                                        onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
+                                        onclick="$('.file-upload-input').trigger( 'click' )">Add File</button>
                                     <div class="image-upload-wrap">
                                         <input class="file-upload-input" id="upload_file" name="upload_file" type='file'
                                             accept="image/*" />
                                         <div class="drag-text">
-                                            <h3>Drag and drop a file or select add Image</h3>
+                                            <h3>Drag and drop a file or select add File</h3>
                                         </div>
                                     </div>
                                     <div class="file-upload-content">
@@ -235,6 +244,13 @@
         @include('teacher.layouts.static_footer')
     </div>
     <script>
+        // $('#exam_date').on('changeDate', function() {
+        //     $('.datepicker1').datepicker('destroy').datepicker({
+        //             format: 'yyyy-mm-dd',
+        //             startDate:  $('#exam_date').val() + '+20d',
+        //             // daysOfWeekDisabled: [0]
+        //         });
+        // });
         $('#class_name').on('click', function() {
             var class_name = $('#class_name').val();
             var after_split = class_name.split("-")[1];

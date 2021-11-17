@@ -33,7 +33,8 @@
                                 <form class="form" action="{{ route('teacher.studentExamSubmission') }}"
                                     method="POST" enctype="multipart/form-data">
                                     @csrf
-                                    <div class="d-sm-flex align-items-center justify-content-between">
+                                    <div class="d-sm-flex align-items-top justify-content-between">
+                                        <div class="responsive-error">
                                         <select name="class" id="class" class="form-control" onclick="test()">
                                             <option value="">Select Class/Groups</option>
                                             @foreach ($groups as $group)
@@ -45,6 +46,11 @@
                                                     {{ $class->name }}</option>
                                             @endforeach
                                         </select>
+                                        @if ($errors->has('class'))
+                                            <span style="color: red;width: 100%">{{ $errors->first('class') }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="responsive-error">
                                         <select class="form-control" id="subject" name="subject">
                                             <option value="" selected>Subject</option>
                                             @foreach ($subjects as $subject)
@@ -52,16 +58,19 @@
                                                     {{ $subject->name }}</option>
                                             @endforeach
                                         </select>
-
+                                        @if ($errors->has('subject'))
+                                            <span style="color: red;width: 100%">{{ $errors->first('subject') }}</span>
+                                        @endif
                                     </div>
-                                    <div class="d-sm-flex align-items-center justify-content-between">
+                                    </div>
+                                    {{-- <div class="d-sm-flex align-items-center justify-content-between">
                                         @if ($errors->has('class'))
                                             <span style="color: red;">{{ $errors->first('class') }}</span>
                                         @endif
                                         @if ($errors->has('subject'))
                                             <span style="color: red;">{{ $errors->first('subject') }}</span>
                                         @endif
-                                    </div>
+                                    </div> --}}
                                     <button class="btn-pill btn btn-primary mt-4" name="view_submission">Proceed</button>
                                     <a href="{{ route('teacher.studentExamSubmission') }}"
                                         class="btn-pill btn btn-success mt-4 float-right">View All</a>

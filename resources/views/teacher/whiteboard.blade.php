@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whiteboard</title>
+  <link rel="icon" href="favicon.ico" type="image">
+
+  <!-- LIB -->
+  <script src="{{ asset('whiteboard/lib/paper/paper-full.min.js') }}"></script>
+
+  <link rel="stylesheet" href="{{ asset('whiteboard/lib/bootstrap/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('whiteboard/lib/bootstrap-icons/bootstrap-icons.css') }}">
+
+  <!-- STYLE -->
+  <link rel="stylesheet" href="{{ asset('whiteboard/css/style.css') }}">
+</head>
+
+<body>
+  <div class="px-1 position-fixed sticky-sidebar scrollbar-hidden">
+    <button type="button" id="move" class="mode-btn btn btn-light border p-0">
+      <em class="bi bi-arrows-move"></em>
+    </button>
+    <button type="button" id="draw" class="mode-btn btn btn-light border p-0">
+      <em class="bi bi-brush"></em>
+    </button>
+    <button type="button" id="del" class="mode-btn btn btn-light border p-0">
+      <em class="bi bi-eraser"></em>
+    </button>
+    <button type="button" id="text" class="mode-btn btn btn-light border p-0">
+      <em class="bi bi-type"></em>
+    </button>
+
+    <hr>
+
+    <input type="text" id="mode" class="d-none" value="draw">
+    <input type="color" id="color" class="form-control bg-light p-1" value="#000000">
+    <input type="text" id="width" class="form-control bg-light p-1" value="6">
+
+    <hr>
+
+    <button type="button" id="zoom-in" class="btn btn-light border p-0">
+      <em class="bi bi-plus"></em>
+    </button>
+    <button type="button" id="zoom-out" class="btn btn-light border p-0">
+      <em class="bi bi-dash"></em>
+    </button>
+
+    <hr>
+
+    <button type="button" id="save-load" class="btn btn-light border p-0" data-toggle="modal"
+      data-target="#save-load-modal">
+      <em class="bi bi-save"></em>
+    </button>
+
+    <hr>
+
+    <!-- <a type="button" class="btn btn-light border p-0" href="https://github.com/wggb/whiteboard" target="_blank">
+      <em class="bi bi-github"></em>
+    </a> -->
+  </div>
+
+  <div class="modal fade" id="save-load-modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="Save and load modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content m-2">
+        <div class="modal-header">
+          <h5 class="modal-title d-none" id="save-load-lable">Save & Load</h5>
+          <h5 class="modal-title save-item" id="save-lable">Save</h5>
+          <h5 class="modal-title load-item d-none" id="load-lable">Load</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"><em class="bi bi-x"></em></span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <textarea id="save-textarea" class="form-control save-item" aria-label="With textarea" readonly></textarea>
+          <textarea id="load-textarea" class="form-control load-item d-none" aria-label="With textarea"></textarea>
+          <div id="copy-save-textarea-container" class="hover-container save-item">
+            <button id="copy-save-textarea" default-text="Copy" class="btn btn-light">Copy</button>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <div class="modal-buttons">
+            <button id="save-jpeg-button" type="button" class="btn btn-light border save-item">
+              <em class="bi bi-file-earmark-image"></em>
+              Save as JPEG
+            </button>
+            <button id="save-json-button" type="button" class="btn btn-light border save-item">
+              <em class="bi bi-file-earmark-code"></em>
+              Save as JSON
+            </button>
+            <button id="load-json-button" type="button" class="btn btn-light border load-item">
+              <em class="bi bi-file-earmark-code"></em>
+              Load from JSON
+            </button>
+            <input type="file" id="load-json-file" accept="application/JSON" class="d-none">
+          </div>
+          <div class="modal-buttons">
+            <button id="load-button" type="button" class="btn btn-light border save-item">
+              <em class="bi bi-upload"></em>
+              Load data
+            </button>
+            <button id="save-button" type="button" class="btn btn-light border load-item d-none">
+              <em class="bi bi-download"></em>
+              Save data
+            </button>
+            <button id="save-load-done" type="button" class="btn btn-dark" data-dismiss="modal">
+              <em class="bi bi-check2"></em>
+              Done
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <canvas resize="true" id="whiteboard" data-paper-scope="1"></canvas>
+  </div>
+
+  <div class="hud">
+    <div id="zoom-percent-container" class="hover-container">
+      <button class="btn btn-light"><span id="zoom-percent">100</span>%</button>
+    </div>
+  </div>
+
+  <!-- LIB -->
+  <script src="{{ asset('whiteboard/lib/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('whiteboard/lib/bootstrap/bootstrap.bundle.min.js') }}"></script>
+
+  <!-- whiteboard -->
+  <script src="{{ asset('whiteboard/js/whiteboard.js') }}"></script>
+  <script src="{{ asset('whiteboard/js/file.js') }}"></script>
+
+  <!-- TOOLS -->
+  <script src="{{ asset('whiteboard/js/tools/general.js') }}"></script>
+  <script src="{{ asset('whiteboard/js/tools/brush.js') }}"></script>
+  <script src="{{ asset('whiteboard/js/tools/eraser.js') }}"></script>
+  <script src="{{ asset('whiteboard/js/tools/hand.js') }}"></script>
+  <script src="{{ asset('whiteboard/js/tools/shape.js') }}"></script>
+  <script src="{{ asset('whiteboard/js/tools/text.js') }}"></script>
+
+  <!-- SITE -->
+  <script src="{{ asset('whiteboard/js/site.js') }}"></script>
+</body>
+
+</html>

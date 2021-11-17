@@ -201,4 +201,59 @@ class RegisterController extends Controller
             return redirect()->route('teacher_login')->with('success','Your registration is successful, waiting for admin approval');
         }
     }
+
+    // HR registration
+    public function hr_register(Request $request){
+        if ($request->method() == 'GET'){
+            return view('auth.hr_register');
+        } else if($request->method() == 'POST'){
+            $this->validate($request,[
+                    'first_name' => ['required', 'string', 'max:255'],
+                    'last_name' => ['required', 'string', 'max:255'],
+                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                    'doj' => ['required', 'date'],
+                    'gender' => ['required'],
+                    'image' => 'required| mimes:png,jpg',
+                    'mobile' => ['required'],
+                    'qualification' => ['required']
+            ]);
+
+            if($request->hasFile('image')){
+                $image = $request->file('image');
+                $imageName = imageUpload($image,'profile_image');
+            }else{
+                $imageName = null;
+            }
+
+            $unique_id = $this->getCode();
+            $id_no = 'LLHR'.$unique_id;
+
+            $user = new User();
+            $user->role_id = 2;
+            $user->first_name = $request->first_name;
+            $user->last_name = $request->last_name;
+            $user->email = $request->email;
+            $user->doj = $request->doj;
+            $user->gender = $request->gender;
+            $user->id_no = $id_no;
+            $user->password = Hash::make($id_no);
+            $user->image = $imageName;
+            $user->mobile = $request->mobile;
+            $user->qualification = $request->qualification;
+            $user->save();
+
+            $admin_details = User::select('email')->where('role_id',1)->first();
+            $admin_email = $admin_details['email'];
+            $email_data = array(
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'id_no' => $id_no,
+                'user_type' => 'hr'
+            );
+            FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+
+            return redirect()->route('hr_login')->with('success','Your registration is successful, waiting for admin approval');
+        }
+    }
 }

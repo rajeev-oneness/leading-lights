@@ -35,4 +35,7 @@
 
     Route::get('assigned-groups',[TeacherController::class,'assigned_groups'])->name('assigned_groups');
 
+    // Whiteboard
+    Route::get('whiteboard',[TeacherController::class,'whiteboard'])->name('whiteboard');
+
 

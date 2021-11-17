@@ -171,7 +171,7 @@
                                                 <li>
                                                     {{-- <img src="{{ asset($certificate->image) }}"
                                             class="img-fluid mx-auto w-100"> --}}
-                                                    <a href="{{ asset($certificate->image) }}" target="_blank">View
+                                                    <a href="{{ asset($certificate->image) }}" target="_blank" class="img-fluid mx-auto w-100">View
                                                         documents <i class="fas fa-arrow-right"></i></a>
                                                 </li>
                                             @empty

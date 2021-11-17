@@ -48,11 +48,18 @@
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="name">Students Name</label>
-									@foreach ($student_details as $key => $student_detail)
-										<div class="col-md-6">
-											<strong>{{ $key + 1 }}.</strong> {{ $student_detail->first_name }} {{ $student_detail->last_name }} - {{ $student_detail->id_no }}
-										</div>	
+								<div class="student-list">	
+                                    <ol>
+                                @foreach ($student_details as $key => $student_detail)
+                               
+                                    <li>{{ $student_detail->first_name }} {{ $student_detail->last_name }} - {{ $student_detail->id_no }}</li>
+
+                                            
+											{{-- <strong>{{ $key + 1 }}.</strong> {{ $student_detail->first_name }} {{ $student_detail->last_name }} - {{ $student_detail->id_no }} --}}
+                                        
 									@endforeach
+                                </ol>
+                                </div>
                             </div>
                         </div>
                     </div>

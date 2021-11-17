@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Certificate;
 use App\Models\Classes;
+use App\Models\Event;
 use App\Models\Payment;
 use App\Models\SpecialCourse;
 use Illuminate\Support\Facades\Auth;
@@ -31,8 +32,13 @@ class UserController extends Controller
     {
         $current_user_id = Auth::user()->id;
         $data['classes'] = ArrangeClass::where('class', Auth::user()->class)
-            ->join('subjects','subjects.id','=','arrange_classes.class')
+            ->join('subjects','subjects.id','=','arrange_classes.subject')
             ->whereDate('date', '=', date('Y-m-d'))->orderBy('arrange_classes.created_at','desc')->get();
+        // dd( $data['classes']);
+            $data['special_classes'] = ArrangeClass::where('group_id', Auth::user()->group_ids)
+            ->join('subjects','subjects.id','=','arrange_classes.subject')
+            ->whereDate('date', '=', date('Y-m-d'))->orderBy('arrange_classes.created_at','desc')->get();
+        // dd($data['special_classes']);
         $data['student'] = User::where('id', $current_user_id)->first();
         $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
         $data['certificates'] = DB::table('certificate')->where('user_id', $current_user_id)->first();
@@ -140,12 +146,19 @@ class UserController extends Controller
 
     public function dairy(Request $request)
     {
-        if ($request->ajax()) {    
+        if ($request->ajax()) {  
             $classes = ArrangeClass::where('class', Auth::user()->class)->
-            join('subjects','subjects.id','=','arrange_classes.class')->get(['arrange_classes.id', 'name as title', 'date', 'start_time as description']);
-            return response()->json($classes);
+            join('subjects','subjects.id','=','arrange_classes.class')
+            ->get(['arrange_classes.id', 'name as title', 'date', 'start_time as description'])->toArray();
+            // dd($classes);
+            $special_classes = ArrangeClass::
+            where('group_id', Auth::user()->group_ids)->where('group_id','!=',null)->
+            join('subjects','subjects.id','=','arrange_classes.group_id')
+            ->get(['arrange_classes.id', 'name as title', 'date', 'start_time as description'])->toArray();
+            return response()->json(array_merge($classes,$special_classes));
         }
-        return view('student.dairy');
+        $events = Event::where('class_id',Auth::user()->class)->get();
+        return view('student.dairy',compact('events'));
     }
 
     public function homework(Request $request)
@@ -369,18 +382,29 @@ class UserController extends Controller
 
     public function certificate_upload(Request $request)
     {
-        if ($request->ajax()) {
-            $image = $request->file('file');
-            $fileName = imageUpload($image, 'student_certificate');
+        Validator::make($request->all(), [
+            'upload_file' => 'required|mimes:pdf',
+        ], $messages = [
+            'upload_file.required' => 'This field is required.',
+            'upload_file.mimes' => 'Please upload pdf file',
+        ])->validate();
 
-            $data['user_id'] = Auth::user()->id;
-            $data['updated_at'] = date('Y-m-d H:i:s');
+        $image = $request->file('upload_file');
+        $fileName = imageUpload($image, 'student_certificate');
 
-            $certificate = new Certificate();
-            $certificate->user_id = Auth::user()->id;
-            $certificate->image = $fileName;
-            $certificate->save();
-        }
+        $data['user_id'] = Auth::user()->id;
+        $data['updated_at'] = date('Y-m-d H:i:s');
+
+        $certificate = new Certificate();
+        $certificate->user_id = Auth::user()->id;
+        $certificate->image = $fileName;
+        $certificate->save();
+
+        $user = User::find(Auth::user()->id);
+        $user->is_rejected_document_uploaded = 1;
+        $user->save();
+
+        return redirect()->back();
     }
 
     public function payment_receipt(Request $request,$payment_id){

@@ -39,7 +39,7 @@
                         <i class=" metismenu-icon fa fa-universal-access"></i>HR’s Profile 
                     </a>                               
                 </li>
-                  <li class="{{ Request::is('hr/attendance') ? 'mm-active' : '' }}">
+                  <li class="{{ Request::is('hr/attendance*') ? 'mm-active' : '' }}">
                     <a href="{{ route('hr.attendance') }}">
                         <i class="metismenu-icon fa fa-users"></i>Attendance
                     </a>                               
@@ -49,9 +49,9 @@
                         <i class="metismenu-icon fa fa-music"></i>Manage Event
                     </a>                               
                 </li>
-                 <li class="{{ Request::is('hr/notice') ? 'mm-active' : '' }}">
-                    <a href="{{ route('hr.notice') }}">
-                        <i class="metismenu-icon fa fa-bullhorn"></i>Notice/ announcement  
+                <li class="{{ Request::is('hr/announcement') ? 'mm-active' : '' }}">
+                    <a href="{{ route('hr.announcement') }}">
+                        <i class="metismenu-icon fa fa-bullhorn"></i>Announcement  
                     </a>                               
                 </li>
                 <li class="{{ Request::is('hr/download_report') ? 'mm-active' : '' }}">

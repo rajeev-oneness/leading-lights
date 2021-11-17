@@ -1,146 +1,238 @@
 @extends('hr.layouts.master')
 @section('content')
-<div class="app-main__outer">
-    <div class="app-main__inner">
-        <div class="app-page-title">
-            <div class="page-title-wrapper">
-                <div class="page-title-heading">
-                    <div class="page-title-icon">
-                        <i class="fa fa-bullhorn"></i>
-                    </div>
-                    <div> Manage Event                              
-                    </div>
-                </div>
-                   </div>
-        </div>       
-        <div class="tabs-animation">  
-            <div class="card mb-3">                            
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-7">
-                             <img src="images/event.jpg" class="img-fluid mb-4">
-                             <div class="card-header-title mb-4">
-                                Summer Camp
-                            </div>
-                            <div class="d-sm-flex align-items-center   mb-4">
-                                <p class="des dec"><span class="mr-2"><i class="fa fa-circle"></i></span>Description</p>
-                                <div class="d-sm-flex align-items-baseline">
-                                     <p class="des  mr-2"><span class="mr-2"><i class="fa fa-circle"></i></span>Date</p>
-                                    <form class="form">                                                 
-                                     <input type="date" name="" class="form-control">
-                                 </form>
-                            </div>
-                             </div>
-                            <textarea cols="10" id="editor1" name="editor1" rows="5"></textarea>
-                       
-                            <button class="btn-pill btn btn-dark mt-4">Submit Now</button>
+    <style>
+        .popover,
+        .tooltip {
+            opacity: unset;
+        }
+
+    </style>
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="fa fa-bullhorn"></i>
                         </div>
-                         <div class="col-lg-5">
-                             <div class="card-header-title mb-4">
-Recent News                                        </div>
-                                <div class="items d-sm-flex align-items-center">
-                                    <div class="pdf-box">
-                                         <img src="images/event4.jpg" class="img-fluid rounded  mx-auto">
-                                    </div>
-                                    <div class="pdf-text">
-                                         <h4>Lorem Ipsum</h4>
-                                         <p>This is Photoshop's version  of Lorem Ipsum. </p>
-                                         <div class="widget-content-left d-sm-flex align-items-center">
-                                        <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
-                                        <div class="widget-subheading ml-3">
-                                           
-                                             Today<br><span class="text">7:30 pm</span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
-
-
-                                                   <div class="items d-sm-flex align-items-center">
-                                    <div class="pdf-box">
-                                         <img src="images/event5.jpg" class="img-fluid rounded  mx-auto">
-                                    </div>
-                                    <div class="pdf-text">
-                                         <h4>Lorem Ipsum</h4>
-                                         <p>This is Photoshop's version  of Lorem Ipsum. </p>
-                                         <div class="widget-content-left d-sm-flex align-items-center">
-                                        <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
-                                        <div class="widget-subheading ml-3">
-                                           
-                                             Today<br><span class="text">7:30 pm</span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
-                                                    <div class="items d-sm-flex align-items-center">
-                                    <div class="pdf-box">
-                                         <img src="images/event4.jpg" class="img-fluid rounded  mx-auto">
-                                    </div>
-                                    <div class="pdf-text">
-                                         <h4>Lorem Ipsum</h4>
-                                         <p>This is Photoshop's version  of Lorem Ipsum. </p>
-                                         <div class="widget-content-left d-sm-flex align-items-center">
-                                        <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
-                                        <div class="widget-subheading ml-3">
-                                           
-                                             Today<br><span class="text">7:30 pm</span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
-                                                    <div class="items d-sm-flex align-items-center">
-                                    <div class="pdf-box">
-                                         <img src="images/event4.jpg" class="img-fluid rounded  mx-auto">
-                                    </div>
-                                    <div class="pdf-text">
-                                         <h4>Lorem Ipsum</h4>
-                                         <p>This is Photoshop's version  of Lorem Ipsum. </p>
-                                         <div class="widget-content-left d-sm-flex align-items-center">
-                                        <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
-                                        <div class="widget-subheading ml-3">
-                                           
-                                             Today<br><span class="text">7:30 pm</span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
-                                                 <div class="items d-sm-flex align-items-center">
-                                    <div class="pdf-box">
-                                         <img src="images/event4.jpg" class="img-fluid rounded  mx-auto">
-                                    </div>
-                                    <div class="pdf-text">
-                                         <h4>Lorem Ipsum</h4>
-                                         <p>This is Photoshop's version  of Lorem Ipsum. </p>
-                                         <div class="widget-content-left d-sm-flex align-items-center">
-                                        <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
-                                        <div class="widget-subheading ml-3">
-                                           
-                                             Today<br><span class="text">7:30 pm</span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
-                         </div>
+                        <div> Manage Event
+                        </div>
                     </div>
-                </div>
-            </div>                     
-          
-        </div>
-    </div>
-    <div class="app-wrapper-footer">
-        <div class="app-footer">
-            <div class="app-footer__inner">                           
-                <div class="app-footer-right">
-                    <ul class="header-megamenu nav">
-                        <li class="nav-item">
-                            <a class="nav-link">
-                                Copyright &copy; 2021 | All Right Reserved
-                            </a>                                     
-                        </li>                                   
-                    </ul>
                 </div>
             </div>
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+            <div class="tabs-animation">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <img src="{{ asset('frontend/images/event.jpg') }}" class="img-fluid mb-4">
+                                {{-- <div class="card-header-title mb-4">
+                                    Summer Camp
+                                </div> --}}
+
+                                <form class="form" action="{{ route('hr.manage-event.store') }}" method="POST"
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="form-group row">
+                                        <label for="title" class="col-sm-2 des dec"><i
+                                                class="fa fa-circle color-icon mr-2"></i>Title</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="title" name="title" class="form-control"
+                                                value="{{ old('title') }}">
+                                            @error('title')
+                                                <span class="text-danger">
+                                                    {{ $message }}
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="name" class="col-sm-2 des dec"><i
+                                                class="fa fa-circle color-icon mr-2"></i>Class</label>
+                                        <div class="col-sm-10">
+                                            <select name="class" id="class_name" class="form-control">
+                                                <option value="">Select Class</option>
+                                                {{-- @foreach ($groups as $group)
+                                                    <option value="{{ $group->id . '-group' }}" class="text-info">
+                                                        {{ $group->name }}</option>
+                                                @endforeach --}}
+                                                @foreach ($classes as $class)
+                                                    <option value="{{ $class->id . '-class' }}" @if (old('class') == $class->id) selected @endif>
+                                                        {{ $class->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('class')
+                                                <span class="text-danger">
+                                                    {{ $message }}
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="name" class="col-sm-2 des dec"><i
+                                                class="fa fa-circle color-icon mr-2"></i>Image</label>
+                                        <div class="col-sm-10">
+                                            <input type="file" id="image" name="image"
+                                                accept="image/png, image/gif, image/jpeg" class="form-control">
+                                            @error('image')
+                                                <span class="text-danger">
+                                                    {{ $message }}
+                                                </span>
+                                            @enderror
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <span for="start_date" class="des dec"><i
+                                                    class="fa fa-circle color-icon mr-2 mb-2"></i>Start Date</span>
+                                            <input type="text" id="start_date" name="start_date"
+                                                class="form-control datepicker" value="{{ old('start_date') }}">
+                                            @error('start_date')
+                                                <span class="text-danger">
+                                                    {{ $message }}
+                                                </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span for="end_date" class="des dec"><i
+                                                    class="fa fa-circle color-icon mr-2 mb-2"></i>End Date</span>
+                                            <input type="text" id="end_date" name="end_date" class="form-control datepicker"
+                                                value="{{ old('end_date') }}">
+                                            @error('end_date')
+                                                <span class="text-danger">
+                                                    {{ $message }}
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <span for="start_time" class="des dec"><i
+                                                    class="fa fa-circle color-icon mr-2 mb-2"></i>Start Time</span>
+                                            <input type="text" id="start_time" name="start_time"
+                                                class="form-control clockpicker" value="{{ old('start_time') }}">
+                                            @error('start_time')
+                                                <span class="text-danger">
+                                                    {{ $message }}
+                                                </span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span for="end_time" class="des dec"><i
+                                                    class="fa fa-circle color-icon mr-2 mb-2"></i>End Time</span>
+                                            <input type="text" id="end_time" name="end_time"
+                                                class="form-control clockpicker" value="{{ old('end_time') }}">
+                                            @error('end_time')
+                                                <span class="text-danger">
+                                                    {{ $message }}
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="d-sm-flex align-items-top   mb-4">
+                                        <p class="des dec"><span class="mr-2"><i
+                                                    class="fa fa-circle"></i></span>Description</p>
+
+                                    </div>
+                                    <textarea cols="10" id="editor1" name="desc" rows="5"></textarea>
+                                    @error('desc')
+                                        <span class="text-danger">
+                                            {{ $message }}
+                                        </span>
+                                    @enderror
+                                    <br>
+                                    <button class="btn-pill btn btn-dark mt-4" type="submit">Submit Now</button>
+
+                                </form>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card-header-title mb-4">
+                                    Recent Event </div>
+                                @foreach ($events as $event)
+                                    <div class="items d-sm-flex align-items-center">
+                                        <div class="pdf-box w-40">
+                                            <img src="{{ asset($event->image) }}"
+                                                class="img-fluid rounded  w-100 mx-auto">
+                                        </div>
+                                        <div class="pdf-text">
+                                            <h4>{{ \Illuminate\Support\Str::limit($event->title, 15) }}</h4>
+                                            <p>{!! \Illuminate\Support\Str::limit($event->desc, 50) !!}</p>
+                                            <div class="widget-content-left d-sm-flex align-items-center">
+                                                <div class="widget-heading text-dark"><img
+                                                        src="{{ asset('frontend/assets/images/calander.png') }}"
+                                                        class="img-fluid mx-auto"></div>
+                                                <div class="widget-subheading ml-3">
+                                                    {{ date('M d, Y', strtotime($event->start_date)) }}
+                                                    @if ($event->end_date)
+                                                        - {{ date('M d, Y', strtotime($event->end_date)) }}
+                                                    @endif
+                                                    <br><span
+                                                        class="text">{{ date('h:i A', strtotime($event->start_time)) }}
+                                                        @if ($event->end_time)
+                                                            - {{ date('h:i A', strtotime($event->end_time)) }}
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                {{-- <div class="pagination_center">
+                                    <ul class="pagination clearfix">
+                                        <li>{{ $events->links() }}</li>
+                                    </ul>
+                                </div> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
+        @include('hr.layouts.static_footer')  
     </div>
-</div>
+    <script>
+        $('#class_name').on('click', function() {
+            var class_name = $('#class_name').val();
+            var after_split = class_name.split("-")[1];
+            if (after_split === 'group') {
+                $('.datepicker').datepicker('destroy').datepicker({
+                    format: 'yyyy-mm-dd',
+                    startDate: new Date(),
+                    // daysOfWeekDisabled: [0]
+                });
+            } else {
+                $('.datepicker').datepicker('destroy').datepicker({
+                    format: 'yyyy-mm-dd',
+                    startDate: new Date(),
+                    daysOfWeekDisabled: [0]
+                });
+            }
+        })
+        setTimeout(() => {
+            $('.alert-success').css('display', 'none');
+            $('.alert-warning').css('display', 'none');
+        }, 4000);
+        $('.clockpicker').clockpicker({
+            placement: 'bottom',
+            align: 'right',
+            donetext: 'Done',
+            'default': 'now',
+            // autoclose: true,
+        });
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: new Date(),
+            daysOfWeekDisabled: [0]
+        });
+    </script>
 @endsection

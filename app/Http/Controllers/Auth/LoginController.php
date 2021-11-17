@@ -82,10 +82,15 @@ class LoginController extends Controller
         if (Auth::user()->role_id == 3) {
             $check_attendance->user_id = Auth::user()->id;
             $check_attendance->date = date('Y-m-d');
-            $check_attendance->logout_time = getAsiaTime24(date('y-m-d h:i:s'));
+            $check_attendance->logout_time = getAsiaTime24(date('y-m-d H:i:s'));
             $check_attendance->save();
         }
 
+        if (Auth::check() && Auth::user()->role_id == 2) {
+            auth()->guard()->logout();
+            $request->session()->invalidate();
+            return redirect()->route('hr_login');
+        }
         if (Auth::check() && Auth::user()->role_id == 3) {
             auth()->guard()->logout();
             $request->session()->invalidate();
@@ -130,7 +135,7 @@ class LoginController extends Controller
                             $attendance = new Attendance();
                             $attendance->user_id = Auth::user()->id;
                             $attendance->date = date('Y-m-d');
-                            $attendance->login_time = getAsiaTime24(date('y-m-d h:i:s'));
+                            $attendance->login_time = getAsiaTime24(date('Y-m-d H:i:s'));
                             $attendance->logout_time = null;
                             $attendance->save();
                         // }

@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\CheckStudentPayment;
+use App\Http\Middleware\HRMiddleware;
 use App\Http\Middleware\SessionTimeOut;
 use App\Http\Middleware\StudentMiddleware;
 use App\Http\Middleware\TeacherMiddleware;
@@ -72,6 +73,7 @@ class Kernel extends HttpKernel
         'admin' => AdminMiddleware::class,
         'student' => StudentMiddleware::class,
         'teacher' => TeacherMiddleware::class,
+        'hr' => HRMiddleware::class,
         'payment.confirm' => CheckStudentPayment::class,
     ];
 }

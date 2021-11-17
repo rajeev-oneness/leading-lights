@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\HR;
 
 use App\Http\Controllers\Controller;
+use App\Models\Announcement;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Attendance;
 use App\Models\Event;
+use App\Models\Group;
+use App\Models\Classes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -16,12 +19,7 @@ class HRController extends Controller
     public function index(){
 
         $current_user_id = Auth::user()->id;
-        // $data['classes'] = ArrangeClass::where('class', Auth::user()->class)
-            // ->join('subjects','subjects.id','=','arrange_classes.class')
-            // ->whereDate('date', '=', date('Y-m-d'))->orderBy('arrange_classes.created_at','desc')->get();
         $data['hr'] = User::where('id', $current_user_id)->first();
-        // $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
-        // $data['certificates'] = DB::table('certificate')->where('user_id', $current_user_id)->first();
         return view('hr.profile')->with($data);
     }
     public function updateProfile(Request $request)
@@ -59,16 +57,99 @@ class HRController extends Controller
         $student->save();
         return response()->json('success');
     }
+    // Attendance
     public function attendance(Request $request)
     {
+        
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $checked_attendance = Attendance::where('user_id', Auth::user()->id)->latest()->get();
-            return view('hr.attendance',compact('checked_attendance'));
+            $data['checked_attendance'] = Attendance::where('user_id', Auth::user()->id)->latest()->get();
+            // dd($data);
+            return view('hr.attendance')->with($data);
         }
     }
-    public function manageEvevnt(Request $request)
+    public function attendanceFor(Request $request)
     {
-            return view('hr.manage_event');
+        Validator::make($request->all(), [
+            'role_id' => 'required',
+        ], $messages = [
+            'role_id.required' => 'Please select any one!',
+        ])->validate();
+            $this->validate($request, [
+                'role_id' => 'required',
+            ]);
+            $role = $request->role_id;
+            // $after_explode_role = explode('-', $role);
+
+            if ($role == 3) {
+                $attendance_detail = User::where('role_id', $role)
+                    ->get();
+            return view('hr.attendance_date', compact('attendance_detail'));
+            }
+            if ($role == 4) {
+                $data['attendance_detail'] = User::where('role_id', $role)
+                    ->get();
+            $data['groups'] = Group::latest()->get();
+            $data['classes'] = Classes::orderBy('name')->get();
+            return view('hr.attendance_student')->with($data);
+            }
+    }
+    // Events
+    public function manageEvent(Request $request)
+    {
+        $data['groups'] = Group::latest()->get();
+        // $data['subjects'] = Subject::latest()->get();
+        $data['classes'] = Classes::orderBy('name')->get();
+        $data['events'] = Event::where('user_id', Auth::user()->id)->latest()->get();
+        // return view('teacher.hometask',compact('classes'));
+        return view('hr.manage_event')->with($data);
+    }
+
+    public function uploadEvevnt(Request $request)
+    {
+        Validator::make($request->all(), [
+            'class' => 'required',
+            'title' => 'required|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i',
+            'desc' => 'required|max:500',
+            'image' => 'required|mimes:jpeg,png,jpg'
+        ], $messages = [
+            'desc.required' => 'The description field is required.',
+            'class.required' => 'The class/group field is required.',
+        ])->validate();
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $fileName = imageUpload($file, 'hr/event');
+        } else {
+            $fileName = null;
+        }
+
+        $class = $request->class;
+        $after_explode_class = explode('-',$class);
+
+        $event = new Event();
+        $event->user_id = Auth::user()->id;
+        if ($after_explode_class[1] === 'class') {
+            $event->class_id = $after_explode_class[0];
+            $event->group_id = null;
+        }
+        if ($after_explode_class[1] === 'group') {
+            $event->group_id = $after_explode_class[0];
+            $event->class_id = null;
+        }
+        $event->title = $request->title;
+        $event->start_date = $request->start_date;
+        $event->end_date = $request->end_date;
+        $event->start_time = $request->start_time;
+        $event->end_time = $request->end_time;
+        $event->desc = $request->desc;
+        $event->image = $fileName;
+        $event->save();
+
+        return redirect('hr/event-management')->with('success', 'Event upload successfully');
     }
 
     public function notice(Request $request)
@@ -145,6 +226,55 @@ class HRController extends Controller
         return $validator;
     }
 
+    // public function event()
+    // {
+    //     $data['groups'] = Group::latest()->where('hr_id', Auth::user()->id)->get();
+    //     // $data['subjects'] = Subject::latest()->get();
+    //     $data['classes'] = Classes::orderBy('name')->get();
+    //     $data['events'] = Event::where('user_id', Auth::user()->id)->latest()->get();
+    //     // return view('teacher.hometask',compact('classes'));
+    //     return view('hr.manage_event')->with($data);
+    // }
+    
+
+    // Announcement
+    public function Announcement(Request $request)
+    {
+        $classes = Classes::orderBy('name')->get();
+        $announcements = Announcement::where('user_id', Auth::user()->id)->latest()->get();
+        // dd($announcements);
+        return view('hr.announcement',compact('classes','announcements'));
+    }
+
+    public function announcementUpload(Request $request)
+    {
+        Validator::make($request->all(), [
+            'title' => 'required',
+            'class_id' => 'required',
+            'date' => 'required'
+        ], $messages = [
+            'title.required' => 'The title field is required.',
+            'class_id.required' => 'The class field is required.',
+            'date.required' => 'The date field is required.',
+        ])->validate();
+        // $class_id = implode(',', $request->class_id);
+        $announcement = new Announcement();
+        $announcement->user_id = Auth::user()->id;
+        $announcement->title = $request->title;
+        // $class_id = $request->class_id;
+
+        // $announcement->class_id = $class_id;
+        // $class = implode(",", $request->class_id);
+        // $announcement->class_id = $class;
+        $announcement->class_id = implode(',', $request->class_id);
+
+        $announcement->date = $request->date;
+
+        // $announcement->class_id = $class_ids;
+        $announcement->save();    
+        
+        return redirect('hr/announcement')->with('success', 'Announcement upload successfully');
+    }
 
     
 }

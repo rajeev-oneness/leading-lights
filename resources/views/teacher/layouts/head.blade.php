@@ -47,6 +47,9 @@ src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootst
     table.dataTable thead .sorting {
         background-image: none !important;
     }
+    .table thead th {
+        font-size: 14px !important;
+    }
 
 </style>
 

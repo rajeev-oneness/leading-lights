@@ -134,13 +134,15 @@
                 </div>
             </div>
             
-                @if ($student->rejected == 1 && $student->status == 0 && $certificates->created_at !== $certificates->updated_at)
+                {{-- @if ($student->rejected == 1 && $student->status == 0 && $certificates->created_at !== $certificates->updated_at) --}}
+                @if ($student->rejected == 1 && $student->status == 0 && $student->is_rejected_document_uploaded == 1)
                 <div>
-            <h5 class="text-warning">N:B: Your documents have been uploaded successfully. You will be notified once ADMIN approved your account.</h5>
+            <h5 class="text-danger">N:B: Your documents have been uploaded successfully. You will be notified once ADMIN approved your account.</h5>
         </div>
             @endif
             
-            @if ($student->rejected == 1 && $student->status == 0 && $certificates->created_at === $certificates->updated_at)
+            @if ($student->rejected == 1 && $student->status == 0 && $student->is_rejected_document_uploaded == 0)
+            {{-- @if ($student->rejected == 1 && $student->status == 0 && $certificates->created_at === $certificates->updated_at) --}}
             <div class="row mt-4">
                 <div class="col-lg-12">
                     <div class="card mb-4">
@@ -148,6 +150,9 @@
                             <div class="card-header-title font-size-lg text-capitalize mb-4">
                                 Attach Documents(PDF only)
                             </div>
+                            <form class="form" action="{{ route('user.certificate_upload') }}" method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
                             <div class="file-upload">
                                 <button class="file-upload-btn" type="button"
                                     onclick="$('.file-upload-input').trigger( 'click' )">Add File</button>
@@ -155,7 +160,7 @@
 
                                 <div class="image-upload-wrap">
                                     <input class="file-upload-input" type='file'
-                                        accept="pdf/*" id="img_upload" name="image"/>
+                                        accept="pdf/*" id="img_upload" name="upload_file"/>
                                     <div class="drag-text">
                                         <h3>Drag and drop a file or select add file</h3>
                                     </div>
@@ -168,8 +173,14 @@
                                     </div> --}}
                                     {{-- <img id="img_prv" style="max-width: 150px;max-height: 150px" class="img-thumbnail" src=""> --}}
                                 </div>
-                                <span id="mgs_ta">
-                            </div>  
+                                @if ($errors->has('upload_file'))
+                                <span style="color: red;"
+                                    id="file_err">{{ $errors->first('upload_file') }}</span>
+                                @endif
+                                <span id="choose_file"></span>
+                            </div> 
+                            <button type="submit" class="btn-pill btn btn-dark mt-4" name="submit">Submit</button> 
+                        </form>
 
                         </div>
                     </div>
@@ -185,7 +196,7 @@
                                 My Classes
                             </div>
                             <div class="row mt-5">
-                                @forelse($classes as $class)
+                                @foreach($classes as $class)
                                 <div class="col-md-12 col-lg-6 col-xl-6">
                                     <div class="card-shadow-primary profile-responsive card-border mb-3 card">
                                         <div class="dropdown-menu-header">
@@ -221,11 +232,57 @@
                                         </ul>
                                     </div>
                                 </div>
-                                @empty
+                                {{-- @empty
+                                <div class="col-md-12">
+                                    <p class="alert alert-warning">No class available for today</p>
+                                </div> --}}
+                                @endforeach
+                                @foreach($special_classes as $class)
+                                <div class="col-md-12 col-lg-6 col-xl-6">
+                                    <div class="card-shadow-primary profile-responsive card-border mb-3 card">
+                                        <div class="dropdown-menu-header">
+                                            <div class="dropdown-menu-header-inner">
+
+                                                <img src="{{ asset('frontend/assets/images/pro1.png') }}"
+                                                    class="img-fluid mx-auto d-block w-100">
+
+                                            </div>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="bg-warm-flame list-group-item">
+                                                <div class="widget-content p-0">
+                                                    <div class="widget-content-wrapper justify-content-between">
+                                                        <div class="widget-content-left mr-3">
+                                                            <div class="icon-wrapper m-0">
+                                                                <span class="head">{{ $class->name }}</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="widget-content-left d-sm-flex align-items-center">
+                                                            <div class="widget-heading text-dark"><img
+                                                                    src="{{ asset('frontend/assets/images/calander.png') }}"
+                                                                    class="img-fluid mx-auto"></div>
+                                                            <div class="widget-subheading">
+
+                                                                Today<br /><span class="text">{{ (date('h:i A',strtotime($class->start_time)))}}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                {{-- @empty
+                                <div class="col-md-12">
+                                    <p class="alert alert-warning">No class available for today</p>
+                                </div> --}}
+                                @endforeach
+                                @if ($special_classes->count() == 0 && $classes->count() == 0)
                                 <div class="col-md-12">
                                     <p class="alert alert-warning">No class available for today</p>
                                 </div>
-                                @endforelse
+                                @endif
                                 <!--  <div class="col-md-12 col-lg-6 col-xl-4">
                             <div class="card-shadow-primary profile-responsive card-border mb-3 card">
                                 <div class="dropdown-menu-header">
@@ -413,6 +470,11 @@
 </div>
 </div>
 <script>
+    $(document).on('change', 'input[name^="upload_file"]', function(ev) {
+        var file_name = this.files[0].name;
+        $('#file_err').html('');
+        $("#choose_file").html(`One file chosen: <span class="text-info">${file_name}</span>`);
+    });
     function changeBio() {
         document.getElementById('bio').innerHTML =
             `<textarea class="form-control" row="10" cols="30" name="bio_edit" id="bio_edit">{{ $student->about_us }}</textarea>`;
@@ -444,45 +506,45 @@
 
     }
 
-    $("#img_upload").on('change',function(ev) {
+    // $("#img_upload").on('change',function(ev) {
  
-            var filedata=this.files[0];
-            var imgtype=filedata.type;
+    //         var filedata=this.files[0];
+    //         var imgtype=filedata.type;
 
-            if(imgtype !== 'application/pdf'){
-                $('#mgs_ta').html('<p style="color:red">Please select a valid type file.Only pdf allowed</p>');
+    //         if(imgtype !== 'application/pdf'){
+    //             $('#mgs_ta').html('<p style="color:red">Please select a valid type file.Only pdf allowed</p>');
  
-            }else{
-                $('#mgs_ta').empty();
+    //         }else{
+    //             $('#mgs_ta').empty();
 
-                 //---image preview
-                var reader=new FileReader();
+    //              //---image preview
+    //             var reader=new FileReader();
  
-                reader.onload=function(ev){
-                $('#img_prv').attr('src',ev.target.result).css('width','150px').css('height','150px');
-                }
+    //             reader.onload=function(ev){
+    //             $('#img_prv').attr('src',ev.target.result).css('width','150px').css('height','150px');
+    //             }
 
-                reader.readAsDataURL(this.files[0]);
-                 /// preview end
+    //             reader.readAsDataURL(this.files[0]);
+    //              /// preview end
 
-                  //upload
+    //               //upload
  
-                var postData=new FormData();
-                postData.append('file',this.files[0]);
+    //             var postData=new FormData();
+    //             postData.append('file',this.files[0]);
  
-                $.ajax({
-                    headers:{'X-CSRF-Token':$('meta[name=csrf-token]').attr('content')},
-                    async:true,
-                    type:"post",
-                    url:"{{ route('user.certificate_upload') }}",
-                    data: postData,
-                    contentType:false,
-                    processData:false,
-                    success:function(){
-                        location.reload();
-                    }
-                });
-            }
-        })
+    //             $.ajax({
+    //                 headers:{'X-CSRF-Token':$('meta[name=csrf-token]').attr('content')},
+    //                 async:true,
+    //                 type:"post",
+    //                 url:"{{ route('user.certificate_upload') }}",
+    //                 data: postData,
+    //                 contentType:false,
+    //                 processData:false,
+    //                 success:function(){
+    //                     location.reload();
+    //                 }
+    //             });
+    //         }
+    //     })
 </script>
 @endsection
