@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Validator;
 
 class HRController extends Controller
 {
-    public function index(){
+    public function index()
+    {
 
         $current_user_id = Auth::user()->id;
         $data['hr'] = User::where('id', $current_user_id)->first();
@@ -60,7 +61,7 @@ class HRController extends Controller
     // Attendance
     public function attendance(Request $request)
     {
-        
+
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $data['checked_attendance'] = Attendance::where('user_id', Auth::user()->id)->latest()->get();
             // dd($data);
@@ -74,24 +75,115 @@ class HRController extends Controller
         ], $messages = [
             'role_id.required' => 'Please select any one!',
         ])->validate();
-            $this->validate($request, [
-                'role_id' => 'required',
-            ]);
-            $role = $request->role_id;
-            // $after_explode_role = explode('-', $role);
+        $this->validate($request, [
+            'role_id' => 'required',
+        ]);
+        $role = $request->role_id;
+        // $after_explode_role = explode('-', $role);
 
-            if ($role == 3) {
-                $attendance_detail = User::where('role_id', $role)
-                    ->get();
-            return view('hr.attendance_date', compact('attendance_detail'));
-            }
-            if ($role == 4) {
-                $data['attendance_detail'] = User::where('role_id', $role)
-                    ->get();
+        if ($role == 3) {
+            $attendance_detail = User::where('role_id', $role)
+                ->get();
+            return view('hr.attendance_teacher_list', compact('attendance_detail'));
+        }
+        if ($role == 4) {
+            $data['attendance_detail'] = User::where('role_id', $role)
+                ->get();
             $data['groups'] = Group::latest()->get();
             $data['classes'] = Classes::orderBy('name')->get();
             return view('hr.attendance_student')->with($data);
+        }
+    }
+
+    public function attendanceStudentShow(Request $request, $id)
+    {
+        $user_id = $id;
+        // dd($user_id);
+        // $event = Attendance::where('user_id', $id)->get();
+        return view('hr.attendance_date', compact('user_id'));
+    }
+
+    public function attendanceShow(Request $request)
+    {
+        // return view('hr.attendance_date');
+        $user = $request->user_id;
+        // dd($user);
+        if ($request->ajax()) {
+            $attendance = Attendance::whereDate('date', $request->date)
+                ->where('user_id', Auth::user()->id)
+                ->latest()
+                ->get();
+            return response()->json($attendance);
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $specific_attendance = Attendance::where('user_id', $user)
+                ->where('date', date('Y-m-d'))->latest()->take(4)->get();
+            $specific_date = date('Y-m-d');
+            return view('hr.attendance_date', compact('specific_attendance', 'specific_date'));
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['submit_btn'])) {
+
+                if ($_POST['submit_btn'] === 'attendance') {
+                    // dd('test');
+                    $this->validate($request, [
+                        'date' => 'required|'
+                    ]);
+                    $date = $request->date;
+                    // dd($date);
+                    $data['specific_date'] = $date;
+                    $data['no_of_working_hours'] = Attendance::whereDate('date', $date)
+                        ->selectRaw("SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(logout_time,login_time) )) ) as 'total'")
+                        ->first();
+                    $data['specific_attendance'] = Attendance::where('user_id', $user)
+                        ->whereDate('date', '=', $date)->latest()->take(4)->get();
+                    // dd($data);
+                    // dd($data['specific_attendance']);
+                    // dd($data['no_of_working_hours']->total);
+                } else {
+                    $this->validate($request, [
+                        'start_date' => 'required|date',
+                        'end_date' => 'required|date'
+                    ]);
+
+                    if ($request->start_date > $request->end_date) {
+                        return redirect()->back()->with('error', 'Please select valid range');
+                    }
+                    // dd($request->start_date, $request->end_date);
+                    $from = date($request->start_date);
+                    $to = date($request->end_date);
+                    // dd($from , $to);
+                    $data['start_date'] = $request->start_date;
+                    $data['end_date'] = $request->end_date;
+                    $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', $user)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
+                    dd($data['checked_attendance']);
+                }
+
+                if (isset($data['specific_attendance'])) {
+                    if ($data['specific_attendance']->count() > 0) {
+                        return view('hr.attendance_date')->with($data);
+                    } else {
+                        $absent_date =  $date;
+                        return view('hr.attendance_date', compact('absent_date'));
+                    }
+                } elseif (isset($data['checked_attendance'])) {
+                    if ($data['checked_attendance']->count() > 0) {
+                        return view('hr.attendance_date')->with($data);
+                    } else {
+                        $attendance = [];
+                        // $attendance['date'] = $date;
+                        $attendance['login_time'] = 'N/A';
+                        $attendance['logout_time'] = 'N/A';
+                        return view('hr.attendance_date')->with($attendance);
+                    }
+                }
+            } else {
+                $attendance = Attendance::find($request->attendance_id);
+                $attendance->comment = $request->comment;
+                $attendance->save();
+                return response()->json('success');
             }
+        }
     }
     // Events
     public function manageEvent(Request $request)
@@ -128,7 +220,7 @@ class HRController extends Controller
         }
 
         $class = $request->class;
-        $after_explode_class = explode('-',$class);
+        $after_explode_class = explode('-', $class);
 
         $event = new Event();
         $event->user_id = Auth::user()->id;
@@ -154,11 +246,11 @@ class HRController extends Controller
 
     public function notice(Request $request)
     {
-            return view('hr.notice');
+        return view('hr.notice');
     }
     public function downloadReport(Request $request)
     {
-            return view('hr.download_report');
+        return view('hr.download_report');
     }
     public function changePassword()
     {
@@ -235,7 +327,7 @@ class HRController extends Controller
     //     // return view('teacher.hometask',compact('classes'));
     //     return view('hr.manage_event')->with($data);
     // }
-    
+
 
     // Announcement
     public function Announcement(Request $request)
@@ -243,7 +335,7 @@ class HRController extends Controller
         $classes = Classes::orderBy('name')->get();
         $announcements = Announcement::where('user_id', Auth::user()->id)->paginate(2);
         // dd($announcements);
-        return view('hr.announcement',compact('classes','announcements'));
+        return view('hr.announcement', compact('classes', 'announcements'));
     }
 
     public function announcementUpload(Request $request)
@@ -265,10 +357,8 @@ class HRController extends Controller
         $announcement->date = $request->date;
         $announcement->description = $request->desc;
         // dd($announcement);
-        $announcement->save();    
-        
+        $announcement->save();
+
         return redirect()->back()->with('success', 'Announcement upload successfully');
     }
-
-    
 }

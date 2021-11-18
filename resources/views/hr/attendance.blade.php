@@ -45,10 +45,10 @@
                                         </div>
                                         <div>
                                             @error('role_id')
-                                            <span class="text-danger">
-                                                {{ $message }}
-                                            </span>
-                                        @enderror
+                                                <span class="text-danger">
+                                                    {{ $message }}
+                                                </span>
+                                            @enderror
                                         </div>
                                         <button class="btn-pill btn btn-dark mt-4" name="view_submission">Proceed</button>
                                     </form>
