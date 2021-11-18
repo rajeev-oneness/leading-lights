@@ -23,6 +23,7 @@
                                 </div>
                                 <form class="form" action="{{ route('hr.attendanceDate') }}" method="POST">
                                     @csrf
+                                    <input type="hidden" name="user_id" value="{{ $user_id }}">
                                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                         <div class="d-sm-flex align-items-baseline">
                                             <p class="des  mr-2"><span class="mr-2"><i
@@ -72,7 +73,7 @@
                                 @endif
                                 <form class="form" action="{{ route('hr.attendanceDate') }}" method="POST">
                                     @csrf
-                                    <input type="hidden" name="user_id" value="{{ $user_id ?? '' }}">
+                                    <input type="hidden" name="user_id" value="{{ $user_id ?? '' }}" id="user_id">
                                     <div class="d-sm-flex">
                                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                             <div class=" align-items-baseline">
@@ -323,10 +324,15 @@
         $('.openBtn').on('click', function() {
 
             var date = $(this).data('id');
+            var user_id = $("#user_id").val();
+
+            var url = '{{ route("hr.show.teacher.attendance", ":id") }}';
+            url = url.replace(':id', user_id);
+
             var fragment = "";
             $.ajax({
                     type: 'POST',
-                    url: "{{ route('teacher.attendance') }}",
+                    url: url,
                     data: {
                         _token: "{{ csrf_token() }}",
                         date: date
@@ -356,7 +362,6 @@
                     console.log(xhr);
                     console.log(error);
                 })
-
         });
     </script>
 @endsection
