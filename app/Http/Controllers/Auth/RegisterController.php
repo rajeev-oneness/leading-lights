@@ -4,18 +4,20 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use App\Models\Classes;
+use App\Models\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Notifications\NewUserInfo;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\Admin\Notification;
+// use App\Http\Controllers\Admin\Notification;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Notification as FacadesNotification;
 
@@ -51,9 +53,10 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    public function showRegistrationForm() {
+    public function showRegistrationForm()
+    {
         $classes = Classes::orderBy('name')->get();
-        return view ('auth.register',compact('classes'));
+        return view('auth.register', compact('classes'));
     }
     /**
      * Get a validator for an incoming registration request.
@@ -72,7 +75,7 @@ class RegisterController extends Controller
             'class' => ['required'],
             'image' => 'required| mimes:png,jpg,jpeg',
             'mobile' => ['required'],
-            'certificate' => ['required','mimes:pdf']
+            'certificate' => ['required', 'mimes:pdf']
         ]);
     }
 
@@ -85,7 +88,7 @@ class RegisterController extends Controller
         // $this->guard()->login($user);
 
         // Notification::
-        return redirect()->route('login')->with('success','Your registration is successful, waiting for admin approval');
+        return redirect()->route('login')->with('success', 'Your registration is successful, waiting for admin approval');
     }
 
     /**
@@ -98,12 +101,12 @@ class RegisterController extends Controller
     {
         // dd($data);
         $unique_id = $this->getCode();
-        $id_no = 'LLST'.$unique_id;
+        $id_no = 'LLST' . $unique_id;
 
         $image = $data['image'];
-        $imageName = imageUpload($image,'profile_image');
+        $imageName = imageUpload($image, 'profile_image');
 
-        $admin_details = User::select('email')->where('role_id',1)->first();
+        $admin_details = User::select('email')->where('role_id', 1)->first();
         $admin_email = $admin_details['email'];
         $email_data = array(
             'first_name' => $data['first_name'],
@@ -113,7 +116,7 @@ class RegisterController extends Controller
             'user_type' => 'student'
         );
         FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
-        
+
         $user_creation =  User::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
@@ -129,7 +132,7 @@ class RegisterController extends Controller
         ]);
 
         //Store certificate 
-        $certificate_data['image'] =  imageUpload($data['certificate'],'student_certificate');
+        $certificate_data['image'] =  imageUpload($data['certificate'], 'student_certificate');
 
         $certificate_data['user_id'] = $user_creation->id;
         $certificate_data['created_at'] = date('Y-m-d H:i:s');
@@ -139,39 +142,41 @@ class RegisterController extends Controller
         return $user_creation;
     }
 
-    public function getCode(){
+    public function getCode()
+    {
         $code = generateUniqueCode();
-        $checkExisting = User::where('id_no',$code)->count();
+        $checkExisting = User::where('id_no', $code)->count();
         if ($checkExisting == 0) {
             return $code;
         }
         return $this->getCode();
     }
 
-    public function teacher_register(Request $request){
-        if ($request->method() == 'GET'){
+    public function teacher_register(Request $request)
+    {
+        if ($request->method() == 'GET') {
             return view('auth.teacher_register');
-        } else if($request->method() == 'POST'){
-            $this->validate($request,[
-                    'first_name' => ['required', 'string', 'max:255'],
-                    'last_name' => ['required', 'string', 'max:255'],
-                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                    'doj' => ['required', 'date'],
-                    'gender' => ['required'],
-                    'image' => 'required| mimes:png,jpg',
-                    'mobile' => ['required'],
-                    'qualification' => ['required']
+        } else if ($request->method() == 'POST') {
+            $this->validate($request, [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'doj' => ['required', 'date'],
+                'gender' => ['required'],
+                'image' => 'required| mimes:png,jpg',
+                'mobile' => ['required'],
+                'qualification' => ['required']
             ]);
 
-            if($request->hasFile('image')){
+            if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = imageUpload($image,'profile_image');
-            }else{
+                $imageName = imageUpload($image, 'profile_image');
+            } else {
                 $imageName = null;
             }
 
             $unique_id = $this->getCode();
-            $id_no = 'LLT'.$unique_id;
+            $id_no = 'LLT' . $unique_id;
 
             $user = new User();
             $user->role_id = 3;
@@ -187,7 +192,7 @@ class RegisterController extends Controller
             $user->qualification = $request->qualification;
             $user->save();
 
-            $admin_details = User::select('email')->where('role_id',1)->first();
+            $admin_details = User::select('email')->where('role_id', 1)->first();
             $admin_email = $admin_details['email'];
             $email_data = array(
                 'first_name' => $request->first_name,
@@ -198,35 +203,36 @@ class RegisterController extends Controller
             );
             FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
 
-            return redirect()->route('teacher_login')->with('success','Your registration is successful, waiting for admin approval');
+            return redirect()->route('teacher_login')->with('success', 'Your registration is successful, waiting for admin approval');
         }
     }
 
     // HR registration
-    public function hr_register(Request $request){
-        if ($request->method() == 'GET'){
+    public function hr_register(Request $request)
+    {
+        if ($request->method() == 'GET') {
             return view('auth.hr_register');
-        } else if($request->method() == 'POST'){
-            $this->validate($request,[
-                    'first_name' => ['required', 'string', 'max:255'],
-                    'last_name' => ['required', 'string', 'max:255'],
-                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                    'doj' => ['required', 'date'],
-                    'gender' => ['required'],
-                    'image' => 'required| mimes:png,jpg',
-                    'mobile' => ['required'],
-                    'qualification' => ['required']
+        } else if ($request->method() == 'POST') {
+            $this->validate($request, [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'doj' => ['required', 'date'],
+                'gender' => ['required'],
+                'image' => 'required| mimes:png,jpg',
+                'mobile' => ['required'],
+                'qualification' => ['required']
             ]);
 
-            if($request->hasFile('image')){
+            if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = imageUpload($image,'profile_image');
-            }else{
+                $imageName = imageUpload($image, 'profile_image');
+            } else {
                 $imageName = null;
             }
 
             $unique_id = $this->getCode();
-            $id_no = 'LLHR'.$unique_id;
+            $id_no = 'LLHR' . $unique_id;
 
             $user = new User();
             $user->role_id = 2;
@@ -242,7 +248,15 @@ class RegisterController extends Controller
             $user->qualification = $request->qualification;
             $user->save();
 
-            $admin_details = User::select('email')->where('role_id',1)->first();
+            $user_id = $user->id;
+
+            $notification = new Notification();
+            $notification->user_id = $user_id;
+            $notification->title = 'Refistration Successfully';
+
+            $notification->save();
+
+            $admin_details = User::select('email')->where('role_id', 1)->first();
             $admin_email = $admin_details['email'];
             $email_data = array(
                 'first_name' => $request->first_name,
@@ -253,7 +267,7 @@ class RegisterController extends Controller
             );
             FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
 
-            return redirect()->route('hr_login')->with('success','Your registration is successful, waiting for admin approval');
+            return redirect()->route('hr_login')->with('success', 'Your registration is successful, waiting for admin approval');
         }
     }
 }

@@ -134,35 +134,41 @@
                         </span>
                     </button>
                     <div tabindex="-1" role="menu" aria-hidden="true"
-                    class="dropdown-menu-xl rm-pointers dropdown-menu dropdown-menu-right">
-                    <div class="dropdown-menu-header mb-0">
-                        <div class="dropdown-menu-header-inner bg-deep-blue">
-                            <div class="menu-header-image opacity-1" style="background-image: url('assets/images/dropdown-header/city3.jpg');"></div>
-                            <div class="menu-header-content text-dark p-3">
-                                <h5 class="menu-header-title">Notifications</h5>
-                                <h6 class="menu-header-subtitle">You have <b>21</b> unread messages</h6>
+                        class="dropdown-menu-xl rm-pointers dropdown-menu dropdown-menu-right">
+                        <div class="dropdown-menu-header mb-0">
+                            <div class="dropdown-menu-header-inner bg-deep-blue">
+                                <div class="menu-header-image opacity-1"
+                                    style="background-image: url('assets/images/dropdown-header/city3.jpg');"></div>
+                                <div class="menu-header-content text-dark p-3">
+                                    <h5 class="menu-header-title">Notifications</h5>
+                                    <h6 class="menu-header-subtitle">You have <b>99+</b> unread messages</h6>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                   <div class="scroll-area-sm">
-                                <div class="scrollbar-container">
-                                    <div class="p-3">
-                                        <div class="vertical-without-time vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
+                        <div class="scroll-area-sm">
+                            <div class="scrollbar-container">
+                                <div class="p-3">
+                                    <div
+                                        class="vertical-without-time vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
+
+                                        @foreach ($notification as $notifi)
                                             <div class="vertical-timeline-item vertical-timeline-element">
                                                 <div>
                                                     <span class="vertical-timeline-element-icon bounce-in">
                                                         <i class="badge badge-dot badge-dot-xl badge-success"> </i>
                                                     </span>
                                                     <div class="vertical-timeline-element-content bounce-in">
-                                                        <h4 class="timeline-title">All Hands Meeting</h4>
-                                                        <p>Lorem ipsum dolor sic amet, today at 
-                                                            <a href="javascript:void(0);">12:00 PM</a>
+                                                        {{-- <h4 class="timeline-title">All Hands Meeting</h4> --}}
+                                                        <p>{{ $notifi->title }}
+                                                            <a
+                                                                href="javascript:void(0);">{{ \carbon\carbon::parse($notifi->created_at)->diffForHumans() }}</a>
                                                         </p>
                                                         <span class="vertical-timeline-element-date"></span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="vertical-timeline-item vertical-timeline-element">
+                                        @endforeach
+                                        {{-- <div class="vertical-timeline-item vertical-timeline-element">
                                                 <div>
                                                     <span class="vertical-timeline-element-icon bounce-in">
                                                         <i class="badge badge-dot badge-dot-xl badge-warning"> </i>
@@ -252,19 +258,21 @@
                                                     </div>
 
                                                 </div>
-                                            </div>
-                                        </div>
+                                            </div> --}}
                                     </div>
                                 </div>
                             </div>
-                  
-                    <ul class="nav flex-column">
-                        <li class="nav-item-divider nav-item"></li>
-                        <li class="nav-item-btn text-center nav-item">
-                            <button class="btn-shadow btn-wide btn-pill btn btn-focus btn-sm">Close all<span class="ml-2"><i class="fa fa-times-circle" aria-hidden="true"></i></span></button>
-                        </li>
-                    </ul>
-                </div>
+                        </div>
+
+                        <ul class="nav flex-column">
+                            <li class="nav-item-divider nav-item"></li>
+                            <li class="nav-item-btn text-center nav-item">
+                                <button class="btn-shadow btn-wide btn-pill btn btn-focus btn-sm">Close all<span
+                                        class="ml-2"><i class="fa fa-times-circle"
+                                            aria-hidden="true"></i></span></button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
@@ -272,8 +280,11 @@
                 <div class="widget-content p-0">
                     <div class="widget-content-wrapper">
                         <div class="widget-content-left header-user-info">
-                            <div class="widget-heading"> {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
-                            <div class="widget-subheading"> Member Seans: {{ Auth::user()->created_at ? date('Y',strtotime(Auth::user()->created_at)) : 'N/A'}} </div>
+                            <div class="widget-heading"> {{ Auth::user()->first_name }}
+                                {{ Auth::user()->last_name }}</div>
+                            <div class="widget-subheading"> Member Seans:
+                                {{ Auth::user()->created_at ? date('Y', strtotime(Auth::user()->created_at)) : 'N/A' }}
+                            </div>
                         </div>
                         <div class="widget-content-left ml-3">
                             <div class="btn-group">
@@ -299,7 +310,9 @@
                                                                 alt="">
                                                         </div>
                                                         <div class="widget-content-left">
-                                                            <div class="widget-heading">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
+                                                            <div class="widget-heading">
+                                                                {{ Auth::user()->first_name }}
+                                                                {{ Auth::user()->last_name }}</div>
                                                             <div class="widget-subheading opacity-8">A short
                                                                 profile description</div>
                                                         </div>
