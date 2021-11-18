@@ -21,8 +21,8 @@
             <div class="dashboard-body-content">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5>Announcement</h5>
-                    <a href="{{ route('admin.announcement.create') }}" class="actionbutton btn btn-sm">ADD
-                        ANNOUNCEMENT</a>
+                    {{-- <a href="{{ route('admin.announcement.create') }}" class="actionbutton btn btn-sm">ADD
+                        ANNOUNCEMENT</a> --}}
                 </div>
                 <hr>
                 @if (session('success'))
@@ -38,6 +38,7 @@
                         <thead>
                             <tr>
                                 <th>Serial No</th>
+                                <th>Class</th>
                                 <th>Title</th>
                                 <th>Date</th>
                                 <th style="width:100px">Action</th>
@@ -47,13 +48,17 @@
                             @foreach ($announcements as $key => $announcement)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
+                                    <td>@php
+                                        $class = App\Models\Classes::where('id',$announcement->class_id)->first();
+                                        echo $class->name;
+                                     @endphp</td>
                                     <td>{{ $announcement->title }}</td>
                                     <td>{{ $announcement->date }}</td>
                                     <td>
-                                        <a href="{{ route('admin.announcement.show', $announcement->id) }}"><i
+                                        {{-- <a href="{{ route('admin.announcement.show', $announcement->id) }}"><i
                                                 class="far fa-eye"></i></a>
                                         <a href="{{ route('admin.announcement.edit', $announcement->id) }}"
-                                            class="ml-2"><i class="far fa-edit"></i></a>
+                                            class="ml-2"><i class="far fa-edit"></i></a> --}}
                                         <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
                                             data-target="#exampleModal" onclick="deleteForm({{ $announcement->id }})"><i
                                                 class="far fa-trash-alt text-danger"></i></a>

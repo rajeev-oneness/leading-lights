@@ -43,7 +43,8 @@
                                     @csrf
                                     <div class="form-group row">
                                         <label for="title" class="col-sm-2 des dec"><i
-                                                class="fa fa-circle color-icon mr-2"></i>Title</label>
+                                                class="fa fa-circle color-icon mr-2"></i>Title<span
+                                                class="text-danger">*</span> </label>
                                         <div class="col-sm-10">
                                             <input type="text" id="title" name="title" class="form-control"
                                                 value="{{ old('title') }}">
@@ -56,7 +57,8 @@
                                     </div>
                                     <div class="form-group row">
                                         <label for="name" class="col-sm-2 des dec"><i
-                                                class="fa fa-circle color-icon mr-2"></i>Class</label>
+                                                class="fa fa-circle color-icon mr-2"></i>Class<span
+                                                class="text-danger">*</span></label>
                                         <div class="col-sm-10">
                                             <select name="class" id="class_name" class="form-control">
                                                 <option value="">Select Class</option>
@@ -78,7 +80,8 @@
                                     </div>
                                     <div class="form-group row">
                                         <label for="name" class="col-sm-2 des dec"><i
-                                                class="fa fa-circle color-icon mr-2"></i>Image</label>
+                                                class="fa fa-circle color-icon mr-2"></i>Image<span
+                                                class="text-danger">*</span></label>
                                         <div class="col-sm-10">
                                             <input type="file" id="image" name="image"
                                                 accept="image/png, image/gif, image/jpeg" class="form-control">
@@ -93,7 +96,8 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <span for="start_date" class="des dec"><i
-                                                    class="fa fa-circle color-icon mr-2 mb-2"></i>Start Date</span>
+                                                    class="fa fa-circle color-icon mr-2 mb-2"></i>Start Date<span
+                                                    class="text-danger">*</span></span>
                                             <input type="text" id="start_date" name="start_date"
                                                 class="form-control datepicker" value="{{ old('start_date') }}">
                                             @error('start_date')
@@ -117,7 +121,8 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <span for="start_time" class="des dec"><i
-                                                    class="fa fa-circle color-icon mr-2 mb-2"></i>Start Time</span>
+                                                    class="fa fa-circle color-icon mr-2 mb-2"></i>Start Time<span
+                                                    class="text-danger">*</span></span>
                                             <input type="text" id="start_time" name="start_time"
                                                 class="form-control clockpicker" value="{{ old('start_time') }}">
                                             @error('start_time')
@@ -128,7 +133,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <span for="end_time" class="des dec"><i
-                                                    class="fa fa-circle color-icon mr-2 mb-2"></i>End Time</span>
+                                                    class="fa fa-circle color-icon mr-2 mb-2"></i>End Time<span
+                                                    class="text-danger">*</span></span>
                                             <input type="text" id="end_time" name="end_time"
                                                 class="form-control clockpicker" value="{{ old('end_time') }}">
                                             @error('end_time')
@@ -140,7 +146,8 @@
                                     </div>
                                     <div class="d-sm-flex align-items-top   mb-4">
                                         <p class="des dec"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Description</p>
+                                                    class="fa fa-circle"></i></span>Description<span
+                                                class="text-danger">*</span></p>
 
                                     </div>
                                     <textarea cols="10" id="editor1" name="desc" rows="5"></textarea>
@@ -158,6 +165,36 @@
                                 <div class="card-header-title mb-4">
                                     Recent Event </div>
                                 @foreach ($events as $event)
+                                    <div class="items align-items-center">
+                                        <div class="pdf-box">
+                                            <img src="{{ asset($event->image) }}"
+                                                class="img-fluid rounded  mx-auto w-100 mb-3">
+                                        </div>
+                                        <div class="pdf-text">
+                                            <h4>{{ \Illuminate\Support\Str::limit($event->title, 15) }}</h4>
+                                            <p>{!! $event->desc !!}</p>
+                                            <div
+                                                class="widget-content-left d-sm-flex align-items-center justify-content-flex-start">
+                                                <div class="widget-heading text-dark"><img
+                                                        src="{{ asset('frontend/assets/images/calander.png') }}"
+                                                        class="img-fluid mx-auto"></div>
+                                                <div class="widget-subheading ml-3">
+                                                    {{ date('M d, Y', strtotime($event->start_date)) }}
+                                                    @if ($event->end_date)
+                                                        - {{ date('M d, Y', strtotime($event->end_date)) }}
+                                                    @endif
+                                                    <br><span
+                                                        class="text">{{ date('h:i A', strtotime($event->start_time)) }}
+                                                        @if ($event->end_time)
+                                                            - {{ date('h:i A', strtotime($event->end_time)) }}
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                {{-- @foreach ($events as $event)
                                     <div class="items d-sm-flex align-items-center">
                                         <div class="pdf-box w-40">
                                             <img src="{{ asset($event->image) }}"
@@ -185,12 +222,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach
-                                {{-- <div class="pagination_center">
-                                    <ul class="pagination clearfix">
-                                        <li>{{ $events->links() }}</li>
+                                @endforeach --}}
+                                {{-- <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                      <li class="page-item"><a class="page-link">{{ $events->links() }}</a></li>
                                     </ul>
-                                </div> --}}
+                                  </nav> --}}
+                                {{ $events->links() }}
                             </div>
                         </div>
                     </div>
@@ -198,7 +236,7 @@
 
             </div>
         </div>
-        @include('hr.layouts.static_footer')  
+        @include('hr.layouts.static_footer')
     </div>
     <script>
         $('#class_name').on('click', function() {

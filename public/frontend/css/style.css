@@ -911,11 +911,12 @@ ul.gallery li.first {
     background: #18105b;
     /* color: #23b5ff; */
 }
+.features-box:hover .text-success{color:#fff !important}
 
 .features-box:hover.features-box h6,
 .features-box:hover.features-box .anim1 svg,
 .features-box:hover.features-box p {
-    color: #fff;
+    color: #ffff;
 }
 
 .features-box h6 {
@@ -930,7 +931,7 @@ ul.gallery li.first {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 25px;
+    font-size: 44px;
     color: #757575;
     background: #f8f8f8;
     width: 50px;

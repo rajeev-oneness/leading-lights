@@ -6,6 +6,7 @@
     <div class="row">
         <div class="col-sm-10 offset-sm-1">
             <div class="sign-in-box">
+                <a href="{{ route('land_page') }}"><i title="Home Page" class="fa fa-home text-primary fa-2x float-right mr-2"></i></a>
                 <div class="row align-items-center jusify-content-center">
                     <div class="col-lg-5">
                         <img src="{{ asset('frontend/images/sign-in-hr.png') }}" class="img-fluid">
@@ -64,7 +65,7 @@
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label for="">Date Of Joining<span class="text-danger">*</span></label>
-                                        <input class="form-control" type="date" name="doj" value="{{ old('doj') }}">
+                                        <input class="form-control datepicker" type="text" name="doj" value="{{ old('doj') }}">
                                         @error('doj')
                                              <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -81,7 +82,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label for="image">Upload Picture<span class="text-danger">*</span></label>
+                                    <label for="image">Upload Profile Picture(png,jpg,jpeg only)<span class="text-danger">*</span></label>
                                     <input type="file" class="form-control" name="image">
                                      @error('image')
                                              <span class="text-danger">{{ $message }}</span>
@@ -102,6 +103,9 @@
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
 <script>
     	function mobileValidation() {
 	    if($('[name=mobile]').val().length > 10){
@@ -116,5 +120,10 @@
 	        document.getElementById("submit").style.cursor = 'pointer';
 	    }
     }
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        startDate: '+1 day',
+        daysOfWeekDisabled: [0]
+    });
 </script>
 @endsection

@@ -319,7 +319,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-12 col-lg-5">
+                {{-- <div class="col-sm-12 col-lg-5">
                     <div class="card-hover-shadow-2x mb-3 card bg-card">
                         <div class="card-header-tab card-header">
                             <div class="card-header-title font-size-lg text-capitalize font-weight-normal not">
@@ -458,6 +458,59 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div> --}}
+                <div class="col-lg-5">
+                    <h3>Latest Announcements</h3>
+                    @if (!$announcements->isEmpty())
+                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach ($announcements as $key => $announcement)
+                                <div class="carousel-item {{$key == 0 ? 'active' : '' }}">
+                                    
+                                    <div class="items align-items-center">
+                                        <div class="pdf-text">
+                                            <h4>{{ $announcement->title }}</h4>
+                                            {!! $announcement->description !!}
+                                            <div
+                                                class="widget-content-left d-sm-flex align-items-center justify-content-flex-start">
+                                                <div class="widget-heading text-dark"><img
+                                                        src="{{ asset('frontend/assets/images/calander.png') }}"
+                                                        class="img-fluid mx-auto"></div>
+                                                <div class="widget-subheading ml-3">
+                                                    {{ date('M d, Y', strtotime($announcement->start_date)) }}
+                                                    @if ($announcement->end_date)
+                                                        - {{ date('M d, Y', strtotime($announcement->end_date)) }}
+                                                    @endif
+                                                    <br><span
+                                                        class="text">{{ date('h:i A', strtotime($announcement->start_time)) }}
+                                                        @if ($announcement->end_time)
+                                                            - {{ date('h:i A', strtotime($announcement->end_time)) }}
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                                @endforeach
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                                data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                                data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                        @else
+                           <p class="alert alert-danger"> No announcements are available </p>
+                        @endif
                         </div>
                     </div>
                 </div>

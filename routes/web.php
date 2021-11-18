@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth,Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::get('/', [CommonController::class,'index']);
+Route::get('/', [CommonController::class,'index'])->name('land_page');
 
 Auth::routes();
 

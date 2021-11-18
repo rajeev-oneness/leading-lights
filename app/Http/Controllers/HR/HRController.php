@@ -99,7 +99,7 @@ class HRController extends Controller
         $data['groups'] = Group::latest()->get();
         // $data['subjects'] = Subject::latest()->get();
         $data['classes'] = Classes::orderBy('name')->get();
-        $data['events'] = Event::where('user_id', Auth::user()->id)->latest()->get();
+        $data['events'] = Event::where('user_id', Auth::user()->id)->paginate(2);
         // return view('teacher.hometask',compact('classes'));
         return view('hr.manage_event')->with($data);
     }
@@ -241,7 +241,7 @@ class HRController extends Controller
     public function Announcement(Request $request)
     {
         $classes = Classes::orderBy('name')->get();
-        $announcements = Announcement::where('user_id', Auth::user()->id)->latest()->get();
+        $announcements = Announcement::where('user_id', Auth::user()->id)->paginate(2);
         // dd($announcements);
         return view('hr.announcement',compact('classes','announcements'));
     }
@@ -249,31 +249,25 @@ class HRController extends Controller
     public function announcementUpload(Request $request)
     {
         Validator::make($request->all(), [
-            'title' => 'required',
+            'title' => 'required|string|max:150',
             'class_id' => 'required',
-            'date' => 'required'
+            'date' => 'required|date',
+            'desc' => 'required|string|max:500',
         ], $messages = [
-            'title.required' => 'The title field is required.',
             'class_id.required' => 'The class field is required.',
-            'date.required' => 'The date field is required.',
+            'desc.required' => 'The description field is required.',
         ])->validate();
-        // $class_id = implode(',', $request->class_id);
         $announcement = new Announcement();
         $announcement->user_id = Auth::user()->id;
         $announcement->title = $request->title;
-        // $class_id = $request->class_id;
-
-        // $announcement->class_id = $class_id;
-        // $class = implode(",", $request->class_id);
-        // $announcement->class_id = $class;
         $announcement->class_id = implode(',', $request->class_id);
 
         $announcement->date = $request->date;
-
-        // $announcement->class_id = $class_ids;
+        $announcement->description = $request->desc;
+        // dd($announcement);
         $announcement->save();    
         
-        return redirect('hr/announcement')->with('success', 'Announcement upload successfully');
+        return redirect()->back()->with('success', 'Announcement upload successfully');
     }
 
     

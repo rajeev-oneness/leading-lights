@@ -412,6 +412,51 @@
 </div>
   <div class="app-drawer-overlay d-none animated fadeIn"></div>
   <script type="text/javascript" src="{{ asset('frontend/assets/scripts/main.d810cf0ae7f39f28f336.js') }}"></script>
+  <script src="{{ asset('frontend/js/owl.carousel.js') }}"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+        var owl = $('.events-boxes1');
+        owl.owlCarousel({
+            items: 1,
+            loop: true,
+            dots: false,
+            nav: true,
+            margin: 10,
+            autoplay: 1000,
+            autoPlaySpeed: 1000,
+            autoplayTimeout: 1520,
+            smartSpeed: 1500,
+            animateIn: 'linear',
+            animateOut: 'linear',
+            autoplayHoverPause: true,
+            responsive: {
+                // breakpoint from 0 up
+                1280: {
+                    items: 3
+                },
+                0: {
+                    items: 4
+                },
+                991: {
+                    items: 3
+                },
+                480: {
+                    items: 1
+                },
+                360: {
+                    items: 1
+                },
+                320: {
+                    items: 1
+                }
+            }
+
+        });
+        $(".owl-prev").html('<i class="fa fa-angle-double-left"></i>');
+        $(".owl-next").html('<i class="fa fa-angle-double-right"></i>');
+
+    });
+</script>
 </body>
 
 

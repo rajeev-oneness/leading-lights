@@ -32,6 +32,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
     <!--Data table-->
     <script type="text/javascript" charset="utf8" src="{{ asset('frontend/js/jquery.dataTables.js') }}"></script>
+
     <style>
         table.dataTable thead .sorting:after,
         table.dataTable thead .sorting_asc:after,

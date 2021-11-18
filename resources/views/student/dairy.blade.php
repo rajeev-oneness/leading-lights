@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-7">
                     <div class="main-card mb-3 card">
                         <div class="card-body">
                             <div id="dairy_calendar"></div>
@@ -59,34 +59,61 @@
                 </div>
                 @endforeach --}}
                 {{-- <p>Latest Events</p> --}}
-                <div class="col-lg-6">
+                <div class="col-lg-5">
                     <h3>Latest Events</h3>
-                    <div class="owl-carousel owl-theme events-boxes">
-                        @foreach ($events as $event)
-                            <div class="item">
-                                <div class="features-box">
-                                    <div class="">
-                                        <img src="
-                                            {{ asset($event->image) }}" class="img-fluid mx-auto" style="width: 343px;height:236px">
+                    @if (!$events->isEmpty())
+                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach ($events as $key => $event)
+                                <div class="carousel-item {{$key == 0 ? 'active' : '' }}">
+                                    
+                                    <div class="items align-items-center">
+                                        <div class="pdf-box">
+                                            <img src="{{ asset($event->image) }}"
+                                                class="img-fluid rounded  mx-auto w-100 mb-3">
+                                        </div>
+                                        <div class="pdf-text">
+                                            <h4>{{ $event->title }}</h4>
+                                            {!! $event->desc !!}
+                                            <div
+                                                class="widget-content-left d-sm-flex align-items-center justify-content-flex-start">
+                                                <div class="widget-heading text-dark"><img
+                                                        src="{{ asset('frontend/assets/images/calander.png') }}"
+                                                        class="img-fluid mx-auto"></div>
+                                                <div class="widget-subheading ml-3">
+                                                    {{ date('M d, Y', strtotime($event->start_date)) }}
+                                                    @if ($event->end_date)
+                                                        - {{ date('M d, Y', strtotime($event->end_date)) }}
+                                                    @endif
+                                                    <br><span
+                                                        class="text">{{ date('h:i A', strtotime($event->start_time)) }}
+                                                        @if ($event->end_time)
+                                                            - {{ date('h:i A', strtotime($event->end_time)) }}
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="features-text">
-                                        <h6>{{ $event->title }}</h6>
-                                        <span>{{ date('M d, Y', strtotime($event->start_date)) }}
-                                            @if ($event->end_date)
-                                                - {{ date('M d, Y', strtotime($event->end_date)) }}
-                                            @endif
-                                        </span>
-                                        <br>
-                                        <span>{{ date('h:i A', strtotime($event->start_time)) }}
-                                            @if ($event->end_time)
-                                                - {{ date('h:i A', strtotime($event->end_time)) }}
-                                            @endif
-                                        </span>
-                                        {!! $event->desc !!}
-                                    </div>
+                                   
                                 </div>
+                                @endforeach
                             </div>
-                        @endforeach
+                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                                data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                                data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                        @else
+                           <p class="alert alert-danger"> No events are available </p>
+                        @endif
+                        </div>
                     </div>
                 </div>
             </div>

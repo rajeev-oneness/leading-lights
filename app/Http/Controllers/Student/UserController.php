@@ -16,6 +16,7 @@ use App\Models\ClassAttendance;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Announcement;
 use App\Models\Certificate;
 use App\Models\Classes;
 use App\Models\Event;
@@ -42,6 +43,7 @@ class UserController extends Controller
         $data['student'] = User::where('id', $current_user_id)->first();
         $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
         $data['certificates'] = DB::table('certificate')->where('user_id', $current_user_id)->first();
+        $data['announcements'] = Announcement::where('class_id',Auth::user()->class)->get();
         return view('student.profile')->with($data);
     }
 
@@ -158,7 +160,8 @@ class UserController extends Controller
             return response()->json(array_merge($classes,$special_classes));
         }
         $events = Event::where('class_id',Auth::user()->class)->get();
-        return view('student.dairy',compact('events'));
+        $announcements = Announcement::where('class_id',Auth::user()->class)->get();
+        return view('student.dairy',compact('events','announcements'));
     }
 
     public function homework(Request $request)

@@ -13,36 +13,28 @@
                     </div>
                 </div>
             </div>
-
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-7">
-                            {{-- <div class="card-header-title font-size-lg text-capitalize mb-4">
-                                Announcement
-                            </div>
-                            <div class="d-sm-flex align-items-center   mb-4">
-                                <p class="des dec"><span class="mr-2"><i class="fa fa-circle"></i></span>Description</p>
-                                <div class="d-sm-flex align-items-baseline">
-                                     <p class="des  mr-2"><span class="mr-2"><i class="fa fa-circle"></i></span>Date</p>
-                                    <form class="form">                                                 
-                                        <input type="date" name="" class="form-control">
-                                    </form>
-                                </div>
-                             </div>
-                            <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea> --}}
-                            <form class="form" action="{{ route('hr.announcement.store') }}" method="POST"
-                                enctype="multipart/form-data">
-                                <form action="{{ route('hr.announcement.store') }}" method="POST"
-                                    enctype="multipart/form-data">
+                            <img src="{{ asset('frontend/images/event.jpg') }}" class="img-fluid mb-4">
+                                <form action="{{ route('hr.announcement.store') }}" method="POST">
                                     @csrf
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <div class="form-group d-flex justify-content-between">
+                                            <div class="form-group justify-content-between">
                                                 <label>
                                                     <i class="fa fa-circle color-icon mr-2"></i>
-                                                    Title</label>
-                                                <input type="text" name="title" class="w-89"
+                                                    Title<span class="text-danger">*</span></label>
+                                                <input type="text" name="title" class="w-89 form-control"
                                                     value="{{ old('title') }}">
                                                 @error('title')
                                                     <span class="text-danger">
@@ -51,9 +43,12 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-lg-6">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <label><i class="fa fa-circle color-icon mr-2"></i>Class</label>
+                                            <div class="justify-content-between align-items-center">
+                                                <label><i class="fa fa-circle color-icon mr-2"></i>Class<span
+                                                        class="text-danger">*</span></label>
                                                 <select class="w-89" id="choices-multiple-remove-button" multiple
                                                     name="class_id[]">
                                                     <option value="">Select Classes</option>
@@ -69,12 +64,13 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
-                                            <div class="d-flex justify-content-between align-items-center">
+                                            <div class="justify-content-between align-items-center">
                                                 <label>
-                                                    <i class="fa fa-circle color-icon mr-2"></i>Date
+                                                    <i class="fa fa-circle color-icon mr-2"></i>Date<span
+                                                        class="text-danger">*</span>
                                                 </label>
 
-                                                <input type="date" name="date" class="form-control w-75 datepicker"
+                                                <input type="text" name="date" class="form-control datepicker"
                                                     value="{{ old('date') }}">
                                                 @error('date')
                                                     <span class="text-danger">
@@ -84,6 +80,19 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="d-sm-flex align-items-top mt-4">
+                                        <p class="des dec"><span class="mr-2"><i
+                                                    class="fa fa-circle"></i></span>Description<span
+                                                class="text-danger">*</span></p>
+
+                                    </div>
+                                    <textarea cols="10" id="editor1" name="desc" rows="5"></textarea>
+                                    @error('desc')
+                                        <span class="text-danger">
+                                            {{ $message }}
+                                        </span>
+                                    @enderror
+                                    <br>
                                     <button class="btn-pill btn btn-dark mt-4" type="submit">Submit Now</button>
                                 </form>
 
@@ -98,8 +107,8 @@
                                          <img src="images/pdf.png" class="img-fluid mx-auto">
                                     </div> --}}
                                     <div class="pdf-text">
-                                        <h4>{{ \Illuminate\Support\Str::limit($announcement->title, 15) }}</h4>
-                                        {{-- <p>This is Photoshop's version  of Lorem Ipsum. </p> --}}
+                                        <h4>{{ $announcement->title }}</h4>
+                                        <p>{!! $announcement->description !!}</p>
                                         <div class="widget-content-left d-sm-flex align-items-center">
                                             <div class="widget-heading text-dark">
                                                 <img src="{{ asset('frontend/assets/images/calander.png') }}"
@@ -114,6 +123,7 @@
                                     </div>
                                 </div>
                             @endforeach
+                            {{ $announcements->links() }}
                         </div>
                     </div>
                 </div>

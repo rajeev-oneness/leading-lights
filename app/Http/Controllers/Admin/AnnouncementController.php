@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
+use App\Models\Classes;
 use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
@@ -15,8 +16,9 @@ class AnnouncementController extends Controller
      */
     public function index()
     {
+        $classes = Classes::orderBy('name')->get();
         $announcements = Announcement::latest()->get();
-        return view('admin.announcement.index',compact('announcements'));
+        return view('admin.announcement.index',compact('announcements','classes'));
     }
 
     /**
@@ -106,6 +108,7 @@ class AnnouncementController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Announcement::find($id)->delete();
+        return redirect()->route('admin.announcement.index')->with('success','Announcement deleted');
     }
 }
