@@ -250,11 +250,13 @@ class RegisterController extends Controller
 
             $user_id = $user->id;
 
-            $notification = new Notification();
-            $notification->user_id = $user_id;
-            $notification->title = 'Refistration Successfully';
+            // $notification = new Notification();
+            // $notification->user_id = $user_id;
+            // $notification->title = 'Refistration Successfully';
 
-            $notification->save();
+            // $notification->save();
+
+            createNotification($user_id, '0', '0', 'user_registration');
 
             $admin_details = User::select('email')->where('role_id', 1)->first();
             $admin_email = $admin_details['email'];

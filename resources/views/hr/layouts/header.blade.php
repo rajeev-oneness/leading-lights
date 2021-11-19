@@ -49,7 +49,7 @@
 
         <div class="app-header-right">
             <div class="header-dots">
-               <!-- <div class="dropdown">
+                <!-- <div class="dropdown">
                     <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown"
                         class="p-0 mr-2 btn btn-link">
                         <span class="icon-wrapper icon-wrapper-alt rounded-circle">
@@ -130,9 +130,24 @@
                         <span class="icon-wrapper icon-wrapper-alt rounded-circle">
                             <span class="icon-wrapper-bg bg-danger"></span>
                             <i class="icon  icon-anim-pulse ion-android-notifications"></i>
-                            <span class="badge badge-dot badge-dot-sm badge-danger">Notifications</span>
+                            {{-- <span class="badge badge-dot badge-dot-sm badge-danger">Notifications</span> --}}
+                            <a class="nav-link" data-toggle="dropdown" href="#">
+                                {{-- <i class="far fa-bell"></i> --}}
+                                @php
+                                    if ($notification->count() > 0) {
+                                        echo '<span class="badge badge-danger navbar-badge">' . $notification->count() . '</span>';
+                                    } elseif ($notification->count() > 99) {
+                                        echo '<span class="badge badge-danger navbar-badge">99+</span>';
+                                    } else {
+                                        echo '';
+                                    }
+                                @endphp
+                            </a>
                         </span>
                     </button>
+
+
+
                     <div tabindex="-1" role="menu" aria-hidden="true"
                         class="dropdown-menu-xl rm-pointers dropdown-menu dropdown-menu-right">
                         <div class="dropdown-menu-header mb-0">
@@ -141,17 +156,26 @@
                                     style="background-image: url('assets/images/dropdown-header/city3.jpg');"></div>
                                 <div class="menu-header-content text-dark p-3">
                                     <h5 class="menu-header-title">Notifications</h5>
-                                    <h6 class="menu-header-subtitle">You have <b>99+</b> unread messages</h6>
+                                    <h6 class="menu-header-subtitle">You have
+                                        @if (count($notification) > 0)
+                                            <b>{{ $notification->count() }}</b> unread messages
+                                            {{ $notification->count() == 1 ? 'notification' : 'notifications' }}
+                                        @endif
+                                    </h6>
                                 </div>
                             </div>
                         </div>
+
+
+
                         <div class="scroll-area-sm">
                             <div class="scrollbar-container">
                                 <div class="p-3">
                                     <div
                                         class="vertical-without-time vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
 
-                                        @foreach ($notification as $notifi)
+                                        @foreach ($notification as $noti)
+
                                             <div class="vertical-timeline-item vertical-timeline-element">
                                                 <div>
                                                     <span class="vertical-timeline-element-icon bounce-in">
@@ -159,9 +183,10 @@
                                                     </span>
                                                     <div class="vertical-timeline-element-content bounce-in">
                                                         {{-- <h4 class="timeline-title">All Hands Meeting</h4> --}}
-                                                        <p>{{ $notifi->title }}
-                                                            <a
-                                                                href="javascript:void(0);">{{ \carbon\carbon::parse($notifi->created_at)->diffForHumans() }}</a>
+                                                        <p>{{ $noti->title }}
+                                                            <a href="javascript:void(0)"
+                                                                class=" {{ $noti->read_flag == 0 ? 'unread' : 'read' }}"
+                                                                onclick="readNotification('{{ $noti->id }}', '{{ $noti->route ? route($noti->route) : '' }}')">{{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}</a>
                                                         </p>
                                                         <span class="vertical-timeline-element-date"></span>
                                                     </div>
@@ -280,15 +305,19 @@
                 <div class="widget-content p-0">
                     <div class="widget-content-wrapper">
                         <div class="widget-content-left header-user-info">
-                            <div class="widget-heading"> {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
-                            <div class="widget-subheading"> Member Seance: {{ Auth::user()->created_at ? date('Y',strtotime(Auth::user()->created_at)) : 'N/A'}} </div>
+                            <div class="widget-heading"> {{ Auth::user()->first_name }}
+                                {{ Auth::user()->last_name }}</div>
+                            <div class="widget-subheading"> Member Seance:
+                                {{ Auth::user()->created_at ? date('Y', strtotime(Auth::user()->created_at)) : 'N/A' }}
+                            </div>
                         </div>
                         <div class="widget-content-left ml-3">
                             <div class="btn-group">
                                 <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                     class="p-0 btn">
                                     <img width="42" class="rounded-circle"
-                                        src="{{ Auth::user()->image ? asset(Auth::user()->image) : asset('frontend/assets/images/avatars/1.jpg') }}" alt="">
+                                        src="{{ Auth::user()->image ? asset(Auth::user()->image) : asset('frontend/assets/images/avatars/1.jpg') }}"
+                                        alt="">
                                     <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                 </a>
                                 <div tabindex="-1" role="menu" aria-hidden="true"
@@ -336,11 +365,13 @@
                                             <ul class="nav flex-column">
                                                 <li class="nav-item-header nav-item">Activity</li>
                                                 <li class="nav-item">
-                                                    <a href="{{ route('hr.profile') }}" class="nav-link">Profile
+                                                    <a href="{{ route('hr.profile') }}"
+                                                        class="nav-link">Profile
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="{{ route('hr.changePassword') }}" class="nav-link">Change
+                                                    <a href="{{ route('hr.changePassword') }}"
+                                                        class="nav-link">Change
                                                         Password</a>
                                                 </li>
                                             </ul>
@@ -356,3 +387,21 @@
     </div>
 </div>
 <div class="app-main">
+    {{-- <script>
+        function readNotification(id, route) {
+            $.ajax({
+                url: '{{ route('hr.notification.read') }}',
+                method: 'POST',
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    id: id
+                },
+                success: function(result) {
+                    // console.log('{{ url()->current() }}',route);
+                    // if (route != '' && '{{ url()->current() }}' != route) {
+                    window.location = route;
+                    // }
+                }
+            });
+        }
+    </script> --}}
