@@ -98,65 +98,55 @@ class HRController extends Controller
     public function attendanceStudentShow(Request $request, $id)
     {
         $user_id = $id;
-        // dd($user_id);
-        // $event = Attendance::where('user_id', $id)->get();
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $specific_attendance = Attendance::where('user_id', $user_id)
+                ->where('date', date('Y-m-d'))->latest()->take(4)->get();
+            $specific_date = date('Y-m-d');
+            return view('hr.attendance_date', compact('specific_attendance', 'specific_date','user_id'));
+        }
+        if ($request->ajax()) {
+            $attendance = Attendance::whereDate('date', $request->date)
+                ->where('user_id', $id)
+                ->latest()
+                ->get();
+            return response()->json($attendance);
+        }
         return view('hr.attendance_date', compact('user_id'));
     }
 
     public function attendanceShow(Request $request)
     {
         // return view('hr.attendance_date');
-        $user = $request->user_id;
-        // dd($user);
-        if ($request->ajax()) {
-            $attendance = Attendance::whereDate('date', $request->date)
-                ->where('user_id', Auth::user()->id)
-                ->latest()
-                ->get();
-            return response()->json($attendance);
-        }
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $specific_attendance = Attendance::where('user_id', $user)
-                ->where('date', date('Y-m-d'))->latest()->take(4)->get();
-            $specific_date = date('Y-m-d');
-            return view('hr.attendance_date', compact('specific_attendance', 'specific_date'));
-        }
+        $user_id = $request->user_id;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['submit_btn'])) {
 
                 if ($_POST['submit_btn'] === 'attendance') {
-                    // dd('test');
                     $this->validate($request, [
                         'date' => 'required|'
                     ]);
                     $date = $request->date;
-                    // dd($date);
                     $data['specific_date'] = $date;
                     $data['no_of_working_hours'] = Attendance::whereDate('date', $date)
                         ->selectRaw("SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(logout_time,login_time) )) ) as 'total'")
                         ->first();
-                    $data['specific_attendance'] = Attendance::where('user_id', $user)
+                    $data['specific_attendance'] = Attendance::where('user_id', $user_id)
                         ->whereDate('date', '=', $date)->latest()->take(4)->get();
-                    // dd($data);
-                    // dd($data['specific_attendance']);
-                    // dd($data['no_of_working_hours']->total);
+                    $data['user_id'] = $user_id;
                 } else {
                     $this->validate($request, [
                         'start_date' => 'required|date',
                         'end_date' => 'required|date'
                     ]);
-
                     if ($request->start_date > $request->end_date) {
                         return redirect()->back()->with('error', 'Please select valid range');
                     }
-                    // dd($request->start_date, $request->end_date);
                     $from = date($request->start_date);
                     $to = date($request->end_date);
-                    // dd($from , $to);
                     $data['start_date'] = $request->start_date;
                     $data['end_date'] = $request->end_date;
-                    $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', $user)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
-                    dd($data['checked_attendance']);
+                    $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', $user_id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
+                    $data['user_id'] = $user_id;
                 }
 
                 if (isset($data['specific_attendance'])) {

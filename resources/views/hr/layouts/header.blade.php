@@ -31,25 +31,25 @@
     </div>
     <div class="app-header__content">
         <div class="app-header-left">
-            <div class="search-wrapper">
+            {{-- <div class="search-wrapper">
                 <div class="input-holder">
                     <input type="text" class="search-input" placeholder="Type to search">
                     <button class="search-icon"><span></span></button>
                 </div>
                 <button class="close"></button>
-            </div>
-            <ul class="header-megamenu nav">
+            </div> --}}
+            {{-- <ul class="header-megamenu nav">
                 <li class="nav-item">
                     <a class="nav-link">
                         03 / 09 / 2021 Friday
                     </a>
                 </li>
-            </ul>
+            </ul> --}}
         </div>
 
         <div class="app-header-right">
             <div class="header-dots">
-                <div class="dropdown">
+               <!-- <div class="dropdown">
                     <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown"
                         class="p-0 mr-2 btn btn-link">
                         <span class="icon-wrapper icon-wrapper-alt rounded-circle">
@@ -123,7 +123,7 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> -->
                 <div class="dropdown">
                     <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown"
                         class="p-0 mr-2 btn btn-link">
@@ -280,18 +280,15 @@
                 <div class="widget-content p-0">
                     <div class="widget-content-wrapper">
                         <div class="widget-content-left header-user-info">
-                            <div class="widget-heading"> {{ Auth::user()->first_name }}
-                                {{ Auth::user()->last_name }}</div>
-                            <div class="widget-subheading"> Member Seans:
-                                {{ Auth::user()->created_at ? date('Y', strtotime(Auth::user()->created_at)) : 'N/A' }}
-                            </div>
+                            <div class="widget-heading"> {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
+                            <div class="widget-subheading"> Member Seance: {{ Auth::user()->created_at ? date('Y',strtotime(Auth::user()->created_at)) : 'N/A'}} </div>
                         </div>
                         <div class="widget-content-left ml-3">
                             <div class="btn-group">
                                 <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                     class="p-0 btn">
                                     <img width="42" class="rounded-circle"
-                                        src="{{ asset('frontend/assets/images/avatars/1.jpg') }}" alt="">
+                                        src="{{ Auth::user()->image ? asset(Auth::user()->image) : asset('frontend/assets/images/avatars/1.jpg') }}" alt="">
                                     <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                 </a>
                                 <div tabindex="-1" role="menu" aria-hidden="true"
@@ -306,7 +303,7 @@
                                                     <div class="widget-content-wrapper">
                                                         <div class="widget-content-left mr-3">
                                                             <img width="42" class="rounded-circle"
-                                                                src="{{ asset('frontend/assets/images/avatars/1.jpg') }}"
+                                                                src="{{ Auth::user()->image ? asset(Auth::user()->image) : asset('frontend/assets/images/avatars/1.jpg') }}"
                                                                 alt="">
                                                         </div>
                                                         <div class="widget-content-left">
@@ -339,59 +336,16 @@
                                             <ul class="nav flex-column">
                                                 <li class="nav-item-header nav-item">Activity</li>
                                                 <li class="nav-item">
-                                                    <a href="javascript:void(0);" class="nav-link">Chat
-                                                        <div class="ml-auto badge badge-pill badge-info">8</div>
+                                                    <a href="{{ route('hr.profile') }}" class="nav-link">Profile
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="javascript:void(0);" class="nav-link">Recover
+                                                    <a href="{{ route('hr.changePassword') }}" class="nav-link">Change
                                                         Password</a>
-                                                </li>
-                                                <li class="nav-item-header nav-item">My Account
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="javascript:void(0);" class="nav-link">Settings
-                                                        <div class="ml-auto badge badge-success">New</div>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="javascript:void(0);" class="nav-link">Messages
-                                                        <div class="ml-auto badge badge-warning">512</div>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="javascript:void(0);" class="nav-link">Logs</a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item-divider mb-0 nav-item"></li>
-                                    </ul>
-                                    <div class="grid-menu grid-menu-2col">
-                                        <div class="no-gutters row">
-                                            <div class="col-sm-6">
-                                                <button
-                                                    class="btn-icon-vertical btn-transition btn-transition-alt pt-2 pb-2 btn btn-outline-warning">
-                                                    Message Inbox
-                                                </button>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <button
-                                                    class="btn-icon-vertical btn-transition btn-transition-alt pt-2 pb-2 btn btn-outline-danger">
-                                                    <b>Support Tickets</b>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item-divider nav-item">
-                                        </li>
-                                        <li class="nav-item-btn text-center nav-item">
-                                            <button class="btn-wide btn btn-primary btn-sm"> Open Messages
-                                            </button>
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
