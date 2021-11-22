@@ -146,7 +146,38 @@ class HRController extends Controller
                     $data['start_date'] = $request->start_date;
                     $data['end_date'] = $request->end_date;
                     $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', $user_id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
+                    $avl_attendance = Attendance::selectRaw('*')->where('user_id', $user_id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date')->toArray();
                     $data['user_id'] = $user_id;
+
+                    //Loop through date
+                    for ($i=$from; $i < $to; $i++) { 
+                        // $absent_attendance[] = !in_array($i,$avl_attendance);
+                        if (!in_array($i,$avl_attendance)) {
+                            $absent_attendance[] = $i;
+                        }
+                        // $avl_attendance = Attendance::where('user_id', $user_id)->whereDate('date', $i)->get()->groupBy('date');
+                        // echo "<pre>";
+                        // print_r($avl_attendance);
+                        // if ($avl_attendance->isEmpty()) {
+                        //     echo $i;
+                        //     $arr_attendance[] = $avl_attendance;
+                        // }
+                        // else{
+                        //     dd('test');
+                        //     $absent_attendance[] = $i;
+                        //     echo $i;
+                        //     // $absent_attendance['status'] = 'Absent';
+                        // }
+                    }
+                    // dd('test');
+                    // dd($avl_attendance,$absent_attendance);
+                    // if (isset($absent_attendance)) {
+                    //     $data['absent_attendance'] = $absent_attendance;
+                    // }
+                    
+                    // dd($absent_attendance);
+                    // $data['checked_attendance'] = $arr_attendance;
+                    // dd($arr_attendance, $data['checked_attendance']);
                 }
 
                 if (isset($data['specific_attendance'])) {

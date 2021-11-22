@@ -7,6 +7,7 @@
     <link rel="icon" href="images/favicon.png" type="image/png" sizes="40x19">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/style.css') }}">
@@ -19,15 +20,21 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/style.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/animate.css') }}">
     {{-- <link href="{{ asset('frontend/css/responsive.css') }}" rel="stylesheet" media="all"> --}}
-    {{-- Cock and date picker --}}
+    {{-- date picker --}}
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
-    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/bootstrap-clockpicker.min.css') }}"> --}}
-    {{-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script> --}}
-    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></script> --}}
+    
+    	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+	<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
 
-    {{-- <script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script> --}}
+	<title>Leading Lights</title>
+	<style>
+		.choices__input.choices__input--cloned{
+			width: 100% !important;
+		}
+	</style>
+        
+
 </head>
 
 <body id="bg-body">

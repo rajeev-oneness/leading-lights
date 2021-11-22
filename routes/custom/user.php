@@ -27,6 +27,10 @@
         Route::get('report-generate',[UserController::class,'report_generate'])->name('report_generate');
 
         Route::get('payment-receipt/{payment_id}',[UserController::class,'payment_receipt'])->name('payment_receipt');
+
+        Route::get('available-courses',[UserController::class,'availableCourses'])->name('available_courses');
+
+
     });
 
 
