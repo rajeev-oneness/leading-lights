@@ -417,4 +417,11 @@ class UserController extends Controller
         $pdf = PDF::loadView('student.payment_receipt', $data);
         return $pdf->download(Auth::user()->id_no . '.pdf');
     }
+
+    public function availableCourses(Request $request)
+    {
+        $available_courses = SpecialCourse::where('class_id',Auth::user()->class)->latest()->get();
+        // dd($available_courses);
+        return view('student.new_course',compact('available_courses'));
+    }
 }

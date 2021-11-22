@@ -88,7 +88,7 @@
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label for="">Special Course</label>
-                                    <select  class="form-control" name="course_id" id="choices-multiple-remove-button" multiple name="course_id[]" class="course_id">
+                                    <select  class="form-control" id="course_id" name="course_id">
                                       
                                     </select>
                                 </div>
@@ -125,15 +125,6 @@
 <script type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
 <script>
-     $(document).ready(function() {
-
-        var multipleCancelButton = new Choices('#choices-multiple-remove-button', {
-            removeItemButton: true,
-            // maxItemCount:5,
-            // searchResultLimit:5,
-            // renderChoiceLimit:5
-        });
-    });
     function mobileValidation() {
         if($('[name=mobile]').val().length > 10){
             $('#digit_error').html('Please enter 10 digit number');
