@@ -126,17 +126,17 @@
                 </div> -->
                 <div class="dropdown">
                     <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown"
-                        class="p-0 mr-2 btn btn-link">
+                        class="p-0 mr-2 btn btn-link" id="notification-bell">
                         <span class="icon-wrapper icon-wrapper-alt rounded-circle">
                             <span class="icon-wrapper-bg bg-danger"></span>
-                            <i class="icon  icon-anim-pulse ion-android-notifications"></i>
+                            <i class="icon  icon-anim ion-android-notifications"></i>
                             {{-- <span class="badge badge-dot badge-dot-sm badge-danger">Notifications</span> --}}
                             <a class="nav-link" data-toggle="dropdown" href="#">
                                 {{-- <i class="far fa-bell"></i> --}}
                                 @php
-                                    if ($notification->count() > 0) {
-                                        echo '<span class="badge badge-danger navbar-badge">' . $notification->count() . '</span>';
-                                    } elseif ($notification->count() > 99) {
+                                    if ($notification->unreadCount > 0) {
+                                        echo '<span class="badge badge-danger navbar-badge">' . $notification->unreadCount . '</span>';
+                                    } elseif ($notification->unreadCount > 99) {
                                         echo '<span class="badge badge-danger navbar-badge">99+</span>';
                                     } else {
                                         echo '';
@@ -158,8 +158,8 @@
                                     <h5 class="menu-header-title">Notifications</h5>
                                     <h6 class="menu-header-subtitle">You have
                                         @if (count($notification) > 0)
-                                            <b>{{ $notification->count() }}</b> unread messages
-                                            {{ $notification->count() == 1 ? 'notification' : 'notifications' }}
+                                            <b>{{ $notification->unreadCount }}</b> unread messages
+                                            {{ $notification->unreadCount == 1 ? 'notification' : 'notifications' }}
                                         @endif
                                     </h6>
                                 </div>
@@ -171,8 +171,8 @@
                         <div class="scroll-area-sm">
                             <div class="scrollbar-container">
                                 <div class="p-3">
-                                    <div
-                                        class="vertical-without-time vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
+                                    <div class="dropdown-holder"
+                                        style="overflow: hidden scroll;max-height: calc(100vh - 146px);">
 
                                         @foreach ($notification as $noti)
 
@@ -183,11 +183,15 @@
                                                     </span>
                                                     <div class="vertical-timeline-element-content bounce-in">
                                                         {{-- <h4 class="timeline-title">All Hands Meeting</h4> --}}
-                                                        <p>{{ $noti->title }}
-                                                            <a href="javascript:void(0)"
-                                                                class=" {{ $noti->read_flag == 0 ? 'unread' : 'read' }}"
-                                                                onclick="readNotification('{{ $noti->id }}', '{{ $noti->route ? route($noti->route) : '' }}')">{{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}</a>
-                                                        </p>
+
+                                                        <a href="javascript:void(0)"
+                                                            class=" {{ $noti->read_flag == 0 ? 'unread' : 'read' }}"
+                                                            onclick="readNotification('{{ $noti->id }}', '{{ $noti->route ? route($noti->route) : '' }}')">
+                                                            <p>{{ $noti->title }}
+                                                                {{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}
+                                                            </p>
+                                                        </a>
+
                                                         <span class="vertical-timeline-element-date"></span>
                                                     </div>
                                                 </div>
@@ -292,6 +296,13 @@
                         <ul class="nav flex-column">
                             <li class="nav-item-divider nav-item"></li>
                             <li class="nav-item-btn text-center nav-item">
+                                @if (count($notification) > 0)
+                                    <a href="{{ route('logs.notification') }}"
+                                        class="dropdown-item dropdown-footer">See All Notifications</a>
+                                @endif
+                            </li>
+                            <li class="nav-item-divider nav-item"></li>
+                            <li class="nav-item-btn text-center nav-item">
                                 <button class="btn-shadow btn-wide btn-pill btn btn-focus btn-sm">Close all<span
                                         class="ml-2"><i class="fa fa-times-circle"
                                             aria-hidden="true"></i></span></button>
@@ -346,7 +357,7 @@
 
                                                             <a class="btn-pill btn-shadow btn-shine btn btn-focus"
                                                                 href="{{ route('logout') }}" onclick="event.preventDefault();
-                       document.getElementById('logout-form').submit();">
+                                                                    document.getElementById('logout-form').submit();">
                                                                 {{ __('Logout') }}
                                                             </a>
 
@@ -387,10 +398,11 @@
     </div>
 </div>
 <div class="app-main">
-    {{-- <script>
+
+    <script>
         function readNotification(id, route) {
             $.ajax({
-                url: '{{ route('hr.notification.read') }}',
+                url: '{{ route('notification.read') }}',
                 method: 'POST',
                 data: {
                     '_token': '{{ csrf_token() }}',
@@ -404,4 +416,38 @@
                 }
             });
         }
-    </script> --}}
+
+        function markAllNotificationRead() {
+            // Swal.fire({
+            //     title: 'Are you sure?',
+            //     text: 'You want to mark all notifications as read. You might lose some data.',
+            //     icon: 'warning',
+            //     showCancelButton: true,
+            //     confirmButtonColor: '#f44336',
+            //     cancelButtonColor: '#8b8787',
+            //     confirmButtonText: 'Yes, mark all as read!'
+            // }).then((result) => {
+            //     if (result.isConfirmed) {
+            $.ajax({
+                url: '{{ route('logs.notification.readall') }}',
+                method: 'POST',
+                data: {
+                    '_token': '{{ csrf_token() }}'
+                },
+                beforeSend: function() {
+                    $('.mark-all-read-btn').prop('disabled', true).html(
+                        '<i class="fas fa-sync-alt"></i> Please wait');
+                },
+                success: function(result) {
+                    $('#notification-bell a.nav-link').remove('');
+                    // $('#notifications-timeline .notification-single .callout').removeClass(
+                    //     'callout-dark');
+                    // $('#notifications-timeline .unread-noti-count').text('');
+                    $('.mark-all-read-btn').removeClass('btn-outline-danger').addClass('btn-success').html(
+                        '<i class="fas fa-check"></i> All notifications marked as read');
+                }
+            });
+            //     }
+            // });
+        }
+    </script>

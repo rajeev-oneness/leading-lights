@@ -9,10 +9,24 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
-    public function index()
+    public function notificationRead(Request $request)
     {
-        $notifications = Notification::where('user_is', Auth::user()->id)->get();
-        dd($notifications);
-        return view('hr.layouts.header', compact('notifications'));
+        $noti = Notification::findOrFail($request->id);
+        $noti->read_flag = 1;
+        $noti->save();
+    }
+
+    public function logsNotification(Request $request)
+    {
+        $user = Auth::user();
+        // $data = Notification::where('user_id', $user->id)->latest();
+        $notifications = Notification::where('user_id', '=', $user->id)->where('read_flag', '=', '0')->get();;
+        return view('hr.notification', compact('notifications'));
+    }
+
+    public function notificationReadAll(Request $request)
+    {
+        $user = Auth::user();
+        $noti = Notification::where('user_id', '=', $user->id)->where('read_flag', '=', '0')->update(['read_flag' => 1]);
     }
 }
