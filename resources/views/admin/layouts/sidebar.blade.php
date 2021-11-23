@@ -26,19 +26,22 @@
                     Management</a></li>
             <li class="{{ Request::is('admin/video*') ? 'active' : '' }}"><a
                     href="{{ route('admin.video.index') }}"><i class="fa fa-video-camera"
-                        aria-hidden="true"></i>Free/Paid video management</a></li>
+                        aria-hidden="true"></i>Free/Paid video Management</a></li>
+            <li class="{{ Request::is('admin/qualification*') ? 'active' : '' }}"><a
+                    href="{{ route('admin.qualifications.index') }}"><i class="fas fa-chalkboard"></i>Academic Qualification
+                    Management</a></li>
             <li class="{{ Request::is('admin/classes*') ? 'active' : '' }}"><a
                     href="{{ route('admin.classes.index') }}"><i class="fas fa-chalkboard"></i>Student Class
-                    management</a></li>
+                    Management</a></li>
             <li class="{{ Request::is('admin/subjects*') ? 'active' : '' }}"><a
                     href="{{ route('admin.subjects.index') }}"><i class="fas fa-book-open"></i>Student Subject
-                    management</a></li>
+                    Management</a></li>
             <li class="{{ Request::is('admin/groups*') ? 'active' : '' }}"><a
                     href="{{ route('admin.groups.index') }}"><i class="fas fa-users"></i>Student Group
-                    management</a></li>
+                    Management</a></li>
             <li class="{{ Request::is('admin/arrange-classes*') ? 'active' : '' }}"><a
                     href="{{ route('admin.arrange_classes') }}"><i class="fas fa-chalkboard"></i>Arrange Class
-                    management</a></li>
+                    Management</a></li>
             <li class="{{ Request::is('admin/exams*') ? 'active' : '' }}"><a
                     href="{{ route('admin.exams.index') }}"><i class="fas fa-chalkboard"></i>Manage Exams</a></li>
             <li class="{{ Request::is('admin/special-courses*') ? 'active' : '' }}"><a

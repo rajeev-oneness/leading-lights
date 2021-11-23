@@ -218,13 +218,13 @@ class TeacherController extends Controller
                     $data['start_date'] = $request->start_date;
                     $data['end_date'] = $request->end_date;
 
-                    // $available_att = Attendance::where('user_id',Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get();
-                    // dd( $available_att);
+                    $available_att = Attendance::where('user_id',Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get();
+                    dd( $available_att);
 
-                    // for ($i = $from; $i <= $to ; $i++) {
-                    //    $attendance_array[] = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
-                    // }
-                    // dd($attendance_array);
+                    for ($i = $from; $i <= $to ; $i++) {
+                       $attendance_array[] = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
+                    }
+                    dd($attendance_array);
 
 
                     $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id',Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');

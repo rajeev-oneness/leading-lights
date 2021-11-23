@@ -17,7 +17,8 @@ class ModifySpecialCourseIdColumnInUsersTable extends Migration
             $table->dropColumn('special_course_id');
         });
         Schema::table('users', function (Blueprint $table) {
-            $table->string('special_course_id')->after('class');
+            $table->string('special_course_ids')->after('class')->nullable();
+            $table->integer('country_code')->after('group_ids')->nullable();
         });
     }
 
@@ -29,10 +30,11 @@ class ModifySpecialCourseIdColumnInUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('special_course_id');
+            $table->integer('special_course_id')->after('class')->nullable();
         });
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('special_course_id')->after('class');
+            $table->dropColumn('special_course_ids');
+            $table->dropColumn('country_code');
         });
     }
 }

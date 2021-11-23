@@ -97,6 +97,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         // dd($data);
+        // dd(implode(',', $data['special_course_ids']));
         $unique_id = $this->getCode();
         $id_no = 'LLST'.$unique_id;
 
@@ -112,7 +113,14 @@ class RegisterController extends Controller
             'id_no' => $id_no,
             'user_type' => 'student'
         );
-        FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+        // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+
+        if (isset($data['special_course_ids'])) {
+            $special_course_ids = implode(',', $data['special_course_ids']);
+        }
+        else{
+            $special_course_ids = null;
+        }
         
         $user_creation =  User::create([
             'first_name' => $data['first_name'],
@@ -125,7 +133,8 @@ class RegisterController extends Controller
             'gender' => $data['gender'],
             'password' => Hash::make($id_no),
             'image' => $imageName,
-            'special_course_id' => $data['course_id']
+            'special_course_ids' => $special_course_ids,
+            'country_code' => $data['country_code']
         ]);
 
         //Store certificate 

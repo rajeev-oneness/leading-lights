@@ -30,7 +30,8 @@ class User extends Authenticatable
         'image',
         'mobile',
         'last_login_time',
-        'special_course_id'
+        'special_course_ids',
+        'country_code'
     ];
 
     /**
