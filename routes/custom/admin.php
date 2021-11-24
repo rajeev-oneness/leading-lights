@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Auth,Illuminate\Support\Facades\Route;
         Route::resource('groups', GroupController::class);
         Route::resource('special-courses', SpecialCoursesController::class);
         Route::resource('events', EventController::class);
+        Route::resource('qualifications', QualificationController::class);
         Route::put('/approve-student/{id}',[StudentController::class,'approval'])->name('students.approve');
         Route::put('/reject-student/{id}',[StudentController::class,'reject_student'])->name('students.reject');
         Route::put('/approve-teacher/{id}',[TeacherController::class,'approval'])->name('teachers.approve');

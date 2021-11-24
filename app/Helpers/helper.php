@@ -55,6 +55,13 @@ function createNotification($user, $class, $group, $type)
 			$message = 'Please check & update your profile as needed';
 			$route = 'hr.profile';
 			break;
+
+		case 'event_create':
+			$title = 'Event created';
+			$message = 'Please check & update your profile as needed';
+			$route = 'hr.manage-event.store';
+			break;
+
 		default:
 			$title = '';
 			$message = '';

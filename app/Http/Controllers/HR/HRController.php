@@ -102,7 +102,7 @@ class HRController extends Controller
             $specific_attendance = Attendance::where('user_id', $user_id)
                 ->where('date', date('Y-m-d'))->latest()->take(4)->get();
             $specific_date = date('Y-m-d');
-            return view('hr.attendance_date', compact('specific_attendance', 'specific_date','user_id'));
+            return view('hr.attendance_date', compact('specific_attendance', 'specific_date', 'user_id'));
         }
         if ($request->ajax()) {
             $attendance = Attendance::whereDate('date', $request->date)
@@ -150,9 +150,9 @@ class HRController extends Controller
                     $data['user_id'] = $user_id;
 
                     //Loop through date
-                    for ($i=$from; $i < $to; $i++) { 
+                    for ($i = $from; $i < $to; $i++) {
                         // $absent_attendance[] = !in_array($i,$avl_attendance);
-                        if (!in_array($i,$avl_attendance)) {
+                        if (!in_array($i, $avl_attendance)) {
                             $absent_attendance[] = $i;
                         }
                         // $avl_attendance = Attendance::where('user_id', $user_id)->whereDate('date', $i)->get()->groupBy('date');
@@ -174,7 +174,7 @@ class HRController extends Controller
                     // if (isset($absent_attendance)) {
                     //     $data['absent_attendance'] = $absent_attendance;
                     // }
-                    
+
                     // dd($absent_attendance);
                     // $data['checked_attendance'] = $arr_attendance;
                     // dd($arr_attendance, $data['checked_attendance']);
@@ -261,6 +261,10 @@ class HRController extends Controller
         $event->desc = $request->desc;
         $event->image = $fileName;
         $event->save();
+
+        $user_id = Auth::user()->id;
+
+        createNotification($user_id, $class, '0', 'event_create');
 
         return redirect('hr/event-management')->with('success', 'Event upload successfully');
     }

@@ -24,9 +24,10 @@ Route::any('admin/login', [LoginController::class, 'admin_login'])->name('admin_
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 //Common Function
-Route::post('get-fees-by-class', [CommonController::class, 'getFeesByClass'])->name('getFeesByClass');
-Route::post('get-course-by-class', [CommonController::class, 'getCourseByClass'])->name('getCourseByClass');
-Route::post('get-student-by-class', [CommonController::class, 'getStudentByClass'])->name('getStudentByClass');
+Route::post('get-fees-by-class',[CommonController::class,'getFeesByClass'])->name('getFeesByClass');
+Route::post('get-course-by-class',[CommonController::class,'getCourseByClass'])->name('getCourseByClass');
+Route::post('get-student-by-class',[CommonController::class,'getStudentByClass'])->name('getStudentByClass');
+Route::post('email-availability',[CommonController::class,'checkEmailExistence'])->name('checkEmailExistence');
 
 // Notification
 Route::post('/read', [NotificationController::class, 'notificationRead'])->name('notification.read');

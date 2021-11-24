@@ -56,4 +56,17 @@ class CommonController extends Controller
             return response()->json($students_details);
         }
     }
+    public function checkEmailExistence(Request $request){
+        $email = $request->email;
+        $already_existence = User::where('email',$email)->first();
+        if ($already_existence) {
+            $message = 'error';
+        }else{
+            $message = 'success';
+        }
+        return response()->json(array(
+            'msg' 	    => $message
+        )); 
+
+    }
 }

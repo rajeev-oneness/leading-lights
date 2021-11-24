@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use App\Models\Classes;
 use App\Models\Notification;
+use App\Models\Qualification;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Notifications\NewUserInfo;
@@ -100,6 +101,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         // dd($data);
+        // dd(implode(',', $data['special_course_ids']));
         $unique_id = $this->getCode();
         $id_no = 'LLST' . $unique_id;
 
@@ -117,6 +119,14 @@ class RegisterController extends Controller
         );
         FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
 
+        // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+
+        if (isset($data['special_course_ids'])) {
+            $special_course_ids = implode(',', $data['special_course_ids']);
+        } else {
+            $special_course_ids = null;
+        }
+
         $user_creation =  User::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
@@ -128,7 +138,8 @@ class RegisterController extends Controller
             'gender' => $data['gender'],
             'password' => Hash::make($id_no),
             'image' => $imageName,
-            'special_course_id' => $data['course_id']
+            'special_course_ids' => $special_course_ids,
+            'country_code' => $data['country_code']
         ]);
 
         //Store certificate 
@@ -155,7 +166,8 @@ class RegisterController extends Controller
     public function teacher_register(Request $request)
     {
         if ($request->method() == 'GET') {
-            return view('auth.teacher_register');
+            $qualifications = Qualification::get();
+            return view('auth.teacher_register', compact('qualifications'));
         } else if ($request->method() == 'POST') {
             $this->validate($request, [
                 'first_name' => ['required', 'string', 'max:255'],
@@ -192,6 +204,12 @@ class RegisterController extends Controller
             $user->qualification = $request->qualification;
             $user->save();
 
+            // if ($user->qualification = "Others") {
+            $qualification = new Qualification();
+            $qualification->qualification = $request->qualification;
+            $qualification->save();
+            // }
+
             $admin_details = User::select('email')->where('role_id', 1)->first();
             $admin_email = $admin_details['email'];
             $email_data = array(
@@ -211,7 +229,8 @@ class RegisterController extends Controller
     public function hr_register(Request $request)
     {
         if ($request->method() == 'GET') {
-            return view('auth.hr_register');
+            $qualifications = Qualification::get();
+            return view('auth.hr_register', compact('qualifications'));
         } else if ($request->method() == 'POST') {
             $this->validate($request, [
                 'first_name' => ['required', 'string', 'max:255'],
@@ -245,16 +264,12 @@ class RegisterController extends Controller
             $user->password = Hash::make($id_no);
             $user->image = $imageName;
             $user->mobile = $request->mobile;
+
             $user->qualification = $request->qualification;
             $user->save();
 
             $user_id = $user->id;
 
-            // $notification = new Notification();
-            // $notification->user_id = $user_id;
-            // $notification->title = 'Refistration Successfully';
-
-            // $notification->save();
 
             createNotification($user_id, '0', '0', 'user_registration');
 
@@ -267,7 +282,7 @@ class RegisterController extends Controller
                 'id_no' => $id_no,
                 'user_type' => 'hr'
             );
-            FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+            // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
 
             return redirect()->route('hr_login')->with('success', 'Your registration is successful, waiting for admin approval');
         }
