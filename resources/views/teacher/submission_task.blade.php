@@ -66,10 +66,10 @@
                                         @if ($task->review)
                                             <span>{{ $task->review }}</span>
                                         @else
-                                            <form method="POST" action="{{ route('teacher.taskReview') }}">
+                                            
+                                            {{-- <form method="POST" action="{{ route('teacher.taskReview') }}">
                                                 @csrf
                                                 <div class="form-group">
-                                                    {{-- <label>Remarks</label> --}}
                                                     <select class="form-control" id="review{{ $task->id }}"
                                                         name="review" onchange="changeReview({{ $task->id }})">
                                                         <option value="">Please select</option>
@@ -79,7 +79,12 @@
                                                         <option value="Outstanding">Outstanding</option>
                                                     </select>
                                                 </div>
-                                            </form>
+                                            </form> --}}
+                                            <button
+                                                class="btn-pill btn-transition btn btn-outline-dark btn-lg comment_section"
+                                                data-toggle="modal" data-target=".bd-example-modal-sm" data-toggle="tooltip"
+                                                title="" data-original-title="Add comment" data-id="{{ $task->id }}"><i
+                                                    class="fa fa-plus"></i> Add Comment</button>
                                         @endif
                                     </td>
                                     <td>
@@ -87,11 +92,7 @@
                                             <span data-toggle="tooltip" data-placement="top"
                                                 title="{{ $task->comment }}">{{ \Illuminate\Support\Str::limit($task->comment, 15) }}</span>
                                         @else
-                                            <button
-                                                class="btn-pill btn-transition btn btn-outline-dark btn-lg comment_section"
-                                                data-toggle="modal" data-target=".bd-example-modal-sm" data-toggle="tooltip"
-                                                title="" data-original-title="Add comment" data-id="{{ $task->id }}"><i
-                                                    class="fa fa-plus"></i> Add Comment</button>
+                                            N/A
                                             {{-- <form action="{{ route('teacher.taskComment',$task->id) }}" method="POST">
                                     @csrf
                                     <input type="text" class="form-control-sm" name="comment">
@@ -112,7 +113,7 @@
     </div>
     <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
         aria-hidden="true" id="comment_box">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Add Comment</h5>
@@ -125,9 +126,20 @@
                     {{-- <form action="{{ route('teacher.taskComment',$task->id) }}" method="POST">
                     @csrf --}}
                     <div class="form-group">
+                        <label for="review">Review<span class="text-danger">*</span></label>
+                        <select class="form-control" name="review" id="review">
+                            <option value="">Please select</option>
+                            <option value="Bad">Bad</option>
+                            <option value="Good">Good</option>
+                            <option value="Very Good">Very Good</option>
+                            <option value="Outstanding">Outstanding</option>
+                        </select>
+                        <span class="text-danger" id="err_review"></span>
+                    </div>
+                    <div class="form-group">
                         <label for="comment">Comment</label>
                         <textarea name="comment" cols="10" rows="3" class="form-control" id="comment"></textarea>
-                        <span class="text-danger" id="err_txt"></span>
+                        <span class="text-danger" id="err_comment"></span>
                     </div>
                     <div class="form-group">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -172,14 +184,15 @@
         function saveComment() {
             var task_id = $('#task_id').val();
             var comment = document.getElementById("comment").value;
+            var review = document.getElementById("review").value;
             var baseUrl = '<?= url('') ?>';
             var url = baseUrl + '/teacher/task-comment/' + task_id;
-            if (comment == '') {
-                $('#err_txt').text('This field can\'t be empty!');
+            if (review == '') {
+                $('#err_review').text('Please select one of them!');
                 return false;
             }
-            if (comment.length > 255) {
-                $('#err_txt').text('You can add comment within 255 characters');
+            if (comment && comment.length > 255) {
+                $('#err_comment').text('You can add comment within 255 characters');
                 return false;
             }
 
@@ -187,7 +200,8 @@
                 url: url,
                 data: {
                     _token: "{{ csrf_token() }}",
-                    comment: comment
+                    comment: comment,
+                    review : review
                 },
                 dataType: 'json',
                 type: 'post',

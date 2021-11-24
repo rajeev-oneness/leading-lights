@@ -207,9 +207,9 @@ class UserController extends Controller
 
     public function upload_homework(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $validation = Validator::make($request->all(), [
-            'upload_doc' => 'required|mimes:pdf'
+            'upload_file' => 'required|mimes:pdf'
         ],$messages = [
             'required' => 'Please upload a document!',
             'mimes' => 'The document must be pdf format' 
@@ -232,7 +232,7 @@ class UserController extends Controller
         $id_no = Auth::user()->id_no;
         $subject = $request->subject;
 
-        $file = $request->file('upload_doc');
+        $file = $request->file('upload_file');
         $fileName = imageUpload($file, 'student/home_task');
 
         $task = new  SubmitHomeTask;

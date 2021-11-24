@@ -304,11 +304,14 @@ class TeacherController extends Controller
     }
     public function taskComment(Request $request, $id)
     {
+        // dd($request->all(),$id);
         $this->validate($request, [
-            'comment' => 'required|max:255'
+            'comment' => 'max:255',
+            'review' => 'required'
         ]);
         $task = SubmitHomeTask::where('task_id', $id)->first();
         $task->comment = $request->comment;
+        $task->review = $request->review;
         $task->save();
         return response()->json('success');
     }

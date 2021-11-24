@@ -48,7 +48,8 @@
                                         <th>Subject</th>
                                         <th>Submission Date</th>
                                         <th>Submission Time</th>
-                                        <th>Action</th>
+                                        <th>Assignment</th>
+                                        <th>Answer Sheet</th>
                                         <th>Feedback</th>
                                         <th>Comment</th>
                                     </tr>
@@ -63,6 +64,11 @@
                                             <td>{{ $subject_details->name }}</td>
                                             <td>{{ $home_work->submission_date }}</td>
                                             <td>{{ $home_work->submission_time }}</td>
+                                            <td><a href="{{ asset($home_work->upload_file) }}" download="">
+                                                <button class="btn-pill btn btn-primary mb-1"><i
+                                                        class="fas fa-download"></i>
+                                                    Download Task</button>
+                                            </a></td>
                                             <td>
                                                 @php
                                                     $upload_task = App\Models\SubmitHomeTask::where('task_id', $home_work->id)
@@ -80,50 +86,22 @@
                                                             Expired</i> </span>
                                                 @elseif (!$upload_task && $submission_date == $today_date &&
                                                     ($current_time
-                                                    <= $submission_time)) <form
-                                                        action="{{ route('user.upload_homework') }}" method="POST"
-                                                        enctype="multipart/form-data">
-                                                        @csrf
-                                                        <a href="{{ asset($home_work->upload_file) }}" download="">
-                                                            <button class="btn-pill btn btn-primary mb-1"><i
-                                                                    class="fas fa-download"></i>
-                                                                Download Task</button>
-                                                        </a>
-                                                        <input class="btn-pill btn btn-primary" type="file"
-                                                            placeholder="Upload" name="upload_doc"
-                                                            id="{{ $home_work->id }}">
-
-
-                                                        <input type="hidden" name="task_id"
-                                                            id="task_id{{ $home_work->id }}"
-                                                            value="{{ $home_work->id }}">
-                                                        <input type="hidden" name="subject"
-                                                            id="subject{{ $home_work->id }}"
-                                                            value="{{ $home_work->subject }}">
-                                                        <button type="submit" class="btn btn-primary" id="upload_doc"
-                                                            value="regular_task" name="submit_btn">Submit</button>
-                                                        </form>
+                                                    <= $submission_time))
+                                                    <button type="button" class="btn-pill btn btn-primary upload-document"
+                                                    data-toggle="modal" data-target="#exampleModal"
+                                                    data-id="{{ $home_work->id }}"
+                                                    data-subject="{{ $home_work->subject }}" data-submit-type="school_task">
+                                                    Upload
+                                                </button>
+                                                        
                                                     @elseif (!$upload_task && $submission_date >= $today_date)
-                                                        <a href="{{ asset($home_work->upload_file) }}" download="">
-                                                            <button class="btn-pill btn btn-primary mb-1"><i
-                                                                    class="fas fa-download"></i>
-                                                                Download Task</button>
-                                                        </a>
-                                                        <form action="{{ route('user.upload_homework') }}" method="POST"
-                                                            enctype="multipart/form-data">
-                                                            @csrf
-                                                            <input class="btn-pill btn btn-primary" type="file"
-                                                                placeholder="Upload" name="upload_doc"
-                                                                id="{{ $home_work->id }}">
-                                                            <input type="hidden" name="task_id"
-                                                                id="task_id{{ $home_work->id }}"
-                                                                value="{{ $home_work->id }}">
-                                                            <input type="hidden" name="subject"
-                                                                id="subject{{ $home_work->id }}"
-                                                                value="{{ $home_work->subject }}">
-                                                            <button type="submit" class="btn btn-primary" id="upload_doc"
-                                                                value="regular_task" name="submit_btn">Submit</button>
-                                                        </form>
+                                                        <button type="button" class="btn-pill btn btn-primary upload-document"
+                                                        data-toggle="modal" data-target="#exampleModal"
+                                                        data-id="{{ $home_work->id }}"
+                                                        data-subject="{{ $home_work->subject }}"
+                                                        data-submit-type="school_task">
+                                                        Upload
+                                                    </button>
                                                     @elseif ($upload_task)
                                                         <span class="btn-pill btn btn-success"><i
                                                                 class="fa fa-check"></i>
@@ -231,58 +209,20 @@
                                                             Expired</i> </span>
                                                 @elseif (!$upload_task && $submission_date == $today_date &&
                                                     ($current_time
-                                                    <= $submission_time)) <form
-                                                        action="{{ route('user.upload_homework') }}" method="POST"
-                                                        enctype="multipart/form-data">
-                                                        @csrf
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                            data-target="#exampleModal" data-id="{{ $home_work->id }}">
-                                                            Upload
+                                                    <= $submission_time)) <button type="button"
+                                                        class="btn-pill btn btn-primary upload-document" data-toggle="modal"
+                                                        data-target="#exampleModal" data-id="{{ $home_work->id }}"
+                                                        data-subject="{{ $home_work->subject }}" data-submit-type="special_task">
+                                                        Upload
                                                         </button>
-                                                        {{-- <a href="{{ asset($home_work->upload_file) }}" download="">
-                                                            <button class="btn-pill btn btn-primary mb-1"><i
-                                                                    class="fas fa-download"></i>
-                                                                Download</button>
-                                                        </a> --}}
-                                                        <input class="btn-pill btn btn-primary" type="file"
-                                                            placeholder="Upload" name="upload_doc"
-                                                            id="{{ $home_work->id }}">
-
-                                                        <input type="hidden" name="task_id"
-                                                            id="task_id{{ $home_work->id }}"
-                                                            value="{{ $home_work->id }}">
-                                                        <input type="hidden" name="subject"
-                                                            id="subject{{ $home_work->id }}"
-                                                            value="{{ $home_work->subject }}">
-                                                        <button type="submit" class="btn btn-primary" id="upload_doc"
-                                                            value="special_task" name="submit_btn">Submit</button>
-                                                        </form>
                                                     @elseif (!$upload_task && $submission_date >= $today_date)
-                                                        {{-- <a href="{{ asset($home_work->upload_file) }}" download="">
-                                                            <button class="btn-pill btn btn-primary mb-1"><i
-                                                                    class="fas fa-download"></i>
-                                                                Download Task</button>
-                                                        </a> --}}
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                            data-target="#exampleModal" data-id="{{ $home_work->id }}">
+                                                        <button type="button" class="btn-pill btn btn-primary upload-document"
+                                                            data-toggle="modal" data-target="#exampleModal"
+                                                            data-id="{{ $home_work->id }}"
+                                                            data-subject="{{ $home_work->subject }}"
+                                                            data-submit-type="special_task">
                                                             Upload
                                                         </button>
-                                                        <form action="{{ route('user.upload_homework') }}" method="POST"
-                                                            enctype="multipart/form-data">
-                                                            @csrf
-                                                            <input class="btn-pill btn btn-primary" type="file"
-                                                                placeholder="Upload" name="upload_doc"
-                                                                id="{{ $home_work->id }}">
-
-                                                            <input type="hidden" name="task_id"
-                                                                id="task_id{{ $home_work->id }}"
-                                                                value="{{ $home_work->id }}">
-                                                            <input type="hidden" name="subject"
-                                                                id="subject{{ $home_work->id }}"
-                                                                value="{{ $home_work->subject }}">
-                                                            <button type="submit" class="btn btn-primary" id="upload_doc"
-                                                                value="special_task" name="submit_btn">Submit</button>
-                                                        </form>
                                                     @elseif ($upload_task)
                                                         <span class="btn-pill btn btn-success"><i
                                                                 class="fa fa-check"></i>
@@ -330,16 +270,18 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Upload answer sheet(PDF only)</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form class="form" id="documentUploadForm"
-                        action="{{ route('user.upload_homework') }}" method="POST" enctype="multipart/form-data">
+                    <form class="form" id="documentUploadForm" action="{{ route('user.upload_homework') }}"
+                        method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="task_id" id="task_id" value="">
+                        <input type="hidden" name="task_id" id="task_id">
+                        <input type="hidden" name="subject" id="subject">
+                        <input type="hidden" name="submit_btn" id="submit_btn">
                         <div class="file-upload">
                             <button class="file-upload-btn" type="button"
                                 onclick="$('.file-upload-input').trigger( 'click' )">Add File</button>
@@ -359,8 +301,11 @@
                             <div class="file_error" style="color : red;">Please Fill This field.
                             </div>
                         </div>
-                        <button type="submit" class="btn-pill btn btn-dark mt-4"
-                            id="button_submit">Submit</button>
+                        {{-- <button type="submit" class="btn-pill btn btn-dark mt-4" name="submit_btn" value="special_task"
+                            id="button_submit">Submit</button> --}}
+
+                        <button type="submit" class="btn-pill btn btn-dark float-right" id="button_submit" value="special_task"
+                            name="submit_btn">Submit</button>
                     </form>
                 </div>
             </div>
@@ -384,9 +329,21 @@
             $('.alert-success').css('display', 'none');
         }, 4000);
 
+        $(document).on("click", ".upload-document", function() {
+            var task_id = $(this).data('id');
+            var subject = $(this).data('subject');
+            var submit_type = $(this).data('submit-type');
+            $(".modal-body #task_id").val(task_id);
+            $(".modal-body #subject").val(subject);
+            $(".modal-body #submit_btn").val(submit_type);
+        });
+
         $('#button_submit').on('click', function(e) {
             e.preventDefault();
             var errorFlagOne = 0;
+
+            var task_id = $('#task_id').val();
+            console.log(task_id);
 
             var upload_file = $('[name="upload_file"]').val();
 

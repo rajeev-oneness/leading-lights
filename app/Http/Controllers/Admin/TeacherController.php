@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 use App\Notifications\WelcomeMail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Notifications\AccountDeactivateMail;
+use App\Notifications\RejectionMail;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use App\Notifications\AccountDeactivateMail;
 use Illuminate\Support\Facades\Notification;
 
 class TeacherController extends Controller
@@ -161,13 +162,13 @@ class TeacherController extends Controller
         if ($user->status == 0) {
             $user->status = 1;
             $user->save();
-            // Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
+            Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
             return response()->json(['success' => true,'data' => 'activated']);
         }
         if ($user->status == 1) {
             $user->status = 0;
             $user->save();
-            // Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
+            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
             return response()->json(['success' => true,'data' => 'inactivated']);
         }       
     }
@@ -177,7 +178,7 @@ class TeacherController extends Controller
             $user->rejected = 1;
             $user->is_rejected_document_uploaded = 0;
             $user->save();
-            // Notification::route('mail', $user->email)->notify(new RejectionMail($user));
+            Notification::route('mail', $user->email)->notify(new RejectionMail($user));
             return response()->json(['success' => true,'data' => 'rejected']);
         }
     }
