@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\HR;
 
-use App\Http\Controllers\Controller;
-use App\Models\Announcement;
-use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\Group;
 use App\Models\Classes;
+use App\Models\Attendance;
+use App\Models\Certificate;
+use App\Models\Announcement;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -381,5 +382,28 @@ class HRController extends Controller
         $announcement->save();
 
         return redirect()->back()->with('success', 'Announcement upload successfully');
+    }
+    public function certificate_upload(Request $request)
+    {
+        Validator::make($request->all(), [
+            'upload_file' => 'required|mimes:pdf',
+        ], $messages = [
+            'upload_file.required' => 'This field is required.',
+            'upload_file.mimes' => 'Please upload pdf file',
+        ])->validate();
+
+        $image = $request->file('upload_file');
+        $fileName = imageUpload($image, 'teacher_certificate');
+
+        $certificate = new Certificate();
+        $certificate->user_id = Auth::user()->id;
+        $certificate->image = $fileName;
+        $certificate->save();
+
+        $user = User::find(Auth::user()->id);
+        $user->is_rejected_document_uploaded = 1;
+        $user->save();
+
+        return redirect()->back();
     }
 }

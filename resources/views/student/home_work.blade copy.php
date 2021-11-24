@@ -209,11 +209,6 @@
                                             <td>{{ $subject_details->name }}</td>
                                             <td>{{ $home_work->submission_date }}</td>
                                             <td>{{ $home_work->submission_time }}</td>
-                                            <td><a href="{{ asset($home_work->upload_file) }}" download="">
-                                                    <button class="btn-pill btn btn-primary mb-1"><i
-                                                            class="fas fa-download"></i>
-                                                        Download</button>
-                                                </a></td>
                                             <td>
                                                 @php
                                                     $upload_task = App\Models\SubmitHomeTask::where('task_id', $home_work->id)
@@ -235,15 +230,11 @@
                                                         action="{{ route('user.upload_homework') }}" method="POST"
                                                         enctype="multipart/form-data">
                                                         @csrf
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                            data-target="#exampleModal" data-id="{{ $home_work->id }}">
-                                                            Upload
-                                                        </button>
-                                                        {{-- <a href="{{ asset($home_work->upload_file) }}" download="">
+                                                        <a href="{{ asset($home_work->upload_file) }}" download="">
                                                             <button class="btn-pill btn btn-primary mb-1"><i
                                                                     class="fas fa-download"></i>
-                                                                Download</button>
-                                                        </a> --}}
+                                                                Download Task</button>
+                                                        </a>
                                                         <input class="btn-pill btn btn-primary" type="file"
                                                             placeholder="Upload" name="upload_doc"
                                                             id="{{ $home_work->id }}">
@@ -258,15 +249,11 @@
                                                             value="special_task" name="submit_btn">Submit</button>
                                                         </form>
                                                     @elseif (!$upload_task && $submission_date >= $today_date)
-                                                        {{-- <a href="{{ asset($home_work->upload_file) }}" download="">
+                                                        <a href="{{ asset($home_work->upload_file) }}" download="">
                                                             <button class="btn-pill btn btn-primary mb-1"><i
                                                                     class="fas fa-download"></i>
                                                                 Download Task</button>
-                                                        </a> --}}
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                            data-target="#exampleModal" data-id="{{ $home_work->id }}">
-                                                            Upload
-                                                        </button>
+                                                        </a>
                                                         <form action="{{ route('user.upload_homework') }}" method="POST"
                                                             enctype="multipart/form-data">
                                                             @csrf
@@ -319,96 +306,57 @@
             </div>
 
         </div>
-
-        @include('student.layouts.static_footer')
+        @include('teacher.layouts.static_footer')
     </div>
-    </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="form" id="documentUploadForm"
-                        action="{{ route('user.upload_homework') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <input type="hidden" name="task_id" id="task_id" value="">
-                        <div class="file-upload">
-                            <button class="file-upload-btn" type="button"
-                                onclick="$('.file-upload-input').trigger( 'click' )">Add File</button>
-                            {{-- <button class="file-upload-btn" type="button">Add Image</button> --}}
-
-                            <div class="image-upload-wrap">
-                                <input class="file-upload-input" type='file' accept="pdf/*" id="img_upload"
-                                    name="upload_file" />
-                                <div class="drag-text">
-                                    <h3>Drag and drop a file or select add file</h3>
-                                </div>
-                            </div>
-                            @if ($errors->has('upload_file'))
-                                <span style="color: red;" id="file_err">{{ $errors->first('upload_file') }}</span>
-                            @endif
-                            <span id="choose_file"></span>
-                            <div class="file_error" style="color : red;">Please Fill This field.
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-pill btn btn-dark mt-4"
-                            id="button_submit">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         $(document).ready(function() {
             $('#task_table').DataTable();
             $('#task_table1').DataTable();
-            var validated = false;
-            $('.file_error').hide();
-        });
-        $(document).on('change', 'input[name^="upload_file"]', function(ev) {
-            var file_name = this.files[0].name;
-            $('#file_err').html('');
-            $("#choose_file").html(`One file chosen: <span class="text-info">${file_name}</span>`);
         });
         setTimeout(() => {
             $('.alert-danger').css('display', 'none');
             $('.alert-success').css('display', 'none');
         }, 4000);
+        // $('#upload_doc').on('click', function(ev) {
+        //         let task_id = $(ev.target).prev().prev().id;
+        //         console.log(task_id);
+        //         var filedata = this.files[0];
+        //         var imgtype = filedata.type;
 
-        $('#button_submit').on('click', function(e) {
-            e.preventDefault();
-            var errorFlagOne = 0;
+        //         if (!(imgtype === 'application/pdf')) {
+        //             $('#mgs_ta').html(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    //          Please select pdf file type
+    //          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    //              <span aria-hidden="true">&times;</span>
+    //          </button>
+    //      </div>`);
 
-            var upload_file = $('[name="upload_file"]').val();
+        //         } else {
+        //             $('#mgs_ta').empty();
 
-            if (!upload_file) {
-                $('.file_error').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('.file_error').fadeOut(100);
-            }
+        //             //upload
 
-            var allowedExtensions = /(\.pdf)$/i;
-            if (!allowedExtensions.exec(upload_file) && upload_file != '') {
-                $('.file_error').html(
-                    'Please upload file having pdf extensions').fadeIn(100);
-                errorFlagOne = 1;
-            }
+        //             // var postData = new FormData();
+        //             // postData.append('file', this.files[0]);
+        //             // postData.append('task_id', $("#task_id"+task_id).val())
+        //             // postData.append('subject', $("#subject"+task_id).val())
+        //             // console.log($("#task_id"+task_id).val(),$("#subject"+task_id).val());
 
-            if (errorFlagOne == 1) {
-                return false;
-            } else {
-                $("#documentUploadForm").submit();
-            }
-        });
+        //             // $.ajax({
+        //             //     headers: {
+        //             //         'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')
+        //             //     },
+        //             //     async: true,
+        //             //     type: "post",
+        //             //     url: "{{ route('user.upload_homework') }}",
+        //             //     data: postData,
+        //             //     contentType: false,
+        //             //     processData: false,
+        //             //     success: function() {
+        //             //         location.reload();
+        //             //     }
+        //             // });
+        //         }
+        // });
     </script>
 @endsection

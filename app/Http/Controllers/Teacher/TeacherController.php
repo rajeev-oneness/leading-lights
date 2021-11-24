@@ -14,6 +14,7 @@ use App\Models\HomeTask;
 use App\Models\Attendance;
 use App\Models\SubmitExam;
 use App\Models\ArrangeExam;
+use App\Models\Certificate;
 use App\Models\ArrangeClass;
 use Illuminate\Http\Request;
 use App\Models\SpecialCourse;
@@ -23,8 +24,8 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use function GuzzleHttp\Promise\task;
 use Illuminate\Contracts\Session\Session;
@@ -52,6 +53,12 @@ class TeacherController extends Controller
         }
         if ($request->address) {
             $teacher->address = $request->address;
+        }
+        if ($request->bio) {
+            $this->validate($request, [
+                'bio' => 'max:255'
+            ]);
+            $teacher->about_us = $request->bio;
         }
         $teacher->save();
         return response()->json('success');
@@ -308,14 +315,26 @@ class TeacherController extends Controller
 
     public function certificate_upload(Request $request)
     {
-        if ($request->ajax()) {
-            $image = $request->file('file');
-            $data['image'] = imageUpload($image, 'teacher_certificate');
+        Validator::make($request->all(), [
+            'upload_file' => 'required|mimes:pdf',
+        ], $messages = [
+            'upload_file.required' => 'This field is required.',
+            'upload_file.mimes' => 'Please upload pdf file',
+        ])->validate();
 
-            $data['user_id'] = Auth::user()->id;
+        $image = $request->file('upload_file');
+        $fileName = imageUpload($image, 'teacher_certificate');
 
-            DB::table('certificate')->insert($data);
-        }
+        $certificate = new Certificate();
+        $certificate->user_id = Auth::user()->id;
+        $certificate->image = $fileName;
+        $certificate->save();
+
+        $user = User::find(Auth::user()->id);
+        $user->is_rejected_document_uploaded = 1;
+        $user->save();
+
+        return redirect()->back();
     }
 
     public function arrange_class(Request $request)
@@ -631,5 +650,28 @@ class TeacherController extends Controller
     //Whiteboard
     public function whiteboard(){
         return view('teacher.whiteboard');
+    }
+
+    public function updateBio(Request $request)
+    {
+        $student = User::find(Auth::id());
+        if ($request->dob) {
+            $this->validate($request, [
+                'dob' => 'date|nullable',
+            ]);
+            $student->dob = $request->dob;
+        }
+        if ($request->gender) {
+            $student->gender = $request->gender;
+        }
+        if ($request->bio) {
+            $this->validate($request, [
+                'bio' => 'max:255'
+            ]);
+            $student->about_us = $request->bio;
+        }
+
+        $student->save();
+        return response()->json('success');
     }
 }

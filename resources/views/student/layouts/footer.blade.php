@@ -410,7 +410,7 @@
         </div>
     </div>
 </div>
-  <div class="app-drawer-overlay d-none animated fadeIn"></div>
+  {{-- <div class="app-drawer-overlay d-none animated fadeIn"></div> --}}
   <script type="text/javascript" src="{{ asset('frontend/assets/scripts/main.d810cf0ae7f39f28f336.js') }}"></script>
   <script src="{{ asset('frontend/js/owl.carousel.js') }}"></script>
   <script type="text/javascript">

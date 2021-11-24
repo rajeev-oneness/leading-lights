@@ -113,7 +113,7 @@ class LoginController extends Controller
                 'email' => 'required|string|email',
                 'password' => 'required|string',
             ]);
-            $inactive_user = User::where('email',$request->email)->where('status',0)->first();
+            $inactive_user = User::where('email',$request->email)->where('status',0)->where('rejected',0)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 3) {
