@@ -178,13 +178,13 @@ class StudentController extends Controller
             $user->status = 1;
             $user->rejected = 0;
             $user->save();
-            Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
+            // Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
             return response()->json(['success' => true,'data' => 'activated']);
         }
         if ($user->status == 1) {
             $user->status = 0;
             $user->save();
-            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
+            // Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
             return response()->json(['success' => true,'data' => 'inactivated']);
         }       
     }
@@ -195,7 +195,7 @@ class StudentController extends Controller
             $user->rejected = 1;
             $user->is_rejected_document_uploaded = 0;
             $user->save();
-            Notification::route('mail', $user->email)->notify(new RejectionMail($user));
+            // Notification::route('mail', $user->email)->notify(new RejectionMail($user));
             return response()->json(['success' => true,'data' => 'rejected']);
         }
     }

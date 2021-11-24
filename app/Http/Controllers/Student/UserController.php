@@ -207,6 +207,7 @@ class UserController extends Controller
 
     public function upload_homework(Request $request)
     {
+        dd($request->all());
         $validation = Validator::make($request->all(), [
             'upload_doc' => 'required|mimes:pdf'
         ],$messages = [

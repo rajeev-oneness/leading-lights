@@ -39,8 +39,10 @@ use Illuminate\Support\Facades\Auth,Illuminate\Support\Facades\Route;
         Route::resource('qualifications', QualificationController::class);
         Route::put('/approve-student/{id}',[StudentController::class,'approval'])->name('students.approve');
         Route::put('/reject-student/{id}',[StudentController::class,'reject_student'])->name('students.reject');
-        Route::put('/approve-teacher/{id}',[TeacherController::class,'approval'])->name('teachers.approve');
+        Route::put('/approve-teacher/{id}',[TeacherController::class,'approval'])->name('teacher.approve');
+        Route::put('/reject-teacher/{id}',[TeacherController::class,'reject_teacher'])->name('teacher.reject');
         Route::put('/approve-hr/{id}',[HRController::class,'approval'])->name('hr.approve');
+        Route::put('/reject-hr/{id}',[HRController::class,'reject_hr'])->name('hr.reject');
 
         Route::get('/arrange-classes',[ClassController::class,'arrange_classes'])->name('arrange_classes');
         Route::delete('/delete-arrange-classes/{id}',[ClassController::class,'delete_arrange_classes'])->name('delete_arrange_classes');

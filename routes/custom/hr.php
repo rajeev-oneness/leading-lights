@@ -9,6 +9,7 @@ Route::get('change-password', [HRController::class, 'changePassword'])->name('ch
 Route::post('update-password', [HRController::class, 'updatePassword'])->name('updatePassword');
 Route::post('update-profile', [HRController::class, 'updateProfile'])->name('updateProfile');
 Route::post('update-bio', [HRController::class, 'updateBio'])->name('updateBio');
+Route::post('certificate-upload/',[HRController::class,'certificate_upload'])->name('certificate_upload');
 
 // ---------------Attendance--------------------------
 Route::any('attendance',[HRController::class,'attendance'])->name('attendance');

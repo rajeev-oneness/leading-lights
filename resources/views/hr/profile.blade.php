@@ -3,17 +3,17 @@
     <div class="app-main">
         <div class="app-sidebar sidebar-shadow">
             <!--      <div class="app-header__logo">
-                        <div class="logo-src"></div>
-                        <div class="header__pane ml-auto">
-                            <div>
-                                <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
-                                    <span class="hamburger-box">
-                                        <span class="hamburger-inner"></span>
-                                    </span>
-                                </button>
+                            <div class="logo-src"></div>
+                            <div class="header__pane ml-auto">
+                                <div>
+                                    <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
+                                        <span class="hamburger-box">
+                                            <span class="hamburger-inner"></span>
+                                        </span>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    </div> -->
+                        </div> -->
             <div class="app-header__mobile-menu">
                 <div>
                     <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
@@ -210,7 +210,65 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-5">
+                    @if ($hr->rejected == 1 && $hr->status == 0 && $hr->is_rejected_document_uploaded == 1)
+                        <div>
+                            <h5 class="text-danger">N:B: Your documents have been uploaded successfully. You will be
+                                notified
+                                once ADMIN approved your account.</h5>
+                        </div>
+                    @endif
+
+                    @if ($hr->rejected == 1 && $hr->status == 0 && $hr->is_rejected_document_uploaded == 0)
+                        {{-- @if ($hr->rejected == 1 && $hr->status == 0 && $certificates->created_at === $certificates->updated_at) --}}
+                        <div class="row mt-4">
+                            <div class="col-lg-12">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div class="card-header-title font-size-lg text-capitalize mb-4">
+                                            Attach Documents(PDF only)
+                                        </div>
+                                        <form class="form" id="documentUploadForm"
+                                            action="{{ route('hr.certificate_upload') }}" method="POST"
+                                            enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="file-upload">
+                                                <button class="file-upload-btn" type="button"
+                                                    onclick="$('.file-upload-input').trigger( 'click' )">Add File</button>
+                                                {{-- <button class="file-upload-btn" type="button">Add Image</button> --}}
+
+                                                <div class="image-upload-wrap">
+                                                    <input class="file-upload-input" type='file' accept="pdf/*"
+                                                        id="img_upload" name="upload_file" />
+                                                    <div class="drag-text">
+                                                        <h3>Drag and drop a file or select add file</h3>
+                                                    </div>
+                                                </div>
+                                                <div class="file-upload-content">
+                                                    <img class="file-upload-image" src="#" alt="your image" />
+                                                    {{-- <div class="image-title-wrap">
+                                    <button type="button" onclick="removeUpload()" class="remove-image">Remove
+                                        <span class="image-title">Uploaded Image</span></button>
+                                </div> --}}
+                                                    {{-- <img id="img_prv" style="max-width: 150px;max-height: 150px" class="img-thumbnail" src=""> --}}
+                                                </div>
+                                                @if ($errors->has('upload_file'))
+                                                    <span style="color: red;"
+                                                        id="file_err">{{ $errors->first('upload_file') }}</span>
+                                                @endif
+                                                <span id="choose_file"></span>
+                                                <div class="file_error" style="color : red;">Please Fill This field.
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn-pill btn btn-dark mt-4" name="submit"
+                                                id="button_submit">Submit</button>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    {{-- <div class="row mt-5">
                         <div class="col-lg-7">
                             <div class="card">
 
@@ -344,11 +402,11 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                 </div>
             </div>
-            <div class="app-wrapper-footer">
+            <div class="app-wrapper-footer mt-5">
                 <div class="app-footer">
                     <div class="app-footer__inner">
                         <div class="app-footer-right">
@@ -369,6 +427,16 @@
 
 
     <script>
+        $(document).ready(function() {
+            var validated = false;
+            $('.file_error').hide();
+        });
+        $(document).on('change', 'input[name^="upload_file"]', function(ev) {
+            var file_name = this.files[0].name;
+            $('#file_err').html('');
+            $("#choose_file").html(`One file chosen: <span class="text-info">${file_name}</span>`);
+        });
+
         function changeAddress() {
             document.getElementById('address').innerHTML = `
         <textarea class="form-control" row="10" cols="30" name="address_save" id="address_save">{{ $hr->address }}</textarea>

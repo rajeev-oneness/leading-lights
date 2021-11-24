@@ -55,13 +55,44 @@
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label for="mobile">Phone Number<span class="text-danger">*</span></label>
-                                        <input class=" form-control" type="number" name="mobile" id="mobile"
-                                            value="{{ old('mobile') }}" onkeyup="mobileValidation()">
-                                        <div class="error" style="color : red;">Please Fill This field.</div>
-                                        <span style="color: red;" id="digit_error"></span>
-                                        @error('mobile')
-                                            <span class="text-danger" id="mobile_err">{{ $message }}</span>
-                                        @enderror
+                                        <div class="d-sm-flex align-items-top justify-content-between">
+                                            <div class="responsive-error">
+                                                <?php $phonecodes = \App\Models\Country::Where('phonecode', '!=', '')
+                                                    ->select('phonecode')
+                                                    ->orderBy('phonecode')
+                                                    ->get(); ?>
+                                                <select class="form-control" required name="country_code"
+                                                    id="country_code">
+                                                    <option value="">Country Code</option>
+                                                    <?php if($phonecodes){?>
+                                                    <?php foreach($phonecodes as $code){?>
+                                                    <option value="+{{ $code->phonecode }}"
+                                                        {{ old('country_code') == $code->phonecode ? 'selected' : '' }}>
+                                                        +{{ $code->phonecode }}</option>
+                                                    <?php } } ?>
+                                                </select>
+                                                <div class="error" style="color : red;">Please Fill This field.
+                                                </div>
+
+                                                @if ($errors->has('country_code'))
+                                                    <span class="invalid" role="alert">
+                                                        <strong
+                                                            style="color: red;">{{ $errors->first('country_code') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <div class="responsive-error">
+                                                <input class=" form-control" type="number" name="mobile" id="mobile"
+                                                    value="{{ old('mobile') }}" onkeyup="mobileValidation()">
+                                                <div class="error" style="color : red;">Please Fill This field.
+                                                </div>
+                                                <span style="color: red;" id="digit_error"></span>
+                                                @error('mobile')
+                                                    <span class="text-danger" id="mobile_err">{{ $message }}</span>
+                                                @enderror
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -89,14 +120,23 @@
                                         <label for="">Academic Qualification<span class="text-danger">*</span></label>
                                         <select name="qualification" class="form-control" id="qualification">
                                             <option value="">Select Qualification</option>
-
-                                            <option value="Others">Others</option>
+                                            @foreach ($qualifications as $qualification)
+                                                <option value="{{ $qualification->id }}" @if (old('qualification') == $qualification->id)
+                                                    selected
+                                            @endif>{{ $qualification->name }}</option>
+                                            @endforeach
+                                            <option value="Others"  @if (old('qualification') === 'Others')
+                                                selected
+                                        @endif>Others</option>
                                         </select>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                     </div>
-                                    <div class="form-group col-sm-6" id="other_qualification">
+                                    <div class="form-group col-sm-6">
                                         <label for="image">Other Academic Qualification</label>
-                                        <input type="text" class="form-control" name="other_qualification">
+                                        <input type="text" class="form-control" name="other_qualification" value="{{ old('other_qualification') }}" id="other_qualification">
+                                        @error('other_qualification')
+                                        <span class="text-danger qualification_err">{{ $message }}</span>
+                                         @enderror
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                     </div>
                                 </div>
@@ -138,21 +178,21 @@
             </div>
         </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js?v1" type="text/javascript"></script>
     <script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js?v1"></script>
     <script>
         $(document).ready(function() {
-            $('#other_qualification').hide();
+            $('#other_qualification').prop('disabled', true);
             var validated = false;
-            $('.error').hide();
+        $('.error').hide();
         });
         $('#qualification').on('change', function(e) {
             let qualification = $('#qualification').val();
             if (qualification === 'Others') {
-                $('#other_qualification').show();
+                $('#other_qualification').prop( "disabled", false );
             } else {
-                $('#other_qualification').hide();
+                $('#other_qualification').prop('disabled', true);
             }
         })
 
@@ -241,7 +281,7 @@
                 country_code = $('[name="country_code"]').val(),
                 gender = $('[name="gender"]').val(),
                 doj = $('[name="doj"]').val(),
-                class_id = $('[name="class"]').val(),
+                // class_id = $('[name="class"]').val(),
                 qualification = $('[name="qualification"]').val(),
                 other_qualification = $('[name="other_qualification"]').val(),
                 image = $('[name="image"]').val(),
@@ -303,12 +343,6 @@
             } else {
                 $('[name="doj"]').next('.error').fadeOut(100);
             }
-            if (!class_id) {
-                $('[name="class"]').next('.error').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('[name="class"]').next('.error').fadeOut(100);
-            }
             if (!qualification) {
                 $('[name="qualification"]').next('.error').fadeIn(100);
                 errorFlagOne = 1;
@@ -355,7 +389,7 @@
             if (errorFlagOne == 1) {
                 return false;
             } else {
-                $("#registrationForm").submit();
+                document.getElementById("registrationForm").submit();
             }
         });
     </script>

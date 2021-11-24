@@ -52,23 +52,30 @@
 						<td>{{ $hr->id_no }}</td>
 						<td>{{ $hr->first_name }}  {{ $hr->last_name }}</td>
 						<td>{{ $hr->email }}</td>
-						<td>{{ $hr->mobile ? $hr->mobile : 'N/A' }}</td>
+						<td> @if ($hr->country_code)
+							{{ $hr->mobile ? '+' . $hr->country_code . ' ' . $hr->mobile : 'N/A' }}
+						@else
+							{{ $hr->mobile ? $hr->mobile : 'N/A' }}
+						@endif</td>
 						<td class="text-center">
 							@if ($hr->status == 1)
 							<span class="badge badge-success">Approved</span>
-							@else
+						@elseif($hr->rejected == 1)
+							<span class="badge badge-danger">Rejected</span>
+						@else
 							<span class="badge badge-warning">Pending</span>
-							@endif
+						@endif
 							
 						</td>
 						<td>
 							<a href="{{ route('admin.hr.show',$hr->id) }}"><i class="far fa-eye"></i></a>
 							<a href="{{ route('admin.hr.edit',$hr->id) }}" class="ml-2"><i class="far fa-edit"></i></a>
-							<a href="javascript:void(0);" class="ml-2" data-toggle="modal" data-target="#exampleModal" onclick="deleteForm({{ $hr->id }})"><i class="far fa-trash-alt text-danger"></i></a>
+							{{-- <a href="javascript:void(0);" class="ml-2" data-toggle="modal" data-target="#exampleModal" onclick="deleteForm({{ $hr->id }})"><i class="far fa-trash-alt text-danger"></i></a>
 							<form id="delete_form_{{ $hr->id }}" action="{{ route('admin.hr.destroy',$hr->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                            </form></td>
+                            </form> --}}
+						</td>
 						</td>
 					</tr>
 				@endforeach

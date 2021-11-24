@@ -16,9 +16,6 @@
                             <div class="heading">
                                 <h1>Register Now :)</h1>
                             </div>
-                            <p>To keep connected with us please login with your personal information by email address and
-                                password<span class="ml-3"><img src="{{ asset('frontend/images/bell.png') }}"
-                                        class="img-fluid"></span></p>
                             <form class="cd-form" method="POST" action="{{ route('teacher_register') }}"
                                 enctype="multipart/form-data" id="registrationForm">
                                 @csrf
@@ -53,6 +50,8 @@
                                         @error('email')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
+                                        <span class="text-danger email-err"></span>
+                                        <span class="text-success email-success"></span>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label for="mobile">Phone Number<span class="text-danger">*</span></label>
@@ -100,13 +99,11 @@
                                     <div class="form-group col-sm-6">
                                         <label for="gender">Gender<span class="text-danger">*</span></label>
                                         <select name="gender" id="gender" class="form-control">
+                                            <option value="">Select Gender</option>
                                             <option value="Male" @if (old('gender') == 'Male')  selected @endif>Male</option>
                                             <option value="Female" value="Female" @if (old('gender') == 'Female')  selected @endif>Female</option>
                                         </select>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
-                                        @error('gender')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label for="">Date Of Joining<span class="text-danger">*</span></label>
@@ -121,26 +118,48 @@
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
                                         <label for="">Academic Qualification<span class="text-danger">*</span></label>
-                                        <select name="qualification" class="form-control">
+                                        <select name="qualification" class="form-control" id="qualification">
                                             <option value="">Select Qualification</option>
                                             @foreach ($qualifications as $qualification)
-                                                <option value="{{ $qualification->id }}">{{ $qualification->name }}
-                                                </option>
+                                                <option value="{{ $qualification->id }}" @if (old('qualification') == $qualification->id)
+                                                    selected
+                                            @endif>{{ $qualification->name }}</option>
                                             @endforeach
-                                            {{-- <option value="MCA">MCA</option>
-                                            <option value="MBA">MBA</option> --}}
+                                            <option value="Others" @if (old('qualification') === 'Others')
+                                                selected
+                                                @endif>Others</option>
                                         </select>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
-                                        @error('qualification')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
                                     </div>
                                     <div class="form-group col-sm-6">
-                                        <label for="image">Upload Profile Picture<span
+                                        <label for="image">Other Academic Qualification</label>
+                                        <input type="text" class="form-control" name="other_qualification"
+                                            value="{{ old('other_qualification') }}" id="other_qualification">
+                                        @error('other_qualification')
+                                            <span class="text-danger qualification_err">{{ $message }}</span>
+                                        @enderror
+                                        <div class="error" style="color : red;">Please Fill This field.</div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-sm-6">
+                                        <label for="image">Upload Profile Picture(png,jpg,jpeg only)<span
                                                 class="text-danger">*</span></label>
-                                        <input type="file" class="form-control" name="image">
+                                        <input type="file" class="form-control" name="image"
+                                            value="{{ old('image') }}">
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                         @error('image')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="certificate">Upload Documents(pdf only)<span
+                                                class="text-danger">*</span></label>
+                                        <input type="file" class="form-control" name="certificate"
+                                            value="{{ old('certificate') }}">
+                                        <div class="error" style="color : red;">Please Fill This field.</div>
+                                        @error('certificate')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -149,7 +168,7 @@
                                     <div class="form-group col-sm-12">
                                         <button class="btn btn-login mt-2 float-right" type="submit"
                                             id="btn_submit">Submit</button>
-                                        <a href="{{ route('teacher_login') }}" class="btn btn-create mt-2" type="button"
+                                        <a href="{{ route('hr_login') }}" class="btn btn-create mt-2" type="button"
                                             value="Login"><span></span>Back to login</a>
                                     </div>
                                 </div>
@@ -160,110 +179,23 @@
             </div>
         </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js?v1" type="text/javascript"></script>
     <script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js?v1"></script>
     <script>
         $(document).ready(function() {
+            $('#other_qualification').prop('disabled', true);
             var validated = false;
             $('.error').hide();
         });
-        $('#btn_submit').on('click', function(e) {
-            e.preventDefault();
-            var errorFlagOne = 0;
-
-            var email = $('[name="email"]').val(),
-                mobile = $('[name="mobile"]').val(),
-                first_name = $('[name="first_name"]').val(),
-                last_name = $('[name="last_name"]').val(),
-                country_code = $('[name="country_code"]').val(),
-                gender = $('[name="gender"]').val(),
-                dob = $('[name="dob"]').val(),
-                image = $('[name="image"]').val(),
-                qualification = $('[name="qualification"]').val();
-
-            if (!first_name) {
-                $('[name="first_name"]').next('.error').fadeIn(100);
-                errorFlagOne = 1;
+        $('#qualification').on('change', function(e) {
+            let qualification = $('#qualification').val();
+            if (qualification === 'Others') {
+                $('#other_qualification').prop("disabled", false);
             } else {
-                $('[name="first_name"]').next('.error').fadeOut(100);
+                $('#other_qualification').prop('disabled', true);
             }
-
-            if (!last_name) {
-                $('[name="last_name"]').next('.error').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('[name="last_name"]').next('.error').fadeOut(100);
-            }
-
-            if (!email) {
-                $('input[name="email"]').next('.error').html('Please Fill This field.').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('input[name="email"]').next('.error').fadeOut(100);
-            }
-
-            if (!mobile) {
-                $('[name="mobile"]').next('.error').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('[name="mobile"]').next('.error').fadeOut(100);
-            }
-
-            if (!mobile.match(/^\d{10}$/)) {
-                $('[name="mobile"]').next('.error').next('.digit_error').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('[name="mobile"]').next('.error').next('.digit_error').fadeOut(100);
-            }
-
-            if (!country_code) {
-                $('[name="country_code"]').next('.error').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('[name="country_code"]').next('.error').fadeOut(100);
-            }
-
-            if (!gender) {
-                $('[name="gender"]').next('.error').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('[name="gender"]').next('.error').fadeOut(100);
-            }
-            if (!dob) {
-                $('[name="dob"]').next('.error').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('[name="dob"]').next('.error').fadeOut(100);
-            }
-            if (!image) {
-                $('[name="image"]').next('.error').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('[name="image"]').next('.error').fadeOut(100);
-            }
-            if (!qualification) {
-                $('[name="qualification"]').next('.error').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('[name="qualification"]').next('.error').fadeOut(100);
-            }
-
-            var allowedImageExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-            if (!allowedImageExtensions.exec(image) && image != '') {
-                $('[name="image"]').next('.error').html(
-                    'Please upload file having jpg,jpeg and png extensions').fadeIn(100);
-                errorFlagOne = 1;
-            }
-
-
-
-            if (errorFlagOne == 1) {
-                return false;
-            } else {
-                $("#registrationForm").submit();
-            }
-        });
+        })
 
         //Email availability
         $('#email').on('keyup', function() {
@@ -320,14 +252,6 @@
             }
         }
 
-
-
-
-
-
-
-
-
         function mobileValidation() {
             if ($('[name=mobile]').val().length > 10) {
                 $('#digit_error').html('Please enter 10 digit number');
@@ -345,6 +269,127 @@
             format: 'yyyy-mm-dd',
             startDate: '+1 day',
             daysOfWeekDisabled: [0]
+        });
+
+        $('#btn_submit').on('click', function(e) {
+            e.preventDefault();
+            var errorFlagOne = 0;
+
+            var email = $('[name="email"]').val(),
+                mobile = $('[name="mobile"]').val(),
+                first_name = $('[name="first_name"]').val(),
+                last_name = $('[name="last_name"]').val(),
+                country_code = $('[name="country_code"]').val(),
+                gender = $('[name="gender"]').val(),
+                doj = $('[name="doj"]').val(),
+                // class_id = $('[name="class"]').val(),
+                qualification = $('[name="qualification"]').val(),
+                other_qualification = $('[name="other_qualification"]').val(),
+                image = $('[name="image"]').val(),
+                certificate = $('[name="certificate"]').val();
+
+            if (!first_name) {
+                $('[name="first_name"]').next('.error').fadeIn(100);
+                errorFlagOne = 1;
+            } else {
+                $('[name="first_name"]').next('.error').fadeOut(100);
+            }
+
+            if (!last_name) {
+                $('[name="last_name"]').next('.error').fadeIn(100);
+                errorFlagOne = 1;
+            } else {
+                $('[name="last_name"]').next('.error').fadeOut(100);
+            }
+
+            if (!email) {
+                $('input[name="email"]').next('.error').html('Please Fill This field.').fadeIn(100);
+                errorFlagOne = 1;
+            } else {
+                $('input[name="email"]').next('.error').fadeOut(100);
+            }
+
+            if (!mobile) {
+                $('[name="mobile"]').next('.error').fadeIn(100);
+                errorFlagOne = 1;
+            } else {
+                $('[name="mobile"]').next('.error').fadeOut(100);
+            }
+
+            if (!mobile.match(/^\d{10}$/)) {
+                $('[name="mobile"]').next('.error').next('.digit_error').fadeIn(100);
+                errorFlagOne = 1;
+            } else {
+                $('[name="mobile"]').next('.error').next('.digit_error').fadeOut(100);
+            }
+
+            if (!country_code) {
+                $('[name="country_code"]').next('.error').fadeIn(100);
+                errorFlagOne = 1;
+            } else {
+                $('[name="country_code"]').next('.error').fadeOut(100);
+            }
+
+            if (!gender) {
+                $('[name="gender"]').next('.error').fadeIn(100);
+                errorFlagOne = 1;
+            } else {
+                $('[name="gender"]').next('.error').fadeOut(100);
+            }
+            if (!doj) {
+                $('[name="doj"]').next('.error').fadeIn(100);
+                errorFlagOne = 1;
+            } else {
+                $('[name="doj"]').next('.error').fadeOut(100);
+            }
+            if (!qualification) {
+                $('[name="qualification"]').next('.error').fadeIn(100);
+                errorFlagOne = 1;
+            } else {
+                if (qualification === 'Others') {
+                    if (!other_qualification) {
+                        $('[name="other_qualification"]').next('.error').fadeIn(100);
+                    } else {
+                        $('[name="other_qualification"]').next('.error').fadeOut(100);
+                    }
+                } else {
+                    $('[name="qualification"]').next('.error').fadeOut(100);
+                }
+                // $('[name="qualification"]').next('.error').fadeOut(100);
+            }
+            if (!image) {
+                $('[name="image"]').next('.error').fadeIn(100);
+                errorFlagOne = 1;
+            } else {
+                $('[name="image"]').next('.error').fadeOut(100);
+            }
+
+            var allowedImageExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+            if (!allowedImageExtensions.exec(image) && image != '') {
+                $('[name="image"]').next('.error').html(
+                    'Please upload file having jpg,jpeg and png extensions').fadeIn(100);
+                errorFlagOne = 1;
+            }
+
+            if (!certificate) {
+                $('[name="certificate"]').next('.error').fadeIn(100);
+                errorFlagOne = 1;
+            } else {
+                $('[name="certificate"]').next('.error').fadeOut(100);
+            }
+
+            var allowedExtensions = /(\.pdf)$/i;
+            if (!allowedExtensions.exec(certificate) && certificate != '') {
+                $('[name="certificate"]').next('.error').html(
+                    'Please upload file having pdf extensions').fadeIn(100);
+                errorFlagOne = 1;
+            }
+
+            if (errorFlagOne == 1) {
+                return false;
+            } else {
+                document.getElementById("registrationForm").submit();
+            }
         });
     </script>
 @endsection

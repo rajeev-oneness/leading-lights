@@ -52,24 +52,50 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $student->id_no }}</td>
-                                    <?php 
-                                           $class_details = App\Models\Classes::find($student->class);
-                                           $course_details = App\Models\SpecialCourse::find($student->special_course_id);
-                                           if (isset($course_details)) {
-                                              $course_title = $course_details->title;
-                                           }else{
-                                            $course_title = 'N/A'; 
-                                           }
-                                        ?>
+                                    <?php
+                                    
+                                    $special_course_ids = explode(',', $student->special_course_ids);
+                                    foreach ($special_course_ids as $course_id) {
+                                        $course_details[] = App\Models\SpecialCourse::find($course_id);
+                                    }
+                                    
+                                    $class_details = App\Models\Classes::find($student->class);
+                                    ?>
                                     <td><span class="text-success">{{ $class_details->name }}</span></td>
-                                    <td><span class="text-info">{{ $course_title }}</span></td>
+                                    <td>
+                                            <span class="text-info">
+                                                @if ($student->special_course_ids !== null)
+                                                <div class="student-list">
+                                                <ol>
+                                                    @foreach ($course_details as $course)
+                                                        <li>{{ $course['title'] }}</li>
+                                                    @endforeach
+                                                </ol>
+                                            </div>
+                                                @else
+                                                    N/A
+                                                @endif
+    
+                                            </span>
+                                        
+                                        
+                                    </td>
                                     {{-- <td>{{ $course_details->title ? $course_details->title : 'N/A' }}</td> --}}
                                     <td>{{ $student->first_name }} {{ $student->last_name }}</td>
                                     <td>{{ $student->email }}</td>
-                                    <td>{{ $student->mobile ? $student->mobile : 'N/A' }}</td>
+                                    <td>
+                                        @if ($student->country_code)
+                                        {{ $student->mobile ? '+'.$student->country_code.' '.$student->mobile : 'N/A' }}
+                                        @else
+                                        {{ $student->mobile ? $student->mobile : 'N/A' }}
+                                        @endif
+                                        
+                                    </td>
                                     <td class="text-center">
                                         @if ($student->status == 1)
                                             <span class="badge badge-success">Approved</span>
+                                        @elseif($student->rejected == 1)
+                                            <span class="badge badge-danger">Rejected</span>
                                         @else
                                             <span class="badge badge-warning">Pending</span>
                                         @endif

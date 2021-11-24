@@ -32,20 +32,25 @@
                         </div>
                         <div class="ml-5">
                             @if ($student->status == 0)
-                                <a href="{{ route('admin.students.approve', $student->id) }}"
-                                    class="btn btn-info pull-right" onclick="activeAccount({{ $student->id }})"
-                                    id="activeAccount" data-toggl="tooltip" title="This account is not approved">Approve</a>
                                 @if ($student->rejected == 0)
+                                    <a href="{{ route('admin.students.approve', $student->id) }}"
+                                        class="btn btn-info pull-right" onclick="activeAccount({{ $student->id }})"
+                                        id="activeAccount">Approve</a>
                                     <a href="{{ route('admin.students.reject', $student->id) }}"
                                         class="btn btn-info pull-right mr-2" onclick="rejectAccount({{ $student->id }})"
-                                        id="rejectAccount" data-toggl="tooltip" title="This account is not rejected">Reject</a>
-                                @else
-                                    <button class="btn btn-info pull-right mr-2" data-toggle="tooltip" data-placement="top" title="This account is  rejected">Rejected</button>
+                                        id="rejectAccount">Reject</a>
+                                @elseif ($student->rejected == 1 && $student->is_rejected_document_uploaded == 0)
+                                    <button class="btn btn-info pull-right mr-2" data-toggle="tooltip" data-placement="top"
+                                        title="This account is  rejected">Rejected</button>
+                                @elseif ($student->rejected == 1 && $student->is_rejected_document_uploaded == 1)
+                                    <a href="{{ route('admin.students.approve', $student->id) }}"
+                                        class="btn btn-info pull-right" onclick="activeAccount({{ $student->id }})"
+                                        id="activeAccount">Approve</a>
                                 @endif
                             @else
                                 <a href="{{ route('admin.students.approve', $student->id) }}"
-                                    class="btn btn-info pull-right" onclick="activeAccount({{ $student->id }})"
-                                    id="activeAccount" data-toggl="tooltip" title="This account is approved">Approved</a>
+                                    class="btn btn-danger pull-right" onclick="activeAccount({{ $student->id }})"
+                                    id="activeAccount" data-toggl="tooltip">Deactivate</a>
                                 <a href="#" class="btn btn-info pull-right ml-2" id="RejectedAccount"
                                     style="display: none;">Rejected</a>
                             @endif
@@ -54,23 +59,32 @@
                 </div>
                 <div class="tabs-animation">
                     <div class="bg-edit p-4">
+                        @if ($student->status == 1)
+                            <h5 class="">This account is verified <i
+                                    class="text-success fa fa-check-circle"></i></h5>
+                        @elseif ($student->status == 0 && $student->rejected == 0)
+                            <h5 class="">This account is not verified <i
+                                    class="text-danger fa fa-exclamation-circle"></i></h5>
+                        @elseif ($student->status == 0 && $student->rejected == 1)
+                            <h5 class="">This account is rejected <i
+                                    class="text-danger fa fa-times-circle"></i></h5>
+                        @endif
                         <div class="row">
                             <div class="col-lg-3">
                                 <img src="{{ asset($student->image ? $student->image : 'frontend/assets/images/avata3.jpg') }}"
                                     class="img-fluid mx-auto">
                             </div>
-                            <div class="col-lg-4 not2
-							">
+                            <div class="col-lg-4 not2">
                                 <p>{{ date('d-m-Y', strtotime($student->created_at)) }}</p>
                                 <h4 class="mb-4">{{ $student->first_name . ' ' . $student->last_name }}<span
                                         class="ml-3">
                                         <!-- <img src="assets/images/edit.png" class="img-fluid mx-auto"> -->
                                     </span></h4>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-7">
                                         <label>DOB :</label>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <p>{{ $student->dob ? $student->dob : 'N/A' }}</p>
                                     </div>
                                     <div class="col-md-2">
@@ -78,10 +92,10 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-7">
                                         <label>Age :</label>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <p>{{ $student_age }}</p>
                                     </div>
                                     <div class="col-md-2">
@@ -89,10 +103,10 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-7">
                                         <label>Sex :</label>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <p>{{ $student->gender ? $student->gender : 'N/A' }}</p>
                                     </div>
                                     <div class="col-md-2">
@@ -100,10 +114,27 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-7">
+                                        <label>Mobile No :</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <p>
+                                            @if ($student->country_code)
+                                                {{ $student->mobile ? '+' . $student->country_code . ' ' . $student->mobile : 'N/A' }}
+                                            @else
+                                                {{ $student->mobile ? $student->mobile : 'N/A' }}
+                                            @endif
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> --}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-7">
                                         <label>Class :</label>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <?php
                                         $class_details = App\Models\Classes::find($student->class);
                                         ?>
@@ -114,29 +145,38 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-7">
                                         <label>Course :</label>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <?php
-                                        $courses_details = App\Models\SpecialCourse::find($student->special_course_id);
-                                        if (isset($courses_details)) {
-                                              $course_title = $courses_details->title;
-                                           }else{
-                                            $course_title = 'N/A'; 
-                                           }
+                                        
+                                        $special_course_ids = explode(',', $student->special_course_ids);
+                                        foreach ($special_course_ids as $course_id) {
+                                            $course_details[] = App\Models\SpecialCourse::find($course_id);
+                                        }
                                         ?>
-                                        <p>{{ $course_title }}</p>
+                                        @if ($student->special_course_ids !== null)
+                                            {{-- <div class="student-list"> --}}
+                                            <ol>
+                                                @foreach ($course_details as $course)
+                                                    <li>{{ $course->title }}</li>
+                                                @endforeach
+                                            </ol>
+                                            {{-- </div> --}}
+                                        @else
+                                            N/A
+                                        @endif
                                     </div>
                                     <div class="col-md-2">
                                         <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> -->
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-7">
                                         <label>Student Id :</label>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <p>{{ $student->id_no ? $student->id_no : 'N/A' }}</p>
                                     </div>
                                     <div class="col-md-2">
@@ -171,9 +211,12 @@
                                                 <li>
                                                     {{-- <img src="{{ asset($certificate->image) }}"
                                             class="img-fluid mx-auto w-100"> --}}
-                                                    <a href="{{ asset($certificate->image) }}" target="_blank" class="img-fluid mx-auto w-100">View
-                                                        documents 
-                                                        <span title="Update on">{{ date('Y-m-d',strtotime($certificate->created_at)) }}</span> <i class="fas fa-arrow-right"></i></a>
+                                                    <a href="{{ asset($certificate->image) }}" target="_blank"
+                                                        class="img-fluid mx-auto w-100">Upload
+                                                        documents on
+                                                        <span
+                                                            title="Update on">{{ date('Y-m-d', strtotime($certificate->created_at)) }}</span>
+                                                        <i class="fas fa-arrow-right"></i></a>
                                                 </li>
                                             @empty
                                                 <li>Not Available</li>
