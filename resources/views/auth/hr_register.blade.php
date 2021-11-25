@@ -13,7 +13,7 @@
                             <img src="{{ asset('frontend/images/sign-in-hr.png') }}" class="img-fluid">
                         </div>
                         <div class="col-lg-7 form-div wow fadeInRight">
-                            <div class="heading">zzzzz
+                            <div class="heading">
                                 <h1>Register Now :)</h1>
                             </div>
                             <form class="cd-form" method="POST" action="{{ route('hr_register') }}"
@@ -125,18 +125,19 @@
                                                     selected
                                             @endif>{{ $qualification->name }}</option>
                                             @endforeach
-                                            <option value="Others"  @if (old('qualification') === 'Others')
+                                            <option value="Others" @if (old('qualification') === 'Others')
                                                 selected
-                                        @endif>Others</option>
+                                                @endif>Others</option>
                                         </select>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label for="image">Other Academic Qualification</label>
-                                        <input type="text" class="form-control" name="other_qualification" value="{{ old('other_qualification') }}" id="other_qualification">
+                                        <input type="text" class="form-control" name="other_qualification"
+                                            value="{{ old('other_qualification') }}" id="other_qualification">
                                         @error('other_qualification')
-                                        <span class="text-danger qualification_err">{{ $message }}</span>
-                                         @enderror
+                                            <span class="text-danger qualification_err">{{ $message }}</span>
+                                        @enderror
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                     </div>
                                 </div>
@@ -185,12 +186,12 @@
         $(document).ready(function() {
             $('#other_qualification').prop('disabled', true);
             var validated = false;
-        $('.error').hide();
+            $('.error').hide();
         });
         $('#qualification').on('change', function(e) {
             let qualification = $('#qualification').val();
             if (qualification === 'Others') {
-                $('#other_qualification').prop( "disabled", false );
+                $('#other_qualification').prop("disabled", false);
             } else {
                 $('#other_qualification').prop('disabled', true);
             }
@@ -321,9 +322,6 @@
             } else {
                 $('[name="mobile"]').next('.error').next('.digit_error').fadeOut(100);
             }
-            {{-- < src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/style.css') }}">
             if (!country_code) {
                 $('[name="country_code"]').next('.error').fadeIn(100);
                 errorFlagOne = 1;

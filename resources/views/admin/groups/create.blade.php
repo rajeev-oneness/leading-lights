@@ -26,7 +26,7 @@
                     <div class="row m-0 pt-3">
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                <label for="name">Group Name</label>
+                                <label for="review">Group Name<span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control" id="name" value="{{ old('name') }}">
                                 @if ($errors->has('name'))
                                     <span style="color: red;">{{ $errors->first('name') }}</span>
@@ -35,7 +35,7 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                <label for="name">Teacher Name</label>
+                                <label for="review">Teacher Name<span class="text-danger">*</span></label>
                                 <select id="choices-multiple-remove-button" name="teacher_id">
                                     <option value="">Select Teacher</option>
                                     @foreach ($teachers as $teacher)
@@ -48,7 +48,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        {{-- <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="class_id">Class</label>
                                 <select class="form-control" name="class_id" id="class_id">
@@ -65,11 +65,42 @@
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="name">Students Name</label>
-                                <select id="choices-multiple-remove-button" multiple name="student_ids[]" class="student_ids">
+                                <select id="student_ids form-control" multiple name="student_ids[]" class="student_ids">
                                     @foreach ($students as $student)
                                         <option value="{{ $student->user_id }}">{{ $student->first_name }}
                                             {{ $student->last_name }} - {{ $student->id_no }}</option>
                                     @endforeach
+                                </select>
+                                @if ($errors->has('student_ids'))
+                                    <span style="color: red;">{{ $errors->first('student_ids') }}</span>
+                                @endif
+                            </div>
+                        </div> --}}
+
+
+
+                        <div class="col-lg-6">
+                            <div class="form-group edit-box">
+                                <label for="review">Class<span class="text-danger">*</span></label>
+                                <select class="form-control" name="class_id" id="class_id">
+                                    <option value="">Select Class</option>
+                                    @foreach ($classes as $class)
+                                        <option value="{{ $class->id }}" @if (old('class_id') == $class->name)
+                                            selected
+                                    @endif>{{ $class->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('class_id'))
+                                    <span style="color: red;">{{ $errors->first('class_id') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group edit-box">
+                                <label for="review">Students Name<span class="text-danger mb-5">*</span></label>
+                                <select class="student_ids form-control" name="student_ids[]" multiple="multiple"
+                                    id="student_ids">
+
                                 </select>
                                 @if ($errors->has('student_ids'))
                                     <span style="color: red;">{{ $errors->first('student_ids') }}</span>
@@ -84,6 +115,7 @@
             </div>
         </div>
     </div>
+
     <script>
         $(document).ready(function() {
 
@@ -92,12 +124,40 @@
                 // maxItemCount:5,
                 // searchResultLimit:5,
                 // renderChoiceLimit:5
+
             });
+            $('.student_ids').select2();
+            // var validated = false;
+            // $('.error').hide();
         });
+
+        // $('#class_id').on('change', function() {
+        //     let class_id = $('#class_id').val();
+        //     $(".choices-multiple-remove-button").html('<option value="">** Loading...</option>');
+        //     $(".choices-multiple-remove-button").html('<option value="">--Select a Country--</option>');
+        //     $.ajax({
+        //         url: "{{ route('admin.getStudentsByClass') }}",
+        //         data: {
+        //             _token: "{{ csrf_token() }}",
+        //             class_id: class_id
+        //         },
+        //         dataType: 'json',
+        //         type: 'post',
+        //         beforeSend: function() {
+        //             $(".choices-multiple-remove-button").html(
+        //                 '<option value="">** Loading....</option>');
+        //         },
+        //         success: function(response) {
+        //             if (response.msg == 'success') {
+        //                 $('#choices-multiple-remove-button').html('');
+        //             }
+        //         }
+        //     });
+        // });
+
+
         $('#class_id').on('change', function() {
             let class_id = $('#class_id').val();
-            $(".choices-multiple-remove-button").html('<option value="">** Loading...</option>');
-            $(".choices-multiple-remove-button").html('<option value="">--Select a Country--</option>');
             $.ajax({
                 url: "{{ route('admin.getStudentsByClass') }}",
                 data: {
@@ -106,12 +166,22 @@
                 },
                 dataType: 'json',
                 type: 'post',
-                beforeSend:function(){
-		        	$(".choices-multiple-remove-button").html('<option value="">** Loading....</option>');	
-		        },
+                beforeSend: function() {
+                    $("#student_ids").html('<option value="">** Loading....</option>');
+                },
                 success: function(response) {
-                    if(response.msg == 'success'){
-                        $('#choices-multiple-remove-button').html('');
+                    if (response.msg == 'success') {
+                        $("#student_ids").html('');
+                        var option = '';
+                        $.each(response.result, function(i) {
+                            option += '<option value="' + response.result[i].id + '">' +
+                                response.result[i].first_name + " " + response.result[i]
+                                .last_name + '</option>';
+                        });
+
+                        $("#student_ids").append(option);
+                    } else {
+                        $("#student_ids").html('<option value="">No Student Found</option>');
                     }
                 }
             });

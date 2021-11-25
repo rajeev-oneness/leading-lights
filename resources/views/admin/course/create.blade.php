@@ -26,7 +26,8 @@
                     <div class="row m-0 pt-3">
                         <div class="col-lg-12">
                             <div class="form-group edit-box">
-                                <label for="title">Course title</label>
+                                {{-- <label for="title">Course title</label> --}}
+                                 <label for="review">Course title<span class="text-danger">*</span></label>
                                 <input type="text" name="title" class="form-control" id="title"
                                     value="{{ old('title') }}">
                                 @if ($errors->has('title'))
@@ -36,7 +37,8 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="form-group edit-box">
-                                <label for="description">Description</label>
+                                {{-- <label for="description">Description</label> --}}
+                                 <label for="review">Description<span class="text-danger">*</span></label>
                                 <textarea name="description"></textarea>
                                 @if ($errors->has('description'))
                                     <span style="color: red;">{{ $errors->first('description') }}</span>
@@ -45,7 +47,8 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                <label for="image">Cover Image</label>
+                                {{-- <label for="image">Cover Image</label> --}}
+                                 <label for="review">Cover Image<span class="text-danger">*</span></label>
                                 <input type="file" id="image" class="form-control" name="image"
                                     value="{{ old('image') }}">
                                 @if ($errors->has('image'))
@@ -55,7 +58,8 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                <label for="time">Assigned teacher</label>
+                                {{-- <label for="time">Assigned teacher</label> --}}
+                                 <label for="review">Assigned teacher<span class="text-danger">*</span></label>
                                 <select class="form-control" name="teacher_id" id="teacher_id">
                                     <option value="">Please select teacher</option>
                                     @if ($teachers)
@@ -72,7 +76,8 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                <label for="start_date">Start Date</label>
+                                {{-- <label for="start_date">Start Date</label> --}}
+                                 <label for="review">Start Date<span class="text-danger">*</span></label>
                                 <input type="date" id="start_date" class="form-control" name="start_date"
                                     value="{{ old('start_date') }}">
                                 @if ($errors->has('start_date'))
@@ -83,7 +88,8 @@
 
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                <label for="end_date">End Date</label>
+                                {{-- <label for="end_date">End Date</label> --}}
+                                 <label for="review">End Date<span class="text-danger">*</span></label>
                                 <input type="date" id="end_date" class="form-control" name="end_date"
                                     value="{{ old('end_date') }}">
                                 @if ($errors->has('end_date'))
@@ -93,7 +99,8 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                <label for="fees">Fees</label>
+                                {{-- <label for="fees">Fees</label> --}}
+                                 <label for="review">Fees<span class="text-danger">*</span></label>
                                 <input type="number" id="fees" class="form-control" name="fees"
                                     value="{{ old('fees') }}">
                                 @if ($errors->has('fees'))
@@ -103,7 +110,8 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                <label for="duration">Duration in days</label>
+                                {{-- <label for="duration">Duration in days</label> --}}
+                                 <label for="review">Duration in days<span class="text-danger">*</span></label>
                                 <input type="number" id="duration" class="form-control" name="duration"
                                     value="{{ old('duration') }}">
                                 @if ($errors->has('duration'))
