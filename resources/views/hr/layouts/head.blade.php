@@ -15,8 +15,6 @@
 
     <!-- Disable tap highlight on IE -->
     <meta name="msapplication-tap-highlight" content="no">
-
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/jquery.dataTables.css') }}">
     <link href="{{ asset('frontend/main.d810cf0ae7f39f28f336.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
 
@@ -29,8 +27,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
-    <!--Data table-->
-    <script type="text/javascript" charset="utf8" src="{{ asset('frontend/js/jquery.dataTables.js') }}"></script>
     {{-- Cock and date picker --}}
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
@@ -42,8 +38,13 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="{{ asset('frontend/js/bootstrap-clockpicker.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
-   
-   <style>
+
+    <!--Data table-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/jquery.dataTables.css') }}">
+
+    <script type="text/javascript" charset="utf8" src="{{ asset('frontend/js/jquery.dataTables.js') }}"></script>
+
+    <style>
         table.dataTable thead .sorting:after,
         table.dataTable thead .sorting_asc:after,
         table.dataTable thead .sorting_desc:after,

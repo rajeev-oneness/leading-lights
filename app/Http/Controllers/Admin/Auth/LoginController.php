@@ -51,11 +51,6 @@ class LoginController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
-        // $inactive_user = User::where('email',$req->email)->where('status',0)->first();
-        // if ($inactive_user) {
-        //     auth()->logout();
-        //     return back()->with('error', 'Your account is not active.');
-        // }
         $user = Admin::where('email',$req->email)->first();
         if($user){
             if(Hash::check($req->password,$user->password)){

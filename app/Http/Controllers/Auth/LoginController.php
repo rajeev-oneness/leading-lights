@@ -165,7 +165,6 @@ class LoginController extends Controller
                 'password' => 'required|string',
             ]);
             $user = User::where('email', $request->email)->first();
-            $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 2) {
                     if (Hash::check($request->password, $user->password)) {
@@ -193,7 +192,6 @@ class LoginController extends Controller
                 'email' => 'required|string|email',
                 'password' => 'required|string',
             ]);
-            $user = User::where('email', $request->email)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 1) {

@@ -469,7 +469,7 @@
                                 @foreach ($announcements as $key => $announcement)
                                 <div class="carousel-item {{$key == 0 ? 'active' : '' }}">
                                     
-                                    <div class="items align-items-center">
+                                    <div class="items align-items-center items-height">
                                         <div class="pdf-text">
                                             <h4>{{ $announcement->title }}</h4>
                                             {!! $announcement->description !!}
@@ -483,12 +483,6 @@
                                                     @if ($announcement->end_date)
                                                         - {{ date('M d, Y', strtotime($announcement->end_date)) }}
                                                     @endif
-                                                    <br><span
-                                                        class="text">{{ date('h:i A', strtotime($announcement->start_time)) }}
-                                                        @if ($announcement->end_time)
-                                                            - {{ date('h:i A', strtotime($announcement->end_time)) }}
-                                                        @endif
-                                                    </span>
                                                 </div>
                                             </div>
                                         </div>

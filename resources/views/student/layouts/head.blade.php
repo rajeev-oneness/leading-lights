@@ -25,6 +25,8 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/owl.carousel.css') }}">
     {{-- <link rel="stylesheet" href="{{ asset('frontend/css/style.min.css') }}"> --}}
     <link rel="stylesheet" href="{{ asset('frontend/css/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/chat.css') }}">
+    
 
     {{-- Full Calender --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />

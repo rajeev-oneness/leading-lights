@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-sm-10 offset-sm-1">
             <div class="sign-in-box">
-                <a href="{{ route('land_page') }}"><i title="Home Page" class="fa fa-home text-primary fa-2x float-right mr-2"></i></a>
+                <a href="{{ route('land_page') }}"><i title="Home Page" class="fa fa-home text-primary fa-2x float-right mr-3 mt-3 shadow-sm text-info"></i></a>
                 <div class="row align-items-center jusify-content-center">
                     <div class="col-lg-5">
                         <img src="{{ asset('frontend/images/sign-in-hr.png') }}" class="img-fluid">
