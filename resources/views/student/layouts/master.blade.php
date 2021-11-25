@@ -11,12 +11,18 @@
             </figure>
         </div>
         <div class="messages">
-            <div class="messages-content">
-                <p class="text-left">
-                    <span class="badge">Hi</span>
+            <div class="messages-content px-3 py-4">
+                <p class="float-left r-chat">
+                   Hi, This is Md Aasim from Oneness Techs Solutions
                 </p>
-                <p class="text-right">
-                    <span class="badge">Hi</span>
+                <p class="float-right l-chat">
+                    Hi this is aasim from 
+                </p>
+                <p class="float-left r-chat">
+                    Hi this is aasim from 
+                </p>
+                <p class="float-right l-chat">
+                    Hi, This is Md Aasim from Oneness Techs Solutions
                 </p>
             </div>
         </div>
