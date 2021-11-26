@@ -1,7 +1,9 @@
 <?php
 
+namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route, Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::get('chatting/message',[MessageController::class,'getMessageForUser'])->name('api.chat.message.list');
+Route::post('chatting/message',[MessageController::class,'sendMessageUniversal'])->name('api.chat.message.post');
+Route::post('chatting/mark_as_read',[MessageController::class,'messageRead'])->name('api.chat.message.read');
