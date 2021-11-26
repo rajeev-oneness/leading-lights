@@ -8,6 +8,7 @@ use App\Models\Notification;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -43,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
                     $notification->unreadCount = $unreadCount;
                 }
                 if ($user = Auth::user()) {
-                    $notification = Notification::where('class_id', $user->id)->latest()->get();
+                    $notification = Notification::where('class_id', $user->class)->latest()->get();
                     $unreadCount = 0;
                     foreach ($notification as $index => $noti) {
                         if ($noti->read_flag == 0) {
