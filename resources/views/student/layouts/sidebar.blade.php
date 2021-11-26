@@ -68,7 +68,7 @@
                         <i class="metismenu-icon fa fa-desktop"></i>Exam
                     </a>
                 </li>
-                <li class="{{ Request::is('user/available-courses*') ? 'mm-active' : '' }}">
+                <li class="{{ Request::is('user/courses*') ? 'mm-active' : '' }}">
                     <a href="{{ route('user.available_courses') }}">
                         <i class="metismenu-icon fa fa-book"></i>Join New Course
                     </a>

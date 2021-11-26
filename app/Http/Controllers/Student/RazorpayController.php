@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Student;
 use Razorpay\Api\Api;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use App\Models\SpecialCourse;
 use App\Http\Controllers\Controller;
-use App\Notifications\PaymentSuccessMail;
+use App\Models\OtherPaymentDetails;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Notifications\PaymentSuccessMail;
 use Illuminate\Support\Facades\Notification;
 
 class RazorpayController extends Controller
@@ -27,37 +30,118 @@ class RazorpayController extends Controller
                 if ($response) {
                     $payment = new Payment();
                     $payment->user_id = Auth::user()->id;
-                    $payment->amount = $response->amount/100;
+                    $payment->amount = ($response->amount / 100);
+                    // dd($payment->amount);
                     $payment->payment_method = $response->method;
                     $payment->invoice_no = $response->id;
-                    
-                    if ($request->fees_type === 'admission_fee') {
-                        $payment->fees_type = 'admission_fee';
-                        if (Auth::user()->special_course_id) {
-                            $next_due_date = date('Y-m-d',strtotime('first day of +1 month'));
-                            $payment_month = date('Y-m-d');
-                        }else{
-                            $next_date = date('Y-m-d',strtotime('first day of +2 month'));
-                            $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
-                            $payment_month = date('Y-m-d',strtotime('first day of +1 month'));
-                        }
-                        $payment->payment_month = $payment_month;
-                        $payment->next_due_date = $next_due_date;
-                    }
-                    if ($request->fees_type === 'monthly_fees') {
-                        $previous_payment = Payment::where('user_id',Auth::user()->id)->orderBy('id', 'desc')->first();
-                        //Next date for payment 
-                        $next_due_date = $previous_payment->next_due_date;
-
-                        $next_date = date('Y-m-d',strtotime("+1 months",strtotime($previous_payment->next_due_date)));
-                        $payment->payment_month = $next_due_date;
-                        $payment->fees_type = 'monthly_fees';
-                        $payment->next_due_date = $next_date;
-                    } 
                     $payment->status = 1;
                     $payment->save();
+
+                    // Other payment details
                     
-                    Notification::route('mail', Auth::user()->email)->notify(new PaymentSuccessMail($payment));
+                    if ($request->fees_type === 'admission_fee') {
+                        if (Auth::user()->special_course_ids) {
+                            $special_course_ids = explode(',', Auth::user()->special_course_ids);
+                            foreach ($special_course_ids as $course_id) {
+                                $course_details[] = SpecialCourse::find($course_id);
+                            }
+
+                            foreach ($course_details as $key => $course) {
+
+                                $other_payment_details = new OtherPaymentDetails();
+                                $other_payment_details->fees_type = 'admission_fee';
+                                $other_payment_details->payment_id = $payment->id;
+                                $other_payment_details->user_id = Auth::user()->id;
+                                $other_payment_details->course_id = $course->id;
+
+                                $course_start_date = $course->start_date;
+                                $next_date = date('Y-m-d',strtotime($course_start_date.'first day of +1 month'));
+                                $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                                $other_payment_details->payment_month = $course_start_date;
+                                $other_payment_details->next_due_date = $next_due_date;
+
+                                $other_payment_details->save();
+                            }
+                        }else{
+                            $other_payment_details = new OtherPaymentDetails();
+                            $other_payment_details->fees_type = 'admission_fee';
+                            $other_payment_details->payment_id = $payment->id;
+                            $other_payment_details->user_id = Auth::user()->id;
+                            $other_payment_details->class_id = $request->class_id;
+
+                            $next_date = date('Y-m-d',strtotime('first day of +2 month'));
+                            $other_payment_details->next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                            $other_payment_details->payment_month = date('Y-m-d',strtotime('first day of +1 month'));
+                            $other_payment_details->save();
+                        }
+                        // $payment->payment_month = $payment_month;
+                        // $payment->next_due_date = $next_due_date;
+                    }
+                    if ($request->fees_type === 'monthly_fees') {
+                        if ($request->type === 'course') {
+                            $other_payment_details = new OtherPaymentDetails();
+                            $other_payment_details->payment_id = $payment->id;
+                            $other_payment_details->user_id = Auth::user()->id;
+                            $other_payment_details->course_id = $request->course_id;
+                            $other_payment_details->fees_type = 'monthly_fees';
+    
+                            $previous_payment = OtherPaymentDetails::where('user_id',Auth::user()->id)->where('course_id',$request->course_id)->orderBy('id', 'desc')->first();
+                            // $course_details = SpecialCourse::find($request->course_id);
+                            $next_due_date = date('Y-m-d',strtotime("+1 months",strtotime($previous_payment->next_due_date)));
+    
+                            $other_payment_details->payment_month = $previous_payment->next_due_date;
+                            $other_payment_details->next_due_date = $next_due_date;
+                            $other_payment_details->save();
+                        }
+                        elseif($request->type === 'new_course'){
+                            // dd(explode(',',$request->course_id));
+                            $all_corses = $request->course_id;
+                            foreach ($all_corses as $key => $course_id) {
+                                $other_payment_details = new OtherPaymentDetails();
+                                $other_payment_details->payment_id = $payment->id;
+                                $other_payment_details->user_id = Auth::user()->id;
+                                $other_payment_details->course_id = $course_id;
+                                $other_payment_details->class_id = Auth::user()->class;
+                                $other_payment_details->fees_type = 'monthly_fees';
+
+                                // $previous_payment = OtherPaymentDetails::where('user_id',Auth::user()->id)->where('course_id',$request->course_id)->orderBy('id', 'desc')->first();
+                                $course_details = SpecialCourse::find($course_id);
+                                $next_due_date = date('Y-m-d',strtotime("+1 months",strtotime($course_details->start_date)));
+        
+                                $other_payment_details->payment_month = $course_details->start_date;
+                                $other_payment_details->next_due_date = $next_due_date;
+                                $other_payment_details->save();
+
+                                $user_details = User::find(Auth::user()->id);
+                                if ($user_details->special_course_ids) {
+                                    $user_details->special_course_ids = $user_details->special_course_ids.','.$course_id;
+                                }else{
+                                    $user_details->special_course_ids = $user_details->special_course_ids.$course_id;
+                                }
+                                $user_details->save();
+                            }
+                            Session::put('success', 'Payment successful, your order will be despatched in the next 48 hours.');
+                            return redirect()->route('user.payment')->with('success', 'Payment successful, your order will be despatched in the next 48 hours.');
+                        }
+                        else{
+                            $other_payment_details = new OtherPaymentDetails();
+                            $other_payment_details->payment_id = $payment->id;
+                            $other_payment_details->user_id = Auth::user()->id;
+                            $other_payment_details->class_id = $request->class_id;
+                            $other_payment_details->fees_type = 'monthly_fees';
+
+                            $previous_payment = OtherPaymentDetails::where('user_id',Auth::user()->id)->where('class_id',$request->class_id)->orderBy('id', 'desc')->first();
+                            //Next date for payment 
+                            $next_due_date = date('Y-m-d',strtotime("+1 months",strtotime($previous_payment->next_due_date)));
+
+                            $other_payment_details->payment_month = $previous_payment->next_due_date;
+                            $other_payment_details->next_due_date = $next_due_date;
+                            $other_payment_details->save();
+                        }
+                    } 
+
+                    
+                    // Notification::route('mail', Auth::user()->email)->notify(new PaymentSuccessMail($payment));
                    
                 }
 

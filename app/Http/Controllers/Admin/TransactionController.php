@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\OtherPaymentDetails;
 use App\Models\Payment;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -84,6 +85,7 @@ class TransactionController extends Controller
     public function destroy($id)
     {
         Payment::find($id)->delete();
+        OtherPaymentDetails::where('payment_id',$id)->delete();
         return redirect()->back()->with('success','Payment history is deleted');
     }
 }

@@ -28,7 +28,10 @@
 
         Route::get('payment-receipt/{payment_id}',[UserController::class,'payment_receipt'])->name('payment_receipt');
 
-        Route::get('available-courses',[UserController::class,'availableCourses'])->name('available_courses');
+        Route::get('courses/available_courses',[UserController::class,'availableCourses'])->name('available_courses');
+
+        Route::post('courses/add-courses',[UserController::class,'addCourses'])->name('add_courses');
+        Route::post('courses/checkout',[UserController::class,'checkoutCourses'])->name('checkout_courses');
 
 
     });

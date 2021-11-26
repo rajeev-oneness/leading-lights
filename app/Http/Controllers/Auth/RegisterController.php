@@ -104,7 +104,7 @@ class RegisterController extends Controller
         // $id_no = 'LLST'.$unique_id;
 
         $student_count = User::where('role_id',4)->count();
-        $num_padded = sprintf("%05d", $student_count);
+        $num_padded = sprintf("%05d", ( $student_count +1 ));
         $id_no = 'LLST'.$num_padded;
 
         $image = $data['image'];

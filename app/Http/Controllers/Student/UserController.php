@@ -20,6 +20,7 @@ use App\Models\Announcement;
 use App\Models\Certificate;
 use App\Models\Classes;
 use App\Models\Event;
+use App\Models\OtherPaymentDetails;
 use App\Models\Payment;
 use App\Models\SpecialCourse;
 use Illuminate\Support\Facades\Auth;
@@ -197,9 +198,21 @@ class UserController extends Controller
             }
         }
         $data['class_details'] = Classes::where('id',Auth::user()->class)->first();
-        $data['admission_payment_details'] = Payment::where('user_id',$current_user_id)->where('fees_type','admission_fee')->first();
-        $data['monthly_payment_details'] = Payment::where('user_id',$current_user_id)->where('fees_type','monthly_fees')->latest()->get();
-        $data['previous_payment'] = Payment::where('user_id',$current_user_id)->orderBy('id', 'desc')->first();
+        $data['admission_payment_details'] = OtherPaymentDetails::where('other_payment_details.user_id',$current_user_id)
+        ->where('fees_type','admission_fee')
+        ->join('payments','payments.id','=','other_payment_details.payment_id')
+        ->first();
+        $data['monthly_payment_details'] = OtherPaymentDetails::where('other_payment_details.user_id',$current_user_id)
+        ->where('fees_type','monthly_fees')
+        ->join('payments','payments.id','=','other_payment_details.payment_id')
+        ->get();
+        // dd($data['monthly_payment_details']);
+        $data['previous_payment'] = OtherPaymentDetails::
+        // where('class_id',Auth::user()->class)
+        // where('fees_type','monthly_fees')
+        where('user_id',$current_user_id)
+        ->get();
+        // dd($data['previous_payment']);
         //Check students belong to special class
         $data['special_course_details'] = SpecialCourse::where('id',Auth::user()->special_course_id)->first();
         return view('student.payments')->with($data);
@@ -413,7 +426,8 @@ class UserController extends Controller
 
     public function payment_receipt(Request $request,$payment_id){
         $current_user_id = Auth::user()->id;
-        $data['payment_details'] = Payment::find($payment_id);
+        $data['payment_details'] = OtherPaymentDetails::where('payment_id',$payment_id)->
+        join('payments','payments.id','=','other_payment_details.payment_id')->first();
         $data['user_details'] = User::find($current_user_id);
         $pdf = PDF::loadView('student.payment_receipt', $data);
         return $pdf->download(Auth::user()->id_no . '.pdf');
@@ -421,8 +435,28 @@ class UserController extends Controller
 
     public function availableCourses(Request $request)
     {
-        $available_courses = SpecialCourse::where('class_id',Auth::user()->class)->latest()->get();
+        $special_course_ids = explode(',', Auth::user()->special_course_ids);
+        // dd($special_course_ids);
+        // foreach ($special_course_ids as $course_id) {
+        //     $course_details[] = SpecialCourse::find($course_id);
+        // }
+        $available_courses = SpecialCourse::where('class_id',Auth::user()->class)
+        ->whereNotIn('id',$special_course_ids)
+        ->latest()->get();
         // dd($available_courses);
         return view('student.new_course',compact('available_courses'));
+    }
+
+    public function addCourses(Request $request){
+        $all_courses = $request->course_id;
+        foreach ($all_courses as $course_id) {
+            $course_details[] = SpecialCourse::find($course_id);
+        }
+        $special_course_total_amount = 0;
+        foreach ($course_details as $key => $course) {
+            $special_course_total_amount += $course->monthly_fees;
+        }
+        $total_amount = $special_course_total_amount;
+        return view('student.course_checkout',compact('all_courses','total_amount'));
     }
 }

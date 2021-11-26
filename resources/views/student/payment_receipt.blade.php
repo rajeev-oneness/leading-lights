@@ -84,7 +84,7 @@
                     Payment For
                 </td>
                 <td>
-                    @if ($user_details->special_course_id)
+                    @if ($user_details->special_course_ids)
                     <span class="text-info">
                         {{ $payment_details->fees_type === 'monthly_fees' ? 'Monthly Fees for ' . date('F', strtotime($payment_details->payment_month)) : 'Admission Fees' }}
                     </span>
