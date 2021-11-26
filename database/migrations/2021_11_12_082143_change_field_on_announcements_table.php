@@ -21,14 +21,10 @@ class ChangeFieldOnAnnouncementsTable extends Migration
         //     $table->bigInteger('user_id')->after('id');
         //     $table->string('class_id')->after('user_id');
         // });
-        Schema::create('announcements', function (Blueprint $table) {
-            $table->id();
-            $table->date('date');
+        Schema::table('announcements', function (Blueprint $table) {
+
             $table->bigInteger('user_id');
             $table->string('class_id');
-            $table->string('title');
-            $table->longText('description');
-            $table->timestamps();
         });
     }
 
@@ -39,6 +35,5 @@ class ChangeFieldOnAnnouncementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('announcements');
     }
 }

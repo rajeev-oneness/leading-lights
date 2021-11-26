@@ -125,18 +125,19 @@
                                                     selected
                                             @endif>{{ $qualification->name }}</option>
                                             @endforeach
-                                            <option value="Others"  @if (old('qualification') === 'Others')
+                                            <option value="Others" @if (old('qualification') === 'Others')
                                                 selected
-                                        @endif>Others</option>
+                                                @endif>Others</option>
                                         </select>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label for="image">Other Academic Qualification</label>
-                                        <input type="text" class="form-control" name="other_qualification" value="{{ old('other_qualification') }}" id="other_qualification">
+                                        <input type="text" class="form-control" name="other_qualification"
+                                            value="{{ old('other_qualification') }}" id="other_qualification">
                                         @error('other_qualification')
-                                        <span class="text-danger qualification_err">{{ $message }}</span>
-                                         @enderror
+                                            <span class="text-danger qualification_err">{{ $message }}</span>
+                                        @enderror
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                     </div>
                                 </div>
@@ -185,12 +186,12 @@
         $(document).ready(function() {
             $('#other_qualification').prop('disabled', true);
             var validated = false;
-        $('.error').hide();
+            $('.error').hide();
         });
         $('#qualification').on('change', function(e) {
             let qualification = $('#qualification').val();
             if (qualification === 'Others') {
-                $('#other_qualification').prop( "disabled", false );
+                $('#other_qualification').prop("disabled", false);
             } else {
                 $('#other_qualification').prop('disabled', true);
             }
@@ -348,7 +349,7 @@
                 if (qualification === 'Others') {
                     if (!other_qualification) {
                         $('[name="other_qualification"]').next('.error').fadeIn(100);
-                    }else{
+                    } else {
                         $('[name="other_qualification"]').next('.error').fadeOut(100);
                     }
                 } else {

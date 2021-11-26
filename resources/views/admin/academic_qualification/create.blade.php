@@ -26,7 +26,7 @@
                     <div class="row m-0 pt-3">
                         <div class="col-lg-12">
                             <div class="form-group edit-box">
-                                <label for="name">Qualification Name</label>
+                                 <label for="review">Qualification Name<span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control" id="name" value="{{ old('name') }}">
                                 @if ($errors->has('name'))
                                     <span style="color: red;">{{ $errors->first('name') }}</span>

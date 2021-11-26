@@ -28,7 +28,8 @@
                     <div class="row m-0 pt-3">
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                <label for="name">Class Name</label>
+                                {{-- <label for="name">Class Name</label> --}}
+                                 <label for="review">Class Name<<span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control" id="name"
                                     value="{{ old('name') ?? $class_details->name }}">
                                 @if ($errors->has('name'))
@@ -38,7 +39,8 @@
                         </div>
                             <div class="col-lg-6">
                                 <div class="form-group edit-box">
-                                    <label for="admission_fees">Admission Fees(&#8377;)</label>
+                                    {{-- <label for="admission_fees">Admission Fees(&#8377;)</label> --}}
+                                     <label for="review">Admission Fees(&#8377;)<span class="text-danger">*</span></label>
                                     <input type="number" name="admission_fees" class="form-control" id="admission_fees"
                                         value="{{ old('admission_fees') ?? $class_details->admission_fees }}" min="1">
                                     @if ($errors->has('admission_fees'))
@@ -48,7 +50,8 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group edit-box">
-                                    <label for="monthly_fees">Monthly Fees(&#8377;)</label>
+                                    {{-- <label for="monthly_fees">Monthly Fees(&#8377;)</label> --}}
+                                     <label for="review">Monthly Fees(&#8377;)<span class="text-danger">*</span></label>
                                     <input type="number" name="monthly_fees" class="form-control" id="monthly_fees"
                                         value="{{ old('monthly_fees') ?? $class_details->monthly_fees }}" min="1">
                                     @if ($errors->has('monthly_fees'))

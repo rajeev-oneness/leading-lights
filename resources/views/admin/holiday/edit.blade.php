@@ -28,7 +28,8 @@
                     <div class="row m-0 pt-3">
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                <label for="name">Holiday Name</label>
+                                {{-- <label for="name">Holiday Name</label> --}}
+                                 <label for="review">Holiday Name<span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control" id="name"
                                     value="{{ $holiday_details->name }}">
                                 @if ($errors->has('name'))
@@ -39,6 +40,7 @@
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="date">Date</label>
+                                 <label for="review">Date<span class="text-danger">*</span></label>
                                 <input type="date" id="date" class="form-control" name="date"
                                     value="{{ $holiday_details->date }}">
                                 @if ($errors->has('date'))

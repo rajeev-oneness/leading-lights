@@ -53,11 +53,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function role(){
+    public function role()
+    {
         return $this->belongsTo(Role::class);
-     }
+    }
 
-     public function payment(){
-         return $this->hasMany(Payment::class);
-     }
+    public function payment()
+    {
+        return $this->hasMany(Payment::class);
+    }
+    public function students()
+    {
+        return $this->hasMany('App\Models\Group', 'group_ids', 'id');
+    }
 }

@@ -19,7 +19,7 @@ class GroupController extends Controller
     public function index()
     {
         $groups = Group::latest()->get();
-        return view('admin.groups.index',compact('groups'));
+        return view('admin.groups.index', compact('groups'));
     }
 
     /**
@@ -29,13 +29,11 @@ class GroupController extends Controller
      */
     public function create()
     {
-        $data['teachers'] = User::where('role_id',3)->latest()->get();
-        $data['students'] = User::
-        select('classes.name as class_name','users.id as user_id','users.id_no as id_no','users.first_name as first_name','users.last_name as last_name')->
-        where('role_id',4)
-        ->join('classes','classes.id','=','users.class')
-        ->orderBy('users.created_at','DESC')
-        ->get();
+        $data['teachers'] = User::where('role_id', 3)->latest()->get();
+        $data['students'] = User::select('classes.name as class_name', 'users.id as user_id', 'users.id_no as id_no', 'users.first_name as first_name', 'users.last_name as last_name')->where('role_id', 4)
+            ->join('classes', 'classes.id', '=', 'users.class')
+            ->orderBy('users.created_at', 'DESC')
+            ->get();
         $data['classes'] = Classes::orderBy('name')->get();
         return view('admin.groups.create')->with($data);
     }
@@ -64,7 +62,7 @@ class GroupController extends Controller
             'class_id.required' => 'Please choose available class',
         ])->validate();
 
-        
+
         $group = new Group();
         $group->name = $request->name;
         $group->teacher_id = $request->teacher_id;
@@ -77,8 +75,8 @@ class GroupController extends Controller
         //For teacher
         $user = User::find($teacher_id);
         if ($user->group_ids) {
-            $user->group_ids = $user->group_ids.','.$group_id;
-        }else{
+            $user->group_ids = $user->group_ids . ',' . $group_id;
+        } else {
             $user->group_ids = $group_id;
         }
         $user->save();
@@ -86,14 +84,14 @@ class GroupController extends Controller
         foreach ($student_ids as $key => $id) {
             $user = User::find($id);
             if ($user->group_ids) {
-                $user->group_ids = $user->group_ids.','.$group_id;
-            }else{
+                $user->group_ids = $user->group_ids . ',' . $group_id;
+            } else {
                 $user->group_ids = $group_id;
             }
             $user->save();
         }
 
-        return redirect()->route('admin.groups.index')->with('success','Group successfully created');
+        return redirect()->route('admin.groups.index')->with('success', 'Group successfully created');
     }
 
     /**
@@ -104,19 +102,19 @@ class GroupController extends Controller
      */
     public function show($id)
     {
-        $data['teachers'] = User::where('role_id',3)->latest()->get();
-        $data['students'] = User::
-        select('classes.name as class_name','users.id as user_id','users.id_no as id_no','users.first_name as first_name','users.last_name as last_name')->
-        where('role_id',4)
-        ->join('classes','classes.id','=','users.class')
-        ->orderBy('users.created_at','DESC')
-        ->get();
+        // dd($id);
+        $data['teachers'] = User::where('role_id', 3)->latest()->get();
+        $data['students'] = User::select('classes.name as class_name', 'users.id as user_id', 'users.id_no as id_no', 'users.first_name as first_name', 'users.last_name as last_name')->where('role_id', 4)
+            ->join('classes', 'classes.id', '=', 'users.class')
+            ->orderBy('users.created_at', 'DESC')
+            ->get();
         $data['group'] = Group::findOrFail($id);
-        $data['classes'] = Classes::find($data['group']->id);
+        // $data['classes'] = Classes::find($data['group']->id);
+        $data['classes'] = Classes::findOrFail($data['group']->class_id);
         $selected_students = $data['group']->student_ids;
-        $student_ids= explode(',',$selected_students);
+        $student_ids = explode(',', $selected_students);
         foreach ($student_ids as $student_id) {
-            $student_details[] = User::where('id',$student_id)->first();
+            $student_details[] = User::where('id', $student_id)->first();
         }
         $data['student_details'] = $student_details;
         // dd($data);
@@ -131,15 +129,19 @@ class GroupController extends Controller
      */
     public function edit($id)
     {
-        $data['teachers'] = User::where('role_id',3)->latest()->get();
-        $data['students'] = User::
-        select('classes.name as class_name','users.id as user_id','users.id_no as id_no','users.first_name as first_name','users.last_name as last_name')->
-        where('role_id',4)
-        ->join('classes','classes.id','=','users.class')
-        ->orderBy('users.created_at','DESC')
-        ->get();
         $data['group'] = Group::findOrFail($id);
+        $data['teachers'] = User::where('role_id', 3)->latest()->get();
+        $data['students'] = User::select('classes.name as class_name', 'users.id as user_id', 'users.id_no as id_no', 'users.first_name as first_name', 'users.last_name as last_name')->where('role_id', 4)
+            ->join('classes', 'classes.id', '=', 'users.class')
+            ->orderBy('users.created_at', 'DESC')
+            ->get();
+
+        // $data['selected_students'] = User::where('group_ids',  $data['group'])->get();
+
+        // dd($data['selected_students']);
         $data['classes'] = Classes::orderBy('name')->get();
+        $data['students_by_grooup'] = Classes::orderBy('name')->get();
+
         return view('admin.groups.edit')->with($data);
     }
 
@@ -188,7 +190,7 @@ class GroupController extends Controller
 
         //For students
 
-        $all_student_ids= explode(',',$assigned_students_ids);
+        $all_student_ids = explode(',', $assigned_students_ids);
         foreach ($all_student_ids as $key => $id) {
             $assigned_student_details = User::find($id);
             $assigned_student_details->group_ids = null;
@@ -198,14 +200,14 @@ class GroupController extends Controller
         foreach ($student_ids as $key => $id) {
             $user = User::find($id);
             if ($user->group_ids) {
-                $user->group_ids = $user->group_ids.','.$group_id;
-            }else{
+                $user->group_ids = $user->group_ids . ',' . $group_id;
+            } else {
                 $user->group_ids = $group_id;
             }
             $user->save();
         }
 
-        return redirect()->route('admin.groups.index')->with('success','Group successfully updated');
+        return redirect()->route('admin.groups.index')->with('success', 'Group successfully updated');
     }
 
     /**

@@ -26,39 +26,42 @@
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="name">Group Name</label>
-                                <input type="text" name="name" class="form-control" id="name" value="{{ old('name') ?? $group->name }}" disabled>
+                                <input type="text" name="name" class="form-control" id="name"
+                                    value="{{ old('name') ?? $group->name }}" disabled>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="name">Teacher Name</label>
-								@php
-									$teacher = App\Models\User::where('id',$group->teacher_id)->first();
-								@endphp
-								<input type="text" class="form-control" value="{{ $teacher->first_name }} {{ $teacher->last_name }}" disabled>
+                                @php
+                                    $teacher = App\Models\User::where('id', $group->teacher_id)->first();
+                                @endphp
+                                <input type="text" class="form-control"
+                                    value="{{ $teacher->first_name }} {{ $teacher->last_name }}" disabled>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="class">Class</label>
-								<input type="text" class="form-control" value="{{ $classes->name }}" disabled>
+                                <input type="text" class="form-control" value="{{ $classes->name ? $classes->name : '' }}" disabled>
                             </div>
                         </div>
 
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="name">Students Name</label>
-								<div class="student-list">	
+                                <div class="student-list">
                                     <ol>
-                                @foreach ($student_details as $key => $student_detail)
-                               
-                                    <li>{{ $student_detail->first_name }} {{ $student_detail->last_name }} - {{ $student_detail->id_no }}</li>
+                                        @foreach ($student_details as $key => $student_detail)
 
-                                            
-											{{-- <strong>{{ $key + 1 }}.</strong> {{ $student_detail->first_name }} {{ $student_detail->last_name }} - {{ $student_detail->id_no }} --}}
-                                        
-									@endforeach
-                                </ol>
+                                            <li>{{ $student_detail->first_name }} {{ $student_detail->last_name }} -
+                                                {{ $student_detail->id_no }}</li>
+
+
+                                            {{-- <strong>{{ $key + 1 }}.</strong> {{ $student_detail->first_name }} {{ $student_detail->last_name }} - {{ $student_detail->id_no }} --}}
+
+                                        @endforeach
+                                    </ol>
                                 </div>
                             </div>
                         </div>
