@@ -53,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
                     $notification->unreadCount = $unreadCount;
                 }
             }
-            // dd($notification);test
+            // dd($notification);
             // view()->share('APP_data', $APP_data);
             view()->share('notification', $notification);
         });
