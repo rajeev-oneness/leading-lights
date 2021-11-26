@@ -91,13 +91,7 @@
                             $('#chat-bubble').show();
                             var toAppendContact = '';
                             $.each(response.data, function(key, value) {
-                                toAppendContact +=
-                                    '<li class="d-flex align-items-center justify-content-start py-2 contact-li"><div class="chat-img mr-3"><img class="w-100" src="{{ asset('') }}' +
-                                    value.image + '" alt=""></div><div class="chat-list-content"><h5>' +
-                                    value.first_name + ' ' + value.last_name +
-                                    '</h5><p>' + value?.lastChat +
-                                    '</p></div><div class="badge msg-count">' + value?.newMessage +
-                                    '</div></li>';
+                                toAppendContact += '<li class="d-flex align-items-center justify-content-start py-2 contact-li" data-details="'+value+'"><div class="chat-img mr-3"><img class="w-100" src="{{ asset('') }}' + value.image + '" alt=""></div><div class="chat-list-content"><h5>' + value.first_name + ' ' + value.last_name + '</h5><p>' + value?.lastChat +'</p></div><div class="badge msg-count">' + value?.newMessage +'</div></li>';
                             });
                             $('#userChatContact').empty().append(toAppendContact);
                         }
@@ -109,7 +103,7 @@
         $(document).ready(function() {
             gettingContactList("{{ Auth::guard('web')->user()->id }}");
             // Open the chat list window by clicking on the chat bubble
-            $('#chat-bubble').click(function() {
+            $(document).on('click','#chat-bubble',function(){
                 var chatlist = $('#chat-list');
                 if (chatlist.hasClass('chat-hidden')) {
                     chatlist.animate({
@@ -124,7 +118,7 @@
 
             // Close the chat window by clicking on the close button
             // at the top right corner of the chat list window
-            $('.close-chat-list').click(function() {
+            $(document).on('click','.close-chat-list',function(){
                 var chatListClose = $('#chat-list');
                 if (chatListClose.hasClass('chat-hidden')) {
                     chatListClose.animate({
@@ -138,7 +132,9 @@
             });
 
             // Click on any contact to open its chat window
-            $('.messages .contact-li').click(function() {
+            $(document).on('click','.messages .contact-li',function(){
+                var contactDetails = $(this).attr('data-details');
+                console.log('contact Details',contactDetails);
                 var chat = $('#chat');
                 var chatListClose = $('#chat-list');
                 if (chat.hasClass('chat-hidden')) {
@@ -157,7 +153,7 @@
 
             // Close the chat window by clicking on the close button
             // at the top right corner of the chat list window
-            $('.close-chat').click(function() {
+            $(document).on('click','.close-chat',function(){
                 var chatClose = $('#chat');
                 if (chatClose.hasClass('chat-hidden')) {
                     chatClose.animate({
@@ -170,7 +166,7 @@
                 }
             });
 
-            $('#chat-back').click(function() {
+            $(document).on('click','#chat-back',function(){
                 var chatClose = $('#chat');
                 var chatlist = $('#chat-list');
                 chatClose.animate({
