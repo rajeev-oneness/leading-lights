@@ -21,6 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::get('chatting/message',[MessageController::class,'getMessageForUser'])->name('chat.message.list');
-Route::post('chatting/message',[MessageController::class,'sendMessageUniversal'])->name('chat.message.post');
-Route::post('chatting/mark_as_read',[MessageController::class,'messageRead'])->name('chat.message.read');
+Route::get('chatting/message',[MessageController::class,'getMessageForUser'])->name('api.chat.message.list');
+Route::post('chatting/message',[MessageController::class,'sendMessageUniversal'])->name('api.chat.message.post');
+Route::post('chatting/mark_as_read',[MessageController::class,'messageRead'])->name('api.chat.message.read');

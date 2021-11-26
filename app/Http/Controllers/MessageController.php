@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Conversation;
 use App\Models\Chatting;
 use App\Models\UserDeviceToken;
+use App\Models\User;
 
 class MessageController extends Controller
 {
