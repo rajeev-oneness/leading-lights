@@ -42,6 +42,16 @@ class AppServiceProvider extends ServiceProvider
                     }
                     $notification->unreadCount = $unreadCount;
                 }
+                if ($user = Auth::user()) {
+                    $notification = Notification::where('class_id', $user->id)->latest()->get();
+                    $unreadCount = 0;
+                    foreach ($notification as $index => $noti) {
+                        if ($noti->read_flag == 0) {
+                            $unreadCount++;
+                        }
+                    }
+                    $notification->unreadCount = $unreadCount;
+                }
             }
             // dd($notification);
             // view()->share('APP_data', $APP_data);
