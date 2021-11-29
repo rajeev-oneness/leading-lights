@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\HR\NotificationController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Auth, Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -24,16 +24,18 @@ Route::any('admin/login', [LoginController::class, 'admin_login'])->name('admin_
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 //Common Function
-Route::post('get-fees-by-class',[CommonController::class,'getFeesByClass'])->name('getFeesByClass');
-Route::post('get-course-by-class',[CommonController::class,'getCourseByClass'])->name('getCourseByClass');
-Route::post('get-student-by-class',[CommonController::class,'getStudentByClass'])->name('getStudentByClass');
-Route::post('email-availability',[CommonController::class,'checkEmailExistence'])->name('checkEmailExistence');
+Route::post('get-fees-by-class', [CommonController::class, 'getFeesByClass'])->name('getFeesByClass');
+Route::post('get-course-by-class', [CommonController::class, 'getCourseByClass'])->name('getCourseByClass');
+Route::post('get-student-by-class', [CommonController::class, 'getStudentByClass'])->name('getStudentByClass');
+Route::post('email-availability', [CommonController::class, 'checkEmailExistence'])->name('checkEmailExistence');
 
 // Notification
 Route::post('/read', [NotificationController::class, 'notificationRead'])->name('notification.read');
 
 Route::get('hr/notification', [NotificationController::class, 'logsNotification'])->name('logs.notification');
+Route::get('student/notification', [NotificationController::class, 'logsNotificationForStudentEvent'])->name('student.logs.notification');
 Route::post('hr/notification/readall', [NotificationController::class, 'notificationReadAll'])->name('logs.notification.readall');
+Route::post('student/notification/readall', [NotificationController::class, 'studentNotificationReadAll'])->name('student.logs.notification.readall');
 
 Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
     require 'custom/admin.php';

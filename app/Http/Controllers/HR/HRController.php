@@ -264,8 +264,12 @@ class HRController extends Controller
         $event->save();
 
         $user_id = Auth::user()->id;
-
-        createNotification($user_id, $class, '0', 'event_create');
+        $users = User::where('class', $class)->get();
+        // dd($user);
+        foreach($users as $user){
+            createNotification($user_id, $class, '0', 'event_create');
+        }
+        
 
         return redirect('hr/event-management')->with('success', 'Event upload successfully');
     }

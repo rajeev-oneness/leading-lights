@@ -43,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
                     }
                     $notification->unreadCount = $unreadCount;
                 }
+
                 if ($user = Auth::user()) {
                     $notification = Notification::where('class_id', $user->class)->latest()->get();
                     $unreadCount = 0;
