@@ -184,7 +184,7 @@
                                                     <input type="hidden" name="class_id" value="{{ Auth::user()->class }}">
                                                     <input type="hidden" name="type" value="class">
                                                     <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="{{ env('RAZOR_KEY') }}"data-amount="{{ $amount * 100 }}" data-name="Leading Lights" data-description="Payment"
-                                                    data-image="{{ asset('img/logo.jpg') }}" data-prefill.name="name"data-prefill.email="email" data-theme.color="#FFFFFF">
+                                                    data-image="{{ asset('img/logo.jpg') }}" data-prefill.name="name" data-prefill.email="email@cc.dd" data-prefill.contact="1234567890" data-theme.color="#FFFFFF">
                                                     </script>
                                                 </form>
                                             </td>

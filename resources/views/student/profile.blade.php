@@ -83,13 +83,13 @@
                                     }
                                     ?>
                                     @if ($student->special_course_ids !== null)
-                                        {{-- <div class="student-list"> --}}
-                                        <ol>
-                                            @foreach ($course_details as $course)
-                                                <li>{{ $course->title }}</li>
-                                            @endforeach
-                                        </ol>
-                                        {{-- </div> --}}
+                                        <div class="student-list border-info">
+                                            <ol>
+                                                @foreach ($course_details as $course)
+                                                    <li>{{ $course->title }}</li>
+                                                @endforeach
+                                            </ol>
+                                        </div>
                                     @else
                                         N/A
                                     @endif
@@ -303,37 +303,37 @@
                                             </div>
                                         @endif
                                         <!--  <div class="col-md-12 col-lg-6 col-xl-4">
-                                    <div class="card-shadow-primary profile-responsive card-border mb-3 card">
-                                        <div class="dropdown-menu-header">
-                                            <div class="dropdown-menu-header-inner">
-                                                
-                                                    <img src="assets/images/pro3.png" class="img-fluid mx-auto d-block w-100">
-                                                
+                                        <div class="card-shadow-primary profile-responsive card-border mb-3 card">
+                                            <div class="dropdown-menu-header">
+                                                <div class="dropdown-menu-header-inner">
+                                                    
+                                                        <img src="assets/images/pro3.png" class="img-fluid mx-auto d-block w-100">
+                                                    
+                                                </div>
                                             </div>
-                                        </div>
-                                        <ul class="list-group list-group-flush">
-                                            <li class="bg-warm-flame list-group-item">
-                                                <div class="widget-content p-0">
-                                                    <div class="widget-content-wrapper justify-content-between">
-                                                        <div class="widget-content-left mr-3">
-                                                            <div class="icon-wrapper m-0">
-                                                                <span class="head">Live Class</span>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="bg-warm-flame list-group-item">
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper justify-content-between">
+                                                            <div class="widget-content-left mr-3">
+                                                                <div class="icon-wrapper m-0">
+                                                                    <span class="head">Live Class</span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        
-                                                        <div class="widget-content-left d-sm-flex align-items-center">
-                                                            <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
-                                                            <div class="widget-subheading">
-                                                                
-                                                                    Today<br/><span class="text">7:30 pm</span>
+                                                            
+                                                            <div class="widget-content-left d-sm-flex align-items-center">
+                                                                <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
+                                                                <div class="widget-subheading">
+                                                                    
+                                                                        Today<br/><span class="text">7:30 pm</span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </li>                                   
-                                        </ul>
-                                    </div>                            
-                                </div> -->
+                                                </li>                                   
+                                            </ul>
+                                        </div>                            
+                                    </div> -->
                                     </div>
                                 </div>
                             </div>

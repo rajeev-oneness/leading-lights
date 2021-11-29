@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Validator;
 // use App\Http\Controllers\Admin\Notification;
 use App\Http\Controllers\Admin\Notification;
 use App\Models\Certificate;
+use App\Models\OtherPaymentDetails;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Notification as FacadesNotification;
 
@@ -123,14 +124,16 @@ class RegisterController extends Controller
             'id_no' => $id_no,
             'user_type' => 'student'
         );
-        FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+        // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
 
         // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
 
         if (isset($data['special_course_ids'])) {
             $special_course_ids = implode(',', $data['special_course_ids']);
+            $admission_type = 1;
         } else {
             $special_course_ids = null;
+            $admission_type = 2;
         }
 
         $user_creation =  User::create([
@@ -149,13 +152,11 @@ class RegisterController extends Controller
         ]);
 
         //Store certificate 
-        $certificate_data['image'] =  imageUpload($data['certificate'], 'student_certificate');
-
-        $certificate_data['user_id'] = $user_creation->id;
-        $certificate_data['created_at'] = date('Y-m-d H:i:s');
-        $certificate_data['updated_at'] = date('Y-m-d H:i:s');
-
-        DB::table('certificate')->insert($certificate_data);
+        $certificate_image =  imageUpload($data['certificate'], 'student_certificate');
+        $certificate = new Certificate();
+        $certificate->user_id = $user_creation->id;
+        $certificate->image = $certificate_image;
+        $certificate->save();
         return $user_creation;
     }
 

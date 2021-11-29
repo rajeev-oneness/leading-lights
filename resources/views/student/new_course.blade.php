@@ -25,22 +25,27 @@
                                 @csrf
                             <div class="row">
                                 @foreach ($available_courses as $course)
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="items align-items-center">
-                                        <div class="pdf-text">
+                                        <div class="course-box">
                                             <h4>{{ $course->title }}</h4>
                                             <ul>
                                                 <li><b>Monthly Fees :</b> &#8377;{{ $course->monthly_fees }}</li>
                                                 <li><b>Start Date : </b>{{ $course->start_date }}</li>
                                             </ul>
-                                            <input class="form-check-input" type="checkbox" value="{{ $course->id }}" id="course_id" name="course_id[]">
+                                            <input class="form-check-input-field largerCheckbox" type="checkbox" value="{{ $course->id }}" id="course_id" name="course_id[]"
+                                            onchange="stickyheaddsadaer(this)">
                                         </div>
                                     </div>
                                 </div>
-                                <hr>
                                 @endforeach
                             </div>
-                            <input type="submit" value="Proceed" class="btn-pill btn btn-primary btn-lg float-right">
+                            @error('course_id')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                            <hr>
+                            <span class="err-text text-danger"></span>
+                            <input type="submit" value="Proceed" class="btn-pill btn btn-primary btn-lg" id="submit_btn">
                             </form>
                             @else
                             <div class="col-md-3">

@@ -83,31 +83,39 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="row align-items-center justify-content-between">
-                                    <div class="col-md-4">
+                                {{-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                    @if ($errors->has('class'))
+                                        <span style="color: red;">{{ $errors->first('class') }}</span>
+                                    @endif
+                                    @if ($errors->has('subject'))
+                                        <span style="color: red;">{{ $errors->first('subject') }}</span>
+                                    @endif
+                                </div> --}}
+                                <div class="d-sm-flex align-items-center justify-content-between">
+                                    <div class="d-sm-flex align-items-baseline ">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Exam Date<span class="text-danger">*</span></p>
+                                                    class="fa fa-circle"></i></span>Exam Date</p>
                                         <input type="text" name="date" id="exam_date" class="form-control datepicker"
-                                            value="{{ old('date') }}" autocomplete="off">
+                                            value="{{ old('date') }}">
 
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="d-sm-flex align-items-baseline ">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Start Time<span class="text-danger">*</span></p>
-                                        <div class="input-group">
-                                            <input type="time" class="form-control" value="{{ old('start_time') }}"
+                                                    class="fa fa-circle"></i></span>Starting Time</p>
+                                        <div class="input-group clockpicker">
+                                            <input type="text" class="form-control" value="{{ old('start_time') }}"
                                                 name="start_time">
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-time"></span>
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="d-sm-flex align-items-baseline ">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>End time<span class="text-danger">*</span></p>
+                                                    class="fa fa-circle"></i></span>Ending time</p>
 
-                                        <div class="input-group">
-                                            <input type="time" class="form-control" value="{{ old('end_time') }}"
+                                        <div class="input-group clockpicker">
+                                            <input type="text" class="form-control" value="{{ old('end_time') }}"
                                                 name="end_time">
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-time"></span>
@@ -116,44 +124,44 @@
 
                                     </div>
                                 </div>
-                                <div class="row mt-3 mb-3">
-                                    <div class="col-md-4">
+                                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                    @if ($errors->has('date'))
+                                        <span style="color: red;">{{ $errors->first('date') }}</span>
+                                    @endif
+                                    @if ($errors->has('start_time'))
+                                        <span style="color: red;">{{ $errors->first('start_time') }}</span>
+                                    @endif
+                                    @if ($errors->has('end_time'))
+                                        <span style="color: red;">{{ $errors->first('end_time') }}</span>
+                                    @endif
+                                </div>
+                                <div class="d-sm-flex align-items-center justify-content-between ">
+                                    <div class="d-sm-flex align-items-baseline mr-5">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Full Marks<span class="text-danger">*</span></p>
+                                                    class="fa fa-circle"></i></span>Full Marks</p>
                                         <input type="number" name="full_marks" id="full_marks" class="form-control"
                                             value="{{ old('full_marks') }}" min="1">
 
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="d-sm-flex align-items-baseline">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Negative Marks<span class="text-danger">*</span></p>
-                                        <select name="negative_marks" id="negative_marks" class="form-control">
-                                            <option value="0">No</option>
-                                            <option value="1">Yes</option>
-                                        </select>
-
-                                    </div>
-                                    <div class="col-md-4">
-                                        <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Pass Marks<span class="text-danger">*</span></p>
+                                                    class="fa fa-circle"></i></span>Expected Result Date</p>
                                         <input type="text" name="result_date" id="result_date"
-                                            class="form-control" value="{{ old('result_date') }}">
-
-                                    </div>
-                                    <div class="col-md-4 mt-3">
-                                        <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Exam Type<span class="text-danger">*</span></p>
-                                        <select name="exam-type" id="exam-type" class="form-control">
-                                            <option value="1">MCQ</option>
-                                            <option value="2">Descriptive</option>
-                                            <option value="3">Mixed(MCQ & Descriptive)</option>
-                                        </select>
+                                            class="form-control datepicker1" value="{{ old('result_date') }}">
 
                                     </div>
                                 </div>
+                                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                    @if ($errors->has('full_marks'))
+                                        <span style="color: red;">{{ $errors->first('full_marks') }}</span>
+                                    @endif
+                                    @if ($errors->has('result_date'))
+                                        <span style="color: red;">{{ $errors->first('result_date') }}</span>
+                                    @endif
+                                </div>
                                 <!--  <p class="des dec"><span class="mr-2"><i class="fa fa-circle"></i></span>Set Quiestion Mannually</p>
-                                            <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea> -->
-                                {{-- <div class="card-header-title mb-4">
+                                        <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea> -->
+                                <div class="card-header-title mb-4">
                                     Upload Quiestion Paper as a Document(Only accept PDF) </div>
                                 <div class="file-upload">
                                     <button class="file-upload-btn" type="button"
@@ -177,7 +185,7 @@
                                         <span style="color: red;"
                                             id="file_err">{{ $errors->first('upload_file') }}</span>
                                     @endif
-                                </div> --}}
+                                </div>
                                 <button class="btn-pill btn btn-dark mt-4">Assign Now</button>
                             </form>
                             <div class="card-header-title mb-4 mt-4"> History Of Exam </div>

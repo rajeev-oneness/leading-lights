@@ -200,6 +200,7 @@ class UserController extends Controller
         $data['class_details'] = Classes::where('id',Auth::user()->class)->first();
         $data['admission_payment_details'] = OtherPaymentDetails::where('other_payment_details.user_id',$current_user_id)
         ->where('fees_type','admission_fee')
+        // ->where('payment_status',1)
         ->join('payments','payments.id','=','other_payment_details.payment_id')
         ->first();
         $data['monthly_payment_details'] = OtherPaymentDetails::where('other_payment_details.user_id',$current_user_id)
@@ -210,9 +211,14 @@ class UserController extends Controller
         $data['previous_payment'] = OtherPaymentDetails::
         // where('class_id',Auth::user()->class)
         // where('fees_type','monthly_fees')
+        // ->where('user_id',$current_user_id)
         where('user_id',$current_user_id)
+        // ->where('payment_status',1)
         ->get();
-        // dd($data['previous_payment']);
+        // ->orderBy('id','desc')
+        // ->first();
+        // dd($data['previous_course_payment']);
+        // dd($data);
         //Check students belong to special class
         $data['special_course_details'] = SpecialCourse::where('id',Auth::user()->special_course_id)->first();
         return view('student.payments')->with($data);
@@ -448,6 +454,11 @@ class UserController extends Controller
     }
 
     public function addCourses(Request $request){
+        $this->validate($request,[
+            'course_id' => 'required'
+        ],$messages = [
+            'course_id.required' => 'Please select any course!!'
+        ]);
         $all_courses = $request->course_id;
         foreach ($all_courses as $course_id) {
             $course_details[] = SpecialCourse::find($course_id);
