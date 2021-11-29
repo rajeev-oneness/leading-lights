@@ -10,6 +10,8 @@ class Chatting extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $hidden = ['deleted_at'];
+
     public function sender_details()
     {
         return $this->belongsTo('App\Models\User','senderId','id');
