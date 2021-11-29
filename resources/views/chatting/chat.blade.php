@@ -8,7 +8,7 @@
         <div class="chat-title d-flex align-items-center">
             <i class="fas fa-angle-left" id="chat-back"></i>
             <figure class="avatar">
-                <img id="chatUserAvater" src="http://leadinglight.dev91.website/frontend/assets/images/avata1.jpg" />
+                <img id="chatUserAvater" src=""/>
             </figure>
             <div>
                 <h1 id="chatUserName">Hello</h1>
@@ -202,6 +202,7 @@
                 messaging.requestPermission().then(function () {
                     return messaging.getToken();
                 }).then(function(token) {
+                    console.log('Device Token',token);
                     updateOrSetUserDeviceToken(token);
                 }).catch(function (err) {
                     // console.log('User Chat Token Error'+ err);
