@@ -12,6 +12,6 @@ class Conversation extends Model
 
     public function message()
     {
-        return $this->hasMany('App\Models\Chatting','conversationId','id')->latest();
+        return $this->hasMany('App\Models\Chatting','conversationId','id')->latest('id');
     }
 }
