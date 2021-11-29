@@ -74,6 +74,8 @@ class MessageController extends Controller
                         $message->message = strQuotationCheck($req->message);
                         $message->read = 0;
                         $message->save();
+                        // Updating Read flag to be Already read for Sender id
+                        Chatting::where('senderId',$sender->id)->orWhere('receiverId',$sender->id)->where('read',0)->update(['read' => 1]);
                         // Sendig push Notification
                         $deviceTokens = $this->getUserDevieToken($receiver);
                         $this->sendPushNotification($deviceTokens,$message);
