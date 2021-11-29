@@ -211,10 +211,14 @@
 
             messaging.onMessage(function(payload) {
                 console.log('Incoming Data',payload);
-                alert(payload.data['gcm.notification.data']);
+                // alert(payload.data['gcm.notification.data']);
                 let data = JSON.parse(payload.data['gcm.notification.data']);
                 addPositiontoFirst(data);
-                $('#userChatTobeAppendHere').append('<p class="float-right l-chat">'+data?.message+'</p>');
+                let listClass = 'float-left r-chat';
+                if(data?.senderId == loggedInUserId){
+                    listClass = 'float-right l-chat';
+                }
+                $('#userChatTobeAppendHere').append('<p class="'+listClass+'">'+data?.message+'</p>');
             });
 
             // Click on any contact to open its chat window
