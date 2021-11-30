@@ -73,35 +73,83 @@ function getAsiaTime24($date)
 	return $set_timezone;
 }
 
-function createNotification($user, $class, $group, $type)
+// function createNotification_old($user, $class, $group, $type)
+// {
+// 	switch ($type) {
+// 		case 'user_registration':
+// 			$title = 'Registration successfull';
+// 			$message = 'Please check & update your profile as needed';
+// 			$route = 'hr.profile';
+// 			break;
+
+// 		case 'event_create':
+// 			$title = 'Event created';
+// 			$message = 'Please check & update your profile as needed';
+// 			$route = 'hr.manage-event.store';
+// 			break;
+
+// 		default:
+// 			$title = '';
+// 			$message = '';
+// 			$route = '';
+// 			break;
+// 	}
+
+// 	$notification = new App\Models\Notification;
+// 	$notification->user_id = $user;
+// 	$notification->class_id = $class;
+// 	$notification->group_id = $group;
+// 	$notification->type = $type;
+// 	$notification->title = $title;
+// 	$notification->message = $message;
+// 	$notification->route = $route;
+// 	$notification->save();
+// }
+
+function createNotification($user, $class = 0, $group = 0, $type)
 {
+	$title = '';
+	$message = '';
+	$route = '';
 	switch ($type) {
+		case 'event_create':
+			$title = 'Event created';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.dairy';
+			break;
 		case 'user_registration':
 			$title = 'Registration successfull';
 			$message = 'Please check & update your profile as needed';
 			$route = 'hr.profile';
 			break;
-
-		case 'event_create':
-			$title = 'Event created';
-			$message = 'Please check & update your profile as needed';
-			$route = 'hr.manage-event.store';
-			break;
-
-		default:
-			$title = '';
-			$message = '';
-			$route = '';
-			break;
 	}
-
-	$notification = new App\Models\Notification;
-	$notification->user_id = $user;
-	$notification->class_id = $class;
-	$notification->group_id = $group;
-	$notification->type = $type;
-	$notification->title = $title;
-	$notification->message = $message;
-	$notification->route = $route;
-	$notification->save();
+	$notification = [];
+	if ($class > 0) {
+		$users = App\Models\User::where('class', $class)->get();
+		foreach ($users as $user) {
+			$notification[] = [
+				'user_id' => $user->id,
+				'class_id' => $user->class,
+				'group_id' => $group,
+				'type' => $type,
+				'title' => $title,
+				'message' => $message,
+				'route' => $route,
+			];
+		}
+	} else {
+		$notification[] = [
+			'user_id' => $user,
+			'class_id' => $class,
+			'group_id' => $group,
+			'type' => $type,
+			'title' => $title,
+			'message' => $message,
+			'route' => $route,
+		];
+	}
+	if (count($notification) > 0) {
+		\App\Models\Notification::insert($notification);
+	}
+	return $notification;
 }

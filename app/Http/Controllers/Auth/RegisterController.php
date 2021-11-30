@@ -107,9 +107,9 @@ class RegisterController extends Controller
         // $unique_id = $this->getCode();
         // $id_no = 'LLST'.$unique_id;
 
-        $student_count = User::where('role_id',4)->count();
-        $num_padded = sprintf("%05d", ( $student_count +1 ));
-        $id_no = 'LLST'.$num_padded;
+        $student_count = User::where('role_id', 4)->count();
+        $num_padded = sprintf("%05d", ($student_count + 1));
+        $id_no = 'LLST' . $num_padded;
 
         $image = $data['image'];
         $imageName = imageUpload($image, 'profile_image');
@@ -169,20 +169,21 @@ class RegisterController extends Controller
         return $this->getCode();
     }
 
-    public function teacher_register(Request $request){
-        if ($request->method() == 'GET'){
+    public function teacher_register(Request $request)
+    {
+        if ($request->method() == 'GET') {
             $qualifications = Qualification::orderBy('name')->get();
-            return view('auth.teacher_register',compact('qualifications'));
-        } else if($request->method() == 'POST'){
-            $this->validate($request,[
-                    'first_name' => ['required', 'string', 'max:255'],
-                    'last_name' => ['required', 'string', 'max:255'],
-                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                    'doj' => ['required', 'date'],
-                    'gender' => ['required'],
-                    'image' => 'required| mimes:png,jpg',
-                    'mobile' => ['required'],
-                    'qualification' => ['required']
+            return view('auth.teacher_register', compact('qualifications'));
+        } else if ($request->method() == 'POST') {
+            $this->validate($request, [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'doj' => ['required', 'date'],
+                'gender' => ['required'],
+                'image' => 'required| mimes:png,jpg',
+                'mobile' => ['required'],
+                'qualification' => ['required']
             ]);
 
             if ($request->hasFile('image')) {
@@ -192,14 +193,14 @@ class RegisterController extends Controller
                 $imageName = null;
             }
 
-            $teachers_count = User::where('role_id',3)->count();
+            $teachers_count = User::where('role_id', 3)->count();
             $num_padded = sprintf("%05d", ($teachers_count + 1));
-            $id_no = 'LLTR'.$num_padded;
+            $id_no = 'LLTR' . $num_padded;
             // $unique_id = $this->getCode();
             // $id_no = 'LLTR'.$unique_id;
 
             if ($request->qualification === 'Others') {
-                
+
                 Validator::make($request->all(), [
                     'other_qualification' => 'required|string|max:255|unique:qualifications,name',
                 ], $messages = [
@@ -210,10 +211,10 @@ class RegisterController extends Controller
                 $qualification->save();
 
                 $qualification_id = $qualification->id;
-            }else{
+            } else {
                 $qualification_id = $request->qualification;
             }
-            
+
 
             $user = new User();
             $user->role_id = 3;
@@ -231,13 +232,13 @@ class RegisterController extends Controller
             $user->save();
 
             //Store certificate 
-            $file_name =  imageUpload($request->certificate,'teacher_certificate');
+            $file_name =  imageUpload($request->certificate, 'teacher_certificate');
             $certificate = new Certificate();
             $certificate->image = $file_name;
             $certificate->user_id = $user->id;
             $certificate->save();
 
-            $admin_details = User::select('email')->where('role_id',1)->first();
+            $admin_details = User::select('email')->where('role_id', 1)->first();
             $admin_email = $admin_details['email'];
             $email_data = array(
                 'first_name' => $request->first_name,
@@ -253,20 +254,21 @@ class RegisterController extends Controller
     }
 
     // HR registration
-    public function hr_register(Request $request){
-        if ($request->method() == 'GET'){
+    public function hr_register(Request $request)
+    {
+        if ($request->method() == 'GET') {
             $qualifications = Qualification::orderBy('name')->get();
-            return view('auth.hr_register',compact('qualifications'));
-        } else if($request->method() == 'POST'){
-            $this->validate($request,[
-                    'first_name' => ['required', 'string', 'max:255'],
-                    'last_name' => ['required', 'string', 'max:255'],
-                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                    'doj' => ['required', 'date'],
-                    'gender' => ['required'],
-                    'image' => 'required| mimes:png,jpg',
-                    'mobile' => ['required'],
-                    'qualification' => ['required']
+            return view('auth.hr_register', compact('qualifications'));
+        } else if ($request->method() == 'POST') {
+            $this->validate($request, [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'doj' => ['required', 'date'],
+                'gender' => ['required'],
+                'image' => 'required| mimes:png,jpg',
+                'mobile' => ['required'],
+                'qualification' => ['required']
             ]);
 
             if ($request->hasFile('image')) {
@@ -278,12 +280,12 @@ class RegisterController extends Controller
 
             // $unique_id = $this->getCode();
             // $id_no = 'LLHR'.$unique_id;
-            $hr_count = User::where('role_id',2)->count();
+            $hr_count = User::where('role_id', 2)->count();
             $num_padded = sprintf("%05d", ($hr_count + 1));
-            $id_no = 'LLHR'.$num_padded;
+            $id_no = 'LLHR' . $num_padded;
 
             if ($request->qualification === 'Others') {
-                
+
                 Validator::make($request->all(), [
                     'other_qualification' => 'required|string|max:255|unique:qualifications,name',
                 ], $messages = [
@@ -294,7 +296,7 @@ class RegisterController extends Controller
                 $qualification->save();
 
                 $qualification_id = $qualification->id;
-            }else{
+            } else {
                 $qualification_id = $request->qualification;
             }
 
@@ -315,17 +317,17 @@ class RegisterController extends Controller
             $user->save();
 
             $user_id = $user->id;
-            createNotification($user_id, '0', '0', 'user_registration');
+            createNotification($user_id, 0, 0, 'user_registration');
 
             //Store certificate 
-            $file_name =  imageUpload($request->certificate,'hr_certificate');
+            $file_name =  imageUpload($request->certificate, 'hr_certificate');
             $certificate = new Certificate();
             $certificate->image = $file_name;
             $certificate->user_id = $user->id;
             $certificate->save();
 
 
-            $admin_details = User::select('email')->where('role_id',1)->first();
+            $admin_details = User::select('email')->where('role_id', 1)->first();
             $admin_email = $admin_details['email'];
             $email_data = array(
                 'first_name' => $request->first_name,
