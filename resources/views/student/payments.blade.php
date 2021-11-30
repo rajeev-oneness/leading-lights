@@ -21,7 +21,7 @@
                             <table class="table table-hover bg-table" id="payment_table">
                                 <thead>
                                     <tr>
-                                        <th>Bill Id</th>
+                                        <th>Order Id</th>
                                         <th>Fees Type</th>
                                         <th>Next Due Date</th>
                                         <th>Total Cost(&#x20B9;)</th>
@@ -76,7 +76,7 @@
                             <table class="table table-hover bg-table" id="payment_table1">
                                 <thead>
                                     <tr>
-                                        <th>Sl. No</th>
+                                        <th>Order Id</th>
                                         <th>Fees Type</th>
                                         <th>Total Cost(&#x20B9;)</th>
                                         <th>Action</th>
