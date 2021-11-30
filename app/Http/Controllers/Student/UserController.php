@@ -179,7 +179,15 @@ class UserController extends Controller
         return view('student.exam')->with($data);
     }
 
-    public function payment(Request $request)
+    public function payment(Request $req)
+    {
+        $data = (object)[];
+        $data->due_payment = \App\Models\Fee::where('transaction_id',0)->latest('id')->get();
+        $data->success_payment = \App\Models\Fee::where('transaction_id','>',0)->latest('id')->get();
+        return view('student.payments',compact('data'));
+    }
+
+    public function paymentold(Request $request)
     {
         $current_user_id = Auth::user()->id;
         $previous_payment = Payment::where('user_id',$current_user_id)->orderBy('id', 'desc')->first();
@@ -206,16 +214,11 @@ class UserController extends Controller
         ->where('fees_type','monthly_fees')
         ->join('payments','payments.id','=','other_payment_details.payment_id')
         ->get();
-        // dd($data['monthly_payment_details']);
         $data['previous_payment'] = OtherPaymentDetails::
-        // where('class_id',Auth::user()->class)
-        // where('fees_type','monthly_fees')
         where('user_id',$current_user_id)
         ->get();
-        // dd($data['previous_payment']);
-        //Check students belong to special class
         $data['special_course_details'] = SpecialCourse::where('id',Auth::user()->special_course_id)->first();
-        return view('student.payments')->with($data);
+        return view('student.payments_old')->with($data);
     }
 
     public function upload_homework(Request $request)
@@ -425,6 +428,16 @@ class UserController extends Controller
     }
 
     public function payment_receipt(Request $request,$payment_id){
+        $user = Auth::user();
+        $data['user_details'] = $user;
+        $data['fee_details'] = \App\Models\Fee::with('transaction_details')->where('id',$payment_id)->where('user_id',$user->id)->where('transaction_id','!=',0)->first();
+        if($data['fee_details']){
+            $pdf = PDF::loadView('student.payment_receipt', $data);
+            return $pdf->download($user->id_no . '.pdf');
+        }
+    }
+
+    public function payment_receipt_old(Request $request,$payment_id){
         $current_user_id = Auth::user()->id;
         $data['payment_details'] = OtherPaymentDetails::where('payment_id',$payment_id)->
         join('payments','payments.id','=','other_payment_details.payment_id')->first();
@@ -448,6 +461,11 @@ class UserController extends Controller
     }
 
     public function addCourses(Request $request){
+        $this->validate($request,[
+            'course_id' => 'required'
+        ],$messages = [
+            'course_id.required' => 'Please select any course!!'
+        ]);
         $all_courses = $request->course_id;
         foreach ($all_courses as $course_id) {
             $course_details[] = SpecialCourse::find($course_id);

@@ -24,16 +24,21 @@ firebase.initializeApp({
 Retrieve an instance of Firebase Messaging so that it can handle background messages.
 */
 const messaging = firebase.messaging();
-messaging.setBackgroundMessageHandler(function(payload) {
-    console.log("Firebase Notification",payload);
-    const notificationTitle = "Background Message Title";
-    const notificationOptions = {
-        body: "Background Message body.",
-        icon: "/itwonders-web-logo.png",
-    };
-  
-    return self.registration.showNotification(
-        notificationTitle,
-        notificationOptions,
-    );
+
+messaging.setBackgroundMessageHandler(function({data:{title,body,icon}}) {
+    return self.registration.showNotification(title,{body,icon});
 });
+
+// messaging.setBackgroundMessageHandler(function(payload) {
+//     console.log("Firebase Notification",payload);
+//     const notificationTitle = "Background Message Title";
+//     const notificationOptions = {
+//         body: "Background Message body.",
+//         icon: "/itwonders-web-logo.png",
+//     };
+  
+//     return self.registration.showNotification(
+//         notificationTitle,
+//         notificationOptions,
+//     );
+// });

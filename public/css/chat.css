@@ -247,6 +247,7 @@ Message Box
 }
 .l-chat,
 .r-chat {
+  width: 215px;
   padding: 5px 10px;
   color: #192146;
   display: inline-block;

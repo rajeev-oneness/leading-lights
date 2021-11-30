@@ -30,7 +30,7 @@
                                     // }
                                     // $amount = $special_course_total_amount;
                                 @endphp
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="items align-items-center">
                                         <div class="pdf-text">
                                             <h4>{{ $course_details->title }}</h4>
@@ -68,7 +68,7 @@
         @include('student.layouts.static_footer')
     </div>
     <script>
-        $('.razorpay-payment-button').addClass('btn-pill btn btn-warning btn-lg float-right');
+        $('.razorpay-payment-button').addClass('btn-pill btn btn-success btn-lg float-right');
         $('.razorpay-payment-button').prop('value', 'Proceed to pay');
     </script>
 @endsection

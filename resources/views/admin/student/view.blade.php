@@ -22,7 +22,7 @@
             <hr>
             <div class="app-main__inner">
                 <div class="app-page-title">
-                    <div class="page-title-wrapper">
+                    <div class="page-title-wrapper d-sm-flex justify-content-between">
                         <div class="page-title-heading">
                             <div class="page-title-icon">
                                 <i class="fa fa-graduation-cap"></i>
@@ -30,7 +30,7 @@
                             <div>Students Profile
                             </div>
                         </div>
-                        <div class="ml-5">
+                        <div class="mr-3">
                             @if ($student->status == 0)
                                 @if ($student->rejected == 0)
                                     <a href="{{ route('admin.students.approve', $student->id) }}"
@@ -157,13 +157,13 @@
                                         }
                                         ?>
                                         @if ($student->special_course_ids !== null)
-                                            {{-- <div class="student-list"> --}}
+                                            <div class="student-list border-info">
                                             <ol>
                                                 @foreach ($course_details as $course)
                                                     <li>{{ $course->title }}</li>
                                                 @endforeach
                                             </ol>
-                                            {{-- </div> --}}
+                                            </div>
                                         @else
                                             N/A
                                         @endif

@@ -52,3 +52,7 @@ Route::group(['as' => 'teacher.', 'prefix' => 'teacher', 'middleware' => ['auth'
 Route::group(['as' => 'hr.', 'prefix' => 'hr', 'middleware' => ['auth', 'hr']], function () {
     require 'custom/hr.php';
 });
+
+Route::get('migrate',function(){
+    \Artisan::call('migrate');
+});

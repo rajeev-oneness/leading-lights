@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Conversation;
-use App\Models\Chatting;
-use App\Models\UserDeviceToken;
-use App\Models\User;
+use App\Models\Conversation,App\Models\Chatting;
+use App\Models\UserDeviceToken,App\Models\User,DB;
 
 class MessageController extends Controller
 {
@@ -29,11 +27,8 @@ class MessageController extends Controller
                         $contact = User::select('id', 'first_name', 'last_name', 'image', 'email')->where('id', $conversation->senderId)->first();
                     }
                     if ($contact) {
-                        $contact->newMessage = count($conversation->message->where('read', 0));
-                        $contact->lastChat = '';
-                        if ($lstChat = $conversation->message->first()) {
-                            $contact->lastChat = $lstChat->message;
-                        }
+                        $conversation->message;
+                        $contact->conversation = $conversation;
                         $contactData[] = $contact;
                     }
                 }
@@ -77,7 +72,13 @@ class MessageController extends Controller
                         $message->senderId = $sender->id;
                         $message->receiverId = $receiver->id;
                         $message->message = strQuotationCheck($req->message);
+                        $message->read = 0;
                         $message->save();
+                        // Updating Read flag to be Already read for Sender id
+                        Chatting::where('senderId',$sender->id)->orWhere('receiverId',$sender->id)->where('read',0)->update(['read' => 1]);
+                        // Sendig push Notification
+                        $deviceTokens = $this->getUserDevieToken($receiver);
+                        $this->sendPushNotification($deviceTokens,$message);
                         DB::commit();
                         return successResponse('Message Submitted Successfully', $message);
                     } else {

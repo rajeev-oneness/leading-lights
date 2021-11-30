@@ -64,7 +64,6 @@
                                                     ->get(); ?>
                                                 <select class="form-control" required name="country_code"
                                                     id="country_code">
-                                                    <option value="">Country Code</option>
                                                     <?php if($phonecodes){?>
                                                     <?php foreach($phonecodes as $code){?>
                                                     <option value="+{{ $code->phonecode }}"
@@ -371,8 +370,6 @@
 
         $('#class').on('change', function() {
             let class_id = $('#class').val();
-            // $(".choices-multiple-remove-button").html('<option value="">** Loading...</option>');
-            // $(".choices-multiple-remove-button").html('<option value="">--Select a Country--</option>');
             $.ajax({
                 url: "{{ route('getCourseByClass') }}",
                 data: {

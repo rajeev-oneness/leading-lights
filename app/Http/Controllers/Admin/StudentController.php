@@ -173,7 +173,7 @@ class StudentController extends Controller
     }
 
     public function approval($id){
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         if ($user->status == 0) {
             $user->status = 1;
             $user->rejected = 0;
@@ -190,7 +190,7 @@ class StudentController extends Controller
     }
 
     public function reject_student($id){
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         if ($user->rejected == 0) {
             $user->rejected = 1;
             $user->is_rejected_document_uploaded = 0;

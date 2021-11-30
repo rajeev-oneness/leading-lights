@@ -1,5 +1,15 @@
-
-
+.course-box h4{
+  font-size: 27px;
+  font-weight: 700;
+  color: #f79256;
+  margin-bottom: 18px;
+}
+ul{
+  padding-left: 0;
+}
+ul li{
+  list-style-type: none;
+}
 .span_pseudo,
 .chiller_cb span:before,
 .chiller_cb span:after {
@@ -94,6 +104,14 @@
 }
 .color-icon{
   color : #f79256;
+}
+
+.student-list{
+  padding: 10px;
+    border: 1px solid #e1e1e1;
+    margin-top: 5px;
+    border-radius: 8px;
+    overflow-y: scroll;
 }
 .file-upload {
   background-color: #ffffff;
@@ -1771,4 +1789,17 @@ font-size: 12px;
 
 .items-height{
   height:300px;
+}
+
+.form-check-input-field{
+  top: 0;
+  right: 0;
+  position: absolute;
+}
+.course-box{
+  position: relative;
+}
+input.largerCheckbox {
+    width: 20px;
+    height: 20px;
 }

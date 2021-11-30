@@ -20,11 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-Route::get('chatting/message', [MessageController::class, 'getMessageForUser'])->name('api.chat.message.list');
-Route::post('chatting/message', [MessageController::class, 'sendMessageUniversal'])->name('api.chat.message.post');
-Route::post('chatting/mark_as_read', [MessageController::class, 'messageRead'])->name('api.chat.message.read');
-
+// Chatting
+Route::post('set_user_device_token',[MessageController::class,'updateDeviceToken'])->name('api.set.user_device_token');
+Route::get('chatting/message',[MessageController::class,'getMessageForUser'])->name('api.contact.message.list');
+Route::post('chatting/message',[MessageController::class,'sendMessageUniversal'])->name('api.contact.message.post');
+Route::post('chatting/mark_as_read',[MessageController::class,'messageRead'])->name('api.chat.message.read');
 
 // Notification
 Route::post('/read', [NotificationController::class, 'notificationRead'])->name('notification.read');

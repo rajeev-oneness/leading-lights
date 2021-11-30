@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Conversation extends Model
+class Fee extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public function message()
+    public function transaction_details()
     {
-        return $this->hasMany('App\Models\Chatting','conversationId','id')->latest('id');
+        return $this->belongsTo('\App\Models\Transaction','transaction_id','id');
     }
 }
