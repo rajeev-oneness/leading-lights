@@ -179,7 +179,15 @@ class UserController extends Controller
         return view('student.exam')->with($data);
     }
 
-    public function payment(Request $request)
+    public function payment(Request $req)
+    {
+        $data = (object)[];
+        $data->due_payment = \App\Models\Fee::where('transaction_id',0)->latest('id')->get();
+        $data->success_payment = \App\Models\Fee::where('transaction_id','>',0)->latest('id')->get();
+        return view('student.payments',compact('data'));
+    }
+
+    public function paymentold(Request $request)
     {
         $current_user_id = Auth::user()->id;
         $previous_payment = Payment::where('user_id',$current_user_id)->orderBy('id', 'desc')->first();
@@ -210,7 +218,7 @@ class UserController extends Controller
         where('user_id',$current_user_id)
         ->get();
         $data['special_course_details'] = SpecialCourse::where('id',Auth::user()->special_course_id)->first();
-        return view('student.payments')->with($data);
+        return view('student.payments_old')->with($data);
     }
 
     public function upload_homework(Request $request)

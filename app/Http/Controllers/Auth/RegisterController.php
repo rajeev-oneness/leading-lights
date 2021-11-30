@@ -11,8 +11,7 @@ use Illuminate\Http\Request;
 use App\Notifications\NewUserInfo;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-
-
+use App\Models\SpecialCourse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
@@ -20,7 +19,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 // use App\Http\Controllers\Admin\Notification;
 use App\Http\Controllers\Admin\Notification;
-use App\Models\Certificate;
+use App\Models\Certificate, App\Models\Fee;
 use App\Models\OtherPaymentDetails;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Notification as FacadesNotification;
@@ -98,53 +97,91 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $student_count = User::where('role_id',4)->count();
-        $num_padded = sprintf("%05d", ( $student_count +1 ));
-        $id_no = 'LLST'.$num_padded;
+        DB::beginTransaction();
+        try {
+            $student_count = User::where('role_id',4)->count();
+            $num_padded = sprintf("%05d", ( $student_count +1 ));
+            $id_no = 'LLST'.$num_padded;
+            $image = $data['image'];
+            $imageName = imageUpload($image, 'profile_image');
+            $admin_details = User::select('email')->where('role_id', 1)->first();
+            $admin_email = $admin_details['email'];
+            $email_data = array(
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'email' => $data['email'],
+                'id_no' => $id_no,
+                'user_type' => 'student'
+            );
+            if (isset($data['special_course_ids'])) {
+                $special_course_ids = implode(',', $data['special_course_ids']);
+                $admission_type = 1;
+            } else {
+                $special_course_ids = null;
+                $admission_type = 2;
+            }
 
-        $image = $data['image'];
-        $imageName = imageUpload($image, 'profile_image');
-
-        $admin_details = User::select('email')->where('role_id', 1)->first();
-        $admin_email = $admin_details['email'];
-        $email_data = array(
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
-            'id_no' => $id_no,
-            'user_type' => 'student'
-        );
-
-        if (isset($data['special_course_ids'])) {
-            $special_course_ids = implode(',', $data['special_course_ids']);
-            $admission_type = 1;
-        } else {
-            $special_course_ids = null;
-            $admission_type = 2;
+            $user = new User();
+                $user->first_name = $data['first_name'];
+                $user->last_name = $data['last_name'];
+                $user->email = $data['email'];
+                $user->mobile = $data['mobile'];
+                $user->id_no =  $id_no;
+                $user->dob = $data['dob'];
+                $user->class = $data['class'];
+                $user->gender = $data['gender'];
+                $user->password = Hash::make($id_no);
+                $user->image = $imageName;
+                $user->special_course_ids = $special_course_ids;
+                $user->country_code = $data['country_code'];
+            $user->save();
+            // Fee generate
+            $feedata = [];
+            if(count($data['special_course_ids']) > 0){
+                foreach ($data['special_course_ids'] as $key => $course) {
+                    $s_course = SpecialCourse::where('id',$course)->first();
+                    if($s_course){
+                        $feedata[] = [
+                            'user_id' => $user->id,
+                            'class_id' => 0,
+                            'course_id' => $s_course->id,
+                            'fee_type' => 'Course',
+                            'due_date' => date('Y-m-d',strtotime('+1 day')),
+                            'payment_month' => date('F',strtotime('+1 day')),
+                            'amount' => $s_course->monthly_fees,
+                        ];
+                    }
+                }
+            }
+            if($user->class > 0){
+                $check_class = Classes::where('id',$user->class)->first();
+                if($check_class){
+                    $feedata[] = [
+                        'user_id' => $user->id,
+                        'class_id' => $check_class->id,
+                        'course_id' => 0,
+                        'fee_type' => 'Adminssion Fee',
+                        'due_date' => date('Y-m-d',strtotime('+1 day')),
+                        'payment_month' => date('F',strtotime('+1 day')),
+                        'amount' => $check_class->monthly_fees + $check_class->admission_fees, 
+                    ];
+                }
+            }
+            if(count($feedata) > 0){
+                DB::table('fees')->insert($feedata);
+            }
+            //Store certificate 
+            $certificate_image =  imageUpload($data['certificate'], 'student_certificate');
+            $certificate = new Certificate();
+            $certificate->user_id = $user->id;
+            $certificate->image = $certificate_image;
+            $certificate->save();
+            DB::commit();
+            return $user;
+        } catch (Exception $e) {
+            DB::rollback();
+            return 0;
         }
-
-        $user_creation =  User::create([
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
-            'mobile' => $data['mobile'],
-            'id_no' =>  $id_no,
-            'dob'  =>  $data['dob'],
-            'class' => $data['class'],
-            'gender' => $data['gender'],
-            'password' => Hash::make($id_no),
-            'image' => $imageName,
-            'special_course_ids' => $special_course_ids,
-            'country_code' => $data['country_code']
-        ]);
-
-        //Store certificate 
-        $certificate_image =  imageUpload($data['certificate'], 'student_certificate');
-        $certificate = new Certificate();
-        $certificate->user_id = $user_creation->id;
-        $certificate->image = $certificate_image;
-        $certificate->save();
-        return $user_creation;
     }
 
     public function getCode()

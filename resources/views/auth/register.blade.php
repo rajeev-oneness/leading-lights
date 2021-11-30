@@ -370,8 +370,6 @@
 
         $('#class').on('change', function() {
             let class_id = $('#class').val();
-            // $(".choices-multiple-remove-button").html('<option value="">** Loading...</option>');
-            // $(".choices-multiple-remove-button").html('<option value="">--Select a Country--</option>');
             $.ajax({
                 url: "{{ route('getCourseByClass') }}",
                 data: {
