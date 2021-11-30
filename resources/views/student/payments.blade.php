@@ -21,7 +21,7 @@
                             <table class="table table-hover bg-table" id="payment_table">
                                 <thead>
                                     <tr>
-                                        <th>Sl. No</th>
+                                        <th>Bill Id</th>
                                         <th>Fees Type</th>
                                         <th>Next Due Date</th>
                                         <th>Total Cost(&#x20B9;)</th>
@@ -32,13 +32,23 @@
                                     @foreach($data->due_payment as $dueIndex => $duePayment)
                                         <tr>
                                             <td>{{$duePayment->id}}</td>
-                                            <td>{{$duePayment->fee_type}}</td>
-                                            <td>{{date('m d, Y',strtotime($duePayment->due_date))}}</td>
+                                            <td>
+                                                @php
+                                                    $feeType = 'Admission Fees';
+                                                    switch($duePayment->fee_type){
+                                                        case 'admission_fee' : $feeType = 'Admission Fees with 1 month class fee';break;
+                                                        case 'course_fee' : $feeType = 'Course Fee';break;
+                                                        case 'class_fee' : $feeType = 'Class Fee';break;
+                                                    }
+                                                    echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
+                                                @endphp
+                                            </td>
+                                            <td>{{date('M d, Y',strtotime($duePayment->due_date))}}</td>
                                             <td>{{$duePayment->amount}}</td>
                                             <td>
-                                                <form id="checkoutFormDetails{{$duePayment->id}}" action="{!! route('user.razorpaypayment') !!}" method="POST" >
+                                                <form action="{!! route('payment.capture') !!}" method="POST" >
                                                     @csrf
-                                                    <input type="hidden" name="redirectURL" value="">
+                                                    <input type="hidden" name="redirectURL" value="{{route('user.razorpaypayment',$duePayment->id)}}">
                                                     <script src="https://checkout.razorpay.com/v1/checkout.js"
                                                             data-key="{{ env('RAZORPAY_KEY') }}"
                                                             data-amount="{{($duePayment->amount) * 100}}"
@@ -76,7 +86,17 @@
                                     @foreach($data->success_payment as $successIndex => $successPayment)
                                         <tr>
                                             <td>{{$successPayment->id}}</td>
-                                            <td>{{$successPayment->fee_type}}</td>
+                                            <td>
+                                                @php
+                                                    $feeType = 'Admission Fees';
+                                                    switch($successPayment->fee_type){
+                                                        case 'admission_fee' : $feeType = 'Admission Fees with 1 month class fee';break;
+                                                        case 'course_fee' : $feeType = 'Course Fee';break;
+                                                        case 'class_fee' : $feeType = 'Class Fee';break;
+                                                    }
+                                                    echo $feeType;
+                                                @endphp
+                                            </td>
                                             <td>&#x20B9;{{$successPayment->amount}}</td>
                                             <td>
                                                 <button class="mb-2 mr-2 btn-pill btn btn-dark btn-lg">Paid Successfully

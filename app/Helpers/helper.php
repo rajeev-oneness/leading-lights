@@ -31,6 +31,14 @@ function strQuotationCheck($string = "")
 	return $returnString;
 }
 
+function emptyCheck($string, $date = false)
+{
+	if ($date) {
+		return !empty($string) ? $string : '0000-00-00';
+	}
+	return !empty($string) ? $string : '';
+}
+
 function imageUpload($image, $folder = 'image')
 {
 	$random = randomGenerator();
@@ -152,4 +160,17 @@ function createNotification($user, $class = 0, $group = 0, $type)
 		\App\Models\Notification::insert($notification);
 	}
 	return $notification;
+}
+
+function getNameofClassOrCourse($feeStructure)
+{
+	$response = '';
+	if($feeStructure->class_id > 0){
+		$class = \App\Models\Classes::where('id',$feeStructure->class_id)->first();
+		if($class){$response = $class->name;}
+	}elseif($feeStructure->course_id > 0){
+		$course = \App\Models\SpecialCourse::where('id',$feeStructure->course_id)->first();
+		if($course){$response = $course->title;}
+	}
+	return $response;
 }

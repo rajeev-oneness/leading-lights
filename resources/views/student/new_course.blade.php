@@ -20,11 +20,11 @@
                             <div class="card-header-title mb-4">
                                 Available Courses
                             </div>
-                            @if ($available_courses)
+                            @if ($courses)
                             <form action="{{ route('user.add_courses') }}" method="post">
                                 @csrf
                             <div class="row">
-                                @foreach ($available_courses as $course)
+                                @foreach ($courses as $course)
                                 <div class="col-md-4">
                                     <div class="items align-items-center">
                                         <div class="course-box">
