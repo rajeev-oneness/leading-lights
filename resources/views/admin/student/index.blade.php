@@ -68,7 +68,9 @@
                                                 <div class="student-list">
                                                 <ol>
                                                     @foreach ($course_details as $course)
-                                                        <li>{{ $course['title'] }}</li>
+                                                        @if(!empty($course['title']))
+                                                            <li>{{ $course['title'] }}</li>
+                                                        @endif
                                                     @endforeach
                                                 </ol>
                                             </div>
