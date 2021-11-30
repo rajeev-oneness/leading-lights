@@ -86,12 +86,7 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
-
         event(new Registered($user = $this->create($request->all())));
-
-        // $this->guard()->login($user);
-
-        // Notification::
         return redirect()->route('login')->with('success', 'Your registration is successful, waiting for admin approval');
     }
 
@@ -103,11 +98,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        // dd($data);
-        // dd(implode(',', $data['special_course_ids']));
-        // $unique_id = $this->getCode();
-        // $id_no = 'LLST'.$unique_id;
-
         $student_count = User::where('role_id',4)->count();
         $num_padded = sprintf("%05d", ( $student_count +1 ));
         $id_no = 'LLST'.$num_padded;
@@ -124,9 +114,6 @@ class RegisterController extends Controller
             'id_no' => $id_no,
             'user_type' => 'student'
         );
-        // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
-
-        // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
 
         if (isset($data['special_course_ids'])) {
             $special_course_ids = implode(',', $data['special_course_ids']);
