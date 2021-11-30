@@ -53,6 +53,8 @@ Route::group(['as' => 'hr.', 'prefix' => 'hr', 'middleware' => ['auth', 'hr']], 
     require 'custom/hr.php';
 });
 
+Route::post('payment/capture',[PaymentController::class,'storeRazorePayPayment'])->name('payment.capture');
+
 Route::get('migrate',function(){
     \Artisan::call('migrate');
 });

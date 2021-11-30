@@ -68,7 +68,7 @@
             @if($transaction = $fee_details->transaction_details)
             <tr>
                 <td>Transaction Id</td>
-                <td>{{ $transaction->transaction_id }}</td>
+                <td>{{ $transaction->transactionId }}</td>
             </tr>
             <tr>
                 <td>Payment Method</td>

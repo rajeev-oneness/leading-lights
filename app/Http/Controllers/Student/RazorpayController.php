@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\SpecialCourse;
 use App\Http\Controllers\Controller;
 use App\Models\OtherPaymentDetails;
-use App\Models\User;
+use App\Models\User, DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Notifications\PaymentSuccessMail;
@@ -16,7 +16,55 @@ use Illuminate\Support\Facades\Notification;
 
 class RazorpayController extends Controller
 {
-    public function payment(Request $request)
+    public function payment(Request $req,$feeId)
+    {
+        if(!empty($req->transactionId) && $req->transactionId > 0){
+            DB::beginTransaction();
+            try {
+                $user = Auth::user();
+                $fee = \App\Models\Fee::where('id',$feeId)->where('user_id',$user->id)->where('transaction_id',0)->first();
+                if($fee){
+                    $transaction = \App\Models\Transaction::where('id',$req->transactionId)->first();
+                    if($transaction){
+                        $fee->transaction_id = $transaction->id;
+                        $fee->paid_on = date('Y-m-d');$fee->save();
+                        $newFee = false;
+                        if($fee->class_id != 0){
+                            $class = \App\Models\Classes::where('id',$fee->class_id)->first();
+                            if($class){
+                                $feeType = 'class_fee';
+                                $amount = $class->monthly_fees;$newFee = true;
+                            }
+                        }elseif($fee->course_id != 0){
+                            $course = \App\Models\SpecialCourse::where('id',$fee->course_id)->first();
+                            if($course){
+                                $feeType = 'course_fee';
+                                $amount = $course->monthly_fees;$newFee = true;
+                            }
+                        }
+                        if($newFee && $amount > 0){
+                            $newFee = new \App\Models\Fee;
+                            $newFee->user_id = $fee->user_id;
+                            $newFee->class_id = $fee->class_id;
+                            $newFee->course_id = $fee->course_id;
+                            $newFee->fee_type = $feeType;
+                            $newFee->due_date = date("Y-m-d", strtotime("+1 month", strtotime($fee->due_date)));
+                            $newFee->payment_month = date("F", strtotime("+1 month", strtotime($fee->due_date)));
+                            $newFee->amount = $amount;
+                            $newFee->save();
+                        }
+                    }
+                }
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollback();
+            }
+        }
+        Session::put('success', 'Payment successful, your order will be despatched in the next 48 hours.');
+        return redirect()->back()->with('success', 'Payment successful, your order will be despatched in the next 48 hours.');
+    }
+
+    public function payment_old(Request $request)
     {        
         $input = $request->all(); 
         $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));

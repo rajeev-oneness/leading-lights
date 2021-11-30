@@ -6,41 +6,49 @@ use Illuminate\Http\Request;
 use App\Models\Transaction,Session,DB;
 use Razorpay\Api\Api,Exception;
 
-class paymentController extends Controller
+class PaymentController extends Controller
 {
-    public function storerazorePayPayment(Request $req)
+    public function storeRazorePayPayment(Request $req)
     {
         $req->validate([
-            'stripeToken' => 'required|string',
-            'amount' => 'required',
-            'redirectURL' => 'required|string',
-            'currency' => 'required|string',
+            'razorpay_payment_id' => 'required|string',
+            'redirectURL' => 'required',
         ]);
-        \Stripe\Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
-        $payment = \Stripe\Charge::create ([
-            "amount" => 100 * $req->amount,
-            "currency" => $req->currency,
-            "source" => $req->stripeToken,
-            "description" => "Test payment",
-        ]);
-        if($payment->status == 'succeeded'){
-            $newPayment = new Transaction();
-            $newPayment->transactionId = $payment->id;
-            $newPayment->order_id = emptyCheck($payment->balance_transaction);
-            $newPayment->amount = $payment->amount;
-            $newPayment->currency = emptyCheck($payment->currency);
-            $newPayment->status = emptyCheck($payment->status);
-            $newPayment->captured = emptyCheck($payment->captured);
-            $newPayment->description = emptyCheck($payment->description);
-            $newPayment->method = $payment->payment_method;
-            $newPayment->amount_refunded = emptyCheck($payment->amount_refunded);
-            $newPayment->refund_status = emptyCheck($payment->refunded);
-            $newPayment->created_at_time = $payment->created;
-            $newPayment->bank = $payment->payment_method_details->type;
-            $newPayment->save();
-            return redirect($req->redirectURL.'?transactionId='.$newPayment->id);
+        $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+        $payment = $api->payment->fetch($req->razorpay_payment_id);
+        if($payment){
+            try{
+                $response = $payment->capture(array('amount' => $payment['amount']));
+                if($response){
+                    $newPayment = new Transaction();
+                    $newPayment->transactionId = $response->id;
+                    $newPayment->entity = emptyCheck($response->entity);
+                    $newPayment->amount = ($response->amount / 100);
+                    $newPayment->currency = emptyCheck($response->currency);
+                    $newPayment->status = emptyCheck($response->status);
+                    $newPayment->order_id = emptyCheck($response->order_id);
+                    $newPayment->invoice_id = emptyCheck($response->invoice_id);
+                    $newPayment->international = emptyCheck($response->international);
+                    $newPayment->method = emptyCheck($response->method);
+                    $newPayment->amount_refunded = emptyCheck($response->amount_refunded);
+                    $newPayment->refund_status = emptyCheck($response->refund_status);
+                    $newPayment->captured = emptyCheck($response->captured);
+                    $newPayment->description = emptyCheck($response->description);
+                    $newPayment->card_id = emptyCheck($response->card_id);
+                    $newPayment->bank = emptyCheck($response->bank);
+                    $newPayment->wallet = emptyCheck($response->wallet);
+                    $newPayment->vpa = emptyCheck($response->vpa);
+                    $newPayment->email = emptyCheck($response->email);
+                    $newPayment->contact = emptyCheck($response->contact);
+                    $newPayment->created_at_time = $response->created_at;
+                    $newPayment->save();
+                    return redirect($req->redirectURL.'?transactionId='.$newPayment->id);
+                }
+                return response()->json(['error' => true,'message' => 'Something went wrong please try after some time']);
+            }catch(Exception $e){
+                return response()->json(['error' => true,'message' => $e->getMessage()]);
+            }
         }
-        $error['stripePaymentGateway'] = 'Something went wrong please try after some time';
-        return back()->withErrors($error)->withInput($req->all());
+        return response()->json(['error' => true,'message' => 'Payment Not done, your money will be refunded withing 7 days']);
     }
 }

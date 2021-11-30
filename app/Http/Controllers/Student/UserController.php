@@ -182,8 +182,9 @@ class UserController extends Controller
     public function payment(Request $req)
     {
         $data = (object)[];
-        $data->due_payment = \App\Models\Fee::where('transaction_id',0)->latest('id')->get();
-        $data->success_payment = \App\Models\Fee::where('transaction_id','>',0)->latest('id')->get();
+        $user = Auth::user();
+        $data->due_payment = \App\Models\Fee::where('user_id',$user->id)->where('transaction_id',0)->latest('id')->get();
+        $data->success_payment = \App\Models\Fee::where('user_id',$user->id)->where('transaction_id','>',0)->latest('id')->get();
         return view('student.payments',compact('data'));
     }
 
@@ -448,33 +449,40 @@ class UserController extends Controller
 
     public function availableCourses(Request $request)
     {
-        $special_course_ids = explode(',', Auth::user()->special_course_ids);
-        // dd($special_course_ids);
-        // foreach ($special_course_ids as $course_id) {
-        //     $course_details[] = SpecialCourse::find($course_id);
-        // }
-        $available_courses = SpecialCourse::where('class_id',Auth::user()->class)
-        ->whereNotIn('id',$special_course_ids)
-        ->latest()->get();
-        // dd($available_courses);
-        return view('student.new_course',compact('available_courses'));
+        $user = $request->user();
+        $courses = SpecialCourse::where('class_id',$user->class);
+        if($user->special_course_ids != ''){
+            $user_courses = explode(',', $user->special_course_ids);
+            $courses = $courses->whereNotIn('id',$user_courses);
+        }
+        $courses = $courses->latest()->get();
+        return view('student.new_course',compact('courses'));
     }
 
     public function addCourses(Request $request){
         $this->validate($request,[
-            'course_id' => 'required'
+            'course_id' => 'required|array',
+            'course_id.*' => 'required|min:1|numeric',
         ],$messages = [
             'course_id.required' => 'Please select any course!!'
         ]);
-        $all_courses = $request->course_id;
-        foreach ($all_courses as $course_id) {
-            $course_details[] = SpecialCourse::find($course_id);
+        $selectedCourses = $request->course_id;
+        $user = $request->user();
+        foreach ($selectedCourses as $course_id) {
+            $course = SpecialCourse::find($course_id);
+            if($course){
+                $newFee = new \App\Models\Fee;
+                $newFee->user_id = $user->id;
+                $newFee->class_id = 0;
+                $newFee->course_id = $course->id;
+                $newFee->fee_type = 'course_fee';
+                $newFee->due_date = date("Y-m-d", strtotime("+1 day"));
+                $newFee->payment_month = date("F", strtotime("+1 day"));
+                $newFee->amount = $course->monthly_fees;
+                $newFee->save();
+            }
         }
-        $special_course_total_amount = 0;
-        foreach ($course_details as $key => $course) {
-            $special_course_total_amount += $course->monthly_fees;
-        }
-        $total_amount = $special_course_total_amount;
-        return view('student.course_checkout',compact('all_courses','total_amount'));
+        return redirect(route('user.payment'));
+        // return view('student.course_checkout',compact('all_courses','total_amount'));
     }
 }

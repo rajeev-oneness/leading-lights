@@ -137,7 +137,7 @@ class RegisterController extends Controller
             $user->save();
             // Fee generate
             $feedata = [];
-            if(count($data['special_course_ids']) > 0){
+            if(!empty($data['special_course_ids']) && count($data['special_course_ids']) > 0){
                 foreach ($data['special_course_ids'] as $key => $course) {
                     $s_course = SpecialCourse::where('id',$course)->first();
                     if($s_course){

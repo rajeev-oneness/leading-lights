@@ -6,7 +6,7 @@
     Route::get('profile', [UserController::class,'index'])->name('profile');
     Route::get('payment',[UserController::class,'payment'])->name('payment');
     //razorpay
-    Route::post('razorpaypayment', [RazorpayController::class, 'payment'])->name('razorpaypayment');
+    Route::get('razorpaypayment/{feeId}', [RazorpayController::class, 'payment'])->name('razorpaypayment');
     Route::post('certificate-upload/',[UserController::class,'certificate_upload'])->name('certificate_upload');
     Route::post('update-profile', [UserController::class,'updateProfile'])->name('updateProfile');
     Route::get('change-password', [UserController::class,'changePassword'])->name('changePassword');
