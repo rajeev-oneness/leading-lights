@@ -428,6 +428,16 @@ class UserController extends Controller
     }
 
     public function payment_receipt(Request $request,$payment_id){
+        $user = Auth::user();
+        $data['user_details'] = $user;
+        $data['fee_details'] = \App\Models\Fee::with('transaction_details')->where('id',$payment_id)->where('user_id',$user->id)->where('transaction_id','!=',0)->first();
+        if($data['fee_details']){
+            $pdf = PDF::loadView('student.payment_receipt', $data);
+            return $pdf->download($user->id_no . '.pdf');
+        }
+    }
+
+    public function payment_receipt_old(Request $request,$payment_id){
         $current_user_id = Auth::user()->id;
         $data['payment_details'] = OtherPaymentDetails::where('payment_id',$payment_id)->
         join('payments','payments.id','=','other_payment_details.payment_id')->first();

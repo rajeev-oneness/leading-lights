@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Payment;
+use App\Models\Fee;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,14 +18,10 @@ class CheckStudentPayment
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->role->id == 4) {
-            $payment_details = Payment::where('user_id',Auth::user()->id)->first();
-            if ($payment_details && Auth::user()->status == 1) {
-                $next_due_date = $payment_details->next_due_date;
-                $additional_next_due_date = date('Y-m-d',strtotime($next_due_date.'+2 day'));
-                if ($additional_next_due_date < date('Y-m-d') && Auth::user()->special_course_id) {
-                    return redirect()->route('user.payment');
-                }
+        $user = Auth::user();
+        if ($user && $user->role_id == 4) {
+            $fee = Fee::where('user_id',$user->id)->where('transaction_id','>',0)->count();
+            if($fee > 0){
                 return $next($request);
             }
             return redirect()->route('user.payment');

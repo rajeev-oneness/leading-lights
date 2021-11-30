@@ -11,6 +11,7 @@
     Route::post('update-profile', [UserController::class,'updateProfile'])->name('updateProfile');
     Route::get('change-password', [UserController::class,'changePassword'])->name('changePassword');
     Route::post('update-password', [UserController::class,'updatePassword'])->name('updatePassword');
+    Route::get('payment-receipt/{payment_id}',[UserController::class,'payment_receipt'])->name('payment_receipt');
 
     Route::group(['middleware' => ['payment.confirm']], function (){       
         Route::any('attendance',[UserController::class,'attendance'])->name('attendance');
@@ -22,7 +23,6 @@
         Route::post('class-attendance',[UserController::class,'class_attendance'])->name('class_attendance');
         Route::post('upload-exam',[UserController::class,'upload_exam'])->name('upload_exam');
         Route::get('report-generate',[UserController::class,'report_generate'])->name('report_generate');
-        Route::get('payment-receipt/{payment_id}',[UserController::class,'payment_receipt'])->name('payment_receipt');
         Route::get('courses/available_courses',[UserController::class,'availableCourses'])->name('available_courses');
         Route::post('courses/add-courses',[UserController::class,'addCourses'])->name('add_courses');
         Route::post('courses/checkout',[UserController::class,'checkoutCourses'])->name('checkout_courses');
