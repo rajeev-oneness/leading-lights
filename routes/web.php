@@ -33,9 +33,9 @@ Route::post('email-availability', [CommonController::class, 'checkEmailExistence
 Route::post('/read', [NotificationController::class, 'notificationRead'])->name('notification.read');
 
 Route::get('hr/notification', [NotificationController::class, 'logsNotification'])->name('logs.notification');
-Route::get('student/notification', [NotificationController::class, 'logsNotificationForStudentEvent'])->name('student.logs.notification');
+// Route::get('student/notification', [NotificationController::class, 'logsNotificationForStudentEvent'])->name('student.logs.notification');
 Route::post('hr/notification/readall', [NotificationController::class, 'notificationReadAll'])->name('logs.notification.readall');
-Route::post('student/notification/readall', [NotificationController::class, 'studentNotificationReadAll'])->name('student.logs.notification.readall');
+// Route::post('student/notification/readall', [NotificationController::class, 'studentNotificationReadAll'])->name('student.logs.notification.readall');
 
 Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
     require 'custom/admin.php';

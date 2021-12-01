@@ -134,7 +134,7 @@ class RegisterController extends Controller
                 $user->image = $imageName;
                 $user->special_course_ids = $special_course_ids;
                 $user->country_code = $data['country_code'];
-            $user->save();
+                $user->save();
             // Fee generate
             $feedata = [];
             if(!empty($data['special_course_ids']) && count($data['special_course_ids']) > 0){
