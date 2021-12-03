@@ -1,6 +1,8 @@
 <?php
     namespace App\Http\Controllers\Teacher;
-    use Illuminate\Support\Facades\Auth,Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Teacher\Exam\ExamController;
+use Illuminate\Support\Facades\Auth,Illuminate\Support\Facades\Route;
     
     Route::get('dashboard', [DashboardController::class,'index'])->name('dashboard');
     Route::get('profile', [TeacherController::class,'index'])->name('profile');
@@ -9,13 +11,21 @@
     Route::post('update-password', [TeacherController::class,'updatePassword'])->name('updatePassword');
     Route::get('home-task',[TeacherController::class,'homeTask'])->name('homeTask');
     Route::post('upload-home-task',[TeacherController::class,'uploadHomeTask'])->name('uploadHomeTask');
-    Route::post('assign-exam',[TeacherController::class,'assignExam'])->name('assignExam');
 
     Route::any('attendance',[TeacherController::class,'attendance'])->name('attendance');
     Route::get('access-class',[TeacherController::class,'class'])->name('class');
     Route::get('student-submission',[TeacherController::class,'studentSubmission'])->name('studentSubmission');
     Route::get('video-call',[TeacherController::class,'videoCall'])->name('videoCall');
-    Route::get('manage-exam',[TeacherController::class,'manageExam'])->name('manageExam');
+
+    // Exam
+    Route::get('exam/manage-exam',[ExamController::class,'index'])->name('exam.index');
+    Route::get('exam/create-exam',[ExamController::class,'create'])->name('exam.create');
+    Route::post('exam/assign-exam',[ExamController::class,'store'])->name('exam.store');
+    Route::post('exam/add-question-in-exam',[ExamController::class,'addQuestion'])->name('addQuestion');
+    Route::get('exam/view-desc-question/{id}',[ExamController::class,'viewDescQuestion'])->name('viewDescQuestion');
+    Route::post('exam/add-mcq-question-in-exam',[ExamController::class,'addMCQQuestion'])->name('addMCQQuestion');
+    Route::get('exam/view-mcq-question/{id}',[ExamController::class,'viewMCQQuestion'])->name('viewMCQQuestion');
+
 
     Route::post('task-review',[TeacherController::class,'taskReview'])->name('taskReview');
     Route::post('task-comment/{id}',[TeacherController::class,'taskComment'])->name('taskComment');

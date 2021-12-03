@@ -18,7 +18,10 @@
         Route::get('classes',[UserController::class,'classes'])->name('classes')->middleware('payment.confirm');
         Route::get('dairy',[UserController::class,'dairy'])->name('dairy');
         Route::get('homework',[UserController::class,'homework'])->name('homework');
-        Route::get('exam',[UserController::class,'exam'])->name('exam');
+
+        // Exam
+        Route::get('exam',[ExamController::class,'index'])->name('exam.index');
+        Route::any('exam/start/{id}',[ExamController::class,'exam'])->name('exam.start');
    
         Route::post('upload-task',[UserController::class,'upload_homework'])->name('upload_homework');
         Route::post('class-attendance',[UserController::class,'class_attendance'])->name('class_attendance');

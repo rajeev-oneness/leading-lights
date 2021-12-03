@@ -53,11 +53,17 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $student->id_no }}</td>
                                     <?php
-                                    
-                                    $special_course_ids = explode(',', $student->special_course_ids);
-                                    foreach ($special_course_ids as $course_id) {
-                                        $course_details[] = App\Models\SpecialCourse::find($course_id);
+                                    if(str_contains($student->special_course_ids, ',')) {
+                                        $special_course_ids = explode(',', $student->special_course_ids);
+                                        foreach ($special_course_ids as $course_id) {
+                                            $course_details[] = App\Models\SpecialCourse::find($course_id);
+                                        }
                                     }
+                                    else{
+                                        $special_course_ids = $student->special_course_ids;
+                                        $course_detail = App\Models\SpecialCourse::find($special_course_ids);
+                                    }
+                                    
                                     
                                     $class_details = App\Models\Classes::find($student->class);
                                     ?>
@@ -65,13 +71,18 @@
                                     <td>
                                             <span class="text-info">
                                                 @if ($student->special_course_ids !== null)
-                                                <div class="student-list">
-                                                <ol>
-                                                    @foreach ($course_details as $course)
-                                                        <li>{{ $course['title'] }}</li>
-                                                    @endforeach
-                                                </ol>
-                                            </div>
+                                                
+                                                    @if (str_contains($student->special_course_ids, ','))
+                                                    <div class="student-list">
+                                                        <ol>
+                                                            @foreach ($course_details as $course)
+                                                                <li>{{ $course['title'] }}</li>
+                                                            @endforeach
+                                                        </ol>
+                                                    </div>
+                                                    @else
+                                                        {{ $course_detail['title'] }}
+                                                    @endif
                                                 @else
                                                     N/A
                                                 @endif

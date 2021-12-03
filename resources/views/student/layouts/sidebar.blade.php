@@ -63,8 +63,8 @@
                         <i class="metismenu-icon fa fa-book"></i>Homework
                     </a>
                 </li>
-                <li class="{{ Request::is('user/exam') ? 'mm-active' : '' }}">
-                    <a href="{{ route('user.exam') }}">
+                <li class="{{ Request::is('user/exam*') ? 'mm-active' : '' }}">
+                    <a href="{{ route('user.exam.index') }}">
                         <i class="metismenu-icon fa fa-desktop"></i>Exam
                     </a>
                 </li>

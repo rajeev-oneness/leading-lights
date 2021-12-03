@@ -88,25 +88,9 @@
                                                 @endphp
 
                                                 @if (!$already_upload && $exam_date == $today_date && ($current_time >= $exam_start_time && $current_time <= $end_time))
-                                                    <a href="{{ asset($exam->upload_file) }}" download="">
-                                                        <button class="btn-pill btn btn-primary mb-1"><i
-                                                                class="fas fa-download"></i>
-                                                            Download Task</button>
-                                                    </a>
-                                                    <form action="{{ route('user.upload_exam') }}" method="POST"
-                                                        enctype="multipart/form-data">
-                                                        @csrf
-                                                        <input class="btn-pill btn btn-primary" type="file"
-                                                            placeholder="Upload" name="upload_doc"
-                                                            id="{{ $exam->id }}">
 
-                                                        <input type="hidden" name="exam_id" id="exam_id{{ $exam->id }}"
-                                                            value="{{ $exam->id }}">
-                                                        <input type="hidden" name="subject" id="subject{{ $exam->id }}"
-                                                            value="{{ $exam->subject }}">
-                                                        <button type="submit" class="btn btn-primary" id="upload_doc"
-                                                            value="regular_exam" name="submit_btn">Submit</button>
-                                                    </form>
+                                                    <a href="{{ route('user.exam.start',$exam->id) }}" class="btn-pill btn btn-primary mb-1">Start Exam</a>
+
                                                 @elseif ($exam_date == $today_date && $current_time < $exam_start_time)
                                                         <button class="btn-pill btn-transition btn btn-success"><i
                                                             class="fa fa-dot-circle"> Upcoming</i></button>
