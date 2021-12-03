@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Classes;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\MessageChattings;
 
 class GroupController extends Controller
 {
@@ -16,6 +17,8 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    use MessageChattings;
+
     public function index()
     {
         $groups = Group::latest()->get();
@@ -73,22 +76,27 @@ class GroupController extends Controller
         $group_id = $group->id;
         //group id assignment
         //For teacher
-        $user = User::find($teacher_id);
-        if ($user->group_ids) {
-            $user->group_ids = $user->group_ids . ',' . $group_id;
+        $teacher = User::find($teacher_id);
+        if ($teacher->group_ids) {
+            $teacher->group_ids = $teacher->group_ids . ',' . $group_id;
         } else {
-            $user->group_ids = $group_id;
+            $teacher->group_ids = $group_id;
         }
-        $user->save();
+        $teacher->save();
         //For students
         foreach ($student_ids as $key => $id) {
-            $user = User::find($id);
-            if ($user->group_ids) {
-                $user->group_ids = $user->group_ids . ',' . $group_id;
+            $student = User::find($id);
+            if ($student->group_ids) {
+                $student->group_ids = $student->group_ids . ',' . $group_id;
             } else {
-                $user->group_ids = $group_id;
+                $student->group_ids = $group_id;
             }
-            $user->save();
+            $student->save();
+            $requestForChat = new Request([
+                'senderId' => $teacher->id,
+                'receiverId' => $student->id
+            ]);
+            $this->sendMessageUniversal($requestForChat);
         }
 
         return redirect()->route('admin.groups.index')->with('success', 'Group successfully created');

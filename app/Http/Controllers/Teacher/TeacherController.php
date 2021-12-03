@@ -140,6 +140,7 @@ class TeacherController extends Controller
     public function homeTask()
     {
         $data['groups'] = Group::latest()->where('teacher_id', Auth::user()->id)->get();
+        // dd($data['groups']);
         $data['subjects'] = Subject::latest()->get();
         $data['classes'] = Classes::orderBy('name')->get();
         $data['tasks'] = HomeTask::where('user_id', Auth::user()->id)->latest()->get();
@@ -156,6 +157,7 @@ class TeacherController extends Controller
             'submission_time' => 'required|date_format:H:i',
             'upload_file' => 'required|mimes:pdf'
         ]);
+        // dd($request->all);
 
         if ($request->hasFile('upload_file')) {
             $file = $request->file('upload_file');
@@ -174,10 +176,14 @@ class TeacherController extends Controller
         if ($after_explode_class[1] === 'class') {
             $homeTask->class = $after_explode_class[0];
             $homeTask->group_id = null;
+            createNotification($user_id, $after_explode_class[0], 0, 'teacher_upload_homework');
+            // dd($notifi);
         }
         if ($after_explode_class[1] === 'group') {
             $homeTask->group_id = $after_explode_class[0];
+            // dd($after_explode_class[0]);
             $homeTask->class = null;
+            createNotification($user_id, 0, $after_explode_class[0], 'teacher_upload_homework');
         }
         $homeTask->subject = $request->subject;
         $homeTask->submission_date = $request->submission_date;
@@ -185,13 +191,18 @@ class TeacherController extends Controller
         $homeTask->upload_file = $fileName;
         $homeTask->save();
 
-        createNotification($user_id, $class, 0, 'teacher_upload_homework');
+        // dd($homeTask);
+
+        // createNotification($user_id, $class, 0, 'teacher_upload_homework');
 
 
         $notification = new Notification();
         $notification->user_id = $user_id;
-        $notification->class_id = $class;
-        $notification->group_id = 0;
+        if ($after_explode_class[1] === 'class') {
+            $notification->class_id = $after_explode_class[0];
+        } elseif ($after_explode_class[1] === 'group') {
+            $notification->group_id = $after_explode_class[0];
+        }
         $notification->type = 'teacher_upload_homework';
         $notification->title = 'Homework uploaded successfully';
         $notification->message = 'Please Update and update as needed';
@@ -286,6 +297,7 @@ class TeacherController extends Controller
     public function class()
     {
         $data['groups'] = Group::latest()->where('teacher_id', Auth::user()->id)->get();
+        // dd($data['groups']);
         $data['classes'] = Classes::orderBy('name')->get();
         $data['subjects'] = Subject::latest()->get();
         $data['arrange_classes'] = ArrangeClass::where('user_id', Auth::user()->id)->latest()->get();
@@ -361,6 +373,7 @@ class TeacherController extends Controller
     public function arrange_class(Request $request)
     {
         $class = $request->class;
+        // dd($group);
         $after_explode_class = explode('-', $class);
         $date = $request->date;
         $start_time = $request->start_time;
@@ -388,11 +401,12 @@ class TeacherController extends Controller
             if ($after_explode_class[1] === 'class') {
                 $arrange_class->class = $after_explode_class[0];
                 $arrange_class->group_id = null;
+                createNotification($user_id, $after_explode_class[0], 0, 'teacher_arrange_class');
             }
-
             if ($after_explode_class[1] === 'group') {
                 $arrange_class->group_id = $after_explode_class[0];
                 $arrange_class->class = null;
+                createNotification($user_id, 0, $after_explode_class[0], 'teacher_arrange_class');
             }
 
             $arrange_class->date = $date;
@@ -402,12 +416,16 @@ class TeacherController extends Controller
             $arrange_class->save();
             // $user_id = auth()->user->id;
 
-            createNotification($user_id, $class, 0, 'teacher_arrange_class');
+            // createNotification($user_id, $class, 0, 'teacher_arrange_class');
+            // createNotification($user_id, $class, $group, 'teacher_arrange_class');
 
             $notification = new Notification();
             $notification->user_id = $user_id;
-            $notification->class_id = $class;
-            $notification->group_id = 0;
+            if ($after_explode_class[1] === 'class') {
+                $notification->class_id = $after_explode_class[0];
+            } elseif ($after_explode_class[1] === 'group') {
+                $notification->group_id = $after_explode_class[0];
+            }
             $notification->type = 'teacher_arrange_class';
             $notification->title = 'Class Arranged';
             $notification->message = 'Please Update and check';

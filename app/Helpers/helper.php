@@ -212,6 +212,19 @@ function createNotification($user, $class = 0, $group = 0, $type)
 				'route' => $route,
 			];
 		}
+	} elseif ($group > 0) {
+		$users = App\Models\User::where('group_ids', $group)->get();
+		foreach ($users as $user) {
+			$notification[] = [
+				'user_id' => $user->id,
+				'class_id' => $class,
+				'group_id' => $user->group_ids,
+				'type' => $type,
+				'title' => $title,
+				'message' => $message,
+				'route' => $route,
+			];
+		}
 	} else {
 		$notification[] = [
 			'user_id' => $user,
