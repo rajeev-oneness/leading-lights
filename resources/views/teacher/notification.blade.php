@@ -1,4 +1,4 @@
-@extends('hr.layouts.master')
+@extends('teacher.layouts.master')
 @section('content')
     <div class="app-main__outer">
         <div class="app-main__inner">

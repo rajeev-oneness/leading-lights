@@ -33,7 +33,8 @@ Route::post('email-availability', [CommonController::class, 'checkEmailExistence
 Route::post('/read', [NotificationController::class, 'notificationRead'])->name('notification.read');
 
 Route::get('hr/notification', [NotificationController::class, 'logsNotification'])->name('logs.notification');
-// Route::get('student/notification', [NotificationController::class, 'logsNotificationForStudentEvent'])->name('student.logs.notification');
+Route::get('student/notification', [NotificationController::class, 'logsNotificationForStudentEvent'])->name('student.logs.notification');
+Route::get('teacher/notification', [NotificationController::class, 'logsNotificationForTeacher'])->name('teacher.logs.notification');
 Route::post('hr/notification/readall', [NotificationController::class, 'notificationReadAll'])->name('logs.notification.readall');
 // Route::post('student/notification/readall', [NotificationController::class, 'studentNotificationReadAll'])->name('student.logs.notification.readall');
 
@@ -53,8 +54,8 @@ Route::group(['as' => 'hr.', 'prefix' => 'hr', 'middleware' => ['auth', 'hr']], 
     require 'custom/hr.php';
 });
 
-Route::post('payment/capture',[PaymentController::class,'storeRazorePayPayment'])->name('payment.capture');
+Route::post('payment/capture', [PaymentController::class, 'storeRazorePayPayment'])->name('payment.capture');
 
-Route::get('migrate',function(){
+Route::get('migrate', function () {
     \Artisan::call('migrate');
 });

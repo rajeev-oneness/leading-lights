@@ -22,12 +22,21 @@ class NotificationController extends Controller
         $notifications = Notification::where('user_id', '=', $user->id)->where('read_flag', '=', '0')->get();;
         return view('hr.notification', compact('notifications'));
     }
+
     public function logsNotificationForStudentEvent(Request $request)
     {
         $user = Auth::user();
         // $data = Notification::where('user_id', $user->id)->latest();
-        $notifications = Notification::where('class_id', $user->class)->where('read_flag', '=', '0')->get();;
+        $notifications = Notification::where('user_id', '=', $user->id)->where('read_flag', '=', '0')->get();;
         return view('student.notification', compact('notifications'));
+    }
+
+    public function logsNotificationForTeacher(Request $request)
+    {
+        $user = Auth::user();
+        // $data = Notification::where('user_id', $user->id)->latest();
+        $notifications = Notification::where('user_id', '=', $user->id)->where('read_flag', '=', '0')->get();;
+        return view('teacher.notification', compact('notifications'));
     }
 
     public function notificationReadAll(Request $request)
@@ -35,13 +44,13 @@ class NotificationController extends Controller
         $user = Auth::user();
         $noti = Notification::where('user_id', '=', $user->id)->where('read_flag', '=', '0')->update(['read_flag' => 1]);
     }
-    public function studentNotificationReadAll(Request $request)
-    {
-        $user = Auth::user();
-        $class = $user->class;
-        // dd($class);
-        // $noti = Notification::where('class_id', '=', $class)->where('read_flag', '=', '0')->get();
-        $noti = Notification::where('class_id', '=', $class)->where('read_flag', '0')->update(['read_flag' => 1]);
-        // dd($noti);
-    }
+    // public function studentNotificationReadAll(Request $request)
+    // {
+    //     $user = Auth::user();
+    //     $class = $user->class;
+    //     // dd($class);
+    //     // $noti = Notification::where('class_id', '=', $class)->where('read_flag', '=', '0')->get();
+    //     $noti = Notification::where('class_id', '=', $class)->where('read_flag', '0')->update(['read_flag' => 1]);
+    //     // dd($noti);
+    // }
 }

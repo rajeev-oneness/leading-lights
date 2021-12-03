@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use App\Models\SpecialCourse;
 use App\Models\SubmitHomeTask;
 use App\Models\ClassAttendance;
+use App\Models\Notification;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -61,6 +62,11 @@ class TeacherController extends Controller
             $teacher->about_us = $request->bio;
         }
         $teacher->save();
+
+        $user_id = $teacher->id;
+
+        createNotification($user_id, 0, 0, 'update_teacher_profile');
+
         return response()->json('success');
     }
 
@@ -161,8 +167,10 @@ class TeacherController extends Controller
         $class = $request->class;
         $after_explode_class = explode('-', $class);
 
+        $user_id = Auth::user()->id;
+
         $homeTask = new HomeTask();
-        $homeTask->user_id = Auth::user()->id;
+        $homeTask->user_id = $user_id;
         if ($after_explode_class[1] === 'class') {
             $homeTask->class = $after_explode_class[0];
             $homeTask->group_id = null;
@@ -177,23 +185,36 @@ class TeacherController extends Controller
         $homeTask->upload_file = $fileName;
         $homeTask->save();
 
+        createNotification($user_id, $class, 0, 'teacher_upload_homework');
+
+
+        $notification = new Notification();
+        $notification->user_id = $user_id;
+        $notification->class_id = $class;
+        $notification->group_id = 0;
+        $notification->type = 'teacher_upload_homework';
+        $notification->title = 'Homework uploaded successfully';
+        $notification->message = 'Please Update and update as needed';
+        $notification->route = 'teacher.homeTask';
+        $notification->save();
+
         return redirect()->back()->with('success', 'Task upload successfully');
     }
 
     public function attendance(Request $request)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             $attendance = Attendance::whereDate('date', $request->date)
-            ->where('user_id',Auth::user()->id)
-            ->latest()
-            ->get();
+                ->where('user_id', Auth::user()->id)
+                ->latest()
+                ->get();
             return response()->json($attendance);
         }
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $specific_attendance = Attendance::where('user_id', Auth::user()->id)
-            ->where('date',date('Y-m-d'))->latest()->take(4)->get();
+                ->where('date', date('Y-m-d'))->latest()->take(4)->get();
             $specific_date = date('Y-m-d');
-            return view('teacher.attendance', compact('specific_attendance','specific_date'));
+            return view('teacher.attendance', compact('specific_attendance', 'specific_date'));
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['submit_btn'])) {
@@ -218,45 +239,42 @@ class TeacherController extends Controller
                         'end_date' => 'required|date'
                     ]);
                     if ($request->start_date > $request->end_date) {
-                        return redirect()->back()->with('error','Please select valid range');
+                        return redirect()->back()->with('error', 'Please select valid range');
                     }
                     $from = date($request->start_date);
                     $to = date($request->end_date);
                     $data['start_date'] = $request->start_date;
                     $data['end_date'] = $request->end_date;
 
-                    $available_att = Attendance::where('user_id',Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get();
-                    dd( $available_att);
+                    $available_att = Attendance::where('user_id', Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get();
+                    dd($available_att);
 
-                    for ($i = $from; $i <= $to ; $i++) {
-                       $attendance_array[] = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
+                    for ($i = $from; $i <= $to; $i++) {
+                        $attendance_array[] = Attendance::where('user_id', Auth::user()->id)->whereDate('date', $i)->first();
                     }
                     dd($attendance_array);
 
 
-                    $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id',Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
+                    $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
                 }
                 if (isset($data['specific_attendance'])) {
                     if ($data['specific_attendance']->count() > 0) {
                         return view('teacher.attendance')->with($data);
-                    }
-                    else {
+                    } else {
                         $absent_date =  $date;
-                        return view('teacher.attendance',compact('absent_date'));
+                        return view('teacher.attendance', compact('absent_date'));
                     }
-                } elseif(isset($data['checked_attendance'])){
+                } elseif (isset($data['checked_attendance'])) {
                     if ($data['checked_attendance']->count() > 0) {
                         return view('teacher.attendance')->with($data);
-                    }
-                    else {
+                    } else {
                         $attendance = [];
                         $attendance['date'] = $date;
                         $attendance['login_time'] = 'N/A';
                         $attendance['logout_time'] = 'N/A';
                         return view('teacher.attendance')->with($attendance);
                     }
-            }
-               
+                }
             } else {
                 $attendance = Attendance::find($request->attendance_id);
                 $attendance->comment = $request->comment;
@@ -361,9 +379,11 @@ class TeacherController extends Controller
             ->whereTime('end_time', '>=', $class_start_time)
             ->count();
 
+        $user_id = Auth::user()->id;
+
         if ($arrange_class == 0 && $group_arrange_class == 0) {
             $arrange_class = new ArrangeClass();
-            $arrange_class->user_id = Auth::user()->id;
+            $arrange_class->user_id = $user_id;
             $arrange_class->subject = $request->subject;
             if ($after_explode_class[1] === 'class') {
                 $arrange_class->class = $after_explode_class[0];
@@ -380,6 +400,20 @@ class TeacherController extends Controller
             $arrange_class->end_time = $request->end_time;
             $arrange_class->meeting_url = $request->meeting_url;
             $arrange_class->save();
+            // $user_id = auth()->user->id;
+
+            createNotification($user_id, $class, 0, 'teacher_arrange_class');
+
+            $notification = new Notification();
+            $notification->user_id = $user_id;
+            $notification->class_id = $class;
+            $notification->group_id = 0;
+            $notification->type = 'teacher_arrange_class';
+            $notification->title = 'Class Arranged';
+            $notification->message = 'Please Update and check';
+            $notification->route = 'teacher.class';
+            $notification->save();
+
             return response()->json(array(
                 'success' => 'Data save successfully',
             ));
@@ -434,7 +468,7 @@ class TeacherController extends Controller
         $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
         $time = new DateTime($request->date . $request->start_time);
         $time->add(new DateInterval('PT' . $minutes_to_add . 'M'));
-        
+
         $new_time = $time->format('H:i');
         // dd($new_time);
         if ($exam_start_time > $exam_end_time) {
@@ -444,15 +478,15 @@ class TeacherController extends Controller
         $after_explode_class = explode('-', $request->class);
 
         $arrange_exam = ArrangeExam::where('class', $after_explode_class[0])
-        ->where('date', $request->date)
-        ->whereTime('start_time', '<=', $exam_start_time)
-        ->whereTime('end_time', '>=', $exam_start_time)
-        ->count();
+            ->where('date', $request->date)
+            ->whereTime('start_time', '<=', $exam_start_time)
+            ->whereTime('end_time', '>=', $exam_start_time)
+            ->count();
         $group_arrange_exam = ArrangeExam::where('group_id', $after_explode_class[0])
-        ->where('date', $request->date)
-        ->whereTime('start_time', '<=', $exam_start_time)
-        ->whereTime('end_time', '>=', $exam_start_time)
-        ->count();
+            ->where('date', $request->date)
+            ->whereTime('start_time', '<=', $exam_start_time)
+            ->whereTime('end_time', '>=', $exam_start_time)
+            ->count();
 
         // $arrange_exam = ArrangeExam::where('class', $request->class)
         //     ->where('date', $request->date)
@@ -651,7 +685,8 @@ class TeacherController extends Controller
     }
 
     //Whiteboard
-    public function whiteboard(){
+    public function whiteboard()
+    {
         return view('teacher.whiteboard');
     }
 

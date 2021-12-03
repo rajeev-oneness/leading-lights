@@ -66,9 +66,9 @@
                                                     id="country_code">
                                                     <?php if($phonecodes){?>
                                                     <?php foreach($phonecodes as $code){?>
-                                                    <option value="+{{ $code->phonecode }}"
+                                                    <option value="{{ $code->phonecode }}"
                                                         {{ old('country_code') == $code->phonecode ? 'selected' : '' }}>
-                                                        +{{ $code->phonecode }}</option>
+                                                        {{ $code->phonecode }}</option>
                                                     <?php } } ?>
                                                 </select>
                                                 <div class="error" style="color : red;">Please Fill This field.

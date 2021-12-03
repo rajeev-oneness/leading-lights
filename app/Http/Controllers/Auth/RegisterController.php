@@ -99,9 +99,9 @@ class RegisterController extends Controller
     {
         DB::beginTransaction();
         try {
-            $student_count = User::where('role_id',4)->count();
-            $num_padded = sprintf("%05d", ( $student_count +1 ));
-            $id_no = 'LLST'.$num_padded;
+            $student_count = User::where('role_id', 4)->count();
+            $num_padded = sprintf("%05d", ($student_count + 1));
+            $id_no = 'LLST' . $num_padded;
             $image = $data['image'];
             $imageName = imageUpload($image, 'profile_image');
             $admin_details = User::select('email')->where('role_id', 1)->first();
@@ -122,52 +122,56 @@ class RegisterController extends Controller
             }
 
             $user = new User();
-                $user->first_name = $data['first_name'];
-                $user->last_name = $data['last_name'];
-                $user->email = $data['email'];
-                $user->mobile = $data['mobile'];
-                $user->id_no =  $id_no;
-                $user->dob = $data['dob'];
-                $user->class = $data['class'];
-                $user->gender = $data['gender'];
-                $user->password = Hash::make($id_no);
-                $user->image = $imageName;
-                $user->special_course_ids = $special_course_ids;
-                $user->country_code = $data['country_code'];
-                $user->save();
+            $user->first_name = $data['first_name'];
+            $user->last_name = $data['last_name'];
+            $user->email = $data['email'];
+            $user->mobile = $data['mobile'];
+            $user->id_no =  $id_no;
+            $user->dob = $data['dob'];
+            $user->class = $data['class'];
+            $user->gender = $data['gender'];
+            $user->password = Hash::make($id_no);
+            $user->image = $imageName;
+            $user->special_course_ids = $special_course_ids;
+            $user->country_code = $data['country_code'];
+            $user->save();
+
+            $user_id = $user->id;
+            createNotification($user_id, 0, 0, 'student_registration');
+
             // Fee generate
             $feedata = [];
-            if(!empty($data['special_course_ids']) && count($data['special_course_ids']) > 0){
+            if (!empty($data['special_course_ids']) && count($data['special_course_ids']) > 0) {
                 foreach ($data['special_course_ids'] as $key => $course) {
-                    $s_course = SpecialCourse::where('id',$course)->first();
-                    if($s_course){
+                    $s_course = SpecialCourse::where('id', $course)->first();
+                    if ($s_course) {
                         $feedata[] = [
                             'user_id' => $user->id,
                             'class_id' => 0,
                             'course_id' => $s_course->id,
                             'fee_type' => 'course_fee',
-                            'due_date' => date('Y-m-d',strtotime('+1 day')),
-                            'payment_month' => date('F',strtotime('+1 day')),
+                            'due_date' => date('Y-m-d', strtotime('+1 day')),
+                            'payment_month' => date('F', strtotime('+1 day')),
                             'amount' => $s_course->monthly_fees,
                         ];
                     }
                 }
             }
-            if($user->class > 0){
-                $check_class = Classes::where('id',$user->class)->first();
-                if($check_class){
+            if ($user->class > 0) {
+                $check_class = Classes::where('id', $user->class)->first();
+                if ($check_class) {
                     $feedata[] = [
                         'user_id' => $user->id,
                         'class_id' => $check_class->id,
                         'course_id' => 0,
                         'fee_type' => 'admission_fee',
-                        'due_date' => date('Y-m-d',strtotime('+1 day')),
-                        'payment_month' => date('F',strtotime('+1 day')),
-                        'amount' => $check_class->monthly_fees + $check_class->admission_fees, 
+                        'due_date' => date('Y-m-d', strtotime('+1 day')),
+                        'payment_month' => date('F', strtotime('+1 day')),
+                        'amount' => $check_class->monthly_fees + $check_class->admission_fees,
                     ];
                 }
             }
-            if(count($feedata) > 0){
+            if (count($feedata) > 0) {
                 DB::table('fees')->insert($feedata);
             }
             //Store certificate 
@@ -255,6 +259,11 @@ class RegisterController extends Controller
             $user->country_code = $request->country_code;
             $user->qualification_id = $qualification_id;
             $user->save();
+
+            $user_id = $user->id;
+            createNotification($user_id, 0, 0, 'teacher_registration');
+            // dd($noti);
+
 
             //Store certificate 
             $file_name =  imageUpload($request->certificate, 'teacher_certificate');

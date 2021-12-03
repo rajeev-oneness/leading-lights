@@ -125,14 +125,12 @@
                                         @if ($teacher->status == 1)
                                             <span>
                                                 <img src="https://img.icons8.com/ios-glyphs/30/000000/save--v1.png"
-                                                    style="display: none;float: right;" id="save_bio"
-                                                    onclick="saveBio()" />
+                                                    style="display: none;float: right;" id="save_bio" onclick="saveBio()" />
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round"
                                                     class="feather feather-edit" onclick="changeBio()" id="edit_bio">
-                                                    <path
-                                                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7">
+                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7">
                                                     </path>
                                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z">
                                                     </path>
@@ -259,37 +257,37 @@
                                         </div>
                                     @endforelse
                                     <!--  <div class="col-md-12 col-lg-6 col-xl-4">
-                                    <div class="card-shadow-primary profile-responsive card-border mb-3 card">
-                                        <div class="dropdown-menu-header">
-                                            <div class="dropdown-menu-header-inner">
-                                                
-                                                    <img src="assets/images/pro3.png" class="img-fluid mx-auto d-block w-100">
-                                                
-                                            </div>
-                                        </div>
-                                        <ul class="list-group list-group-flush">
-                                            <li class="bg-warm-flame list-group-item">
-                                                <div class="widget-content p-0">
-                                                    <div class="widget-content-wrapper justify-content-between">
-                                                        <div class="widget-content-left mr-3">
-                                                            <div class="icon-wrapper m-0">
-                                                                <span class="head">Live Class</span>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div class="widget-content-left d-sm-flex align-items-center">
-                                                            <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
-                                                            <div class="widget-subheading">
-                                                                
-                                                                    Today<br/><span class="text">7:30 pm</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>                                   
-                                        </ul>
-                                    </div>                            
-                                </div> -->
+                                                                    <div class="card-shadow-primary profile-responsive card-border mb-3 card">
+                                                                        <div class="dropdown-menu-header">
+                                                                            <div class="dropdown-menu-header-inner">
+                                                                                
+                                                                                    <img src="assets/images/pro3.png" class="img-fluid mx-auto d-block w-100">
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                                                        <ul class="list-group list-group-flush">
+                                                                            <li class="bg-warm-flame list-group-item">
+                                                                                <div class="widget-content p-0">
+                                                                                    <div class="widget-content-wrapper justify-content-between">
+                                                                                        <div class="widget-content-left mr-3">
+                                                                                            <div class="icon-wrapper m-0">
+                                                                                                <span class="head">Live Class</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        
+                                                                                        <div class="widget-content-left d-sm-flex align-items-center">
+                                                                                            <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
+                                                                                            <div class="widget-subheading">
+                                                                                                
+                                                                                                    Today<br/><span class="text">7:30 pm</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>                                   
+                                                                        </ul>
+                                                                    </div>                            
+                                                                </div> -->
                                 </div>
                             </div>
                         </div>
@@ -306,7 +304,43 @@
                                 <div class="scrollbar-container ps ps--active-y">
                                     <div class="p-2">
                                         <ul class="todo-list-wrapper list-group list-group-flush">
-                                            <li class="list-group-item">
+                                            @foreach ($notification as $noti)
+                                                <li class="list-group-item">
+
+                                                    <div class="widget-content p-0">
+                                                        <div class="d-sm-flex align-items-center not">
+                                                            <div class="">
+                                                                <img src="
+                                                                                                    {{ asset('frontend/assets/images/alart.png') }}"
+                                                                    class="img-fluid">
+
+                                                            </div>
+                                                            <div class="ml-3">
+                                                                <div class="widget-subheading"> <a
+                                                                        href="javascript:void(0)"
+                                                                        class="{{ $noti->read_flag == 0 ? 'unread' : 'read' }}"
+                                                                        onclick="readNotification('{{ $noti->id }}', '{{ $noti->route ? route($noti->route) : '' }}')"><i
+                                                                            class="white-text" style="color: #fff">
+                                                                            <div>{{ $noti->title }}</div>
+                                                                            <div>{{ $noti->message }}</div>
+                                                                        </i></a>
+                                                                </div>
+
+                                                                <div class="d-sm-flex align-items-center">
+
+                                                                    <div class="widget-subheading">
+
+                                                                        {{-- Today<br> --}}
+                                                                        <span class="text">7 {{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}</span>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            @endforeach
+                                            {{-- <li class="list-group-item">
 
                                                 <div class="widget-content p-0">
                                                     <div class="d-sm-flex align-items-center not">
@@ -392,36 +426,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </li>
-                                            <li class="list-group-item">
-
-                                                <div class="widget-content p-0">
-                                                    <div class="d-sm-flex align-items-center not">
-                                                        <div class="">
-                                                            <img src="
-                                                                {{ asset('frontend/assets/images/alart.png') }}"
-                                                                class="img-fluid">
-
-                                                        </div>
-                                                        <div class="ml-3">
-                                                            <div class="widget-subheading"><i>Proin gravida
-                                                                    nibh vel velit auctor aliquet. sollicitudin,
-                                                                    lorem quis bibendum auctor, nisi elit
-                                                                    consequat</i></div>
-
-                                                            <div class="d-sm-flex align-items-center">
-
-                                                                <div class="widget-subheading">
-
-                                                                    Today<br><span class="text">7:30
-                                                                        pm</span>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
+                                            </li> --}}
                                         </ul>
                                     </div>
                                     <div class="ps__rail-x" style="left: 0px; bottom: 0px;">

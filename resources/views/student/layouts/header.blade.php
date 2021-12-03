@@ -297,7 +297,7 @@
                             <li class="nav-item-divider nav-item"></li>
                             <li class="nav-item-btn text-center nav-item">
                                 @if (count($notification) > 0)
-                                    <a href="{{ route('logs.notification') }}"
+                                    <a href="{{ route('student.logs.notification') }}"
                                         class="dropdown-item dropdown-footer">See All Notifications</a>
                                 @endif
                             </li>

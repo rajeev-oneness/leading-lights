@@ -16,33 +16,36 @@ use Illuminate\Support\Facades\Notification;
 
 class RazorpayController extends Controller
 {
-    public function payment(Request $req,$feeId)
+    public function payment(Request $req, $feeId)
     {
-        if(!empty($req->transactionId) && $req->transactionId > 0){
+        if (!empty($req->transactionId) && $req->transactionId > 0) {
             DB::beginTransaction();
             try {
                 $user = Auth::user();
-                $fee = \App\Models\Fee::where('id',$feeId)->where('user_id',$user->id)->where('transaction_id',0)->first();
-                if($fee){
-                    $transaction = \App\Models\Transaction::where('id',$req->transactionId)->first();
-                    if($transaction){
+                $fee = \App\Models\Fee::where('id', $feeId)->where('user_id', $user->id)->where('transaction_id', 0)->first();
+                if ($fee) {
+                    $transaction = \App\Models\Transaction::where('id', $req->transactionId)->first();
+                    if ($transaction) {
                         $fee->transaction_id = $transaction->id;
-                        $fee->paid_on = date('Y-m-d');$fee->save();
+                        $fee->paid_on = date('Y-m-d');
+                        $fee->save();
                         $newFee = false;
-                        if($fee->class_id != 0){
-                            $class = \App\Models\Classes::where('id',$fee->class_id)->first();
-                            if($class){
+                        if ($fee->class_id != 0) {
+                            $class = \App\Models\Classes::where('id', $fee->class_id)->first();
+                            if ($class) {
                                 $feeType = 'class_fee';
-                                $amount = $class->monthly_fees;$newFee = true;
+                                $amount = $class->monthly_fees;
+                                $newFee = true;
                             }
-                        }elseif($fee->course_id != 0){
-                            $course = \App\Models\SpecialCourse::where('id',$fee->course_id)->first();
-                            if($course){
+                        } elseif ($fee->course_id != 0) {
+                            $course = \App\Models\SpecialCourse::where('id', $fee->course_id)->first();
+                            if ($course) {
                                 $feeType = 'course_fee';
-                                $amount = $course->monthly_fees;$newFee = true;
+                                $amount = $course->monthly_fees;
+                                $newFee = true;
                             }
                         }
-                        if($newFee && $amount > 0){
+                        if ($newFee && $amount > 0) {
                             $newFee = new \App\Models\Fee;
                             $newFee->user_id = $fee->user_id;
                             $newFee->class_id = $fee->class_id;
@@ -60,21 +63,22 @@ class RazorpayController extends Controller
                 DB::rollback();
             }
         }
-        Session::put('success', 'Payment successful, your order will be despatched in the next 48 hours.');
-        return redirect()->back()->with('success', 'Payment successful, your order will be despatched in the next 48 hours.');
+        $user_id =  Auth::user()->id;
+        createNotification($user_id, 0, 0, 'payment_student');
+
+        Session::put('success', 'Payment successful.');
+        return redirect()->back()->with('success', 'Payment successful.');
     }
 
     public function payment_old(Request $request)
-    {        
-        $input = $request->all(); 
+    {
+        $input = $request->all();
         $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
         $payment = $api->payment->fetch($input['razorpay_payment_id']);
 
-        if(count($input)  && !empty($input['razorpay_payment_id'])) 
-        {
-            try 
-            {
-                $response = $api->payment->fetch($input['razorpay_payment_id'])->capture(array('amount'=>$payment['amount'])); 
+        if (count($input)  && !empty($input['razorpay_payment_id'])) {
+            try {
+                $response = $api->payment->fetch($input['razorpay_payment_id'])->capture(array('amount' => $payment['amount']));
                 if ($response) {
                     $payment = new Payment();
                     $payment->user_id = Auth::user()->id;
@@ -86,7 +90,7 @@ class RazorpayController extends Controller
                     $payment->save();
 
                     // Other payment details
-                    
+
                     if ($request->fees_type === 'admission_fee') {
                         if (Auth::user()->special_course_ids) {
                             $special_course_ids = explode(',', Auth::user()->special_course_ids);
@@ -103,23 +107,23 @@ class RazorpayController extends Controller
                                 $other_payment_details->course_id = $course->id;
 
                                 $course_start_date = $course->start_date;
-                                $next_date = date('Y-m-d',strtotime($course_start_date.'first day of +1 month'));
-                                $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                                $next_date = date('Y-m-d', strtotime($course_start_date . 'first day of +1 month'));
+                                $next_due_date = date('Y-m-d', strtotime($next_date . ' + 4 days'));
                                 $other_payment_details->payment_month = $course_start_date;
                                 $other_payment_details->next_due_date = $next_due_date;
 
                                 $other_payment_details->save();
                             }
-                        }else{
+                        } else {
                             $other_payment_details = new OtherPaymentDetails();
                             $other_payment_details->fees_type = 'admission_fee';
                             $other_payment_details->payment_id = $payment->id;
                             $other_payment_details->user_id = Auth::user()->id;
                             $other_payment_details->class_id = $request->class_id;
 
-                            $next_date = date('Y-m-d',strtotime('first day of +2 month'));
-                            $other_payment_details->next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
-                            $other_payment_details->payment_month = date('Y-m-d',strtotime('first day of +1 month'));
+                            $next_date = date('Y-m-d', strtotime('first day of +2 month'));
+                            $other_payment_details->next_due_date = date('Y-m-d', strtotime($next_date . ' + 4 days'));
+                            $other_payment_details->payment_month = date('Y-m-d', strtotime('first day of +1 month'));
                             $other_payment_details->save();
                         }
                         // $payment->payment_month = $payment_month;
@@ -132,16 +136,15 @@ class RazorpayController extends Controller
                             $other_payment_details->user_id = Auth::user()->id;
                             $other_payment_details->course_id = $request->course_id;
                             $other_payment_details->fees_type = 'monthly_fees';
-    
-                            $previous_payment = OtherPaymentDetails::where('user_id',Auth::user()->id)->where('course_id',$request->course_id)->orderBy('id', 'desc')->first();
+
+                            $previous_payment = OtherPaymentDetails::where('user_id', Auth::user()->id)->where('course_id', $request->course_id)->orderBy('id', 'desc')->first();
                             // $course_details = SpecialCourse::find($request->course_id);
-                            $next_due_date = date('Y-m-d',strtotime("+1 months",strtotime($previous_payment->next_due_date)));
-    
+                            $next_due_date = date('Y-m-d', strtotime("+1 months", strtotime($previous_payment->next_due_date)));
+
                             $other_payment_details->payment_month = $previous_payment->next_due_date;
                             $other_payment_details->next_due_date = $next_due_date;
                             $other_payment_details->save();
-                        }
-                        elseif($request->type === 'new_course'){
+                        } elseif ($request->type === 'new_course') {
                             // dd(explode(',',$request->course_id));
                             $all_corses = $request->course_id;
                             foreach ($all_corses as $key => $course_id) {
@@ -154,56 +157,51 @@ class RazorpayController extends Controller
 
                                 // $previous_payment = OtherPaymentDetails::where('user_id',Auth::user()->id)->where('course_id',$request->course_id)->orderBy('id', 'desc')->first();
                                 $course_details = SpecialCourse::find($course_id);
-                                $next_due_date = date('Y-m-d',strtotime("+1 months",strtotime($course_details->start_date)));
-        
+                                $next_due_date = date('Y-m-d', strtotime("+1 months", strtotime($course_details->start_date)));
+
                                 $other_payment_details->payment_month = $course_details->start_date;
                                 $other_payment_details->next_due_date = $next_due_date;
                                 $other_payment_details->save();
 
                                 $user_details = User::find(Auth::user()->id);
                                 if ($user_details->special_course_ids) {
-                                    $user_details->special_course_ids = $user_details->special_course_ids.','.$course_id;
-                                }else{
-                                    $user_details->special_course_ids = $user_details->special_course_ids.$course_id;
+                                    $user_details->special_course_ids = $user_details->special_course_ids . ',' . $course_id;
+                                } else {
+                                    $user_details->special_course_ids = $user_details->special_course_ids . $course_id;
                                 }
                                 $user_details->save();
                             }
                             Session::put('success', 'Payment successful, your order will be despatched in the next 48 hours.');
                             return redirect()->route('user.payment')->with('success', 'Payment successful, your order will be despatched in the next 48 hours.');
-                        }
-                        else{
+                        } else {
                             $other_payment_details = new OtherPaymentDetails();
                             $other_payment_details->payment_id = $payment->id;
                             $other_payment_details->user_id = Auth::user()->id;
                             $other_payment_details->class_id = $request->class_id;
                             $other_payment_details->fees_type = 'monthly_fees';
 
-                            $previous_payment = OtherPaymentDetails::where('user_id',Auth::user()->id)->where('class_id',$request->class_id)->orderBy('id', 'desc')->first();
+                            $previous_payment = OtherPaymentDetails::where('user_id', Auth::user()->id)->where('class_id', $request->class_id)->orderBy('id', 'desc')->first();
                             //Next date for payment 
-                            $next_due_date = date('Y-m-d',strtotime("+1 months",strtotime($previous_payment->next_due_date)));
+                            $next_due_date = date('Y-m-d', strtotime("+1 months", strtotime($previous_payment->next_due_date)));
 
                             $other_payment_details->payment_month = $previous_payment->next_due_date;
                             $other_payment_details->next_due_date = $next_due_date;
                             $other_payment_details->save();
                         }
-                    } 
+                    }
 
-                    
+
                     // Notification::route('mail', Auth::user()->email)->notify(new PaymentSuccessMail($payment));
-                   
-                }
 
-            } 
-            catch (\Exception $e) 
-            {
+                }
+            } catch (\Exception $e) {
                 return  $e->getMessage();
-                Session::put('error',$e->getMessage());
+                Session::put('error', $e->getMessage());
                 return redirect()->back();
-            }            
+            }
         }
-        
+
         Session::put('success', 'Payment successful, your order will be despatched in the next 48 hours.');
         return redirect()->back()->with('success', 'Payment successful, your order will be despatched in the next 48 hours.');
     }
-
 }

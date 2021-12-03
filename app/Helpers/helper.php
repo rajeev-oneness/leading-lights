@@ -130,6 +130,73 @@ function createNotification($user, $class = 0, $group = 0, $type)
 			$message = 'Please check & update your profile as needed';
 			$route = 'hr.profile';
 			break;
+		case 'update_hr_address':
+			$title = 'Address update successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'hr.profile';
+			break;
+		case 'update_hr_bio':
+			$title = 'Bio update successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'hr.profile';
+			break;
+		case 'announcement_create':
+			$title = 'Announcement Create successfull';
+			$message = 'Please check & update announcement as needed';
+			$route = 'hr.announcement';
+			break;
+
+		case 'teacher_registration':
+			$title = 'Registration successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'teacher.profile';
+			break;
+
+		case 'update_teacher_profile':
+			$title = 'Profile update successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'teacher.profile';
+			break;
+		case 'teacher_arrange_class':
+			$title = 'Class arrange';
+			$message = 'Please check & update as needed';
+			$route = 'user.classes';
+			break;
+		case 'teacher_upload_homework':
+			$title = 'Homework Uploaded';
+			$message = 'Please check & update as needed';
+			$route = 'user.homework';
+			break;
+		case 'student_registration':
+			$title = 'Registration successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.profile';
+			break;
+		case 'update_student_bio':
+			$title = 'Bio update successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.profile';
+			break;
+		case 'student_change_password':
+			$title = 'Password change successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.profile';
+			break;
+		case 'upload_student_hometask':
+			$title = 'Home task upload successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.homework';
+			break;
+		case 'join_course_student':
+			$title = 'Join new course successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.profile';
+			break;
+		case 'payment_student':
+			$title = 'Payment successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.profile';
+			break;
 	}
 	$notification = [];
 	if ($class > 0) {
@@ -165,12 +232,16 @@ function createNotification($user, $class = 0, $group = 0, $type)
 function getNameofClassOrCourse($feeStructure)
 {
 	$response = '';
-	if($feeStructure->class_id > 0){
-		$class = \App\Models\Classes::where('id',$feeStructure->class_id)->first();
-		if($class){$response = $class->name;}
-	}elseif($feeStructure->course_id > 0){
-		$course = \App\Models\SpecialCourse::where('id',$feeStructure->course_id)->first();
-		if($course){$response = $course->title;}
+	if ($feeStructure->class_id > 0) {
+		$class = \App\Models\Classes::where('id', $feeStructure->class_id)->first();
+		if ($class) {
+			$response = $class->name;
+		}
+	} elseif ($feeStructure->course_id > 0) {
+		$course = \App\Models\SpecialCourse::where('id', $feeStructure->course_id)->first();
+		if ($course) {
+			$response = $course->title;
+		}
 	}
 	return $response;
 }

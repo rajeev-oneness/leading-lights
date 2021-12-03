@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
             if ($user = Auth::user()) {
                 $notiTableExists = Schema::hasTable('notifications');
                 if ($notiTableExists) {
-                    $notification = Notification::where('user_id', $user->id)->latest()->get();
+                    $notification = Notification::where('user_id', $user->id)->where('read_flag', 0)->latest()->get();
                     $unreadCount = 0;
                     foreach ($notification as $index => $noti) {
                         if ($noti->read_flag == 0) {

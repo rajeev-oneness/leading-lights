@@ -13,7 +13,7 @@
                             <img src="{{ asset('frontend/images/sign-in-hr.png') }}" class="img-fluid">
                         </div>
                         <div class="col-lg-7 form-div wow fadeInRight">
-                            <div class="heading">zzzzz
+                            <div class="heading">
                                 <h1>Register Now :)</h1>
                             </div>
                             <form class="cd-form" method="POST" action="{{ route('hr_register') }}"
