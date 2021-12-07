@@ -49,11 +49,12 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $student_ids = $request->student_ids;
         $teacher_id = $request->teacher_id;
         // dd($request->student_ids);
         Validator::make($request->all(), [
-            'student_ids' => 'required',
+            // 'student_ids' => 'required',
             'teacher_id' => 'required',
             'class_id' => 'required',
             'name' => 'required|unique:student_groups'
@@ -61,19 +62,21 @@ class GroupController extends Controller
             'name.required' => 'The group name field is required.',
             'name.unique' => 'The group name  must  be unique',
             'teacher_id.required' => 'Please choose available teacher',
-            'student_ids.required' => 'Please choose available students',
+            // 'student_ids.required' => 'Please choose available students',
             'class_id.required' => 'Please choose available class',
         ])->validate();
-
 
         $group = new Group();
         $group->name = $request->name;
         $group->teacher_id = $request->teacher_id;
         $group->class_id = $request->class_id;
-        $group->student_ids = implode(',', $student_ids);
+        if ($student_ids) {
+            $group->student_ids = implode(',', $student_ids);
+        }
         $group->save();
 
         $group_id = $group->id;
+        // dd($group_id);
         //group id assignment
         //For teacher
         $teacher = User::find($teacher_id);
@@ -84,19 +87,21 @@ class GroupController extends Controller
         }
         $teacher->save();
         //For students
-        foreach ($student_ids as $key => $id) {
-            $student = User::find($id);
-            if ($student->group_ids) {
-                $student->group_ids = $student->group_ids . ',' . $group_id;
-            } else {
-                $student->group_ids = $group_id;
+        if ($student_ids) {
+            foreach ($student_ids as $key => $id) {
+                $student = User::find($id);
+                if ($student->group_ids) {
+                    $student->group_ids = $student->group_ids . ',' . $group_id;
+                } else {
+                    $student->group_ids = $group_id;
+                }
+                $student->save();
+                $requestForChat = new Request([
+                    'senderId' => $teacher->id,
+                    'receiverId' => $student->id
+                ]);
+                $this->sendMessageUniversal($requestForChat);
             }
-            $student->save();
-            $requestForChat = new Request([
-                'senderId' => $teacher->id,
-                'receiverId' => $student->id
-            ]);
-            $this->sendMessageUniversal($requestForChat);
         }
 
         return redirect()->route('admin.groups.index')->with('success', 'Group successfully created');
@@ -165,7 +170,7 @@ class GroupController extends Controller
         $student_ids = $request->student_ids;
         $teacher_id = $request->teacher_id;
         Validator::make($request->all(), [
-            'student_ids' => 'required',
+            // 'student_ids' => 'required',
             'teacher_id' => 'required',
             'name' => 'required',
             'class_id' => 'required',
@@ -173,7 +178,7 @@ class GroupController extends Controller
             'name.required' => 'The group name field is required.',
             'name.unique' => 'The group name  must  be unique',
             'teacher_id.required' => 'The teacher must be assigned',
-            'student_ids.required' => 'Please choose any of students',
+            // 'student_ids.required' => 'Please choose any of students', 
             'class_id.required' => 'Please choose available class',
         ])->validate();
         $group =  Group::find($id);
@@ -181,7 +186,9 @@ class GroupController extends Controller
         $assigned_students_ids = $group->student_ids;
         $group->name = $request->name;
         $group->teacher_id = $request->teacher_id;
-        $group->student_ids = implode(',', $request->student_ids);
+        if ($student_ids) {
+            $group->student_ids = implode(',', $request->student_ids);
+        }
         $group->class_id = $request->class_id;
         $group->save();
 
@@ -204,15 +211,16 @@ class GroupController extends Controller
             $assigned_student_details->group_ids = null;
             $assigned_student_details->save();
         }
-
-        foreach ($student_ids as $key => $id) {
-            $user = User::find($id);
-            if ($user->group_ids) {
-                $user->group_ids = $user->group_ids . ',' . $group_id;
-            } else {
-                $user->group_ids = $group_id;
+        if ($student_ids) {
+            foreach ($student_ids as $key => $id) {
+                $user = User::find($id);
+                if ($user->group_ids) {
+                    $user->group_ids = $user->group_ids . ',' . $group_id;
+                } else {
+                    $user->group_ids = $group_id;
+                }
+                $user->save();
             }
-            $user->save();
         }
 
         return redirect()->route('admin.groups.index')->with('success', 'Group successfully updated');

@@ -145,7 +145,11 @@ function createNotification($user, $class = 0, $group = 0, $type)
 			$message = 'Please check & update announcement as needed';
 			$route = 'hr.announcement';
 			break;
-
+		case 'hr_change_password':
+			$title = 'Password change successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'hr.profile';
+			break;
 		case 'teacher_registration':
 			$title = 'Registration successfull';
 			$message = 'Please check & update your profile as needed';
@@ -166,6 +170,11 @@ function createNotification($user, $class = 0, $group = 0, $type)
 			$title = 'Homework Uploaded';
 			$message = 'Please check & update as needed';
 			$route = 'user.homework';
+			break;
+		case 'teacher_change_password':
+			$title = 'Password change successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'teacher.profile';
 			break;
 		case 'student_registration':
 			$title = 'Registration successfull';

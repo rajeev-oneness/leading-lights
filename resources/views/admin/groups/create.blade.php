@@ -97,14 +97,14 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                <label for="review">Students Name<span class="text-danger mb-5">*</span></label>
+                                <label for="review">Students Name</label>
                                 <select class="student_ids form-control" name="student_ids[]" multiple="multiple"
                                     id="student_ids">
 
                                 </select>
-                                @if ($errors->has('student_ids'))
-                                    <span style="color: red;">{{ $errors->first('student_ids') }}</span>
-                                @endif
+                                <!--  @if ($errors->has('student_ids'))
+                                        <span style="color: red;">{{ $errors->first('student_ids') }}</span>
+                                    @endif -->
                             </div>
                         </div>
                     </div>

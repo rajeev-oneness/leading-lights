@@ -104,6 +104,8 @@ class TeacherController extends Controller
                 $update_user =   User::where('id', $user_id)->update($postdata);
                 if ($update_user) {
 
+                    createNotification($user_id, 0, 0, 'teacher_change_password');
+
                     return redirect()->back()->with('change_password_success_message', "Password has been changed successfully.");
                 }
             } else {
