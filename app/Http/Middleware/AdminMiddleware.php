@@ -19,8 +19,15 @@ class AdminMiddleware
     {
         if (Auth::check() && Auth::user()->role->id == 1) {
             return $next($request);
+        } elseif (Auth::check() && Auth::user()->role->id == 5) {
+            return $next($request);
         } else {
-            return redirect()->route('login');
+            if (Auth::check() && Auth::user()->role->id == 1) {
+                return redirect()->route('admin_login');
+            }
+            if (Auth::check() && Auth::user()->role->id == 5) {
+                return redirect()->route('super-admin_login');
+            }
         }
     }
 }

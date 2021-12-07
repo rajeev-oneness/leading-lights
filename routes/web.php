@@ -20,6 +20,7 @@ Route::any('teacher/register', [RegisterController::class, 'teacher_register'])-
 Route::any('hr/login', [LoginController::class, 'hr_login'])->name('hr_login');
 Route::any('hr/register', [RegisterController::class, 'hr_register'])->name('hr_register');
 Route::any('admin/login', [LoginController::class, 'admin_login'])->name('admin_login');
+Route::any('super-admin/login', [LoginController::class, 'super_admin_login'])->name('super_admin_login');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
@@ -40,6 +41,10 @@ Route::post('hr/notification/readall', [NotificationController::class, 'notifica
 
 Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
     require 'custom/admin.php';
+});
+
+Route::group(['as' => 'superAdmin.', 'prefix' => 'super-admin'], function () {
+    require 'custom/superAdmin.php';
 });
 
 Route::group(['as' => 'user.', 'prefix' => 'user', 'middleware' => ['auth', 'student']], function () {

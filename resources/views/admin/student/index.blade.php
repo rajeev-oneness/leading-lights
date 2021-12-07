@@ -12,7 +12,6 @@
                         <li><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
                         <li><a href="{{ route('admin.students.index') }}" class="active">Student List</a></li>
-
                     </ul>
                 </div>
                 @include('admin.layouts.navbar')
@@ -63,35 +62,35 @@
                                     ?>
                                     <td><span class="text-success">{{ $class_details->name }}</span></td>
                                     <td>
-                                            <span class="text-info">
-                                                @if ($student->special_course_ids !== null)
+                                        <span class="text-info">
+                                            @if ($student->special_course_ids !== null)
                                                 <div class="student-list">
-                                                <ol>
-                                                    @foreach ($course_details as $course)
-                                                        @if(!empty($course['title']))
-                                                            <li>{{ $course['title'] }}</li>
-                                                        @endif
-                                                    @endforeach
-                                                </ol>
-                                            </div>
-                                                @else
-                                                    N/A
-                                                @endif
-    
-                                            </span>
-                                        
-                                        
+                                                    <ol>
+                                                        @foreach ($course_details as $course)
+                                                            @if (!empty($course['title']))
+                                                                <li>{{ $course['title'] }}</li>
+                                                            @endif
+                                                        @endforeach
+                                                    </ol>
+                                                </div>
+                                            @else
+                                                N/A
+                                            @endif
+
+                                        </span>
+
+
                                     </td>
                                     {{-- <td>{{ $course_details->title ? $course_details->title : 'N/A' }}</td> --}}
                                     <td>{{ $student->first_name }} {{ $student->last_name }}</td>
                                     <td>{{ $student->email }}</td>
                                     <td>
                                         @if ($student->country_code)
-                                        {{ $student->mobile ? '+'.$student->country_code.' '.$student->mobile : 'N/A' }}
+                                            {{ $student->mobile ? '+' . $student->country_code . ' ' . $student->mobile : 'N/A' }}
                                         @else
-                                        {{ $student->mobile ? $student->mobile : 'N/A' }}
+                                            {{ $student->mobile ? $student->mobile : 'N/A' }}
                                         @endif
-                                        
+
                                     </td>
                                     <td class="text-center">
                                         @if ($student->status == 1)
