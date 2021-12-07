@@ -40,6 +40,7 @@
                                 <th>Employee Id</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Phone Number</th>
                                 {{-- <th style="width:100px">Action</th> --}}
                             </tr>
                         </thead>
@@ -50,6 +51,7 @@
                                     <td>{{ $admin->id_no }}</td>
                                     <td>{{ $admin->first_name }} {{ $admin->last_name }}</td>
                                     <td>{{ $admin->email }}</td>
+                                    <td>{{ $admin->mobile }}</td>
 
 
                                     {{-- <td>

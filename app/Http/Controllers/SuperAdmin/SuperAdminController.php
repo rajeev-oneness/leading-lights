@@ -49,6 +49,7 @@ class SuperAdminController extends Controller
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
             'email' => 'required|email | unique:users',
+            'mobile' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
         ]);
 
         // $password = Str::random(10);
@@ -57,6 +58,7 @@ class SuperAdminController extends Controller
         $admin->first_name = $request->first_name;
         $admin->last_name = $request->last_name;
         $admin->email = $request->email;
+        $admin->mobile = $request->mobile;
         $admin->password = Hash::make($id_no);
         $admin->id_no = $id_no;
         $admin->save();
