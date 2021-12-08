@@ -12,14 +12,14 @@
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
                         {{-- <li><a href="{{ route('admin.hr.index') }}">HR List</a></li> --}}
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#" class="active">Add teacher</a></li>
+                        <li><a href="#" class="active">Add Admin</a></li>
                     </ul>
                 </div>
                 @include('admin.layouts.navbar')
             </div>
             <hr>
             <div class="dashboard-body-content">
-                <h5>Add Teacher</h5>
+                <h5>Add Admin</h5>
                 <hr>
                 <form action="{{ route('superAdmin.admin.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
