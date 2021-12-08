@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\HR;
 
+// use App\Http\Controllers\Admin\Notification;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Group;
@@ -9,6 +10,7 @@ use App\Models\Classes;
 use App\Models\Attendance;
 use App\Models\Certificate;
 use App\Models\Announcement;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -26,37 +28,45 @@ class HRController extends Controller
     }
     public function updateProfile(Request $request)
     {
-        $teacher = User::find(Auth::id());
+        $hr = User::find(Auth::id());
         if ($request->qualification) {
-            $teacher->qualification = $request->qualification;
+            $hr->qualification = $request->qualification;
         }
         if ($request->address) {
-            $teacher->address = $request->address;
+            $hr->address = $request->address;
         }
-        $teacher->save();
+        $hr->save();
+
+        $user_id = $hr->id;
+
+        createNotification($user_id, 0, 0, 'update_hr_address');
+
         return response()->json('success');
     }
 
     public function updateBio(Request $request)
     {
-        $student = User::find(Auth::id());
+        $hr = User::find(Auth::id());
         if ($request->dob) {
             $this->validate($request, [
                 'dob' => 'date|nullable',
             ]);
-            $student->dob = $request->dob;
+            $hr->dob = $request->dob;
         }
         if ($request->gender) {
-            $student->gender = $request->gender;
+            $hr->gender = $request->gender;
         }
         if ($request->bio) {
             $this->validate($request, [
                 'bio' => 'max:255'
             ]);
-            $student->about_us = $request->bio;
+            $hr->about_us = $request->bio;
         }
 
-        $student->save();
+        $hr->save();
+
+        $user_id = $hr->id;
+        createNotification($user_id, 0, 0, 'update_hr_bio');
         return response()->json('success');
     }
     // Attendance
@@ -265,7 +275,18 @@ class HRController extends Controller
 
         $user_id = Auth::user()->id;
 
-        createNotification($user_id, $class, '0', 'event_create');
+        createNotification($user_id, $class, 0, 'event_create');
+        // createNotification($user_id, 0, 0, 'event_create');
+
+        $notification = new Notification();
+        $notification->user_id = $user_id;
+        $notification->class_id = $class;
+        $notification->group_id = 0;
+        $event->type = 'event_create';
+        $notification->title = 'Event createt';
+        $notification->message = 'Please Update and check';
+        $notification->route = 'hr.manage-event';
+        $notification->save();
 
         return redirect('hr/event-management')->with('success', 'Event upload successfully');
     }
@@ -311,6 +332,7 @@ class HRController extends Controller
                 $update_user =   User::where('id', $user_id)->update($postdata);
                 if ($update_user) {
 
+                    createNotification($user_id, 0, 0, 'hr_change_password');
                     return redirect()->back()->with('change_password_success_message', "Password has been changed successfully.");
                 }
             } else {
@@ -375,15 +397,25 @@ class HRController extends Controller
             'class_id.required' => 'The class field is required.',
             'desc.required' => 'The description field is required.',
         ])->validate();
+
+        $class = $request->class_id;
+        $user_id = Auth::user()->id;
+
+
         $announcement = new Announcement();
-        $announcement->user_id = Auth::user()->id;
+        $announcement->user_id = $user_id;
         $announcement->title = $request->title;
         $announcement->class_id = implode(',', $request->class_id);
 
         $announcement->date = $request->date;
         $announcement->description = $request->desc;
-        // dd($announcement);
+        // dd($announcement->description);
         $announcement->save();
+
+        // dd($announcement);
+
+
+        // createNotification($user_id, $class, 0, 'announcement_create');
 
         return redirect()->back()->with('success', 'Announcement upload successfully');
     }

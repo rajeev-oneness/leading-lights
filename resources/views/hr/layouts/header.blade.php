@@ -207,8 +207,7 @@
                                                         <span class="vertical-timeline-element-date"></span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            --}}
+                                            </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -222,12 +221,12 @@
                                         class="dropdown-item dropdown-footer">See All Notifications</a>
                                 @endif
                             </li>
-                            <li class="nav-item-divider nav-item"></li>
+                            {{-- <li class="nav-item-divider nav-item"></li>
                             <li class="nav-item-btn text-center nav-item">
                                 <button class="btn-shadow btn-wide btn-pill btn btn-focus btn-sm">Close all<span
                                         class="ml-2"><i class="fa fa-times-circle"
                                             aria-hidden="true"></i></span></button>
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
                 </div>

@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
- 
+
 class LoginController extends Controller
 {
     /*
@@ -21,16 +21,16 @@ class LoginController extends Controller
     | to conveniently provide its functionality to your applications.
     |
     */
- 
+
     use AuthenticatesUsers;
- 
+
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
     protected $redirectTo = '/admin/dashboard';
- 
+
     /**
      * Create a new controller instance.
      *
@@ -40,13 +40,15 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
- 
-    public function showLoginForm(){
+
+    public function showLoginForm()
+    {
         return view('admin.auth.login');
     }
     // 
     public function login(Request $req)
     {
+        // dd('test');
         $req->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
@@ -56,15 +58,15 @@ class LoginController extends Controller
         //     auth()->logout();
         //     return back()->with('error', 'Your account is not active.');
         // }
-        $user = Admin::where('email',$req->email)->first();
-        if($user){
-            if(Hash::check($req->password,$user->password)){
+        $user = Admin::where('email', $req->email)->first();
+        if ($user) {
+            if (Hash::check($req->password, $user->password)) {
                 Auth::login($user);
                 return redirect()->intended('/home');
-            }else{
+            } else {
                 $errors['password'] = 'You have entered wrong password';
             }
-        }else{
+        } else {
             $errors['email'] = 'This email is not register with us';
         }
         return back()->withErrors($errors)->withInput($req->all());
@@ -78,13 +80,13 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $this->guard()->logout();
- 
+
         $request->session()->invalidate();
- 
+
         return redirect()->route('admin.login');
     }
-    
-     /**
+
+    /**
      * Get the guard to be used during authentication.
      *
      * @return \Illuminate\Contracts\Auth\StatefulGuard
@@ -93,5 +95,4 @@ class LoginController extends Controller
     {
         return Auth::guard('admin');
     }
- 
 }

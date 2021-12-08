@@ -31,6 +31,14 @@ function strQuotationCheck($string = "")
 	return $returnString;
 }
 
+function emptyCheck($string, $date = false)
+{
+	if ($date) {
+		return !empty($string) ? $string : '0000-00-00';
+	}
+	return !empty($string) ? $string : '';
+}
+
 function imageUpload($image, $folder = 'image')
 {
 	$random = randomGenerator();
@@ -74,35 +82,189 @@ function getAsiaTime24($date)
 	return $set_timezone;
 }
 
-function createNotification($user, $class, $group, $type)
+// function createNotification_old($user, $class, $group, $type)
+// {
+// 	switch ($type) {
+// 		case 'user_registration':
+// 			$title = 'Registration successfull';
+// 			$message = 'Please check & update your profile as needed';
+// 			$route = 'hr.profile';
+// 			break;
+
+// 		case 'event_create':
+// 			$title = 'Event created';
+// 			$message = 'Please check & update your profile as needed';
+// 			$route = 'hr.manage-event.store';
+// 			break;
+
+// 		default:
+// 			$title = '';
+// 			$message = '';
+// 			$route = '';
+// 			break;
+// 	}
+
+// 	$notification = new App\Models\Notification;
+// 	$notification->user_id = $user;
+// 	$notification->class_id = $class;
+// 	$notification->group_id = $group;
+// 	$notification->type = $type;
+// 	$notification->title = $title;
+// 	$notification->message = $message;
+// 	$notification->route = $route;
+// 	$notification->save();
+// }
+
+function createNotification($user, $class = 0, $group = 0, $type)
 {
+	$title = '';
+	$message = '';
+	$route = '';
 	switch ($type) {
+		case 'event_create':
+			$title = 'Event created';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.dairy';
+			break;
 		case 'user_registration':
 			$title = 'Registration successfull';
 			$message = 'Please check & update your profile as needed';
 			$route = 'hr.profile';
 			break;
-
-		case 'event_create':
-			$title = 'Event created';
+		case 'update_hr_address':
+			$title = 'Address update successfull';
 			$message = 'Please check & update your profile as needed';
-			$route = 'hr.manage-event.store';
+			$route = 'hr.profile';
+			break;
+		case 'update_hr_bio':
+			$title = 'Bio update successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'hr.profile';
+			break;
+		case 'announcement_create':
+			$title = 'Announcement Create successfull';
+			$message = 'Please check & update announcement as needed';
+			$route = 'hr.announcement';
+			break;
+		case 'hr_change_password':
+			$title = 'Password change successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'hr.profile';
+			break;
+		case 'teacher_registration':
+			$title = 'Registration successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'teacher.profile';
 			break;
 
-		default:
-			$title = '';
-			$message = '';
-			$route = '';
+		case 'update_teacher_profile':
+			$title = 'Profile update successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'teacher.profile';
+			break;
+		case 'teacher_arrange_class':
+			$title = 'Class arrange';
+			$message = 'Please check & update as needed';
+			$route = 'user.classes';
+			break;
+		case 'teacher_upload_homework':
+			$title = 'Homework Uploaded';
+			$message = 'Please check & update as needed';
+			$route = 'user.homework';
+			break;
+		case 'teacher_change_password':
+			$title = 'Password change successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'teacher.profile';
+			break;
+		case 'student_registration':
+			$title = 'Registration successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.profile';
+			break;
+		case 'update_student_bio':
+			$title = 'Bio update successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.profile';
+			break;
+		case 'student_change_password':
+			$title = 'Password change successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.profile';
+			break;
+		case 'upload_student_hometask':
+			$title = 'Home task upload successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.homework';
+			break;
+		case 'join_course_student':
+			$title = 'Join new course successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.profile';
+			break;
+		case 'payment_student':
+			$title = 'Payment successfull';
+			$message = 'Please check & update your profile as needed';
+			$route = 'user.profile';
 			break;
 	}
+	$notification = [];
+	if ($class > 0) {
+		$users = App\Models\User::where('class', $class)->get();
+		foreach ($users as $user) {
+			$notification[] = [
+				'user_id' => $user->id,
+				'class_id' => $user->class,
+				'group_id' => $group,
+				'type' => $type,
+				'title' => $title,
+				'message' => $message,
+				'route' => $route,
+			];
+		}
+	} elseif ($group > 0) {
+		$users = App\Models\User::where('group_ids', $group)->get();
+		foreach ($users as $user) {
+			$notification[] = [
+				'user_id' => $user->id,
+				'class_id' => $class,
+				'group_id' => $user->group_ids,
+				'type' => $type,
+				'title' => $title,
+				'message' => $message,
+				'route' => $route,
+			];
+		}
+	} else {
+		$notification[] = [
+			'user_id' => $user,
+			'class_id' => $class,
+			'group_id' => $group,
+			'type' => $type,
+			'title' => $title,
+			'message' => $message,
+			'route' => $route,
+		];
+	}
+	if (count($notification) > 0) {
+		\App\Models\Notification::insert($notification);
+	}
+	return $notification;
+}
 
-	$notification = new App\Models\Notification;
-	$notification->user_id = $user;
-	$notification->class_id = $class;
-	$notification->group_id = $group;
-	$notification->type = $type;
-	$notification->title = $title;
-	$notification->message = $message;
-	$notification->route = $route;
-	$notification->save();
+function getNameofClassOrCourse($feeStructure)
+{
+	$response = '';
+	if ($feeStructure->class_id > 0) {
+		$class = \App\Models\Classes::where('id', $feeStructure->class_id)->first();
+		if ($class) {
+			$response = $class->name;
+		}
+	} elseif ($feeStructure->course_id > 0) {
+		$course = \App\Models\SpecialCourse::where('id', $feeStructure->course_id)->first();
+		if ($course) {
+			$response = $course->title;
+		}
+	}
+	return $response;
 }

@@ -153,30 +153,42 @@
                                     style="background-image: url('assets/images/dropdown-header/city3.jpg');"></div>
                                 <div class="menu-header-content text-dark p-3">
                                     <h5 class="menu-header-title">Notifications</h5>
-                                    <h6 class="menu-header-subtitle">You have <b>21</b> unread messages</h6>
+                                    <h6 class="menu-header-subtitle">You have @if (count($notification) > 0)
+                                            <b>{{ $notification->unreadCount }}</b> unread messages
+                                            {{ $notification->unreadCount == 1 ? 'notification' : 'notifications' }}
+                                        @endif
                                 </div>
                             </div>
                         </div>
                         <div class="scroll-area-sm">
                             <div class="scrollbar-container">
                                 <div class="p-3">
-                                    <div
-                                        class="vertical-without-time vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
-                                        <div class="vertical-timeline-item vertical-timeline-element">
-                                            <div>
-                                                <span class="vertical-timeline-element-icon bounce-in">
-                                                    <i class="badge badge-dot badge-dot-xl badge-success"> </i>
-                                                </span>
-                                                <div class="vertical-timeline-element-content bounce-in">
-                                                    <h4 class="timeline-title">All Hands Meeting</h4>
-                                                    <p>Lorem ipsum dolor sic amet, today at
-                                                        <a href="javascript:void(0);">12:00 PM</a>
-                                                    </p>
-                                                    <span class="vertical-timeline-element-date"></span>
+                                    <div class="dropdown-holder">
+
+                                        @foreach ($notification as $noti)
+
+                                            <div class="vertical-timeline-item vertical-timeline-element">
+                                                <div>
+                                                    <span class="vertical-timeline-element-icon bounce-in">
+                                                        <i class="badge badge-dot badge-dot-xl badge-success"> </i>
+                                                    </span>
+                                                    <div class="vertical-timeline-element-content bounce-in">
+                                                        {{-- <h4 class="timeline-title">All Hands Meeting</h4> --}}
+
+                                                        <a href="javascript:void(0)"
+                                                            class=" {{ $noti->read_flag == 0 ? 'unread' : 'read' }}"
+                                                            onclick="readNotification('{{ $noti->id }}', '{{ $noti->route ? route($noti->route) : '' }}')">
+                                                            <p>{{ $noti->title }}
+                                                                {{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}
+                                                            </p>
+                                                        </a>
+
+                                                        <span class="vertical-timeline-element-date"></span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="vertical-timeline-item vertical-timeline-element">
+                                        @endforeach
+                                        {{-- <div class="vertical-timeline-item vertical-timeline-element">
                                             <div>
                                                 <span class="vertical-timeline-element-icon bounce-in">
                                                     <i class="badge badge-dot badge-dot-xl badge-warning"> </i>
@@ -275,7 +287,7 @@
                                                 </div>
 
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -284,10 +296,16 @@
                         <ul class="nav flex-column">
                             <li class="nav-item-divider nav-item"></li>
                             <li class="nav-item-btn text-center nav-item">
+                                @if (count($notification) > 0)
+                                    <a href="{{ route('student.logs.notification') }}"
+                                        class="dropdown-item dropdown-footer">See All Notifications</a>
+                                @endif
+                            </li>
+                            {{-- <li class="nav-item-btn text-center nav-item">
                                 <button class="btn-shadow btn-wide btn-pill btn btn-focus btn-sm">Close all<span
                                         class="ml-2"><i class="fa fa-times-circle"
                                             aria-hidden="true"></i></span></button>
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
                 </div>
@@ -379,3 +397,55 @@
     </div>
 </div>
 <div class="app-main">
+    <script>
+        function readNotification(id, route) {
+            $.ajax({
+                url: '{{ route('notification.read') }}',
+                method: 'POST',
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    id: id
+                },
+                success: function(result) {
+                    // console.log('{{ url()->current() }}',route);
+                    // if (route != '' && '{{ url()->current() }}' != route) {
+                    window.location = route;
+                    // }
+                }
+            });
+        }
+
+        function markAllNotificationRead() {
+            // Swal.fire({
+            //     title: 'Are you sure?',
+            //     text: 'You want to mark all notifications as read. You might lose some data.',
+            //     icon: 'warning',
+            //     showCancelButton: true,
+            //     confirmButtonColor: '#f44336',
+            //     cancelButtonColor: '#8b8787',
+            //     confirmButtonText: 'Yes, mark all as read!'
+            // }).then((result) => {
+            //     if (result.isConfirmed) {
+            $.ajax({
+                url: '{{ route('logs.notification.readall') }}',
+                method: 'POST',
+                data: {
+                    '_token': '{{ csrf_token() }}'
+                },
+                beforeSend: function() {
+                    $('.mark-all-read-btn').prop('disabled', true).html(
+                        '<i class="fas fa-sync-alt"></i> Please wait');
+                },
+                success: function(result) {
+                    $('#notification-bell a.nav-link').remove('');
+                    // $('#notifications-timeline .notification-single .callout').removeClass(
+                    //     'callout-dark');
+                    // $('#notifications-timeline .unread-noti-count').text('');
+                    $('.mark-all-read-btn').removeClass('btn-outline-danger').addClass('btn-success').html(
+                        '<i class="fas fa-check"></i> All notifications marked as read');
+                }
+            });
+            //     }
+            // });
+        }
+    </script>

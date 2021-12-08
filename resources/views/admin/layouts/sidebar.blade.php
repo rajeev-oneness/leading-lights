@@ -7,9 +7,17 @@
         <ul class=" menu">
             <li class="{{ Request::is('admin/dashboard') ? 'active' : '' }}"><a
                     href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+            <?php if (Auth::check() && Auth::user()->role->id == 5) { ?>
+            <li class="{{ Request::is('super-admin/admin *') ? 'active' : '' }}"><a
+                    href="{{ route('superAdmin.admin.index') }}"><i class="fa  fa-user-cog"
+                        aria-hidden="true"></i>Admin Management</a></li>
+            <?php } ?>
+
             <li class="{{ Request::is('admin/students*') ? 'active' : '' }}"><a
                     href="{{ route('admin.students.index') }}"><i class="fas fa-user-graduate"
                         aria-hidden="true"></i>Student Management</a></li>
+
+
             <li class="{{ Request::is('admin/teachers*') ? 'active' : '' }}"><a
                     href="{{ route('admin.teachers.index') }}"><i class="fa fa-user"
                         aria-hidden="true"></i>Teacher
@@ -28,7 +36,8 @@
                     href="{{ route('admin.video.index') }}"><i class="fa fa-video-camera"
                         aria-hidden="true"></i>Free/Paid video Management</a></li>
             <li class="{{ Request::is('admin/qualification*') ? 'active' : '' }}"><a
-                    href="{{ route('admin.qualifications.index') }}"><i class="fas fa-chalkboard"></i>Academic Qualification
+                    href="{{ route('admin.qualifications.index') }}"><i class="fas fa-chalkboard"></i>Academic
+                    Qualification
                     Management</a></li>
             <li class="{{ Request::is('admin/classes*') ? 'active' : '' }}"><a
                     href="{{ route('admin.classes.index') }}"><i class="fas fa-chalkboard"></i>Student Class

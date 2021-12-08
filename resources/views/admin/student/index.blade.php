@@ -12,7 +12,6 @@
                         <li><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
                         <li><a href="{{ route('admin.students.index') }}" class="active">Student List</a></li>
-
                     </ul>
                 </div>
                 @include('admin.layouts.navbar')
@@ -53,26 +52,35 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $student->id_no }}</td>
                                     <?php
-                                    if(str_contains($student->special_course_ids, ',')) {
+                                    if (str_contains($student->special_course_ids, ',')) {
                                         $special_course_ids = explode(',', $student->special_course_ids);
                                         foreach ($special_course_ids as $course_id) {
                                             $course_details[] = App\Models\SpecialCourse::find($course_id);
                                         }
-                                    }
-                                    else{
+                                    } else {
                                         $special_course_ids = $student->special_course_ids;
                                         $course_detail = App\Models\SpecialCourse::find($special_course_ids);
                                     }
                                     
-                                    
                                     $class_details = App\Models\Classes::find($student->class);
                                     ?>
-                                    <td><span class="text-success">{{ $class_details->name }}</span></td>
                                     <td>
-                                            <span class="text-info">
-                                                @if ($student->special_course_ids !== null)
-                                                
-                                                    @if (str_contains($student->special_course_ids, ','))
+
+                                        <?php
+                                       if($class_details){
+                                        ?>
+                                        <span
+                                            class="text-success">{{ $class_details->name ? $class_details->name : '' }}</span>
+                                    </td>
+                                    <?php
+                                       }
+                                       ?>
+
+                                    <td>
+                                        <span class="text-info">
+                                            @if ($student->special_course_ids !== null)
+
+                                                @if (str_contains($student->special_course_ids, ','))
                                                     <div class="student-list">
                                                         <ol>
                                                             @foreach ($course_details as $course)
@@ -80,27 +88,27 @@
                                                             @endforeach
                                                         </ol>
                                                     </div>
-                                                    @else
-                                                        {{ $course_detail['title'] }}
-                                                    @endif
                                                 @else
-                                                    N/A
+                                                    {{ $course_detail['title'] }}
                                                 @endif
-    
-                                            </span>
-                                        
-                                        
+                                            @else
+                                                N/A
+                                            @endif
+
+                                        </span>
+
+
                                     </td>
                                     {{-- <td>{{ $course_details->title ? $course_details->title : 'N/A' }}</td> --}}
                                     <td>{{ $student->first_name }} {{ $student->last_name }}</td>
                                     <td>{{ $student->email }}</td>
                                     <td>
                                         @if ($student->country_code)
-                                        {{ $student->mobile ? '+'.$student->country_code.' '.$student->mobile : 'N/A' }}
+                                            {{ $student->mobile ? '+' . $student->country_code . ' ' . $student->mobile : 'N/A' }}
                                         @else
-                                        {{ $student->mobile ? $student->mobile : 'N/A' }}
+                                            {{ $student->mobile ? $student->mobile : 'N/A' }}
                                         @endif
-                                        
+
                                     </td>
                                     <td class="text-center">
                                         @if ($student->status == 1)

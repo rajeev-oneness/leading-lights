@@ -7,6 +7,7 @@ use App\Http\Middleware\CheckStudentPayment;
 use App\Http\Middleware\HRMiddleware;
 use App\Http\Middleware\SessionTimeOut;
 use App\Http\Middleware\StudentMiddleware;
+use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Middleware\TeacherMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -70,6 +71,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'superAdmin' => SuperAdminMiddleware::class,
         'admin' => AdminMiddleware::class,
         'student' => StudentMiddleware::class,
         'teacher' => TeacherMiddleware::class,

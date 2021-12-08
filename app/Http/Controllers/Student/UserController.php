@@ -33,17 +33,17 @@ class UserController extends Controller
     {
         $current_user_id = Auth::user()->id;
         $data['classes'] = ArrangeClass::where('class', Auth::user()->class)
-            ->join('subjects','subjects.id','=','arrange_classes.subject')
-            ->whereDate('date', '=', date('Y-m-d'))->orderBy('arrange_classes.created_at','desc')->get();
+            ->join('subjects', 'subjects.id', '=', 'arrange_classes.subject')
+            ->whereDate('date', '=', date('Y-m-d'))->orderBy('arrange_classes.created_at', 'desc')->get();
         // dd( $data['classes']);
-            $data['special_classes'] = ArrangeClass::where('group_id', Auth::user()->group_ids)
-            ->join('subjects','subjects.id','=','arrange_classes.subject')
-            ->whereDate('date', '=', date('Y-m-d'))->orderBy('arrange_classes.created_at','desc')->get();
+        $data['special_classes'] = ArrangeClass::where('group_id', Auth::user()->group_ids)
+            ->join('subjects', 'subjects.id', '=', 'arrange_classes.subject')
+            ->whereDate('date', '=', date('Y-m-d'))->orderBy('arrange_classes.created_at', 'desc')->get();
         // dd($data['special_classes']);
         $data['student'] = User::where('id', $current_user_id)->first();
         $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
         $data['certificates'] = DB::table('certificate')->where('user_id', $current_user_id)->first();
-        $data['announcements'] = Announcement::where('class_id',Auth::user()->class)->get();
+        $data['announcements'] = Announcement::where('class_id', Auth::user()->class)->get();
         return view('student.profile')->with($data);
     }
 
@@ -65,6 +65,8 @@ class UserController extends Controller
             ]);
             $student->about_us = $request->bio;
         }
+        $user_id = $student->id;
+        createNotification($user_id, 0, 0, 'update_student_bio');
 
         $student->save();
         return response()->json('success');
@@ -102,6 +104,9 @@ class UserController extends Controller
 
                 //$update_user = DB::table('users')->where('id', '=', $user_id)->update($postdata);
                 $update_user =   User::where('id', $user_id)->update($postdata);
+
+                createNotification($user_id, 0, 0, 'student_change_password');
+
                 if ($update_user) {
 
                     return redirect()->back()->with('change_password_success_message', "Password has been changed successfully.");
@@ -141,79 +146,83 @@ class UserController extends Controller
     public function classes(Request $request)
     {
         $available_classes = ArrangeClass::where('class', Auth::user()->class)->latest()->get();
-        $group_wise_classes = ArrangeClass::
-        where('group_id', Auth::user()->group_ids)->where('group_id','!=',null)->latest()->get();
-        return view('student.classes', compact('available_classes','group_wise_classes'));
+        $group_wise_classes = ArrangeClass::where('group_id', Auth::user()->group_ids)->where('group_id', '!=', null)->latest()->get();
+        return view('student.classes', compact('available_classes', 'group_wise_classes'));
     }
 
     public function dairy(Request $request)
     {
-        if ($request->ajax()) {  
-            $classes = ArrangeClass::where('class', Auth::user()->class)->
-            join('subjects','subjects.id','=','arrange_classes.class')
-            ->get(['arrange_classes.id', 'name as title', 'date', 'start_time as description'])->toArray();
+        if ($request->ajax()) {
+            $classes = ArrangeClass::where('class', Auth::user()->class)->join('subjects', 'subjects.id', '=', 'arrange_classes.class')
+                ->get(['arrange_classes.id', 'name as title', 'date', 'start_time as description'])->toArray();
             // dd($classes);
-            $special_classes = ArrangeClass::
-            where('group_id', Auth::user()->group_ids)->where('group_id','!=',null)->
-            join('subjects','subjects.id','=','arrange_classes.group_id')
-            ->get(['arrange_classes.id', 'name as title', 'date', 'start_time as description'])->toArray();
-            return response()->json(array_merge($classes,$special_classes));
+            $special_classes = ArrangeClass::where('group_id', Auth::user()->group_ids)->where('group_id', '!=', null)->join('subjects', 'subjects.id', '=', 'arrange_classes.group_id')
+                ->get(['arrange_classes.id', 'name as title', 'date', 'start_time as description'])->toArray();
+            return response()->json(array_merge($classes, $special_classes));
         }
-        $events = Event::where('class_id',Auth::user()->class)->get();
-        $announcements = Announcement::where('class_id',Auth::user()->class)->get();
-        return view('student.dairy',compact('events','announcements'));
+        $events = Event::where('class_id', Auth::user()->class)->get();
+        $announcements = Announcement::where('class_id', Auth::user()->class)->get();
+        return view('student.dairy', compact('events', 'announcements'));
     }
 
     public function homework(Request $request)
     {
         $data['class_wise_home_works'] =  HomeTask::where('class',  Auth::user()->class)->latest()->get();
-        $data['group_wise_home_works'] =  HomeTask::where('group_id', Auth::user()->group_ids)->where('group_id','!=',null)->latest()->get();
+        $data['group_wise_home_works'] =  HomeTask::where('group_id', Auth::user()->group_ids)->where('group_id', '!=', null)->latest()->get();
         return view('student.home_work')->with($data);
     }
 
+<<<<<<< HEAD
+    public function exam(Request $request)
+    {
+        $data['class_wise_exam'] = ArrangeExam::where('class',  Auth::user()->class)->latest()->get();
+        $data['group_wise_exam'] = ArrangeExam::where('group_id', Auth::user()->group_ids)->where('group_id', '!=', null)->latest()->get();
+        return view('student.exam')->with($data);
+    }
+
+    public function payment(Request $req)
+    {
+        $data = (object)[];
+        $user = Auth::user();
+        $data->due_payment = \App\Models\Fee::where('user_id', $user->id)->where('transaction_id', 0)->latest('id')->get();
+        $data->success_payment = \App\Models\Fee::where('user_id', $user->id)->where('transaction_id', '>', 0)->latest('id')->get();
+        return view('student.payments', compact('data'));
+    }
+
+    public function paymentold(Request $request)
+=======
     public function payment(Request $request)
+>>>>>>> f24f7c8daed66c344258e932de0a8c124cadc3d8
     {
         $current_user_id = Auth::user()->id;
-        $previous_payment = Payment::where('user_id',$current_user_id)->orderBy('id', 'desc')->first();
-        
+        $previous_payment = Payment::where('user_id', $current_user_id)->orderBy('id', 'desc')->first();
+
         if (!empty($previous_payment)) {
             //Next date for payment 
             $next_due_date = $previous_payment->next_due_date;
             $today_date = date('Y-m-d');
 
             if ($today_date > $next_due_date) {
-                $date1=date_create($next_due_date);
-                $date2=date_create($today_date);
-                $diff=date_diff($date1,$date2);
+                $date1 = date_create($next_due_date);
+                $date2 = date_create($today_date);
+                $diff = date_diff($date1, $date2);
                 $extra_date = $diff->format("%a");
                 $data['extra_date'] = $extra_date;
             }
         }
-        $data['class_details'] = Classes::where('id',Auth::user()->class)->first();
-        $data['admission_payment_details'] = OtherPaymentDetails::where('other_payment_details.user_id',$current_user_id)
-        ->where('fees_type','admission_fee')
-        // ->where('payment_status',1)
-        ->join('payments','payments.id','=','other_payment_details.payment_id')
-        ->first();
-        $data['monthly_payment_details'] = OtherPaymentDetails::where('other_payment_details.user_id',$current_user_id)
-        ->where('fees_type','monthly_fees')
-        ->join('payments','payments.id','=','other_payment_details.payment_id')
-        ->get();
-        // dd($data['monthly_payment_details']);
-        $data['previous_payment'] = OtherPaymentDetails::
-        // where('class_id',Auth::user()->class)
-        // where('fees_type','monthly_fees')
-        // ->where('user_id',$current_user_id)
-        where('user_id',$current_user_id)
-        // ->where('payment_status',1)
-        ->get();
-        // ->orderBy('id','desc')
-        // ->first();
-        // dd($data['previous_course_payment']);
-        // dd($data);
-        //Check students belong to special class
-        $data['special_course_details'] = SpecialCourse::where('id',Auth::user()->special_course_id)->first();
-        return view('student.payments')->with($data);
+        $data['class_details'] = Classes::where('id', Auth::user()->class)->first();
+        $data['admission_payment_details'] = OtherPaymentDetails::where('other_payment_details.user_id', $current_user_id)
+            ->where('fees_type', 'admission_fee')
+            ->join('payments', 'payments.id', '=', 'other_payment_details.payment_id')
+            ->first();
+        $data['monthly_payment_details'] = OtherPaymentDetails::where('other_payment_details.user_id', $current_user_id)
+            ->where('fees_type', 'monthly_fees')
+            ->join('payments', 'payments.id', '=', 'other_payment_details.payment_id')
+            ->get();
+        $data['previous_payment'] = OtherPaymentDetails::where('user_id', $current_user_id)
+            ->get();
+        $data['special_course_details'] = SpecialCourse::where('id', Auth::user()->special_course_id)->first();
+        return view('student.payments_old')->with($data);
     }
 
     public function upload_homework(Request $request)
@@ -221,20 +230,20 @@ class UserController extends Controller
         // dd($request->all());
         $validation = Validator::make($request->all(), [
             'upload_file' => 'required|mimes:pdf'
-        ],$messages = [
+        ], $messages = [
             'required' => 'Please upload a document!',
-            'mimes' => 'The document must be pdf format' 
+            'mimes' => 'The document must be pdf format'
         ]);
         $validationError = $validation->errors();
-        
+
 
         if ($validation->fails()) {
             if ($_POST['submit_btn'] === 'special_task') {
                 return redirect()->back()
-                ->withErrors($validationError, 'special_task_upload_error');
+                    ->withErrors($validationError, 'special_task_upload_error');
             } else {
                 return redirect()->back()
-                ->withErrors($validationError, 'regular_task_upload_error');
+                    ->withErrors($validationError, 'regular_task_upload_error');
             }
         }
 
@@ -254,10 +263,14 @@ class UserController extends Controller
         $task->upload_doc = $fileName;
         $task->task_id = $request->task_id;
         $task->save();
-        if ($_POST['submit_btn'] === 'special_task'){
-            return redirect()->back()->with('special_task_upload_success','Home task uploaded successfully');
-        }else{
-            return redirect()->back()->with('regular_task_upload_success','Home task uploaded successfully');
+
+        $user_id =  Auth::user()->id;
+        createNotification($user_id, 0, 0, 'upload_student_hometask');
+
+        if ($_POST['submit_btn'] === 'special_task') {
+            return redirect()->back()->with('special_task_upload_success', 'Home task uploaded successfully');
+        } else {
+            return redirect()->back()->with('regular_task_upload_success', 'Home task uploaded successfully');
         }
     }
 
@@ -301,19 +314,19 @@ class UserController extends Controller
     {
         $validation = Validator::make($request->all(), [
             'upload_doc' => 'required|mimes:pdf'
-        ],$messages = [
+        ], $messages = [
             'required' => 'Please upload a document!',
-            'mimes' => 'The document must be pdf format' 
+            'mimes' => 'The document must be pdf format'
         ]);
         $validationError = $validation->errors();
 
         if ($validation->fails()) {
             if ($_POST['submit_btn'] === 'special_exam') {
                 return redirect()->back()
-                ->withErrors($validationError, 'special_exam_upload_error');
+                    ->withErrors($validationError, 'special_exam_upload_error');
             } else {
                 return redirect()->back()
-                ->withErrors($validationError, 'regular_exam_upload_error');
+                    ->withErrors($validationError, 'regular_exam_upload_error');
             }
         }
         $name = Auth::user()->first_name . ' ' . Auth::user()->last_name;
@@ -332,10 +345,10 @@ class UserController extends Controller
         $exam->upload_doc = $fileName;
         $exam->exam_id = $request->exam_id;
         $exam->save();
-        if ($_POST['submit_btn'] === 'special_exam'){
-            return redirect()->back()->with('special_exam_upload_success','Exam uploaded successfully');
-        }else{
-            return redirect()->back()->with('regular_exam_upload_success','Exam uploaded successfully');
+        if ($_POST['submit_btn'] === 'special_exam') {
+            return redirect()->back()->with('special_exam_upload_success', 'Exam uploaded successfully');
+        } else {
+            return redirect()->back()->with('regular_exam_upload_success', 'Exam uploaded successfully');
         }
     }
 
@@ -422,10 +435,21 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    public function payment_receipt(Request $request,$payment_id){
+    public function payment_receipt(Request $request, $payment_id)
+    {
+        $user = Auth::user();
+        $data['user_details'] = $user;
+        $data['fee_details'] = \App\Models\Fee::with('transaction_details')->where('id', $payment_id)->where('user_id', $user->id)->where('transaction_id', '!=', 0)->first();
+        if ($data['fee_details']) {
+            $pdf = PDF::loadView('student.payment_receipt', $data);
+            return $pdf->download($user->id_no . '.pdf');
+        }
+    }
+
+    public function payment_receipt_old(Request $request, $payment_id)
+    {
         $current_user_id = Auth::user()->id;
-        $data['payment_details'] = OtherPaymentDetails::where('payment_id',$payment_id)->
-        join('payments','payments.id','=','other_payment_details.payment_id')->first();
+        $data['payment_details'] = OtherPaymentDetails::where('payment_id', $payment_id)->join('payments', 'payments.id', '=', 'other_payment_details.payment_id')->first();
         $data['user_details'] = User::find($current_user_id);
         $pdf = PDF::loadView('student.payment_receipt', $data);
         return $pdf->download(Auth::user()->id_no . '.pdf');
@@ -433,33 +457,44 @@ class UserController extends Controller
 
     public function availableCourses(Request $request)
     {
-        $special_course_ids = explode(',', Auth::user()->special_course_ids);
-        // dd($special_course_ids);
-        // foreach ($special_course_ids as $course_id) {
-        //     $course_details[] = SpecialCourse::find($course_id);
-        // }
-        $available_courses = SpecialCourse::where('class_id',Auth::user()->class)
-        ->whereNotIn('id',$special_course_ids)
-        ->latest()->get();
-        // dd($available_courses);
-        return view('student.new_course',compact('available_courses'));
+        $user = $request->user();
+        $courses = SpecialCourse::where('class_id', $user->class);
+        if ($user->special_course_ids != '') {
+            $user_courses = explode(',', $user->special_course_ids);
+            $courses = $courses->whereNotIn('id', $user_courses);
+        }
+        $courses = $courses->latest()->get();
+        return view('student.new_course', compact('courses'));
     }
 
-    public function addCourses(Request $request){
-        $this->validate($request,[
-            'course_id' => 'required'
-        ],$messages = [
+    public function addCourses(Request $request)
+    {
+        $this->validate($request, [
+            'course_id' => 'required|array',
+            'course_id.*' => 'required|min:1|numeric',
+        ], $messages = [
             'course_id.required' => 'Please select any course!!'
         ]);
-        $all_courses = $request->course_id;
-        foreach ($all_courses as $course_id) {
-            $course_details[] = SpecialCourse::find($course_id);
+        $selectedCourses = $request->course_id;
+        $user = $request->user();
+        foreach ($selectedCourses as $course_id) {
+            $course = SpecialCourse::find($course_id);
+            if ($course) {
+                $newFee = new \App\Models\Fee;
+                $newFee->user_id = $user->id;
+                $newFee->class_id = 0;
+                $newFee->course_id = $course->id;
+                $newFee->fee_type = 'course_fee';
+                $newFee->due_date = date("Y-m-d", strtotime("+1 day"));
+                $newFee->payment_month = date("F", strtotime("+1 day"));
+                $newFee->amount = $course->monthly_fees;
+                $newFee->save();
+
+                $user_id =  Auth::user()->id;
+                createNotification($user_id, 0, 0, 'join_course_student');
+            }
         }
-        $special_course_total_amount = 0;
-        foreach ($course_details as $key => $course) {
-            $special_course_total_amount += $course->monthly_fees;
-        }
-        $total_amount = $special_course_total_amount;
-        return view('student.course_checkout',compact('all_courses','total_amount'));
+        return redirect(route('user.payment'));
+        // return view('student.course_checkout',compact('all_courses','total_amount'));
     }
 }

@@ -8,7 +8,7 @@
                         <div class="page-title-icon">
                             <i class="fa fa-users"></i>
                         </div>
-                        <div>Attendance
+                        <div>Notification
                         </div>
                     </div>
                 </div>

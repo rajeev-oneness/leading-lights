@@ -932,6 +932,9 @@ margin-left: 10px;
 .app-header-right .widget-content .widget-content-left .widget-subheading {
     color: #ffffff !important;
 }
+.unread{
+	color: #fff !important;
+}
 .nav-tabs .nav-item.show .nav-link,.nav-tabs .nav-link,.nav-tabs .nav-link.active{
 	color: #fff;
     background-color: #91e4e9;

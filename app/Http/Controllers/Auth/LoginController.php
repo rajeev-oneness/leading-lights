@@ -48,7 +48,7 @@ class LoginController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
-        $inactive_user = User::where('email',$req->email)->where('status',0)->where('rejected',0)->first();
+        $inactive_user = User::where('email', $req->email)->where('status', 0)->where('rejected', 0)->first();
         $user = User::where('email', $req->email)->first();
         if ($user) {
             if ($user->role_id == 4) {
@@ -74,10 +74,10 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         //Attendance
-        $check_attendance = Attendance::where('user_id',Auth::user()->id)
-        ->whereDate('date','=',date('Y-m-d'))
-        ->where('logout_time','=',null)
-        ->first();
+        $check_attendance = Attendance::where('user_id', Auth::user()->id)
+            ->whereDate('date', '=', date('Y-m-d'))
+            ->where('logout_time', '=', null)
+            ->first();
         // dd( $check_attendance);
         if (Auth::user()->role_id == 3) {
             $check_attendance->user_id = Auth::user()->id;
@@ -101,7 +101,6 @@ class LoginController extends Controller
             $request->session()->invalidate();
             return redirect()->route('login');
         }
-        
     }
 
     public function teacher_login(Request $request)
@@ -113,7 +112,7 @@ class LoginController extends Controller
                 'email' => 'required|string|email',
                 'password' => 'required|string',
             ]);
-            $inactive_user = User::where('email',$request->email)->where('status',0)->where('rejected',0)->first();
+            $inactive_user = User::where('email', $request->email)->where('status', 0)->where('rejected', 0)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 3) {
@@ -132,22 +131,21 @@ class LoginController extends Controller
                         //     $check_attendance->logout_time = getAsiaTime24(date('y-m-d h:i:s'));
                         //     $check_attendance->save();
                         // }else{
-                            $attendance = new Attendance();
-                            $attendance->user_id = Auth::user()->id;
-                            $attendance->date = date('Y-m-d');
-                            $attendance->login_time = getAsiaTime24(date('Y-m-d H:i:s'));
-                            $attendance->logout_time = null;
-                            $attendance->save();
+                        $attendance = new Attendance();
+                        $attendance->user_id = Auth::user()->id;
+                        $attendance->date = date('Y-m-d');
+                        $attendance->login_time = getAsiaTime24(date('Y-m-d H:i:s'));
+                        $attendance->logout_time = null;
+                        $attendance->save();
                         // }
-                        
+
                         return redirect()->intended('/home');
                     } else {
                         $errors['password'] = 'You have entered wrong password';
                     }
-                }else{
+                } else {
                     $errors['email'] = 'This email is not register with us';
                 }
-                
             } else {
                 $errors['email'] = 'This email is not register with us';
             }
@@ -174,10 +172,9 @@ class LoginController extends Controller
                     } else {
                         $errors['password'] = 'You have entered wrong password';
                     }
-                }else{
+                } else {
                     $errors['email'] = 'This email is not register with us';
                 }
-                
             } else {
                 $errors['email'] = 'This email is not register with us';
             }
@@ -203,15 +200,41 @@ class LoginController extends Controller
                     } else {
                         $errors['password'] = 'You have entered wrong password';
                     }
-                }else{
+                } else {
                     $errors['email'] = 'This email is not register with us';
                 }
-                
             } else {
                 $errors['email'] = 'This email is not register with us';
             }
             return back()->withErrors($errors)->withInput($request->all());
         }
     }
-    
+    public function super_admin_login(Request $request)
+    {
+        if ($request->method() == 'GET') {
+            return view('super-admin.auth.login');
+        } else if ($request->method() == 'POST') {
+            $request->validate([
+                'email' => 'required|string|email',
+                'password' => 'required|string',
+            ]);
+            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->first();
+            if ($user) {
+                if ($user->role_id == 5) {
+                    if (Hash::check($request->password, $user->password)) {
+                        Auth::login($user);
+                        return redirect()->intended('/home');
+                    } else {
+                        $errors['password'] = 'You have entered wrong password';
+                    }
+                } else {
+                    $errors['email'] = 'This email is not register with us';
+                }
+            } else {
+                $errors['email'] = 'This email is not register with us';
+            }
+            return back()->withErrors($errors)->withInput($request->all());
+        }
+    }
 }

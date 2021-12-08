@@ -26,77 +26,77 @@
                     <div class="row">
                         <div class="col-lg-7">
                             <img src="{{ asset('frontend/images/event.jpg') }}" class="img-fluid mb-4">
-                                <form action="{{ route('hr.announcement.store') }}" method="POST">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="form-group justify-content-between">
-                                                <label>
-                                                    <i class="fa fa-circle color-icon mr-2"></i>
-                                                    Title<span class="text-danger">*</span></label>
-                                                <input type="text" name="title" class="w-89 form-control"
-                                                    value="{{ old('title') }}">
-                                                @error('title')
-                                                    <span class="text-danger">
-                                                        {{ $message }}
-                                                    </span>
-                                                @enderror
-                                            </div>
+                            <form action="{{ route('hr.announcement.store') }}" method="POST">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group justify-content-between">
+                                            <label>
+                                                <i class="fa fa-circle color-icon mr-2"></i>
+                                                Title<span class="text-danger">*</span></label>
+                                            <input type="text" name="title" class="w-89 form-control"
+                                                value="{{ old('title') }}">
+                                            @error('title')
+                                                <span class="text-danger">
+                                                    {{ $message }}
+                                                </span>
+                                            @enderror
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="justify-content-between align-items-center">
-                                                <label><i class="fa fa-circle color-icon mr-2"></i>Class<span
-                                                        class="text-danger">*</span></label>
-                                                <select class="w-89" id="choices-multiple-remove-button" multiple
-                                                    name="class_id[]">
-                                                    <option value="">Select Classes</option>
-                                                    @foreach ($classes as $class)
-                                                        <option value="{{ $class->id }}">{{ $class->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('class_id')
-                                                    <span class="text-danger">
-                                                        {{ $message }}
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="justify-content-between align-items-center">
-                                                <label>
-                                                    <i class="fa fa-circle color-icon mr-2"></i>Date<span
-                                                        class="text-danger">*</span>
-                                                </label>
-
-                                                <input type="text" name="date" class="form-control datepicker"
-                                                    value="{{ old('date') }}">
-                                                @error('date')
-                                                    <span class="text-danger">
-                                                        {{ $message }}
-                                                    </span>
-                                                @enderror
-                                            </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="justify-content-between align-items-center">
+                                            <label><i class="fa fa-circle color-icon mr-2"></i>Class<span
+                                                    class="text-danger">*</span></label>
+                                            <select class="w-89" id="choices-multiple-remove-button" multiple
+                                                name="class_id[]">
+                                                <option value="">Select Classes</option>
+                                                @foreach ($classes as $class)
+                                                    <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('class_id')
+                                                <span class="text-danger">
+                                                    {{ $message }}
+                                                </span>
+                                            @enderror
                                         </div>
                                     </div>
-                                    <div class="d-sm-flex align-items-top mt-4">
-                                        <p class="des dec"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Description<span
-                                                class="text-danger">*</span></p>
+                                    <div class="col-lg-6">
+                                        <div class="justify-content-between align-items-center">
+                                            <label>
+                                                <i class="fa fa-circle color-icon mr-2"></i>Date<span
+                                                    class="text-danger">*</span>
+                                            </label>
 
+                                            <input type="text" name="date" class="form-control datepicker"
+                                                value="{{ old('date') }}">
+                                            @error('date')
+                                                <span class="text-danger">
+                                                    {{ $message }}
+                                                </span>
+                                            @enderror
+                                        </div>
                                     </div>
-                                    <textarea cols="10" id="editor1" name="desc" rows="5"></textarea>
-                                    @error('desc')
-                                        <span class="text-danger">
-                                            {{ $message }}
-                                        </span>
-                                    @enderror
-                                    <br>
-                                    <button class="btn-pill btn btn-dark mt-4" type="submit">Submit Now</button>
-                                </form>
+                                </div>
+                                <div class="d-sm-flex align-items-top mt-4">
+                                    <p class="des dec"><span class="mr-2"><i
+                                                class="fa fa-circle"></i></span>Description<span
+                                            class="text-danger">*</span></p>
 
-                                {{-- <button class="btn-pill btn btn-dark mt-4">Submit Now</button> --}}
+                                </div>
+                                <textarea cols="10" id="editor1" name="desc" rows="5"></textarea>
+                                @error('desc')
+                                    <span class="text-danger">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                                <br>
+                                <button class="btn-pill btn btn-dark mt-4" type="submit">Submit Now</button>
+                            </form>
+
+                            {{-- <button class="btn-pill btn btn-dark mt-4">Submit Now</button> --}}
                         </div>
                         <div class="col-lg-5">
                             <div class="card-header-title mb-4">
@@ -108,7 +108,7 @@
                                     </div> --}}
                                     <div class="pdf-text">
                                         <h4>{{ $announcement->title }}</h4>
-                                        <p>{!! $announcement->description !!}</p>
+                                        <p>{!! $announcement->description ? $announcement->description : 'N/A' !!}</p>
                                         <div class="widget-content-left d-sm-flex align-items-center">
                                             <div class="widget-heading text-dark">
                                                 <img src="{{ asset('frontend/assets/images/calander.png') }}"
