@@ -20,7 +20,7 @@ class InsertDataInRolesTable extends Migration
             'slug' => 'super-admin'
         ];
 
-        DB::table('roles')->insert($data);
+        // DB::table('roles')->insert($data);
     }
 
     /**
@@ -30,5 +30,6 @@ class InsertDataInRolesTable extends Migration
      */
     public function down()
     {
+
     }
 }

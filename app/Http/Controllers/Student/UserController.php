@@ -127,7 +127,7 @@ class UserController extends Controller
             [
                 'old_password' => ['required', function ($attribute, $value, $fail) {
                     if (!Hash::check($value, Auth::user()->password)) {
-                        $fail('Old Password doesdn\'t match');
+                        $fail('Old Password doesn\'t match');
                     }
                 }],
                 'password' => 'required|min:6',
@@ -172,7 +172,6 @@ class UserController extends Controller
         return view('student.home_work')->with($data);
     }
 
-<<<<<<< HEAD
     public function exam(Request $request)
     {
         $data['class_wise_exam'] = ArrangeExam::where('class',  Auth::user()->class)->latest()->get();
@@ -190,9 +189,6 @@ class UserController extends Controller
     }
 
     public function paymentold(Request $request)
-=======
-    public function payment(Request $request)
->>>>>>> f24f7c8daed66c344258e932de0a8c124cadc3d8
     {
         $current_user_id = Auth::user()->id;
         $previous_payment = Payment::where('user_id', $current_user_id)->orderBy('id', 'desc')->first();

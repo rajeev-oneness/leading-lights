@@ -14,7 +14,7 @@ class AddFieldOnAnnouncementsTable extends Migration
     public function up()
     {
         Schema::table('announcements', function (Blueprint $table) {
-            $table->string('description')->after('title');
+            // $table->string('description')->after('title');
         });
     }
 
@@ -26,7 +26,7 @@ class AddFieldOnAnnouncementsTable extends Migration
     public function down()
     {
         Schema::table('announcements', function (Blueprint $table) {
-            $table->dropColumn('description');
+            // $table->dropColumn('description');
         });
     }
 }
