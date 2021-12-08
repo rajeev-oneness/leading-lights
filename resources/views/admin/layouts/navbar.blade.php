@@ -479,18 +479,19 @@
                                                             src="{{ asset('img/1.jpg') }}" alt="">
                                                     </div>
                                                     <div class="widget-content-left">
-                                                        <div class="widget-heading">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
+                                                        <div class="widget-heading">{{ Auth::user()->first_name }}
+                                                            {{ Auth::user()->last_name }}</div>
                                                         <div class="widget-subheading opacity-8">A short profile
                                                             description</div>
                                                     </div>
                                                     <div class="widget-content-right mr-2">
                                                         <a class="btn-pill btn-shadow btn-shine btn btn-focus"
-                                                            href="{{ route('admin.logout') }}" onclick="event.preventDefault();
-                           document.getElementById('logout-form').submit();">
+                                                            href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                                    document.getElementById('logout-form').submit();">
                                                             {{ __('Logout') }}
                                                         </a>
 
-                                                        <form id="logout-form" action="{{ route('admin.logout') }}"
+                                                        <form id="logout-form" action="{{ route('logout') }}"
                                                             method="POST" class="d-none">
                                                             @csrf
                                                         </form>

@@ -7,9 +7,9 @@ use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Models\SpecialCourse;
 use Illuminate\Support\Facades\Auth, Illuminate\Support\Facades\Route;
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+// Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+// Route::post('/login', [LoginController::class, 'login']);
+// Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 // Forgot / Reset Password --------------------------------->
 Route::any('/forgot-password', [ResetPasswordController::class, 'forgotPassword'])->name('forgotPassword');

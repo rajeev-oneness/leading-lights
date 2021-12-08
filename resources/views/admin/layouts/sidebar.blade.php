@@ -83,13 +83,15 @@
             </li>
             <li><a href="#"><i class="fas fa-user-graduate" aria-hidden="true"></i>PTM Schedule Management</a></li>
             <li>
-                <a href="{{ route('admin.logout') }}" onclick="event.preventDefault();
-                           document.getElementById('logout-form').submit();">
-                    <i class="fas fa-sign-out-alt"></i> {{ __('Logout') }}
+                <a class="btn-pill btn-shadow btn-shine btn btn-focus"
+                        href="{{ route('logout') }}" onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }}
                 </a>
 
-                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">
-                    @csrf
+                <form id="logout-form" action="{{ route('logout') }}"
+                        method="POST" class="d-none">
+                        @csrf
                 </form>
             </li>
         </ul>
