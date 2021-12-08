@@ -21,18 +21,18 @@
                 </div>
             </div>
             <div class="card-header-title mb-4">
-                 History Of Exam 
+                History Of Exam
                 <div class="float-right">
                     <a href="{{ route('teacher.exam.create') }}" class="btn-pill btn btn-dark btn-lg mb-4">Arrange Exam</a>
                 </div>
             </div>
             @if (session('question_add_success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('question_add_success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('question_add_success') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             @endif
             <div class="table-responsive mb-5">
                 <table class="table table-hover bg-table" id="exam_table">
@@ -64,11 +64,9 @@
                                 @endphp
                                 <td>
                                     @if ($exam->class)
-                                        {{ $class_details->name }} <span
-                                            class="badge badge-secondary">Class</span>
+                                        {{ $class_details->name }} <span class="badge badge-secondary">Class</span>
                                     @else
-                                        {{ $group_details->name }} <span
-                                            class="badge badge-secondary">Group</span>
+                                        {{ $group_details->name }} <span class="badge badge-secondary">Group</span>
                                     @endif
                                 </td>
                                 <td>{{ $subject_details->name }}</td>
@@ -81,43 +79,48 @@
                                         Mixed(MCQ & Desc)
                                     @endif
                                 <td>{{ $exam->full_marks }}</td>
-                                <td>{{ $exam->date }} {{ $exam->exam_type }}</td>
+                                <td>{{ $exam->date }}</td>
                                 <td>{{ date('h:i A', strtotime($exam->start_time)) }} <span
                                         class="text-success">to</span>
                                     {{ date('h:i A', strtotime($exam->end_time)) }}</td>
                                 <td>{{ $exam->result_date }}</td>
                                 <td>
-                                    @if ($exam->exam_type == 1)
-                                        <span data-toggle="modal" data-target="#mcqExamModal" data-id="{{ $exam->id }}" class="add_question_section">
-                                            <a href="#"><i class="fa fa-plus mr-2" data-toggle="tooltip"
-                                                    data-placement="top" title="Add Questions"></i></a>
-                                        </span>
-                                       
-                                    @elseif ($exam->exam_type == 2)
-                                        <span data-toggle="modal" data-target="#examModal" data-id="{{ $exam->id }}" class="add_question_section">
-                                            <a href="#"><i class="fa fa-plus mr-2" data-toggle="tooltip"
-                                                    data-placement="top" title="Add Questions"></i></a>
-                                        </span>
-                                    @else
-                                        <span data-toggle="modal" data-target="#mixedExamModal" data-id="{{ $exam->id }}" class="add_question_section">
-                                            <a href="#"><i class="fa fa-plus mr-2" data-toggle="tooltip"
-                                                    data-placement="top" title="Add Questions"></i></a>
-                                        </span>
+                                    @if ($exam->date >= date('Y-m-d'))
+                                        @if ($exam->exam_type == 1)
+                                            <span data-toggle="modal" data-target="#mcqExamModal"
+                                                data-id="{{ $exam->id }}" class="add_question_section">
+                                                <a href="#"><i class="fa fa-plus mr-2" data-toggle="tooltip"
+                                                        data-placement="top" title="Add Questions"></i></a>
+                                            </span>
+
+                                        @elseif ($exam->exam_type == 2)
+                                            <span data-toggle="modal" data-target="#examModal"
+                                                data-id="{{ $exam->id }}" class="add_question_section">
+                                                <a href="#"><i class="fa fa-plus mr-2" data-toggle="tooltip"
+                                                        data-placement="top" title="Add Questions"></i></a>
+                                            </span>
+                                        @else
+                                            <span data-toggle="modal" data-target="#mixedExamModal"
+                                                data-id="{{ $exam->id }}" class="add_question_section">
+                                                <a href="#"><i class="fa fa-plus mr-2" data-toggle="tooltip"
+                                                        data-placement="top" title="Add Questions"></i></a>
+                                            </span>
+                                        @endif
                                     @endif
                                     @if ($exam->exam_type == 1)
-                                        <a href="{{ route('teacher.viewMCQQuestion',$exam->id) }}"><i class="fa fa-eye mr-2" data-toggle="tooltip"
-                                                data-placement="top" title="View Questions"
-                                                data-toggle="modal" data-target="#examModal"></i></a>
+                                        <a href="{{ route('teacher.viewMCQQuestion', $exam->id) }}"><i
+                                                class="fa fa-eye mr-2" data-toggle="tooltip" data-placement="top"
+                                                title="View Questions" data-toggle="modal" data-target="#examModal"></i></a>
                                     @elseif ($exam->exam_type == 2)
-                                        <a href="{{ route('teacher.viewDescQuestion',$exam->id) }}"><i class="fa fa-eye mr-2" data-toggle="tooltip"
-                                                data-placement="top" title="View Questions"
-                                                data-toggle="modal" data-target="#examModal"></i></a>
+                                        <a href="{{ route('teacher.viewDescQuestion', $exam->id) }}"><i
+                                                class="fa fa-eye mr-2" data-toggle="tooltip" data-placement="top"
+                                                title="View Questions" data-toggle="modal" data-target="#examModal"></i></a>
                                     @else
-                                        <a href="{{ route('teacher.viewMixedQuestion',$exam->id) }}"><i class="fa fa-eye mr-2" data-toggle="tooltip"
-                                        data-placement="top" title="View Questions"
-                                        data-toggle="modal" data-target="#examModal"></i></a>
+                                        <a href="{{ route('teacher.viewMixedQuestion', $exam->id) }}"><i
+                                                class="fa fa-eye mr-2" data-toggle="tooltip" data-placement="top"
+                                                title="View Questions" data-toggle="modal" data-target="#examModal"></i></a>
                                     @endif
-                                    
+
                                     {{-- <a href="{{ route('admin.hr.edit', $exam->id) }}"
                                         class="ml-2"><i class="fa fa-edit"></i></a> --}}
                                 </td>

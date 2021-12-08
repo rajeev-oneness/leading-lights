@@ -161,13 +161,10 @@ class ExamController extends Controller
         foreach ($request->addMoreInputFields as $key => $input_field) {
             // Check if any image provide or not
             // If Exist then it's store otherwise store null value
-            if (count($input_field) == 2) {
+            $imageName = null;
+            if (!empty($input_field['image'])) {
                 $image = $input_field['image'];
-            }
-            if(count($input_field) == 2){
                 $imageName = imageUpload($image,'question/'.$current_user_id.'/'.$exam_id);
-            }else{
-                $imageName = null;
             }
 
             // Collect other input values

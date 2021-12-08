@@ -53,7 +53,6 @@ class ExamController extends Controller
                     $question = Question::where('id', $data['question_id' . $i])->first();
 
                     // For MCQ Question
-                    // Also for mixed MCQ Question
                     // It's calculate right and wrong answer
                     if ($exam_details->exam_type == 1) {
                         if ($question->answer === $data['answer' . $i]) {
@@ -66,8 +65,6 @@ class ExamController extends Controller
                     // For mixed MCQ Question
                     // It's calculate right and wrong answer
                     if ($exam_details->exam_type == 3) {
-                        // echo $data['question_type'][1];
-                        // echo $data['question_type'][($i-1)];
                         // if ($data['question_type'][$i] == 1) {
                             if ($question->answer === $data['answer' . $i]) {
                                 $yes_ans++;
