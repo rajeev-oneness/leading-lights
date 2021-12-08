@@ -18,7 +18,7 @@ class InsertDataInUsersTable extends Migration
             'first_name' => 'Super Admin',
             'last_name' => 'user',
             'email' => 'superadmin@gmail.com',
-            'password' => Hash::make('123456'),
+            'password' => Hash::make('123'),
             'status' => 1,
             'id_no' => 'LLSA003567',
         ];
