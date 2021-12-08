@@ -60,7 +60,6 @@
                                             <div class="responsive-error">
                                                 <?php $phonecodes = \App\Models\Country::Where('phonecode', '!=', '')
                                                     ->select('phonecode')
-                                                    ->orderBy('phonecode')
                                                     ->get(); ?>
                                                 <select class="form-control" required name="country_code"
                                                     id="country_code">

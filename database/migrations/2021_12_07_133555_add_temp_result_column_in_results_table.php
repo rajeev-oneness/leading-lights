@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnToArrangeExamsTable extends Migration
+class AddTempResultColumnInResultsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddColumnToArrangeExamsTable extends Migration
      */
     public function up()
     {
-        Schema::table('arrange_exams', function (Blueprint $table) {
-           $table->integer('full_marks');
-           $table->date('result_date');
+        Schema::table('results', function (Blueprint $table) {
+            $table->string('temp_marks')->after('total_marks')->comment('It\'s store Mixed questions,MCQ type result')->nullable();
         });
     }
 
@@ -26,9 +25,8 @@ class AddColumnToArrangeExamsTable extends Migration
      */
     public function down()
     {
-        Schema::table('arrange_exams', function (Blueprint $table) {
-            $table->dropColumn('full_marks');
-            $table->dropColumn('result_date');
+        Schema::table('results', function (Blueprint $table) {
+            $table->dropColumn('temp_marks');
         });
     }
 }

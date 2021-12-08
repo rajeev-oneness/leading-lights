@@ -1,12 +1,5 @@
 @extends('teacher.layouts.master')
 @section('content')
-    <style>
-        .popover,
-        .tooltip {
-            opacity: unset;
-        }
-
-    </style>
     <div class="app-main__outer">
         <div class="app-main__inner">
             <div class="app-page-title">
@@ -20,12 +13,21 @@
                     </div>
                 </div>
             </div>
+            <div class="row m-0 dashboard-content-header">
+                <div class="col-md-6">     
+                    <ul class="breadcrumb p-0">
+                        <li><a href="{{ route('teacher.exam.index') }}">Exam List</a></li>
+                        <li class="text-info"><i class="fa fa-chevron-right"></i></li>
+                        <li><a href="#">Arrange Exam</a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card-header-title mb-4">
-                                Manage Exam
+                                Arrange Exam
                             </div>
                             @if (session('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -43,7 +45,7 @@
                                     </button>
                                 </div>
                             @endif
-                            <form class="form" action="{{ route('teacher.assignExam') }}" method="POST"
+                            <form class="form" action="{{ route('teacher.exam.store') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="d-sm-flex align-items-top justify-content-between mb-5">
@@ -84,16 +86,20 @@
                                     </div>
                                 </div>
                                 <div class="row align-items-center justify-content-between">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Exam Date<span class="text-danger">*</span></p>
+                                                    class="fa fa-circle"></i></span>Exam Date<span
+                                                class="text-danger">*</span></p>
                                         <input type="text" name="date" id="exam_date" class="form-control datepicker"
                                             value="{{ old('date') }}" autocomplete="off">
-
+                                        @if ($errors->has('date'))
+                                            <span style="color: red;">{{ $errors->first('date') }}</span>
+                                        @endif
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Start Time<span class="text-danger">*</span></p>
+                                                    class="fa fa-circle"></i></span>Start Time<span
+                                                class="text-danger">*</span></p>
                                         <div class="input-group">
                                             <input type="time" class="form-control" value="{{ old('start_time') }}"
                                                 name="start_time">
@@ -101,10 +107,14 @@
                                                 <span class="glyphicon glyphicon-time"></span>
                                             </span>
                                         </div>
+                                        @if ($errors->has('start_time'))
+                                            <span style="color: red;">{{ $errors->first('start_time') }}</span>
+                                        @endif
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>End time<span class="text-danger">*</span></p>
+                                                    class="fa fa-circle"></i></span>End time<span
+                                                class="text-danger">*</span></p>
 
                                         <div class="input-group">
                                             <input type="time" class="form-control" value="{{ old('end_time') }}"
@@ -113,46 +123,61 @@
                                                 <span class="glyphicon glyphicon-time"></span>
                                             </span>
                                         </div>
-
+                                        @if ($errors->has('start_time'))
+                                            <span style="color: red;">{{ $errors->first('start_time') }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-3 mt-3">
+                                        <p class="des  mr-2"><span class="mr-2"><i
+                                                    class="fa fa-circle"></i></span>Exam Type<span
+                                                class="text-danger">*</span></p>
+                                        <select name="exam_type" id="exam-type" class="form-control">
+                                            <option value="">Select Exam Type</option>
+                                            <option value="1">MCQ</option>
+                                            <option value="2">Descriptive</option>
+                                            <option value="3">Mixed(MCQ & Descriptive)</option>
+                                        </select>
+                                        @if ($errors->has('exam_type'))
+                                            <span style="color: red;">{{ $errors->first('exam_type') }}</span>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="row mt-3 mb-3">
                                     <div class="col-md-4">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Full Marks<span class="text-danger">*</span></p>
+                                                    class="fa fa-circle"></i></span>Full Marks<span
+                                                class="text-danger">*</span></p>
                                         <input type="number" name="full_marks" id="full_marks" class="form-control"
                                             value="{{ old('full_marks') }}" min="1">
-
+                                        @if ($errors->has('full_marks'))
+                                            <span style="color: red;">{{ $errors->first('full_marks') }}</span>
+                                        @endif
                                     </div>
                                     <div class="col-md-4">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Negative Marks<span class="text-danger">*</span></p>
+                                                    class="fa fa-circle"></i></span>Negative Marks<span
+                                                class="text-danger">*</span></p>
                                         <select name="negative_marks" id="negative_marks" class="form-control">
                                             <option value="0">No</option>
                                             <option value="1">Yes</option>
                                         </select>
-
+                                        @if ($errors->has('negative_marks'))
+                                            <span style="color: red;">{{ $errors->first('negative_marks') }}</span>
+                                        @endif
                                     </div>
                                     <div class="col-md-4">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Pass Marks<span class="text-danger">*</span></p>
-                                        <input type="text" name="result_date" id="result_date"
-                                            class="form-control" value="{{ old('result_date') }}">
-
-                                    </div>
-                                    <div class="col-md-4 mt-3">
-                                        <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Exam Type<span class="text-danger">*</span></p>
-                                        <select name="exam-type" id="exam-type" class="form-control">
-                                            <option value="1">MCQ</option>
-                                            <option value="2">Descriptive</option>
-                                            <option value="3">Mixed(MCQ & Descriptive)</option>
-                                        </select>
-
+                                                    class="fa fa-circle"></i></span>Pass Marks<span
+                                                class="text-danger">*</span></p>
+                                        <input type="text" name="pass_marks" id="pass_marks" class="form-control"
+                                            value="{{ old('pass_marks') }}">
+                                        @if ($errors->has('pass_marks'))
+                                            <span style="color: red;">{{ $errors->first('pass_marks') }}</span>
+                                        @endif
                                     </div>
                                 </div>
                                 <!--  <p class="des dec"><span class="mr-2"><i class="fa fa-circle"></i></span>Set Quiestion Mannually</p>
-                                            <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea> -->
+                                                            <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea> -->
                                 {{-- <div class="card-header-title mb-4">
                                     Upload Quiestion Paper as a Document(Only accept PDF) </div>
                                 <div class="file-upload">
@@ -180,54 +205,6 @@
                                 </div> --}}
                                 <button class="btn-pill btn btn-dark mt-4">Assign Now</button>
                             </form>
-                            <div class="card-header-title mb-4 mt-4"> History Of Exam </div>
-                            <div class="table-responsive">
-                                <table class="table table-hover bg-table" id="exam_table">
-                                    <thead>
-                                        <tr>
-                                            <th>Serial no</th>
-                                            <th>Class/Group Name</th>
-                                            <th>Subject</th>
-                                            <th>Full Marks</th>
-                                            <th>Exam Date</th>
-                                            <th>Exam Time</th>
-                                            <th>Result Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($assign_exam as $i => $exam)
-                                            <tr class="bg-tr">
-                                                <th>{{ $i + 1 }}</th>
-                                                @php
-                                                    if ($exam->group_id) {
-                                                        $group_details = App\Models\Group::find($exam->group_id);
-                                                    }
-                                                    if ($exam->class) {
-                                                        $class_details = App\Models\Classes::find($exam->class);
-                                                    }
-                                                    $subject_details = App\Models\Subject::find($exam->subject);
-                                                @endphp
-                                                <td>
-                                                    @if ($exam->class)
-                                                        {{ $class_details->name }} <span
-                                                            class="badge badge-secondary">Class</span>
-                                                    @else
-                                                        {{ $group_details->name }} <span
-                                                            class="badge badge-secondary">Group</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{ $subject_details->name }}</td>
-                                                <td>{{ $exam->full_marks }}</td>
-                                                <td>{{ $exam->date }}</td>
-                                                <td>{{ date('h:i A', strtotime($exam->start_time)) }} <span
-                                                        class="text-success">to</span>
-                                                    {{ date('h:i A', strtotime($exam->end_time)) }}</td>
-                                                <td>{{ $exam->result_date }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -235,14 +212,15 @@
         </div>
         @include('teacher.layouts.static_footer')
     </div>
+    </div>
+    </div>
+    @include('teacher.modal.exam.add_desc_question')
+    @include('teacher.modal.exam.view_desc_question')
+
+    @include('teacher.modal.exam.add_mcq_question')
+    @include('teacher.modal.exam.view_mcq_question')
+    @include('teacher.modal.exam.question_js')
     <script>
-        // $('#exam_date').on('changeDate', function() {
-        //     $('.datepicker1').datepicker('destroy').datepicker({
-        //             format: 'yyyy-mm-dd',
-        //             startDate:  $('#exam_date').val() + '+20d',
-        //             // daysOfWeekDisabled: [0]
-        //         });
-        // });
         $('#class_name').on('click', function() {
             var class_name = $('#class_name').val();
             var after_split = class_name.split("-")[1];

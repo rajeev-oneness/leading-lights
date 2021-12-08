@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnToArrangeExamsTable extends Migration
+class RemoveColumnInArrangeExamsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,9 @@ class AddColumnToArrangeExamsTable extends Migration
     public function up()
     {
         Schema::table('arrange_exams', function (Blueprint $table) {
-           $table->integer('full_marks');
-           $table->date('result_date');
+            $table->dropColumn('full_marks');
+            $table->dropColumn('result_date');
+            $table->dropColumn('upload_file');
         });
     }
 
@@ -27,8 +28,7 @@ class AddColumnToArrangeExamsTable extends Migration
     public function down()
     {
         Schema::table('arrange_exams', function (Blueprint $table) {
-            $table->dropColumn('full_marks');
-            $table->dropColumn('result_date');
+            //
         });
     }
 }

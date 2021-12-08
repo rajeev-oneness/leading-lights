@@ -35,33 +35,34 @@
                                     @csrf
                                     <div class="d-sm-flex align-items-top justify-content-between">
                                         <div class="responsive-error">
-                                        <select name="class" id="class" class="form-control" onclick="test()">
-                                            <option value="">Select Class/Groups</option>
-                                            @foreach ($groups as $group)
-                                                <option value="{{ $group->id . '-group' }}" class="text-info">
-                                                    {{ $group->name }}</option>
-                                            @endforeach
-                                            @foreach ($classes as $class)
-                                                <option value="{{ $class->id . '-class' }}" @if (old('class') == $class->id) selected @endif>
-                                                    {{ $class->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('class'))
-                                            <span style="color: red;width: 100%">{{ $errors->first('class') }}</span>
-                                        @endif
-                                    </div>
-                                    <div class="responsive-error">
-                                        <select class="form-control" id="subject" name="subject">
-                                            <option value="" selected>Subject</option>
-                                            @foreach ($subjects as $subject)
-                                                <option value="{{ $subject->id }}" @if (old('subject') == $subject->id) selected @endif>
-                                                    {{ $subject->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('subject'))
-                                            <span style="color: red;width: 100%">{{ $errors->first('subject') }}</span>
-                                        @endif
-                                    </div>
+                                            <select name="class" id="class" class="form-control" onclick="test()">
+                                                <option value="">Select Class/Groups</option>
+                                                @foreach ($groups as $group)
+                                                    <option value="{{ $group->id . '-group' }}" class="text-info">
+                                                        {{ $group->name }}</option>
+                                                @endforeach
+                                                @foreach ($classes as $class)
+                                                    <option value="{{ $class->id . '-class' }}" @if (old('class') == $class->id) selected @endif>
+                                                        {{ $class->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('class'))
+                                                <span style="color: red;width: 100%">{{ $errors->first('class') }}</span>
+                                            @endif
+                                        </div>
+                                        <div class="responsive-error">
+                                            <select class="form-control" id="subject" name="subject">
+                                                <option value="" selected>Subject</option>
+                                                @foreach ($subjects as $subject)
+                                                    <option value="{{ $subject->id }}" @if (old('subject') == $subject->id) selected @endif>
+                                                        {{ $subject->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('subject'))
+                                                <span
+                                                    style="color: red;width: 100%">{{ $errors->first('subject') }}</span>
+                                            @endif
+                                        </div>
                                     </div>
                                     {{-- <div class="d-sm-flex align-items-center justify-content-between">
                                         @if ($errors->has('class'))
@@ -200,32 +201,33 @@
             console.log(class_id);
             if (class_id !== '') {
                 $.ajax({
-                        type: 'POST',
-                        url: "{{ route('getStudentByClass') }}",
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            class_id : class_id 
-                        },
-                        dataType: 'json',
+                    type: 'POST',
+                    url: "{{ route('getStudentByClass') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        class_id: class_id
+                    },
+                    dataType: 'json',
 
-                        success: function(response) {
-                            console.log(response.length);
-                            if (response.length > 0) {
-                                $("#student_id").html('');
-                                var option = '<option value="">Select a student</option>';
-                                $.each( response, function( i ) {
-                                    option +='<option value="'+response[i].id+'">'+response[i].first_name+'</option>';
-                                });
+                    success: function(response) {
+                        console.log(response.length);
+                        if (response.length > 0) {
+                            $("#student_id").html('');
+                            var option = '<option value="">Select a student</option>';
+                            $.each(response, function(i) {
+                                option += '<option value="' + response[i].id + '">' + response[
+                                    i].first_name + '</option>';
+                            });
 
-                                $("#student_id").append(option);
-                            }else{
-                                $("#student_id").html('');
-                                var option = '<option value="">Select a student</option>';
-                                option +='<option value="">'+'No student available'+'</option>';
-                                $("#student_id").append(option);
-                            }
-                        },
-                    })
+                            $("#student_id").append(option);
+                        } else {
+                            $("#student_id").html('');
+                            var option = '<option value="">Select a student</option>';
+                            option += '<option value="">' + 'No student available' + '</option>';
+                            $("#student_id").append(option);
+                        }
+                    },
+                })
             }
         })
     </script>

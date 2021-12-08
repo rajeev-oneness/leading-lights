@@ -24,6 +24,7 @@ use App\Models\Notification;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Question;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\File;
@@ -259,13 +260,13 @@ class TeacherController extends Controller
                     $data['start_date'] = $request->start_date;
                     $data['end_date'] = $request->end_date;
 
-                    $available_att = Attendance::where('user_id', Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get();
-                    dd($available_att);
+                    // $available_att = Attendance::where('user_id',Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get();
+                    // dd( $available_att);
 
-                    for ($i = $from; $i <= $to; $i++) {
-                        $attendance_array[] = Attendance::where('user_id', Auth::user()->id)->whereDate('date', $i)->first();
-                    }
-                    dd($attendance_array);
+                    // for ($i = $from; $i <= $to ; $i++) {
+                    //    $attendance_array[] = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
+                    // }
+                    // dd($attendance_array);
 
 
                     $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
@@ -317,14 +318,6 @@ class TeacherController extends Controller
     public function videoCall()
     {
         return view('teacher.video_call');
-    }
-    public function manageExam()
-    {
-        $data['groups'] = Group::latest()->where('teacher_id', Auth::user()->id)->get();
-        $data['subjects'] = Subject::latest()->get();
-        $data['classes'] = Classes::orderBy('name')->get();
-        $data['assign_exam'] = ArrangeExam::where('user_id', Auth::user()->id)->latest()->get();
-        return view('teacher.exam')->with($data);;
     }
 
     public function taskReview(Request $request)
@@ -468,199 +461,6 @@ class TeacherController extends Controller
         return response()->json('success');
     }
 
-    public function assignExam(Request $request)
-    {
-        $this->validate($request, [
-            // 'class' => 'required',
-            // 'subject' => 'required',
-            'date' => 'required|date',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i',
-            // 'full_marks' => 'required',
-            // 'result_date' => 'required',
-            // 'upload_file' => 'required|mimes:pdf'
-        ]);
-
-        $exam_start_time = date('H:i', strtotime($request->start_time));
-        $exam_end_time = date('H:i', strtotime($request->end_time));
-
-        $minutes_to_add = 180;
-        $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
-        $time = new DateTime($request->date . $request->start_time);
-        $time->add(new DateInterval('PT' . $minutes_to_add . 'M'));
-
-        $new_time = $time->format('H:i');
-        // dd($new_time);
-        if ($exam_start_time > $exam_end_time) {
-            return redirect()->back()->with('error', 'Please choose valid end time')->withInput();;
-        }
-
-        $after_explode_class = explode('-', $request->class);
-
-        $arrange_exam = ArrangeExam::where('class', $after_explode_class[0])
-            ->where('date', $request->date)
-            ->whereTime('start_time', '<=', $exam_start_time)
-            ->whereTime('end_time', '>=', $exam_start_time)
-            ->count();
-        $group_arrange_exam = ArrangeExam::where('group_id', $after_explode_class[0])
-            ->where('date', $request->date)
-            ->whereTime('start_time', '<=', $exam_start_time)
-            ->whereTime('end_time', '>=', $exam_start_time)
-            ->count();
-
-        // $arrange_exam = ArrangeExam::where('class', $request->class)
-        //     ->where('date', $request->date)
-        //     ->whereTime('start_time', '<=', $exam_start_time)
-        //     ->whereTime('end_time', '>=', $exam_start_time)
-        //     ->count();
-        if ($arrange_exam == 0 && $group_arrange_exam == 0) {
-            if ($request->hasFile('upload_file')) {
-                $file = $request->file('upload_file');
-                $fileName = imageUpload($file, 'teacher/exam');
-            } else {
-                $fileName = null;
-            }
-
-            $class = $request->class;
-            $after_explode_class = explode('-', $class);
-
-            $exam = new ArrangeExam();
-            $exam->user_id = Auth::user()->id;
-            if ($after_explode_class[1] === 'class') {
-                $exam->class = $after_explode_class[0];
-                $exam->group_id = null;
-            }
-            if ($after_explode_class[1] === 'group') {
-                $exam->group_id = $after_explode_class[0];
-                $exam->class = null;
-            }
-            $exam->subject = $request->subject;
-            $exam->date = $request->date;
-            $exam->start_time = $request->start_time;
-            $exam->end_time = $request->end_time;
-            $exam->full_marks = $request->full_marks;
-            $exam->result_date = $request->result_date;
-            $exam->upload_file = $fileName;
-            $exam->save();
-
-            return redirect()->back()->with('success', 'Exam upload successfully');
-        } else {
-            return redirect()->back()->with('error', 'Exam already schedule this time')->withInput();;
-        }
-    }
-
-    public function examSubmission()
-    {
-        $data['groups'] = Group::latest()->where('teacher_id', Auth::user()->id)->get();
-        $data['subjects'] = Subject::latest()->get();
-        $data['classes'] = Classes::orderBy('name')->get();
-        $data['users'] = User::where('role_id', 4)->latest()->get();
-        return view('teacher.submission_exam_filter')->with($data);
-    }
-    public function studentExamSubmission(Request $request)
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $submitted_exams_detail = SubmitExam::where('user_id', Auth::user()->id)
-                ->join('arrange_exams', 'submit_exams.exam_id', '=', 'arrange_exams.id')
-                ->orderBy('submit_exams.created_at', 'DESC')
-                ->get();
-        }
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['student_wise_result'])) {
-                // $this->validate($request, [
-                //     'student_id' => 'required',
-                //     'class_name' => 'required'
-                // ]);
-
-                Validator::make($request->all(), [
-                    'student_id' => 'required',
-                    'class_name' => 'required'
-                ], $messages = [
-                    'student_id.required' => 'The student field is required.',
-                    'class_name.required' => 'The class field is required.',
-                ])->validate();
-
-                $student_id = $request->student_id;
-                $data['user_details'] = User::where('id_no', $student_id)->first();
-                $data['all_result'] = SubmitExam::where('id_no', $student_id)
-                    ->where('marks', '!=', '')
-                    ->join('arrange_exams', 'arrange_exams.id', '=', 'submit_exams.exam_id')
-                    ->get();
-                $data['total_marks'] = SubmitExam::where('id_no', $student_id)
-                    ->where('marks', '!=', '')
-                    ->join('arrange_exams', 'arrange_exams.id', '=', 'submit_exams.exam_id')
-                    ->sum('marks');
-                $data['total_full_marks'] = SubmitExam::where('id_no', $student_id)
-                    ->where('marks', '!=', '')
-                    ->join('arrange_exams', 'arrange_exams.id', '=', 'submit_exams.exam_id')
-                    ->sum('full_marks');
-                $pdf = PDF::loadView('student.report', $data);
-                return $pdf->download($student_id . '.pdf');
-            }
-            if (isset($_POST['class_wise_result'])) {
-                Validator::make($request->all(), [
-                    'class_name1' => 'required'
-                ], $messages = [
-                    'required' => 'The class field is required.',
-                ])->validate();
-
-
-                $class = $request->class_name1;
-                $after_explode_class = explode('-', $class);
-
-                if ($after_explode_class[1] === 'class') {
-                    $data['class'] = $after_explode_class[0];
-                    $class_details = Classes::where('id', $after_explode_class[0])->first('name');
-
-                    $data['all_result'] = SubmitExam::where('arrange_exams.user_id', Auth::user()->id)
-                        ->where('arrange_exams.class', $after_explode_class[0])
-                        ->where('marks', '!=', '')
-                        ->join('arrange_exams', 'arrange_exams.id', '=', 'submit_exams.exam_id')
-                        // ->join('users','users.id_no','=','submit_exams.roll_no')
-                        ->get();
-                }
-                if ($after_explode_class[1] === 'group') {
-                    $data['class'] = $after_explode_class[0];
-                    $class_details = Group::where('id', $after_explode_class[0])->first('name');
-
-                    $data['all_result'] = SubmitExam::where('arrange_exams.user_id', Auth::user()->id)
-                        ->where('arrange_exams.group_id', $after_explode_class[0])
-                        ->where('marks', '!=', '')
-                        ->join('arrange_exams', 'arrange_exams.id', '=', 'submit_exams.exam_id')
-                        // ->join('users','users.id_no','=','submit_exams.roll_no')
-                        ->get();
-                }
-                $pdf = PDF::loadView('teacher.report', $data);
-                return $pdf->download($class_details->name . '-results' . '.pdf');
-            }
-            if (isset($_POST['view_submission'])) {
-                $this->validate($request, [
-                    'subject' => 'required',
-                    'class' => 'required'
-                ]);
-                $class = $request->class;
-                $after_explode_class = explode('-', $class);
-
-                if ($after_explode_class[1] === 'class') {
-                    $submitted_exams_detail = SubmitExam::where('user_id', Auth::user()->id)
-                        ->where('arrange_exams.class', $after_explode_class[0])
-                        ->where('arrange_exams.subject', $request->subject)
-                        ->join('arrange_exams', 'submit_exams.exam_id', '=', 'arrange_exams.id')
-                        ->orderBy('submit_exams.created_at', 'DESC')
-                        ->get();
-                }
-                if ($after_explode_class[1] === 'group') {
-                    $submitted_exams_detail = SubmitExam::where('user_id', Auth::user()->id)
-                        ->where('arrange_exams.group_id', $after_explode_class[0])
-                        ->where('arrange_exams.subject', $request->subject)
-                        ->join('arrange_exams', 'submit_exams.exam_id', '=', 'arrange_exams.id')
-                        ->orderBy('submit_exams.created_at', 'DESC')
-                        ->get();
-                }
-            }
-        }
-        return view('teacher.submission_exam', compact('submitted_exams_detail'));
-    }
 
     public function examMarks(Request $request, $id)
     {

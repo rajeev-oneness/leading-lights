@@ -29,6 +29,7 @@
 src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="{{ asset('frontend/js/bootstrap-clockpicker.min.js') }}"></script>
 
+<script src="https://cdn.ckeditor.com/4.15.1/standard-all/ckeditor.js"></script>
 <!--Data table-->
 <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/jquery.dataTables.css') }}">
 

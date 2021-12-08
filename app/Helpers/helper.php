@@ -44,6 +44,7 @@ function imageUpload($image, $folder = 'image')
 	$random = randomGenerator();
 	$image->move('upload/' . $folder . '/', $random . '.' . $image->getClientOriginalExtension());
 	$imageurl = 'upload/' . $folder . '/' . $random . '.' . $image->getClientOriginalExtension();
+	// dd($imageurl);
 	return $imageurl;
 }
 function fileUpload($file, $folder = 'image', $file_name)
