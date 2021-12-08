@@ -172,13 +172,6 @@ class UserController extends Controller
         return view('student.home_work')->with($data);
     }
 
-    public function exam(Request $request)
-    {
-        $data['class_wise_exam'] = ArrangeExam::where('class',  Auth::user()->class)->latest()->get();
-        $data['group_wise_exam'] = ArrangeExam::where('group_id', Auth::user()->group_ids)->where('group_id', '!=', null)->latest()->get();
-        return view('student.exam')->with($data);
-    }
-
     public function payment(Request $req)
     {
         $data = (object)[];
