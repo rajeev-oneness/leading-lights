@@ -172,27 +172,7 @@ class UserController extends Controller
         return view('student.home_work')->with($data);
     }
 
-<<<<<<< HEAD
-    public function exam(Request $request)
-    {
-        $data['class_wise_exam'] = ArrangeExam::where('class',  Auth::user()->class)->latest()->get();
-        $data['group_wise_exam'] = ArrangeExam::where('group_id', Auth::user()->group_ids)->where('group_id', '!=', null)->latest()->get();
-        return view('student.exam')->with($data);
-    }
-
-    public function payment(Request $req)
-    {
-        $data = (object)[];
-        $user = Auth::user();
-        $data->due_payment = \App\Models\Fee::where('user_id', $user->id)->where('transaction_id', 0)->latest('id')->get();
-        $data->success_payment = \App\Models\Fee::where('user_id', $user->id)->where('transaction_id', '>', 0)->latest('id')->get();
-        return view('student.payments', compact('data'));
-    }
-
-    public function paymentold(Request $request)
-=======
     public function payment(Request $request)
->>>>>>> f24f7c8daed66c344258e932de0a8c124cadc3d8
     {
         $current_user_id = Auth::user()->id;
         $previous_payment = Payment::where('user_id', $current_user_id)->orderBy('id', 'desc')->first();
