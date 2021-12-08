@@ -79,7 +79,7 @@
 
                     </a>
                 </li>
-                <li class="{{ Request::is('teacher/exam-submission*') ? 'mm-active' : '' }}">
+                <li class="{{ Request::is('teacher/student*') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.examSubmission') }}">
                         <i class="metismenu-icon fa fa-subscript"></i>Student’s Exam submission
 

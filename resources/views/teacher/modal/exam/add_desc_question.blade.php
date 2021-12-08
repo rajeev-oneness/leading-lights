@@ -11,7 +11,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="{{ route('teacher.addQuestion') }}" method="POST" enctype="multipart/form-data"
-                        class="question-form">
+                        class="desc-question-form">
                         @csrf
                         <input type="hidden" name="exam_id" id="exam_id">
                         <div id="dynamicAddRemove">
