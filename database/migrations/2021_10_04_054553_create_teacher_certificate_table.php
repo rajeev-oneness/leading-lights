@@ -13,7 +13,7 @@ class CreateTeacherCertificateTable extends Migration
      */
     public function up()
     {
-        Schema::create('certificate', function (Blueprint $table) {
+        Schema::create('teacher_certificate', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id');
             $table->string('image');
