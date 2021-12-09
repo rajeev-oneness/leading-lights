@@ -178,15 +178,9 @@ class StudentController extends Controller
             $user->status = 1;
             $user->rejected = 0;
             $user->save();
-            Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
+            // Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
             return response()->json(['success' => true,'data' => 'activated']);
-        }
-        if ($user->status == 1) {
-            $user->status = 0;
-            $user->save();
-            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
-            return response()->json(['success' => true,'data' => 'inactivated']);
-        }       
+        }     
     }
 
     public function reject_student($id){
@@ -198,5 +192,27 @@ class StudentController extends Controller
             Notification::route('mail', $user->email)->notify(new RejectionMail($user));
             return response()->json(['success' => true,'data' => 'rejected']);
         }
+    }
+
+    public function deactivate_account($id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->status == 1) {
+            $user->deactivated = 1;
+            $user->password = Hash::make($user->id_no);
+            $user->save();
+            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
+            return response()->json(['success' => true,'data' => 'inactivated']);
+        } 
+    }
+    public function activate_account($id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->status == 1) {
+            $user->deactivated = 0;
+            $user->save();
+            // Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
+            return response()->json(['success' => true,'data' => 'inactivated']);
+        } 
     }
 }

@@ -39,8 +39,12 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::resource('special-courses', SpecialCoursesController::class);
     Route::resource('events', EventController::class);
     Route::resource('qualifications', QualificationController::class);
+
     Route::put('/approve-student/{id}', [StudentController::class, 'approval'])->name('students.approve');
     Route::put('/reject-student/{id}', [StudentController::class, 'reject_student'])->name('students.reject');
+    Route::put('/deactivate-student/{id}', [StudentController::class, 'deactivate_account'])->name('students.deactivate');
+    Route::put('/activate-student/{id}', [StudentController::class, 'activate_account'])->name('students.activate');
+
     Route::put('/approve-teacher/{id}', [TeacherController::class, 'approval'])->name('teacher.approve');
     Route::put('/reject-teacher/{id}', [TeacherController::class, 'reject_teacher'])->name('teacher.reject');
     Route::put('/approve-hr/{id}', [HRController::class, 'approval'])->name('hr.approve');
