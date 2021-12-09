@@ -158,15 +158,4 @@ class SuperAdminController extends Controller
             return response()->json(['success' => true, 'data' => 'inactivated']);
         }
     }
-    public function reject_admin($id)
-    {
-        $user = User::find($id);
-        if ($user->rejected == 0) {
-            $user->rejected = 1;
-            $user->is_rejected_document_uploaded = 0;
-            $user->save();
-            // Notification::route('mail', $user->email)->notify(new RejectionMail($user));
-            return response()->json(['success' => true, 'data' => 'rejected']);
-        }
-    }
 }

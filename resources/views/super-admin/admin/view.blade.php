@@ -33,27 +33,16 @@
                             </div>
                             <div class="ml-5">
                                 @if ($admin->status == 0)
-                                    @if ($admin->rejected == 0)
-                                        <a href="{{ route('superAdmin.admin.approve', $admin->id) }}"
-                                            class="btn btn-info pull-right" onclick="activeAccount({{ $admin->id }})"
-                                            id="activeAccount">Approve</a>
-                                        <a href="{{ route('superAdmin.admin.reject', $admin->id) }}"
-                                            class="btn btn-info pull-right mr-2"
-                                            onclick="rejectAccount({{ $admin->id }})" id="rejectAccount">Reject</a>
-                                    @elseif ($admin->rejected == 1 && $admin->is_rejected_document_uploaded == 0)
-                                        <button class="btn btn-info pull-right mr-2" data-toggle="tooltip"
-                                            data-placement="top" title="This account is  rejected">Rejected</button>
-                                    @elseif ($admin->rejected == 1 && $admin->is_rejected_document_uploaded == 1)
-                                        <a href="{{ route('superAdmin.admin.approve', $admin->id) }}"
-                                            class="btn btn-info pull-right" onclick="activeAccount({{ $admin->id }})"
-                                            id="activeAccount">Approve</a>
-                                    @endif
+
+                                    <a href="{{ route('superAdmin.admin.approve', $admin->id) }}"
+                                        class="btn btn-info pull-right" onclick="activeAccount({{ $admin->id }})"
+                                        id="activeAccount">Approve</a>
+
                                 @else
                                     <a href="{{ route('superAdmin.admin.approve', $admin->id) }}"
                                         class="btn btn-danger pull-right" onclick="activeAccount({{ $admin->id }})"
                                         id="activeAccount" data-toggl="tooltip">Deactivate</a>
-                                    <a href="#" class="btn btn-info pull-right ml-2" id="RejectedAccount"
-                                        style="display: none;">Rejected</a>
+
                                 @endif
                             </div>
                         </div>

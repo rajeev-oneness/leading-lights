@@ -56,8 +56,6 @@
                                     <td class="text-center">
                                         @if ($admin->status == 1)
                                             <span class="badge badge-success">Approved</span>
-                                        @elseif($admin->rejected == 1)
-                                            <span class="badge badge-danger">Rejected</span>
                                         @else
                                             <span class="badge badge-warning">Pending</span>
                                         @endif
