@@ -16,6 +16,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
+use App\Models\ArrangeExam;
 use App\Models\Certificate;
 use App\Models\Classes;
 use App\Models\Event;
@@ -172,7 +173,6 @@ class UserController extends Controller
         return view('student.home_work')->with($data);
     }
 
-<<<<<<< HEAD
     public function exam(Request $request)
     {
         $data['class_wise_exam'] = ArrangeExam::where('class',  Auth::user()->class)->latest()->get();
@@ -190,9 +190,6 @@ class UserController extends Controller
     }
 
     public function paymentold(Request $request)
-=======
-    public function payment(Request $request)
->>>>>>> f24f7c8daed66c344258e932de0a8c124cadc3d8
     {
         $current_user_id = Auth::user()->id;
         $previous_payment = Payment::where('user_id', $current_user_id)->orderBy('id', 'desc')->first();

@@ -71,8 +71,10 @@ class LoginController extends Controller
         return back()->withErrors($errors)->withInput($req->all());
     }
 
+
     public function logout(Request $request)
     {
+
         //Attendance
         $check_attendance = Attendance::where('user_id', Auth::user()->id)
             ->whereDate('date', '=', date('Y-m-d'))
@@ -86,6 +88,16 @@ class LoginController extends Controller
             $check_attendance->save();
         }
 
+        if (Auth::check() && Auth::user()->role_id == 1) {
+            auth()->guard()->logout();
+            $request->session()->invalidate();
+            return redirect()->route('admin_login');
+        }
+        if (Auth::check() && Auth::user()->role_id == 5) {
+            auth()->guard()->logout();
+            $request->session()->invalidate();
+            return redirect()->route('super_admin_login');
+        }
         if (Auth::check() && Auth::user()->role_id == 2) {
             auth()->guard()->logout();
             $request->session()->invalidate();
