@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Notifications\AccountDeactivateMail;
+use App\Notifications\ActivateAccount;
 use App\Notifications\RejectionMail;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -26,9 +27,9 @@ class StudentController extends Controller
      */
     public function index()
     {
-       $students = User::where('role_id',4)->latest()->get();
-       
-       return view('admin.student.index',compact('students'));
+        $students = User::where('role_id', 4)->latest()->get();
+
+        return view('admin.student.index', compact('students'));
     }
 
     /**
@@ -39,7 +40,7 @@ class StudentController extends Controller
     public function create()
     {
         $classes = Classes::latest()->get();
-        return view('admin.student.create',compact('classes'));
+        return view('admin.student.create', compact('classes'));
     }
 
     /**
@@ -51,8 +52,8 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         $unique_id = $this->getCode();
-        $id_no = 'LLST'.$unique_id;
-        $this->validate($request,[
+        $id_no = 'LLST' . $unique_id;
+        $this->validate($request, [
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
             'email' => 'required|email | unique:users',
@@ -73,7 +74,7 @@ class StudentController extends Controller
         // dd($student);
         // Notification::route('mail', $request->email)->notify(new WelcomeMail($student,$password));
 
-        return redirect()->route('admin.students.index')->with('success','Student added');
+        return redirect()->route('admin.students.index')->with('success', 'Student added');
     }
 
     /**
@@ -86,7 +87,7 @@ class StudentController extends Controller
     {
         $data['student'] = User::find($id);
         $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
-        $data['certificates'] = DB::table('certificate')->where('user_id',$id)->get();
+        $data['certificates'] = DB::table('certificate')->where('user_id', $id)->get();
         return view('admin.student.view')->with($data);
     }
 
@@ -113,7 +114,7 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
             'mobile' => 'max:10',
@@ -123,16 +124,16 @@ class StudentController extends Controller
         ]);
         $student = User::find($id);
 
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             if ($student->image !== 'default.png') {
                 $image_name = explode('/', $student->image)[2];
-                if(File::exists('upload/profile_image/'.$image_name)) {
-                    File::delete('upload/profile_image/'.$image_name);
+                if (File::exists('upload/profile_image/' . $image_name)) {
+                    File::delete('upload/profile_image/' . $image_name);
                 }
             }
-            $imageName = imageUpload($image,'profile_image');
-        }else{
+            $imageName = imageUpload($image, 'profile_image');
+        } else {
             $imageName = $student->image;
         }
         $student->first_name = $request->first_name;
@@ -147,7 +148,7 @@ class StudentController extends Controller
         // $student->fathers_name = $request->fathers_name;
         // $student->status = $request->status;
         $student->save();
-        return redirect()->route('admin.students.index')->with('success','Student updated');
+        return redirect()->route('admin.students.index')->with('success', 'Student updated');
     }
 
     /**
@@ -159,44 +160,64 @@ class StudentController extends Controller
     public function destroy($id)
     {
         User::find($id)->delete();
-        Payment::where('user_id',$id)->delete();
-        return redirect()->route('admin.students.index')->with('success','Student deleted');
+        Payment::where('user_id', $id)->delete();
+        return redirect()->route('admin.students.index')->with('success', 'Student deleted');
     }
 
-    public function getCode(){
+    public function getCode()
+    {
         $code = generateUniqueCode();
-        $checkExisting = User::where('id_no',$code)->count();
+        $checkExisting = User::where('id_no', $code)->count();
         if ($checkExisting == 0) {
             return $code;
         }
         return $this->getCode();
     }
 
-    public function approval($id){
+    public function approval($id)
+    {
         $user = User::findOrFail($id);
         if ($user->status == 0) {
             $user->status = 1;
             $user->rejected = 0;
             $user->save();
-            Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
-            return response()->json(['success' => true,'data' => 'activated']);
+            // Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
+            return response()->json(['success' => true, 'data' => 'activated']);
         }
-        if ($user->status == 1) {
-            $user->status = 0;
-            $user->save();
-            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
-            return response()->json(['success' => true,'data' => 'inactivated']);
-        }       
     }
 
-    public function reject_student($id){
+    public function reject_student($id)
+    {
         $user = User::findOrFail($id);
         if ($user->rejected == 0) {
             $user->rejected = 1;
             $user->is_rejected_document_uploaded = 0;
             $user->save();
             Notification::route('mail', $user->email)->notify(new RejectionMail($user));
-            return response()->json(['success' => true,'data' => 'rejected']);
+            return response()->json(['success' => true, 'data' => 'rejected']);
+        }
+    }
+
+    public function deactivate_account($id)
+    {
+        // dd('test');
+        $user = User::findOrFail($id);
+        if ($user->status == 1) {
+            $user->deactivated = 1;
+            $user->password = Hash::make($user->id_no);
+            $user->save();
+            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
+            return response()->json(['success' => true, 'data' => 'inactivated']);
+        }
+    }
+    public function activate_account($id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->status == 1) {
+            $user->deactivated = 0;
+            $user->save();
+            Notification::route('mail', $user->email)->notify(new ActivateAccount($user));
+            return response()->json(['success' => true, 'data' => 'inactivated']);
         }
     }
 }

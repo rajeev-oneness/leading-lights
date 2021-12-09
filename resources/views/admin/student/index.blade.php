@@ -111,8 +111,10 @@
 
                                     </td>
                                     <td class="text-center">
-                                        @if ($student->status == 1)
+                                        @if ($student->status == 1 && $student->deactivated == 0)
                                             <span class="badge badge-success">Approved</span>
+                                        @elseif ($student->status == 1 && $student->deactivated == 1)
+                                            <span class="badge badge-danger">Deactivated</span>
                                         @elseif($student->rejected == 1)
                                             <span class="badge badge-danger">Rejected</span>
                                         @else

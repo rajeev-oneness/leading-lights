@@ -54,9 +54,9 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        {{-- <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                {{-- <label for="class_id">Class</label> --}}
+                                <label for="class_id">Class</label>
                                 <label for="review">Class<span class="text-danger">*</span></label>
                                 <select class="form-control" name="class_id" id="class_id">
                                     <option value="">Select Class</option>
@@ -70,10 +70,10 @@
                                     <span style="color: red;">{{ $errors->first('class_id') }}</span>
                                 @endif
                             </div>
-                        </div>
+                        </div> --}}
 
 
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="form-group edit-box">
                                 {{-- <label for="name">Students Name</label> --}}
                                 <label for="review">Students Name<span class="text-danger">*</span></label>
@@ -100,6 +100,14 @@
                                 <select class="student_ids form-control" name="student_ids[]" multiple="multiple"
                                     id="student_ids">
 
+
+
+                                    @foreach ($students as $student)
+                                        {{-- <option value="{{$student->id}}">{{ $student->first_name }} {{ $student->last_name }}</option> --}}
+                                        <option value="{{ $student->id }}" @if ($group->student_ids){{ 'selected' }}@endif>
+                                            {{ $student->first_name }} {{ $student->last_name }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 @if ($errors->has('student_ids'))
                                     <span style="color: red;">{{ $errors->first('student_ids') }}</span>
@@ -132,11 +140,11 @@
             getStudentsByClass(class_id)
         });
 
-        @if($group->class_id > 0)
-            getStudentsByClass('{{$group->class_id}}','{{$group->student_ids}}');
+        @if ($group->class_id > 0)
+            getStudentsByClass('{{ $group->class_id }}','{{ $group->student_ids }}');
         @endif
 
-        function getStudentsByClass(classId,studentId = ''){
+        function getStudentsByClass(classId, studentId = '') {
             $.ajax({
                 url: "{{ route('admin.getStudentsByClass') }}",
                 data: {
@@ -153,15 +161,16 @@
                         $("#student_ids").html('');
                         var option = '';
                         let array = [];
-                        if(studentId != ''){
+                        if (studentId != '') {
                             array = studentId.split(',');
                         }
                         $.each(response.result, function(i) {
                             option += '<option value="' + response.result[i].id + '"';
-                            if(data = $.inArray( response.result[i].id.toString(), array ) !== -1){
+                            if (data = $.inArray(response.result[i].id.toString(), array) !== -1) {
                                 option += ' selected';
                             }
-                            option += '>' + response.result[i].first_name + " " + response.result[i].last_name + '</option>';
+                            option += '>' + response.result[i].first_name + " " + response.result[i]
+                                .last_name + '</option>';
                         });
 
                         $("#student_ids").append(option);

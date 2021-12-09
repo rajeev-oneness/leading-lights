@@ -48,9 +48,16 @@
                                         id="activeAccount">Approve</a>
                                 @endif
                             @else
-                                <a href="{{ route('admin.students.approve', $student->id) }}"
-                                    class="btn btn-danger pull-right" onclick="activeAccount({{ $student->id }})"
-                                    id="activeAccount" data-toggl="tooltip">Deactivate</a>
+                                @if ($student->deactivated == 0)
+                                    <a href="{{ route('admin.students.deactivate', $student->id) }}"
+                                    class="btn btn-danger pull-right" onclick="deactivateAccount({{ $student->id }})"
+                                    id="deactivateAccount" data-toggle="tooltip">Deactivate</a>
+                                @elseif ($student->deactivated == 1)
+                                    <a href="{{ route('admin.students.activate', $student->id) }}"
+                                    class="btn btn-info pull-right" onclick="activate_account({{ $student->id }})"
+                                    id="activateAccount">Activate</a>  
+                                @endif
+                                
                                 <a href="#" class="btn btn-info pull-right ml-2" id="RejectedAccount"
                                     style="display: none;">Rejected</a>
                             @endif
@@ -59,14 +66,17 @@
                 </div>
                 <div class="tabs-animation">
                     <div class="bg-edit p-4">
-                        @if ($student->status == 1)
-                            <h5 class="">This account is verified <i
+                        @if ($student->status == 1 && $student->deactivated == 0)
+                            <h5 class="">This account is verified<i
                                     class="text-success fa fa-check-circle"></i></h5>
                         @elseif ($student->status == 0 && $student->rejected == 0)
                             <h5 class="">This account is not verified <i
                                     class="text-danger fa fa-exclamation-circle"></i></h5>
                         @elseif ($student->status == 0 && $student->rejected == 1)
                             <h5 class="">This account is rejected <i
+                                    class="text-danger fa fa-times-circle"></i></h5>
+                        @elseif ($student->status == 1 && $student->deactivated == 1)
+                            <h5 class="">This account is deactivated <i
                                     class="text-danger fa fa-times-circle"></i></h5>
                         @endif
                         <div class="row">
@@ -253,6 +263,57 @@
                         },
                         success: function(response) {
                             if (response.data === 'activated') {
+                                location.reload();
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    })
+
+                }
+
+                function deactivateAccount(student_id, status) {
+                    event.preventDefault();
+                    let url = $("#deactivateAccount").attr('href');
+                    let data = {
+                        student_id: student_id,
+                        status: status
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "PUT",
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#deactivateAccount").text('Loading...')
+                        },
+                        success: function(response) {
+                            if (response.data === 'inactivated') {
+                                location.reload();
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    })
+
+                }
+                function activate_account(student_id, status) {
+                    event.preventDefault();
+                    let url = $("#activateAccount").attr('href');
+                    let data = {
+                        student_id: student_id,
+                        status: status
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "PUT",
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#activateAccount").text('Loading...')
+                        },
+                        success: function(response) {
+                            if (response.data === 'inactivated') {
                                 location.reload();
                             } else {
                                 location.reload();

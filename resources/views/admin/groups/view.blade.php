@@ -40,12 +40,12 @@
                                     value="{{ $teacher->first_name }} {{ $teacher->last_name }}" disabled>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        {{-- <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="class">Class</label>
                                 <input type="text" class="form-control" value="{{ $classes->name ? $classes->name : '' }}" disabled>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
