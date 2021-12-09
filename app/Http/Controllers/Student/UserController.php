@@ -128,7 +128,7 @@ class UserController extends Controller
             [
                 'old_password' => ['required', function ($attribute, $value, $fail) {
                     if (!Hash::check($value, Auth::user()->password)) {
-                        $fail('Old Password doesdn\'t match');
+                        $fail('Old Password doesn\'t match');
                     }
                 }],
                 'password' => 'required|min:6',
@@ -171,13 +171,6 @@ class UserController extends Controller
         $data['class_wise_home_works'] =  HomeTask::where('class',  Auth::user()->class)->latest()->get();
         $data['group_wise_home_works'] =  HomeTask::where('group_id', Auth::user()->group_ids)->where('group_id', '!=', null)->latest()->get();
         return view('student.home_work')->with($data);
-    }
-
-    public function exam(Request $request)
-    {
-        $data['class_wise_exam'] = ArrangeExam::where('class',  Auth::user()->class)->latest()->get();
-        $data['group_wise_exam'] = ArrangeExam::where('group_id', Auth::user()->group_ids)->where('group_id', '!=', null)->latest()->get();
-        return view('student.exam')->with($data);
     }
 
     public function payment(Request $req)

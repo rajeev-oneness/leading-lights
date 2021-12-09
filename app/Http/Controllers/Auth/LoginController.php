@@ -174,10 +174,14 @@ class LoginController extends Controller
                 'email' => 'required|string|email',
                 'password' => 'required|string',
             ]);
-            $user = User::where('email', $request->email)->first();
+            $inactive_user = User::where('email', $request->email)->where('status', 0)->where('rejected', 0)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 2) {
+                    if ($inactive_user) {
+                        auth()->logout();
+                        return back()->with('error', 'Your account is not active.');
+                    }
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
                         return redirect()->intended('/home');
@@ -202,10 +206,14 @@ class LoginController extends Controller
                 'email' => 'required|string|email',
                 'password' => 'required|string',
             ]);
-            $user = User::where('email', $request->email)->first();
+            $inactive_user = User::where('email', $request->email)->where('status', 0)->where('rejected', 0)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 1) {
+                    if ($inactive_user) {
+                        auth()->logout();
+                        return back()->with('error', 'Your account is not active.');
+                    }
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
                         return redirect()->intended('/home');
