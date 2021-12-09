@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Certificate;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +23,7 @@ class SuperAdminController extends Controller
     public function index()
     {
         $admins = User::where('role_id', 1)->latest()->get();
-        return view('admin.admin.index', compact('admins'));
+        return view('super-admin.admin.index', compact('admins'));
     }
 
     /**
@@ -32,7 +33,7 @@ class SuperAdminController extends Controller
      */
     public function create()
     {
-        return view('admin.admin.create');
+        return view('super-admin.admin.create');
     }
 
     /**
@@ -78,7 +79,9 @@ class SuperAdminController extends Controller
      */
     public function show($id)
     {
-        //
+        $data['admin'] = User::find($id);
+        $data['certificates'] = Certificate::where('user_id', $id)->get();
+        return view('super-admin.admin.view')->with($data);
     }
 
     /**
@@ -89,7 +92,9 @@ class SuperAdminController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = array();
+        $data['admin_details'] = User::find($id);
+        return view('super-admin.admin.edit')->with($data);
     }
 
     /**
@@ -101,7 +106,21 @@ class SuperAdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'first_name' => 'required |string| max:255',
+            'last_name' => 'required |string| max:255',
+            'email' => 'required|email | unique:users',
+            'mobile' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+        ]);
+        $admin = User::find($id);
+
+
+        $admin->first_name = $request->first_name;
+        $admin->last_name = $request->last_name;
+        $admin->mobile = $request->mobile;
+        $admin->email = $request->email;
+        $admin->save();
+        return redirect()->route('superAdmin.admin.index')->with('success', 'Admin details updated');
     }
 
     /**
@@ -122,5 +141,32 @@ class SuperAdminController extends Controller
             return $code;
         }
         return $this->getReferralCode();
+    }
+    public function approval($id)
+    {
+        $user = User::find($id);
+        if ($user->status == 0) {
+            $user->status = 1;
+            $user->save();
+            // Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
+            return response()->json(['success' => true, 'data' => 'activated']);
+        }
+        if ($user->status == 1) {
+            $user->status = 0;
+            $user->save();
+            // Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
+            return response()->json(['success' => true, 'data' => 'inactivated']);
+        }
+    }
+    public function reject_admin($id)
+    {
+        $user = User::find($id);
+        if ($user->rejected == 0) {
+            $user->rejected = 1;
+            $user->is_rejected_document_uploaded = 0;
+            $user->save();
+            // Notification::route('mail', $user->email)->notify(new RejectionMail($user));
+            return response()->json(['success' => true, 'data' => 'rejected']);
+        }
     }
 }

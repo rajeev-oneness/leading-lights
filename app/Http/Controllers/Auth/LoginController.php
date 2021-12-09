@@ -71,8 +71,10 @@ class LoginController extends Controller
         return back()->withErrors($errors)->withInput($req->all());
     }
 
+
     public function logout(Request $request)
     {
+
         //Attendance
         $check_attendance = Attendance::where('user_id', Auth::user()->id)
             ->whereDate('date', '=', date('Y-m-d'))
@@ -86,6 +88,16 @@ class LoginController extends Controller
             $check_attendance->save();
         }
 
+        if (Auth::check() && Auth::user()->role_id == 1) {
+            auth()->guard()->logout();
+            $request->session()->invalidate();
+            return redirect()->route('admin_login');
+        }
+        if (Auth::check() && Auth::user()->role_id == 5) {
+            auth()->guard()->logout();
+            $request->session()->invalidate();
+            return redirect()->route('super_admin_login');
+        }
         if (Auth::check() && Auth::user()->role_id == 2) {
             auth()->guard()->logout();
             $request->session()->invalidate();
@@ -162,10 +174,14 @@ class LoginController extends Controller
                 'email' => 'required|string|email',
                 'password' => 'required|string',
             ]);
-            $user = User::where('email', $request->email)->first();
+            $inactive_user = User::where('email', $request->email)->where('status', 0)->where('rejected', 0)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 2) {
+                    if ($inactive_user) {
+                        auth()->logout();
+                        return back()->with('error', 'Your account is not active.');
+                    }
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
                         return redirect()->intended('/home');
@@ -190,10 +206,14 @@ class LoginController extends Controller
                 'email' => 'required|string|email',
                 'password' => 'required|string',
             ]);
-            $user = User::where('email', $request->email)->first();
+            $inactive_user = User::where('email', $request->email)->where('status', 0)->where('rejected', 0)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 1) {
+                    if ($inactive_user) {
+                        auth()->logout();
+                        return back()->with('error', 'Your account is not active.');
+                    }
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
                         return redirect()->intended('/home');

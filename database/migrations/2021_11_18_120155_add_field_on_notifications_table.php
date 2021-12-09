@@ -33,14 +33,14 @@ class AddFieldOnNotificationsTable extends Migration
     public function down()
     {
         Schema::table('notifications', function (Blueprint $table) {
-            $table->dropColumn('user_id');
-            $table->dropColumn('date');
-            $table->dropColumn('time');
-            $table->dropColumn('start_date');
-            $table->dropColumn('end_date');
-            $table->dropColumn('start_time');
-            $table->dropColumn('end_time');
-            $table->dropColumn('is_viewd');
+            // $table->dropColumn('user_id');
+            // $table->dropColumn('date');
+            // $table->dropColumn('time');
+            // $table->dropColumn('start_date');
+            // $table->dropColumn('end_date');
+            // $table->dropColumn('start_time');
+            // $table->dropColumn('end_time');
+            // $table->dropColumn('is_viewd');
         });
     }
 }

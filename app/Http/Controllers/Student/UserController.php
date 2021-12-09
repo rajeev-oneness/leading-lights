@@ -16,6 +16,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
+use App\Models\ArrangeExam;
 use App\Models\Certificate;
 use App\Models\Classes;
 use App\Models\Event;
