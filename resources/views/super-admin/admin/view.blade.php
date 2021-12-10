@@ -23,7 +23,7 @@
             <div class="app-main__outer">
                 <div class="app-main__inner">
                     <div class="app-page-title">
-                        <div class="page-title-wrapper">
+                        <div class="page-title-wrapper d-sm-flex justify-content-between mr-3">
                             <div class="page-title-heading">
                                 <div class="page-title-icon">
                                     <i class="fa fa-text-height"></i>
@@ -49,18 +49,23 @@
                                             id="activeAccount">Approve</a>
                                     @endif
                                 @else
-                                    <a href="{{ route('superAdmin.admin.approve', $admin->id) }}"
-                                        class="btn btn-danger pull-right" onclick="activeAccount({{ $admin->id }})"
-                                        id="activeAccount" data-toggl="tooltip">Deactivate</a>
-                                    <a href="#" class="btn btn-info pull-right ml-2" id="RejectedAccount"
-                                        style="display: none;">Rejected</a>
+                                    @if ($admin->deactivated == 0)
+                                        <a href="{{ route('superAdmin.admin.deactivate', $admin->id) }}"
+                                            class="btn btn-danger pull-right"
+                                            onclick="deactivateAccount({{ $admin->id }})" id="deactivateAccount"
+                                            data-toggle="tooltip">Deactivate</a>
+                                    @elseif ($admin->deactivated == 1)
+                                        <a href="{{ route('superAdmin.admin.activate', $admin->id) }}"
+                                            class="btn btn-info pull-right" onclick="activate_account({{ $admin->id }})"
+                                            id="activateAccount">Activate</a>
+                                    @endif
                                 @endif
                             </div>
                         </div>
                     </div>
                     <div class="tabs-animation">
                         <div class="bg-edit2 p-4">
-                            @if ($admin->status == 1)
+                            @if ($admin->status == 1 && $admin->deactivated == 0)
                                 <h5 class="">This account is verified <i
                                         class="text-success fa fa-check-circle"></i></h5>
                             @elseif ($admin->status == 0 && $admin->rejected == 0)
@@ -69,7 +74,14 @@
                             @elseif ($admin->status == 0 && $admin->rejected == 1)
                                 <h5 class="">This account is rejected <i
                                         class="text-danger fa fa-times-circle"></i></h5>
+                            @elseif ($admin->status == 1 && $admin->deactivated == 1)
+                                <h5 class="">This account is deactivated <i
+                                        class="text-danger fa fa-times-circle"></i></h5>
                             @endif
+
+                            @if ($admin->status == 0 && $admin->rejected == 1 && $admin->is_rejected_document_uploaded == 1)
+                            <h6 class="">Document has been uploaded, please verify that!</h6>
+                        @endif
                             <div class="row">
                                 <div class="col-lg-5 col-sm-4">
                                     <img src="{{ asset($admin->image ? $admin->image : 'frontend/assets/images/avata2.jpg') }}"
@@ -139,52 +151,231 @@
     </div>
     </div>
     <script>
+        // For approve an account
         function activeAccount(admin_id, status) {
             event.preventDefault();
-            let url = $("#activeAccount").attr('href');
-            let data = {
-                admin_id: admin_id,
-                status: status
-            };
-            $.ajax({
-                url: url,
-                type: "PUT",
-                data: data,
-                dataType: 'json',
-                beforeSend: function() {
-                    $("#activeAccount").text('Loading...')
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
                 },
-                success: function(response) {
-                    if (response.data === 'activated') {
-                        $("#activeAccount").text('Approved');
-                    } else {
-                        $("#activeAccount").text('Pending');
-                    }
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, APPROVE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    let url = $("#activeAccount").attr('href');
+                    let data = {
+                        admin_id: admin_id,
+                        status: status
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "PUT",
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#activeAccount").text('Loading...')
+                        },
+                        success: function(response) {
+                            if (response.data === 'activated') {
+                                location.reload();
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    })
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain same :)',
+                        'error'
+                    )
+                }
+            })
+
+
+        }
+
+        // For deactivate an account
+        function deactivateAccount(admin_id, status) {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, DEACTIVATE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    let url = $("#deactivateAccount").attr('href');
+                    let data = {
+                        admin_id: admin_id,
+                        status: status
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "PUT",
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#deactivateAccount").text('Loading...')
+                        },
+                        success: function(response) {
+                            if (response.data === 'inactivated') {
+                                location.reload();
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    })
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain ACTIVE :)',
+                        'error'
+                    )
                 }
             })
 
         }
 
-        function rejectAccount(admin_id) {
+        // For activate an account
+        function activate_account(admin_id, status) {
             event.preventDefault();
-            let url = $("#rejectAccount").attr('href');
-            let data = {
-                admin_id: admin_id
-            };
-            $.ajax({
-                url: url,
-                type: "PUT",
-                data: data,
-                dataType: 'json',
-                beforeSend: function() {
-                    $("#rejectAccount").text('Loading...')
+
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
                 },
-                success: function(response) {
-                    if (response.data === 'rejected') {
-                        location.reload();
-                    }
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, ACTIVATE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    let url = $("#activateAccount").attr('href');
+                    let data = {
+                        admin_id: admin_id,
+                        status: status
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "PUT",
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#activateAccount").text('Loading...')
+                        },
+                        success: function(response) {
+                            if (response.data === 'inactivated') {
+                                location.reload();
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    })
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain DEACTIVATE :)',
+                        'error'
+                    )
                 }
             })
+
+        }
+
+        // For reject an account
+        function rejectAccount(admin_id) {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    let url = $("#rejectAccount").attr('href');
+                    let data = {
+                        admin_id: admin_id
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "PUT",
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#rejectAccount").text('Loading...')
+                        },
+                        success: function(response) {
+                            if (response.data === 'rejected') {
+                                location.reload();
+                            }
+                        }
+                    })
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain same :)',
+                        'error'
+                    )
+                }
+            })
+
 
         }
     </script>

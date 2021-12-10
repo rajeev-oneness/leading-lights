@@ -47,8 +47,13 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
 
     Route::put('/approve-teacher/{id}', [TeacherController::class, 'approval'])->name('teacher.approve');
     Route::put('/reject-teacher/{id}', [TeacherController::class, 'reject_teacher'])->name('teacher.reject');
+    Route::put('/deactivate-teacher/{id}', [TeacherController::class, 'deactivate_account'])->name('teacher.deactivate');
+    Route::put('/activate-teacher/{id}', [TeacherController::class, 'activate_account'])->name('teacher.activate');
+
     Route::put('/approve-hr/{id}', [HRController::class, 'approval'])->name('hr.approve');
     Route::put('/reject-hr/{id}', [HRController::class, 'reject_hr'])->name('hr.reject');
+    Route::put('/deactivate-hr/{id}', [HRController::class, 'deactivate_account'])->name('hr.deactivate');
+    Route::put('/activate-hr/{id}', [HRController::class, 'activate_account'])->name('hr.activate');
 
     Route::get('/arrange-classes', [ClassController::class, 'arrange_classes'])->name('arrange_classes');
     Route::delete('/delete-arrange-classes/{id}', [ClassController::class, 'delete_arrange_classes'])->name('delete_arrange_classes');
