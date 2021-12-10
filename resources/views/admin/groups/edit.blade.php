@@ -100,12 +100,12 @@
                                 <select class="student_ids form-control" name="student_ids[]" multiple="multiple"
                                     id="student_ids">
 
-
-
                                     @foreach ($students as $student)
                                         {{-- <option value="{{$student->id}}">{{ $student->first_name }} {{ $student->last_name }}</option> --}}
-                                        <option value="{{ $student->id }}" @if ($group->student_ids){{ 'selected' }}@endif>
-                                            {{ $student->first_name }} {{ $student->last_name }}
+                                        <option value="{{ $student->id }}" @php
+                                            echo in_array($student->group_id, $ids) ? 'selected' : '';
+                                        @endphp>
+                                            {{ $student->first_name }} {{ $student->last_name }} - {{ $student->id_no }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -164,13 +164,14 @@
                         if (studentId != '') {
                             array = studentId.split(',');
                         }
+                        console.log(response.result);
                         $.each(response.result, function(i) {
                             option += '<option value="' + response.result[i].id + '"';
                             if (data = $.inArray(response.result[i].id.toString(), array) !== -1) {
                                 option += ' selected';
                             }
                             option += '>' + response.result[i].first_name + " " + response.result[i]
-                                .last_name + '</option>';
+                                .last_name + " - "+ response.result[i].id_no +'</option>';
                         });
 
                         $("#student_ids").append(option);

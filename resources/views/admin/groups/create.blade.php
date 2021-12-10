@@ -101,7 +101,7 @@
                                 <select class="student_ids form-control" name="student_ids[]" multiple="multiple"
                                     id="student_ids">
                                     @foreach ($students as $student)
-                                        <option value="{{$student->id}}">{{ $student->first_name }} {{ $student->last_name }}</option>
+                                        <option value="{{$student->id}}">{{ $student->first_name }} {{ $student->last_name }} - {{ $student->id_no }}</option>
                                     @endforeach
 
                                 </select>
