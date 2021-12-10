@@ -180,6 +180,17 @@ class RegisterController extends Controller
             $certificate->user_id = $user->id;
             $certificate->image = $certificate_image;
             $certificate->save();
+
+            $admin_details = User::select('email')->where('role_id', 1)->first();
+            $admin_email = $admin_details['email'];
+            $email_data = array(
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'email' => $data['email'],
+                'id_no' => $data['id_no'],
+                'user_type' => 'student'
+            );
+            FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
             DB::commit();
             return $user;
         } catch (Exception $e) {
@@ -370,7 +381,7 @@ class RegisterController extends Controller
                 'id_no' => $id_no,
                 'user_type' => 'hr'
             );
-            // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+            FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
 
             return redirect()->route('hr_login')->with('success', 'Your registration is successful, waiting for admin approval');
         }
