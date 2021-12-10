@@ -216,7 +216,7 @@ class StudentController extends Controller
         if ($user->status == 1) {
             $user->deactivated = 0;
             $user->save();
-            Notification::route('mail', $user->email)->notify(new ActivateAccount($user));
+            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
             return response()->json(['success' => true, 'data' => 'inactivated']);
         }
     }
