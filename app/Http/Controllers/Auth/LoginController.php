@@ -49,12 +49,17 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
         $inactive_user = User::where('email', $req->email)->where('status', 0)->where('rejected', 0)->first();
+        $deactivate_user = User::where('email',$req->email)->where('status',1)->where('deactivated',1)->first();
         $user = User::where('email', $req->email)->first();
         if ($user) {
             if ($user->role_id == 4) {
                 if ($inactive_user) {
                     auth()->logout();
                     return back()->with('error', 'Your account is not active.')->withInput();
+                }
+                if ($deactivate_user) {
+                    auth()->logout();
+                    return back()->with('error', 'Your account is deactivated by admin.')->withInput();
                 }
                 if (Hash::check($req->password, $user->password)) {
                     Auth::login($user);
@@ -125,12 +130,17 @@ class LoginController extends Controller
                 'password' => 'required|string',
             ]);
             $inactive_user = User::where('email', $request->email)->where('status', 0)->where('rejected', 0)->first();
+            $deactivate_user = User::where('email',$request->email)->where('status',1)->where('deactivated',1)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 3) {
                     if ($inactive_user) {
                         auth()->logout();
                         return back()->with('error', 'Your account is not active.');
+                    }
+                    if ($deactivate_user) {
+                        auth()->logout();
+                        return back()->with('error', 'Your account is deactivated by admin.')->withInput();
                     }
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
@@ -175,6 +185,7 @@ class LoginController extends Controller
                 'password' => 'required|string',
             ]);
             $inactive_user = User::where('email', $request->email)->where('status', 0)->where('rejected', 0)->first();
+            $deactivate_user = User::where('email',$request->email)->where('status',1)->where('deactivated',1)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 2) {
@@ -182,6 +193,11 @@ class LoginController extends Controller
                         auth()->logout();
                         return back()->with('error', 'Your account is not active.');
                     }
+                    if ($deactivate_user) {
+                        auth()->logout();
+                        return back()->with('error', 'Your account is deactivated by admin.')->withInput();
+                    }
+
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
                         return redirect()->intended('/home');
@@ -207,12 +223,17 @@ class LoginController extends Controller
                 'password' => 'required|string',
             ]);
             $inactive_user = User::where('email', $request->email)->where('status', 0)->first();
+            $deactivate_user = User::where('email',$request->email)->where('status',1)->where('deactivated',1)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 1) {
                     if ($inactive_user) {
                         auth()->logout();
                         return back()->with('error', 'Your account is not active.');
+                    }
+                    if ($deactivate_user) {
+                        auth()->logout();
+                        return back()->with('error', 'Your account is deactivated by admin.')->withInput();
                     }
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
