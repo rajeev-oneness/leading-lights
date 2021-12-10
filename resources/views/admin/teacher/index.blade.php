@@ -60,14 +60,15 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        @if ($teacher->status == 1)
+                                        @if ($teacher->status == 1 && $teacher->deactivated == 0)
                                             <span class="badge badge-success">Approved</span>
+                                        @elseif ($teacher->status == 1 && $teacher->deactivated == 1)
+                                            <span class="badge badge-danger">Deactivated</span>
                                         @elseif($teacher->rejected == 1)
                                             <span class="badge badge-danger">Rejected</span>
                                         @else
                                             <span class="badge badge-warning">Pending</span>
                                         @endif
-
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.teachers.show', $teacher->id) }}"><i

@@ -7,6 +7,7 @@ use App\Models\Certificate;
 use App\Models\User;
 use App\Notifications\AccountActivationMail;
 use App\Notifications\AccountDeactivateMail;
+use App\Notifications\WelcomeMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
@@ -151,27 +152,27 @@ class SuperAdminController extends Controller
         if ($user->status == 0) {
             $user->status = 1;
             $user->save();
-            // Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
+            Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
             return response()->json(['success' => true, 'data' => 'activated']);
         }
         if ($user->status == 1) {
             $user->status = 0;
             $user->save();
-            // Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
+            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
             return response()->json(['success' => true, 'data' => 'inactivated']);
         }
     }
-    public function reject_admin($id)
-    {
-        $user = User::find($id);
-        if ($user->rejected == 0) {
-            $user->rejected = 1;
-            $user->is_rejected_document_uploaded = 0;
-            $user->save();
-            // Notification::route('mail', $user->email)->notify(new RejectionMail($user));
-            return response()->json(['success' => true, 'data' => 'rejected']);
-        }
-    }
+    // public function reject_admin($id)
+    // {
+    //     $user = User::find($id);
+    //     if ($user->rejected == 0) {
+    //         $user->rejected = 1;
+    //         $user->is_rejected_document_uploaded = 0;
+    //         $user->save();
+    //         // Notification::route('mail', $user->email)->notify(new RejectionMail($user));
+    //         return response()->json(['success' => true, 'data' => 'rejected']);
+    //     }
+    // }
 
     public function deactivate_account($id)
     {
