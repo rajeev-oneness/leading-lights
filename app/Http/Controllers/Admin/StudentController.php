@@ -11,6 +11,7 @@ use App\Notifications\WelcomeMail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Notifications\AccountActivationMail;
 use App\Notifications\AccountDeactivateMail;
 use App\Notifications\ActivateAccount;
 use App\Notifications\RejectionMail;
@@ -216,8 +217,8 @@ class StudentController extends Controller
         if ($user->status == 1) {
             $user->deactivated = 0;
             $user->save();
-            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
-            return response()->json(['success' => true, 'data' => 'inactivated']);
-        }
+            Notification::route('mail', $user->email)->notify(new AccountActivationMail($user));
+            return response()->json(['success' => true,'data' => 'inactivated']);
+        } 
     }
 }

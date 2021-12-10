@@ -8,9 +8,11 @@ use Illuminate\Http\Request;
 use App\Notifications\WelcomeMail;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Notifications\AccountActivationMail;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\AccountDeactivateMail;
+use App\Notifications\RejectionMail;
 use Illuminate\Support\Facades\Notification;
 
 class HRController extends Controller
@@ -165,13 +167,13 @@ class HRController extends Controller
         if ($user->status == 0) {
             $user->status = 1;
             $user->save();
-            // Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
+            Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
             return response()->json(['success' => true,'data' => 'activated']);
         }
         if ($user->status == 1) {
             $user->status = 0;
             $user->save();
-            // Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
+            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
             return response()->json(['success' => true,'data' => 'inactivated']);
         }       
     }
@@ -181,8 +183,30 @@ class HRController extends Controller
             $user->rejected = 1;
             $user->is_rejected_document_uploaded = 0;
             $user->save();
-            // Notification::route('mail', $user->email)->notify(new RejectionMail($user));
+            Notification::route('mail', $user->email)->notify(new RejectionMail($user));
             return response()->json(['success' => true,'data' => 'rejected']);
         }
+    }
+
+    public function deactivate_account($id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->status == 1) {
+            $user->deactivated = 1;
+            $user->password = Hash::make($user->id_no);
+            $user->save();
+            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
+            return response()->json(['success' => true,'data' => 'inactivated']);
+        } 
+    }
+    public function activate_account($id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->status == 1) {
+            $user->deactivated = 0;
+            $user->save();
+            Notification::route('mail', $user->email)->notify(new AccountActivationMail($user));
+            return response()->json(['success' => true,'data' => 'inactivated']);
+        } 
     }
 }

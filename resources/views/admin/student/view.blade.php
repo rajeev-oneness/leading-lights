@@ -50,14 +50,14 @@
                             @else
                                 @if ($student->deactivated == 0)
                                     <a href="{{ route('admin.students.deactivate', $student->id) }}"
-                                    class="btn btn-danger pull-right" onclick="deactivateAccount({{ $student->id }})"
-                                    id="deactivateAccount" data-toggle="tooltip">Deactivate</a>
+                                        class="btn btn-danger pull-right" onclick="deactivateAccount({{ $student->id }})"
+                                        id="deactivateAccount" data-toggle="tooltip">Deactivate</a>
                                 @elseif ($student->deactivated == 1)
                                     <a href="{{ route('admin.students.activate', $student->id) }}"
-                                    class="btn btn-info pull-right" onclick="activate_account({{ $student->id }})"
-                                    id="activateAccount">Activate</a>  
+                                        class="btn btn-info pull-right" onclick="activate_account({{ $student->id }})"
+                                        id="activateAccount">Activate</a>
                                 @endif
-                                
+
                                 <a href="#" class="btn btn-info pull-right ml-2" id="RejectedAccount"
                                     style="display: none;">Rejected</a>
                             @endif
@@ -78,6 +78,10 @@
                         @elseif ($student->status == 1 && $student->deactivated == 1)
                             <h5 class="">This account is deactivated <i
                                     class="text-danger fa fa-times-circle"></i></h5>
+                        @endif
+
+                        @if ($student->status == 0 && $student->rejected == 1 && $student->is_rejected_document_uploaded == 1)
+                            <h6 class="">Document has been uploaded, please verify that!</h6>
                         @endif
                         <div class="row">
                             <div class="col-lg-3">
@@ -168,11 +172,11 @@
                                         ?>
                                         @if ($student->special_course_ids !== null)
                                             <div class="student-list border-info">
-                                            <ol>
-                                                @foreach ($course_details as $course)
-                                                    <li>{{ $course->title }}</li>
-                                                @endforeach
-                                            </ol>
+                                                <ol>
+                                                    @foreach ($course_details as $course)
+                                                        <li>{{ $course->title }}</li>
+                                                    @endforeach
+                                                </ol>
                                             </div>
                                         @else
                                             N/A
@@ -244,9 +248,32 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <script>
-                function activeAccount(student_id, status) {
+    <script>
+
+        // For approve an account
+        function activeAccount(student_id, status) {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, APPROVE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
                     event.preventDefault();
                     let url = $("#activeAccount").attr('href');
                     let data = {
@@ -269,10 +296,42 @@
                             }
                         }
                     })
-
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain same :)',
+                        'error'
+                    )
                 }
+            })
 
-                function deactivateAccount(student_id, status) {
+
+        }
+
+        // For deactivate an account
+        function deactivateAccount(student_id, status) {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, DEACTIVATE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
                     event.preventDefault();
                     let url = $("#deactivateAccount").attr('href');
                     let data = {
@@ -295,9 +354,42 @@
                             }
                         }
                     })
-
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain ACTIVE :)',
+                        'error'
+                    )
                 }
-                function activate_account(student_id, status) {
+            })
+
+        }
+
+        // For activate an account
+        function activate_account(student_id, status) {
+            event.preventDefault();
+
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, ACTIVATE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
                     event.preventDefault();
                     let url = $("#activateAccount").attr('href');
                     let data = {
@@ -320,10 +412,41 @@
                             }
                         }
                     })
-
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain DEACTIVATE :)',
+                        'error'
+                    )
                 }
+            })
 
-                function rejectAccount(student_id) {
+        }
+
+        // For reject an account
+        function rejectAccount(student_id) {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, REJECT it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
                     event.preventDefault();
                     let url = $("#rejectAccount").attr('href');
                     let data = {
@@ -343,7 +466,19 @@
                             }
                         }
                     })
-
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain same :)',
+                        'error'
+                    )
                 }
-            </script>
-        @endsection
+            })
+
+
+        }
+    </script>
+@endsection

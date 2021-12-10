@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Notifications\WelcomeMail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Notifications\AccountActivationMail;
 use App\Notifications\RejectionMail;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -181,5 +182,27 @@ class TeacherController extends Controller
             Notification::route('mail', $user->email)->notify(new RejectionMail($user));
             return response()->json(['success' => true,'data' => 'rejected']);
         }
+    }
+
+    public function deactivate_account($id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->status == 1) {
+            $user->deactivated = 1;
+            $user->password = Hash::make($user->id_no);
+            $user->save();
+            Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
+            return response()->json(['success' => true,'data' => 'inactivated']);
+        } 
+    }
+    public function activate_account($id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->status == 1) {
+            $user->deactivated = 0;
+            $user->save();
+            Notification::route('mail', $user->email)->notify(new AccountActivationMail($user));
+            return response()->json(['success' => true,'data' => 'inactivated']);
+        } 
     }
 }
