@@ -40,6 +40,24 @@ class WelcomeMail extends Notification
      */
     public function toMail($notifiable)
     {
+        $user_type = $this->user['role_id'];
+        switch ($user_type) {
+            case 1:
+                $url = route('admin_login');
+                break;
+            case 2:
+                $url = route('hr_login');
+                break;
+            case 3:
+                $url = route('teacher_login');
+                break;
+            case 4:
+                $url = route('login');
+                break;
+            case 5:
+                $url = route('super_admin_login');
+                break;
+        }
         return (new MailMessage)
                     ->greeting('Hello '.$this->user['first_name'].' '.$this->user['last_name'])
                     ->subject('Approved your account :)')
@@ -47,7 +65,8 @@ class WelcomeMail extends Notification
                     ->line('You can now access leading light web portal.')
                     ->line('Your login credential is: ')
                     ->line('User id : '.$this->user['email'])
-                    ->line('Password : '.$this->user['id_no'])
+                    ->line('Password : '.$this->user['id_no'].$this->user['created_at'])
+                    ->action('Login', $url)
                     ->line('Thank you for using our application!');
     }
 

@@ -13,15 +13,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row m-0 dashboard-content-header">
-                <div class="col-md-6">     
-                    <ul class="breadcrumb p-0">
-                        <li><a href="{{ route('teacher.exam.index') }}">Exam List</a></li>
-                        <li class="text-info"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#">Arrange Exam</a></li>
-                    </ul>
-                </div>
-            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item active"><a href="{{ route('teacher.exam.index') }}">Exam List</a></li>
+                  <li class="breadcrumb-item " aria-current="page">Arrange Exam</li>
+                </ol>
+              </nav>
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="row">

@@ -189,7 +189,6 @@ class TeacherController extends Controller
         $user = User::findOrFail($id);
         if ($user->status == 1) {
             $user->deactivated = 1;
-            $user->password = Hash::make($user->id_no);
             $user->save();
             Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
             return response()->json(['success' => true,'data' => 'inactivated']);

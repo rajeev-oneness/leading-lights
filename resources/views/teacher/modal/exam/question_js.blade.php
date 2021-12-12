@@ -465,6 +465,7 @@
         var errorFlagOne = 0;
         var inputs = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('input');
         var all_textarea = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('textarea');
+        var question_type = $(`input:hidden[name="addMoreInputFields[${k}][question_type]"]`).val();
         for (var i = 0; i < inputs.length; ++i) {
             if (inputs[i].type === 'file') {
                 if (inputs[i].value !== '') {
@@ -642,8 +643,9 @@
         // Start
         var errorFlagOne = 0;
         var inputs = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('input');
+        var question_type = $(`input:hidden[name="addMoreInputFields[${k}][question_type]"]`).val();
         var all_textarea = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('textarea');
-        for (var i = 0; i < inputs.length; ++i)
+        for (var i = 0; i < inputs.length; ++i) {
             if (inputs[i].type === 'file') {
                 if (inputs[i].value !== '') {
                     var filetype = inputs[i].value.split('.')[1];
@@ -672,6 +674,68 @@
 
             }
 
+            if (question_type == 1) {
+                if (inputs[i].type === 'text') {
+                    if (inputs[i].value == '') {
+                        if (k > 0) {
+                            setTimeout(() => {
+                                $('.option_1_err' + (k)).text('');
+                            }, 5000);
+                            $('.option_1_err' + (k)).text('Option 1 can\'t be blank');
+
+                            setTimeout(() => {
+                                $('.option_2_err' + (k)).text('');
+                            }, 5000);
+                            $('.option_2_err' + (k)).text('Option 2 can\'t be blank');
+
+                            setTimeout(() => {
+                                $('.option_3_err' + (k)).text('');
+                            }, 5000);
+                            $('.option_3_err' + (k)).text('Option 3 can\'t be blank');
+
+                            setTimeout(() => {
+                                $('.option_4_err' + (k)).text('');
+                            }, 5000);
+                            $('.option_4_err' + (k)).text('Option 4 can\'t be blank');
+
+                            setTimeout(() => {
+                                $('.answer_err' + (k)).text('');
+                            }, 5000);
+                            $('.answer_err' + (k)).text('Right answer can\'t be blank');
+
+                        } else {
+                            setTimeout(() => {
+                                $('.option_1_err').text('');
+                            }, 5000);
+                            $('.option_1_err').text('Option 1 can\'t be blank');
+
+                            setTimeout(() => {
+                                $('.option_2_err').text('');
+                            }, 5000);
+                            $('.option_2_err').text('Option 2 can\'t be blank');
+
+                            setTimeout(() => {
+                                $('.option_3_err').text('');
+                            }, 5000);
+                            $('.option_3_err').text('Option 3 can\'t be blank');
+
+                            setTimeout(() => {
+                                $('.option_4_err').text('');
+                            }, 5000);
+                            $('.option_4_err').text('Option 4 can\'t be blank');
+
+                            setTimeout(() => {
+                                $('.answer_err').text('');
+                            }, 5000);
+                            $('.answer_err').text('Right answer can\'t be blank');
+
+                        }
+                        errorFlagOne = 1;
+                    }
+
+                }
+            }
+        }
         for (var i = 0; i < all_textarea.length; ++i) {
             let textarea_value = all_textarea[i].value;
             if (all_textarea[i].type === 'textarea') {
@@ -728,6 +792,7 @@
     //     var errorFlagOne = 0;
     //     var inputs = document.getElementById('dynamicAddRemoveMCQ').getElementsByTagName('input');
     //     var all_textarea = document.getElementById('dynamicAddRemoveMCQ').getElementsByTagName('textarea');
+    //     var question_type = $(`input:hidden[name="addMoreInputFields[${k}][question_type]"]`).val();
     //     for (var i = 0; i < inputs.length; ++i) {
     //         if (inputs[i].type === 'file') {
     //             if (inputs[i].value !== '') {
@@ -756,64 +821,66 @@
     //             }
 
     //         }
-    //         if (inputs[i].type === 'text') {
-    //             if (inputs[i].value == '') {
-    //                 if (k > 0) {
-    //                     setTimeout(() => {
-    //                         $('.option_1_err' + (k)).text('');
-    //                     }, 5000);
-    //                     $('.option_1_err' + (k)).text('Option 1 can\'t be blank');
+    //         if (question_type == 1) {
+    //             if (inputs[i].type === 'text') {
+    //                 if (inputs[i].value == '') {
+    //                     if (k > 0) {
+    //                         setTimeout(() => {
+    //                             $('.option_1_err' + (k)).text('');
+    //                         }, 5000);
+    //                         $('.option_1_err' + (k)).text('Option 1 can\'t be blank');
 
-    //                     setTimeout(() => {
-    //                         $('.option_2_err' + (k)).text('');
-    //                     }, 5000);
-    //                     $('.option_2_err' + (k)).text('Option 2 can\'t be blank');
+    //                         setTimeout(() => {
+    //                             $('.option_2_err' + (k)).text('');
+    //                         }, 5000);
+    //                         $('.option_2_err' + (k)).text('Option 2 can\'t be blank');
 
-    //                     setTimeout(() => {
-    //                         $('.option_3_err' + (k)).text('');
-    //                     }, 5000);
-    //                     $('.option_3_err' + (k)).text('Option 3 can\'t be blank');
+    //                         setTimeout(() => {
+    //                             $('.option_3_err' + (k)).text('');
+    //                         }, 5000);
+    //                         $('.option_3_err' + (k)).text('Option 3 can\'t be blank');
 
-    //                     setTimeout(() => {
-    //                         $('.option_4_err' + (k)).text('');
-    //                     }, 5000);
-    //                     $('.option_4_err' + (k)).text('Option 4 can\'t be blank');
+    //                         setTimeout(() => {
+    //                             $('.option_4_err' + (k)).text('');
+    //                         }, 5000);
+    //                         $('.option_4_err' + (k)).text('Option 4 can\'t be blank');
 
-    //                     setTimeout(() => {
-    //                         $('.answer_err' + (k)).text('');
-    //                     }, 5000);
-    //                     $('.answer_err' + (k)).text('Right answer can\'t be blank');
+    //                         setTimeout(() => {
+    //                             $('.answer_err' + (k)).text('');
+    //                         }, 5000);
+    //                         $('.answer_err' + (k)).text('Right answer can\'t be blank');
 
-    //                 } else {
-    //                     setTimeout(() => {
-    //                         $('.option_1_err').text('');
-    //                     }, 5000);
-    //                     $('.option_1_err').text('Option 1 can\'t be blank');
+    //                     } else {
+    //                         setTimeout(() => {
+    //                             $('.option_1_err').text('');
+    //                         }, 5000);
+    //                         $('.option_1_err').text('Option 1 can\'t be blank');
 
-    //                     setTimeout(() => {
-    //                         $('.option_2_err').text('');
-    //                     }, 5000);
-    //                     $('.option_2_err').text('Option 2 can\'t be blank');
+    //                         setTimeout(() => {
+    //                             $('.option_2_err').text('');
+    //                         }, 5000);
+    //                         $('.option_2_err').text('Option 2 can\'t be blank');
 
-    //                     setTimeout(() => {
-    //                         $('.option_3_err').text('');
-    //                     }, 5000);
-    //                     $('.option_3_err').text('Option 3 can\'t be blank');
+    //                         setTimeout(() => {
+    //                             $('.option_3_err').text('');
+    //                         }, 5000);
+    //                         $('.option_3_err').text('Option 3 can\'t be blank');
 
-    //                     setTimeout(() => {
-    //                         $('.option_4_err').text('');
-    //                     }, 5000);
-    //                     $('.option_4_err').text('Option 4 can\'t be blank');
+    //                         setTimeout(() => {
+    //                             $('.option_4_err').text('');
+    //                         }, 5000);
+    //                         $('.option_4_err').text('Option 4 can\'t be blank');
 
-    //                     setTimeout(() => {
-    //                         $('.answer_err').text('');
-    //                     }, 5000);
-    //                     $('.answer_err').text('Right answer can\'t be blank');
+    //                         setTimeout(() => {
+    //                             $('.answer_err').text('');
+    //                         }, 5000);
+    //                         $('.answer_err').text('Right answer can\'t be blank');
 
+    //                     }
+    //                     errorFlagOne = 1;
     //                 }
-    //                 errorFlagOne = 1;
-    //             }
 
+    //             }
     //         }
     //     }
 
