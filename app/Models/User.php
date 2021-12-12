@@ -71,4 +71,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Models\Classes','class','id');
     }
+
+    public  function group_details()
+    {
+        return $this->hasMany(Group::class);
+    }
 }
