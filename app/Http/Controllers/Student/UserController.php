@@ -362,38 +362,126 @@ class UserController extends Controller
         return $pdf->download($id_no . '.pdf');
     }
 
+    // public function attendance(Request $request)
+    // {
+    //     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    //         $checked_attendance = Attendance::where('user_id', Auth::user()->id)->latest()->get();
+    //         return view('student.attendance', compact('checked_attendance'));
+    //     }
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //         if (isset($_POST['attendance'])) {
+    //             $this->validate($request, [
+    //                 'date' => 'required',
+    //                 // 'end_date' => 'required'
+    //             ]);
+
+    //             $date = $request->date;
+    //             // $end_date = $request->end_date;
+    //             $checked_attendance = Attendance::where('user_id', Auth::user()->id)
+    //                 ->whereDate('date', '=', $date)->get();
+    //             // dd($checked_attendance);
+    //             if ($checked_attendance->count() > 0) {
+    //                 return view('student.attendance', compact('checked_attendance'));
+    //             } else {
+    //                 $attendance = [];
+    //                 $attendance['date'] = $date;
+    //                 $attendance['first_login_time'] = 'N/A';
+    //                 $attendance['last_login_time'] = 'N/A';
+    //                 return view('student.attendance')->with($attendance);
+    //             }
+    //         } else {
+    //             $attendance = Attendance::find($request->attendance_id);
+    //             $attendance->comment = $request->comment;
+    //             $attendance->save();
+    //             return response()->json('success');
+    //         }
+    //     }
+    // }
+
     public function attendance(Request $request)
     {
+        if ($request->ajax()) {
+            $attendance = Attendance::whereDate('date', $request->date)
+                ->where('user_id', Auth::user()->id)
+                ->latest()
+                ->get();
+            return response()->json($attendance);
+        }
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $checked_attendance = Attendance::where('user_id', Auth::user()->id)->latest()->get();
-            return view('student.attendance', compact('checked_attendance'));
+            $attendance = Attendance::where('user_id', Auth::user()->id)
+                ->where('date', date('Y-m-d'))->first();
+            if (empty($attendance)) {
+                $attendance_status = 0;
+            } else {
+                $attendance_status = 1;
+            }
+            $specific_attendance = array(
+                "date" => date('Y-m-d'),
+                "attendance_status" => $attendance_status
+            );
+            return view('student.attendance', compact('specific_attendance'));
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['attendance'])) {
-                $this->validate($request, [
-                    'date' => 'required',
-                    // 'end_date' => 'required'
-                ]);
+            if (isset($_POST['submit_btn'])) {
 
-                $date = $request->date;
-                // $end_date = $request->end_date;
-                $checked_attendance = Attendance::where('user_id', Auth::user()->id)
-                    ->whereDate('date', '=', $date)->get();
-                // dd($checked_attendance);
-                if ($checked_attendance->count() > 0) {
-                    return view('student.attendance', compact('checked_attendance'));
+                if ($_POST['submit_btn'] === 'attendance') {
+                    $this->validate($request, [
+                        'date' => 'required|'
+                    ]);
+                    $date = $request->date;
+                    $data['specific_date'] = $date;
+                    $data['specific_attendance'] = Attendance::where('user_id', Auth::user()->id)
+                        ->whereDate('date', '=', $date)->latest()->take(4)->get();
+                    // dd($data);
+                    // dd($checked_attendance);
+                    // dd($data['no_of_working_hours']->total);
                 } else {
-                    $attendance = [];
-                    $attendance['date'] = $date;
-                    $attendance['first_login_time'] = 'N/A';
-                    $attendance['last_login_time'] = 'N/A';
-                    return view('student.attendance')->with($attendance);
+                    $this->validate($request, [
+                        'start_date' => 'required|date',
+                        'end_date' => 'required|date'
+                    ]);
+                    if ($request->start_date > $request->end_date) {
+                        return redirect()->back()->with('error', 'Please select valid range');
+                    }
+                    $from = date($request->start_date);
+                    $to = date($request->end_date);
+                    $data['start_date'] = $request->start_date;
+                    $data['end_date'] = $request->end_date;
+
+                    for ($i = $from; $i <= $to ; $i++) {
+                       $attendance = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
+                       if (empty($attendance)) {
+                           $absent_date[] = array(
+                               "date" => $i,
+                               "attendance_status" => 0
+                           );
+                       }else{
+                           $present_date[] = array(
+                            "date" => $i,
+                            "attendance_status" => 1
+                        );
+                       }
+                    }
+                    if (empty($absent_date)) {
+                        $absent_date = [];
+
+                    }
+                    if (empty($present_date)) {
+                        $present_date = [];
+                    }
+                    $attendance = array_merge($absent_date,$present_date);
+                    $data['checked_attendance'] = $attendance;
                 }
-            } else {
-                $attendance = Attendance::find($request->attendance_id);
-                $attendance->comment = $request->comment;
-                $attendance->save();
-                return response()->json('success');
+                if (isset($data['specific_attendance'])) {
+                    if ($data['specific_attendance']->count() > 0) {
+                        return view('student.attendance')->with($data);
+                    } else {
+                        $absent_date =  $date;
+                        return view('student.attendance', compact('absent_date'));
+                    }
+                } elseif (isset($data['checked_attendance'])) {
+                        return view('student.attendance')->with($data);
+                }
             }
         }
     }

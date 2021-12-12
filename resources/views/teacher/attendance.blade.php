@@ -21,7 +21,7 @@
                                 <div class="card-header-title mb-4">
                                     Attendance Date Wise
                                 </div>
-                                <form class="form" action="{{ route('teacher.attendance') }}" method="POST">
+                                <form class="form" action="{{ route('teacher.attendance') }}" method="POST" autocomplete="off">
                                     @csrf
                                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                         <div class="d-sm-flex align-items-baseline">
@@ -59,52 +59,48 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="card-header-title mb-4">
-                                    Between Two Days
+                                    Attendance Range Wise
                                 </div>
                                 @if (session('error'))
-                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                    {{ session('error') }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        {{ session('error') }}
+                                        <button type="button" class="close" data-dismiss="alert"
+                                            aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
                                 @endif
-                                <form class="form" action="{{ route('teacher.attendance') }}" method="POST">
+                                <form class="form" action="{{ route('teacher.attendance') }}" method="POST" autocomplete="off">
                                     @csrf
                                     <div class="d-sm-flex">
-                                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                                        <div class=" align-items-baseline">
-                                            <p class="des  mr-2"><span class="mr-2"><i
-                                                        class="fa fa-circle"></i></span>Start Date</p>
+                                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                            <div class=" align-items-baseline">
+                                                <p class="des  mr-2"><span class="mr-2"><i
+                                                            class="fa fa-circle"></i></span>Start Date</p>
 
-                                            @if (isset($checked_attendance))
-                                                @if ($checked_attendance->count() > 0)
+                                                @if (isset($checked_attendance))
+                                                    <input type="text" name="start_date" id="start_date" class="form-control datepicker"
+                                                        value="{{ old('start_date') ?? $start_date }}" autocomplete="off">
+                                                @else
                                                     <input type="text" name="start_date" id="start_date"
-                                                        class="form-control datepicker"
-                                                        value="{{ old('start_date') ?? $start_date }}">
+                                                        class="form-control datepicker" value="{{ old('start_date') }}">
                                                 @endif
-                                            @else
-                                                <input type="text" name="start_date" id="start_date"
-                                                    class="form-control datepicker" value="{{ old('start_date') }}">
-                                            @endif
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="d-sm-flex align-items-center justify-content-end mb-4 ml-4">
-                                        <div class="align-items-baseline">
-                                            <p class="des  mr-2"><span class="mr-2"><i
-                                                        class="fa fa-circle"></i></span>End Date</p>
-                                            @if (isset($checked_attendance))
-                                                @if ($checked_attendance->count() > 0)
+                                        <div class="d-sm-flex align-items-center justify-content-end mb-4 ml-4">
+                                            <div class="align-items-baseline">
+                                                <p class="des  mr-2"><span class="mr-2"><i
+                                                            class="fa fa-circle"></i></span>End Date</p>
+                                                @if (isset($checked_attendance))
                                                     <input type="text" name="end_date" id="end_date"
                                                         class="form-control datepicker"
-                                                        value="{{ old('end_date') ?? $end_date }}">
+                                                        value="{{ old('end_date') ?? $end_date }}" autocomplete="off">
+                                                @else
+                                                    <input type="text" name="end_date" id="end_date"
+                                                        class="form-control datepicker" value="{{ old('end_date') }}">
                                                 @endif
-                                            @else
-                                                <input type="text" name="end_date" id="end_date"
-                                                    class="form-control datepicker" value="{{ old('end_date') }}">
-                                            @endif
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="d-sm-flex align-items-center justify-content-between mb-2">
                                         @if ($errors->has('start_date'))
@@ -123,7 +119,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mb-5">
                 <div class="col-lg-12 col-sm-12">
                     <div class="tab-content">
                         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
@@ -132,9 +128,7 @@
                                     <table class="table table-hover bg-table" id="attendance_table">
                                         <thead>
                                             <tr>
-                                                @if (isset($specific_attendance) || isset($absent_date))
-                                                    <th>Sl. No</th>
-                                                @endif
+                                                <th>Sl. No</th>
                                                 <th>Date</th>
                                                 @if (isset($specific_attendance) || isset($absent_date))
                                                     <th>Start Time</th>
@@ -161,11 +155,12 @@
                                                             @if ($i == 0 && isset($no_of_working_hours1))
                                                                 <span>{{ $no_of_working_hours1->total }} <span
                                                                         class="badge badge-info">Total time</span></span>
-                                                                <button type="button" class="btn btn-light openBtn"
-                                                                    data-toggle="modal" data-target="#attendance_details"
-                                                                    title="View All" data-id="{{ $attendance->date }}"><i
-                                                                        class="fa fa-info-circle" aria-hidden="true"></i>
-                                                                </button>
+                                                            <span class="btn btn-light openBtn"
+                                                            data-toggle="modal" data-target="#attendance_details"
+                                                             data-id="{{ $attendance->date }}">
+                                                            <a href="#"><i class="fa fa-info-circle mr-2" data-toggle="tooltip"
+                                                            data-placement="top" title="View All"></i></a>
+                                                            </span>
                                                             @else
                                                                 <span class="mr-2"><i
                                                                         class="fa fa-check-circle text-success"></i></span>PRESENT
@@ -174,27 +169,33 @@
                                                     </tr>
                                                 @endforeach
                                             @elseif (isset($checked_attendance))
-                                                @foreach ($checked_attendance as $date => $attendance)
+                                                @foreach ($checked_attendance as $i => $attendance)
                                                     @php
-                                                        $no_of_working_hours1 = App\Models\Attendance::whereDate('date', '=', $date)
+                                                        $no_of_working_hours1 = App\Models\Attendance::whereDate('date', '=', $attendance['date'])
                                                             ->selectRaw("SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(logout_time,login_time) )) ) as 'total'")
                                                             ->first();
                                                     @endphp
                                                     <tr class="bg-tr">
-                                                        {{-- <td>{{ $i + 1 }}</td> --}}
-                                                        <td>{{ $date }}</td>
-                                                        {{-- <td>{{ $attendance->login_time }}</td> --}}
-                                                        {{-- <td>{{ $attendance->logout_time ? $attendance->logout_time : 'N/A' }} --}}
+                                                        <td>{{ $i + 1 }}</td>
+                                                        <td>{{ $attendance['date'] }}</td>
                                                         </td>
                                                         <td class="text-center">
                                                             @if (isset($no_of_working_hours1))
-                                                                <span>{{ $no_of_working_hours1->total }} <span
-                                                                        class="badge badge-info">Total time</span></span>
-                                                                <button type="button" class="btn btn-light openBtn"
-                                                                    data-toggle="modal" data-target="#attendance_details"
-                                                                    title="View All" data-id="{{ $date }}"><i
-                                                                        class="fa fa-info-circle" aria-hidden="true"></i>
-                                                                </button>
+                                                                <span>
+                                                                    @if ($no_of_working_hours1->total)
+                                                                        {{ $no_of_working_hours1->total  }}
+                                                                        <span class="badge badge-info">Total Time </span>
+                                                                        <span class="btn btn-light openBtn"
+                                                                        data-toggle="modal" data-target="#attendance_details"
+                                                                        data-id="{{ $attendance['date'] }}">
+                                                                        <a href="#"><i class="fa fa-info-circle mr-2" data-toggle="tooltip"
+                                                                        data-placement="top" title="View All"></i></a>
+                                                                        </span>
+                                                                    @else
+                                                                        <span class="mr-2"><i class="fa fa-exclamation-circle text-danger"></i></span>ABSENT
+                                                                    @endif
+                                                                </span>
+                                                                
                                                             @else
                                                                 <span class="mr-2"><i
                                                                         class="fa fa-check-circle text-success"></i></span>PRESENT

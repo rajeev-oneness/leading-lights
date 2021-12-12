@@ -263,13 +263,28 @@ class TeacherController extends Controller
                     // $available_att = Attendance::where('user_id',Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get();
                     // dd( $available_att);
 
-                    // for ($i = $from; $i <= $to ; $i++) {
-                    //    $attendance_array[] = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
-                    // }
-                    // dd($attendance_array);
+                    for ($i = $from; $i <= $to ; $i++) {
+                       $attendance = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
+                       if (empty($attendance)) {
+                           $absent_date[] = array(
+                               "date" => $i
+                           );
+                       }else{
+                           $present_date[] = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
+                       }
+                    }
+                    if (empty($absent_date)) {
+                        $absent_date = [];
 
+                    }
+                    if (empty($present_date)) {
+                        $present_date = [];
+                    }
+                    $attendance = array_merge($absent_date,$present_date);
+                    // dd($attendance);
 
-                    $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
+                    // $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
+                    $data['checked_attendance'] = $attendance;
                 }
                 if (isset($data['specific_attendance'])) {
                     if ($data['specific_attendance']->count() > 0) {
@@ -279,15 +294,15 @@ class TeacherController extends Controller
                         return view('teacher.attendance', compact('absent_date'));
                     }
                 } elseif (isset($data['checked_attendance'])) {
-                    if ($data['checked_attendance']->count() > 0) {
+                    // if ($data['checked_attendance']->count() > 0) {
                         return view('teacher.attendance')->with($data);
-                    } else {
-                        $attendance = [];
-                        $attendance['date'] = $date;
-                        $attendance['login_time'] = 'N/A';
-                        $attendance['logout_time'] = 'N/A';
-                        return view('teacher.attendance')->with($attendance);
-                    }
+                    // } else {
+                    //     $attendance = [];
+                    //     $attendance['date'] = $date;
+                    //     $attendance['login_time'] = 'N/A';
+                    //     $attendance['logout_time'] = 'N/A';
+                    //     return view('teacher.attendance')->with($attendance);
+                    // }
                 }
             } else {
                 $attendance = Attendance::find($request->attendance_id);
