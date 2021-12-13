@@ -478,7 +478,13 @@ class UserController extends Controller
                     $data['checked_attendance'] = $attendance;
                 }
                 if (isset($data['specific_attendance'])) {
+                    if ($data['specific_attendance']) {
                         return view('student.attendance')->with($data);
+                    } else {
+                        $absent_date =  $date;
+                        return view('student.attendance', compact('absent_date'));
+                    }
+                        // return view('student.attendance')->with($data);
                 } elseif (isset($data['checked_attendance'])) {
                         return view('student.attendance')->with($data);
                 }

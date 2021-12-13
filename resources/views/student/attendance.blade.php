@@ -30,6 +30,9 @@
                                             @if (isset($specific_attendance))
                                                     <input type="text" name="date" id="date" class="form-control datepicker"
                                                         value="{{ old('date') ?? $specific_attendance['date'] }}">
+                                            @else
+                                            <input type="text" name="date" id="date" class="form-control datepicker"
+                                                value="{{ old('date') }}">
                                             @endif
                                         </div>
                                     </div>
