@@ -9,4 +9,9 @@ class Classes extends Model
 {
     use HasFactory;
     protected $table = 'classes';
+
+    public function users()
+    {
+        return $this->hasOne(User::class);
+    }
 }

@@ -101,7 +101,8 @@
                                 <select class="student_ids form-control" name="student_ids[]" multiple="multiple"
                                     id="student_ids">
                                     @foreach ($students as $student)
-                                        <option value="{{$student->id}}">{{ $student->first_name }} {{ $student->last_name }}</option>
+                                        <option value="{{ $student->id }}">{{ $student->first_name }}
+                                            {{ $student->last_name }} - {{ $student->id_no }}</option>
                                     @endforeach
 
                                 </select>
@@ -159,35 +160,35 @@
         // });
 
 
-        $('#class_id').on('change', function() {
-            let class_id = $('#class_id').val();
-            $.ajax({
-                url: "{{ route('admin.getStudentsByClass') }}",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    class_id: class_id
-                },
-                dataType: 'json',
-                type: 'post',
-                beforeSend: function() {
-                    $("#student_ids").html('<option value="">** Loading....</option>');
-                },
-                success: function(response) {
-                    if (response.msg == 'success') {
-                        $("#student_ids").html('');
-                        var option = '';
-                        $.each(response.result, function(i) {
-                            option += '<option value="' + response.result[i].id + '">' +
-                                response.result[i].first_name + " " + response.result[i]
-                                .last_name + '</option>';
-                        });
+        // $('#class_id').on('change', function() {
+        //     let class_id = $('#class_id').val();
+        //     $.ajax({
+        //         url: "{{ route('admin.getStudentsByClass') }}",
+        //         data: {
+        //             _token: "{{ csrf_token() }}",
+        //             class_id: class_id
+        //         },
+        //         dataType: 'json',
+        //         type: 'post',
+        //         beforeSend: function() {
+        //             $("#student_ids").html('<option value="">** Loading....</option>');
+        //         },
+        //         success: function(response) {
+        //             if (response.msg == 'success') {
+        //                 $("#student_ids").html('');
+        //                 var option = '';
+        //                 $.each(response.result, function(i) {
+        //                     option += '<option value="' + response.result[i].id + '">' +
+        //                         response.result[i].first_name + " " + response.result[i]
+        //                         .last_name + '</option>';
+        //                 });
 
-                        $("#student_ids").append(option);
-                    } else {
-                        $("#student_ids").html('<option value="">No Student Found</option>');
-                    }
-                }
-            });
-        });
+        //                 $("#student_ids").append(option);
+        //             } else {
+        //                 $("#student_ids").html('<option value="">No Student Found</option>');
+        //             }
+        //         }
+        //     });
+        // });
     </script>
 @endsection

@@ -1,4 +1,4 @@
-@auth
+{{--@auth
 
     <div class="chat-bubble" id="chat-bubble" style="display: none">
         <img class="w-100" src="{{asset('frontend/assets/images/chat-bubble.png')}}">
@@ -297,4 +297,4 @@
             });
         });
     </script>
-@endauth
+@endauth --}}
