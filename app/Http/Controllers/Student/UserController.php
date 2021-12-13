@@ -429,12 +429,17 @@ class UserController extends Controller
                         'date' => 'required|'
                     ]);
                     $date = $request->date;
-                    $data['specific_date'] = $date;
-                    $data['specific_attendance'] = Attendance::where('user_id', Auth::user()->id)
-                        ->whereDate('date', '=', $date)->latest()->take(4)->get();
-                    // dd($data);
-                    // dd($checked_attendance);
-                    // dd($data['no_of_working_hours']->total);
+                    $attendance = Attendance::where('user_id', Auth::user()->id)
+                    ->where('date', $date)->first();
+                    if (empty($attendance)) {
+                        $attendance_status = 0;
+                    } else {
+                        $attendance_status = 1;
+                    }
+                    $data['specific_attendance'] = array(
+                        "date" => $date,
+                        "attendance_status" => $attendance_status
+                    );
                 } else {
                     $this->validate($request, [
                         'start_date' => 'required|date',
@@ -473,12 +478,7 @@ class UserController extends Controller
                     $data['checked_attendance'] = $attendance;
                 }
                 if (isset($data['specific_attendance'])) {
-                    if ($data['specific_attendance']->count() > 0) {
                         return view('student.attendance')->with($data);
-                    } else {
-                        $absent_date =  $date;
-                        return view('student.attendance', compact('absent_date'));
-                    }
                 } elseif (isset($data['checked_attendance'])) {
                         return view('student.attendance')->with($data);
                 }

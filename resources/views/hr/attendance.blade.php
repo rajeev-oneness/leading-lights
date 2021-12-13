@@ -23,7 +23,7 @@
                             <div class="col-sm-4">
                                 <div class="card-body">
                                     <div class="card-header-title font-size-lg text-capitalize mb-4">
-                                        Attendense Sheet
+                                        Attendance Sheet
                                     </div>
 
                                     <form class="form" action="{{ route('hr.attendanceFor') }}" method="POST"

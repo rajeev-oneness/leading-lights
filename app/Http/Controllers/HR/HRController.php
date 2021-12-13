@@ -69,16 +69,21 @@ class HRController extends Controller
         createNotification($user_id, 0, 0, 'update_hr_bio');
         return response()->json('success');
     }
-    // Attendance
+
+    /* From here HR can see which type of user attendance he/she want to visit
+     student Attendance or teacher attendance */
     public function attendance(Request $request)
     {
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $data['checked_attendance'] = Attendance::where('user_id', Auth::user()->id)->latest()->get();
-            // dd($data);
             return view('hr.attendance')->with($data);
         }
     }
+    /* 
+        From here HR can select which type of user attendance he/she want to visit
+        student Attendance or teacher attendance
+    */
     public function attendanceFor(Request $request)
     {
         Validator::make($request->all(), [
@@ -94,11 +99,13 @@ class HRController extends Controller
 
         if ($role == 3) {
             $attendance_detail = User::where('role_id', $role)
+                ->latest()
                 ->get();
             return view('hr.attendance_teacher_list', compact('attendance_detail'));
         }
         if ($role == 4) {
             $data['attendance_detail'] = User::where('role_id', $role)
+                ->latest()
                 ->get();
             $data['groups'] = Group::latest()->get();
             $data['classes'] = Classes::orderBy('name')->get();
@@ -129,6 +136,24 @@ class HRController extends Controller
     {
         // return view('hr.attendance_date');
         $user_id = $request->user_id;
+        if ($request->ajax()) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                dd($request->date,$user_id);
+                $attendance = Attendance::where('date', $request->date)
+                ->where('user_id', $user_id)
+                ->latest()
+                ->get();
+            }
+            
+            dd($attendance);
+            return response()->json($attendance);
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $specific_attendance = Attendance::where('user_id', $user_id)
+                ->where('date', date('Y-m-d'))->latest()->take(4)->get();
+            $specific_date = date('Y-m-d');
+            return view('hr.attendance_date', compact('specific_attendance', 'specific_date'));
+        }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['submit_btn'])) {
 
@@ -143,7 +168,9 @@ class HRController extends Controller
                         ->first();
                     $data['specific_attendance'] = Attendance::where('user_id', $user_id)
                         ->whereDate('date', '=', $date)->latest()->take(4)->get();
-                    $data['user_id'] = $user_id;
+                    // dd($data);
+                    // dd($data['specific_attendance']);
+                    // dd($data['no_of_working_hours']->total);
                 } else {
                     $this->validate($request, [
                         'start_date' => 'required|date',
@@ -156,41 +183,33 @@ class HRController extends Controller
                     $to = date($request->end_date);
                     $data['start_date'] = $request->start_date;
                     $data['end_date'] = $request->end_date;
-                    $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', $user_id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
-                    $avl_attendance = Attendance::selectRaw('*')->where('user_id', $user_id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date')->toArray();
-                    $data['user_id'] = $user_id;
 
-                    //Loop through date
-                    for ($i = $from; $i < $to; $i++) {
-                        // $absent_attendance[] = !in_array($i,$avl_attendance);
-                        if (!in_array($i, $avl_attendance)) {
-                            $absent_attendance[] = $i;
-                        }
-                        // $avl_attendance = Attendance::where('user_id', $user_id)->whereDate('date', $i)->get()->groupBy('date');
-                        // echo "<pre>";
-                        // print_r($avl_attendance);
-                        // if ($avl_attendance->isEmpty()) {
-                        //     echo $i;
-                        //     $arr_attendance[] = $avl_attendance;
-                        // }
-                        // else{
-                        //     dd('test');
-                        //     $absent_attendance[] = $i;
-                        //     echo $i;
-                        //     // $absent_attendance['status'] = 'Absent';
-                        // }
+                    // $available_att = Attendance::where('user_id',$user_id)->whereBetween('date', [$from, $to])->latest()->get();
+                    // dd( $available_att);
+
+                    for ($i = $from; $i <= $to ; $i++) {
+                       $attendance = Attendance::where('user_id',$user_id)->whereDate('date', $i)->first();
+                       if (empty($attendance)) {
+                           $absent_date[] = array(
+                               "date" => $i
+                           );
+                       }else{
+                           $present_date[] = Attendance::where('user_id',$user_id)->whereDate('date', $i)->first();
+                       }
                     }
-                    // dd('test');
-                    // dd($avl_attendance,$absent_attendance);
-                    // if (isset($absent_attendance)) {
-                    //     $data['absent_attendance'] = $absent_attendance;
-                    // }
+                    if (empty($absent_date)) {
+                        $absent_date = [];
 
-                    // dd($absent_attendance);
-                    // $data['checked_attendance'] = $arr_attendance;
-                    // dd($arr_attendance, $data['checked_attendance']);
+                    }
+                    if (empty($present_date)) {
+                        $present_date = [];
+                    }
+                    $attendance = array_merge($absent_date,$present_date);
+                    // dd($attendance);
+
+                    // $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', $user_id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
+                    $data['checked_attendance'] = $attendance;
                 }
-
                 if (isset($data['specific_attendance'])) {
                     if ($data['specific_attendance']->count() > 0) {
                         return view('hr.attendance_date')->with($data);
@@ -199,22 +218,17 @@ class HRController extends Controller
                         return view('hr.attendance_date', compact('absent_date'));
                     }
                 } elseif (isset($data['checked_attendance'])) {
-                    if ($data['checked_attendance']->count() > 0) {
+                    // if ($data['checked_attendance']->count() > 0) {
                         return view('hr.attendance_date')->with($data);
-                    } else {
-                        $attendance = [];
-                        // $attendance['date'] = $date;
-                        $attendance['login_time'] = 'N/A';
-                        $attendance['logout_time'] = 'N/A';
-                        return view('hr.attendance_date')->with($attendance);
-                    }
+                    // } else {
+                    //     $attendance = [];
+                    //     $attendance['date'] = $date;
+                    //     $attendance['login_time'] = 'N/A';
+                    //     $attendance['logout_time'] = 'N/A';
+                    //     return view('hr.attendance_date')->with($attendance);
+                    // }
                 }
-            } else {
-                $attendance = Attendance::find($request->attendance_id);
-                $attendance->comment = $request->comment;
-                $attendance->save();
-                return response()->json('success');
-            }
+            } 
         }
     }
     // Events
