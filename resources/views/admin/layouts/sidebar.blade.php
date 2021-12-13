@@ -8,7 +8,7 @@
             <li class="{{ Request::is('admin/dashboard') ? 'active' : '' }}"><a
                     href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
             <?php if (Auth::check() && Auth::user()->role->id == 5) { ?>
-            <li class="{{ Request::is('super-admin/admin *') ? 'active' : '' }}"><a
+            <li class="{{ Request::is('super-admin/admin*') ? 'active' : '' }}"><a
                     href="{{ route('superAdmin.admin.index') }}"><i class="fa  fa-user-cog"
                         aria-hidden="true"></i>Admin Management</a></li>
             <?php } ?>

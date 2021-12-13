@@ -1,4 +1,4 @@
-@extends('student.layouts.master')
+@extends('hr.layouts.master')
 @section('content')
     <div class="app-main__outer">
         <div class="app-main__inner">
@@ -21,7 +21,7 @@
                                 <div class="card-header-title mb-4">
                                     Attendance Date Wise
                                 </div>
-                                <form class="form" action="{{ route('user.attendance') }}" method="POST" autocomplete="off">
+                                <form class="form" action="{{ route('hr.attendanceStudent') }}" method="POST" autocomplete="off">
                                     @csrf
                                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                         <div class="d-sm-flex align-items-baseline">
@@ -65,7 +65,7 @@
                                         </button>
                                     </div>
                                 @endif
-                                <form class="form" action="{{ route('user.attendance') }}" method="POST" autocomplete="off">
+                                <form class="form" action="{{ route('hr.attendanceStudent') }}" method="POST" autocomplete="off">
                                     @csrf
                                     <div class="d-sm-flex">
                                         <div class="d-sm-flex align-items-center justify-content-between mb-4">

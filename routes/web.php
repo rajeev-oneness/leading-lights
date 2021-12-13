@@ -28,6 +28,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::post('get-fees-by-class', [CommonController::class, 'getFeesByClass'])->name('getFeesByClass');
 Route::post('get-course-by-class', [CommonController::class, 'getCourseByClass'])->name('getCourseByClass');
 Route::post('get-student-by-class', [CommonController::class, 'getStudentByClass'])->name('getStudentByClass');
+Route::post('get-student-by-class-id', [CommonController::class, 'getStudentByClassId'])->name('getStudentByClassId');
 Route::post('email-availability', [CommonController::class, 'checkEmailExistence'])->name('checkEmailExistence');
 
 // Notification

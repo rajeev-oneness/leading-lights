@@ -33,10 +33,6 @@ class GroupController extends Controller
     public function create()
     {
         $data['teachers'] = User::where('role_id', 3)->latest()->get();
-        // $data['students'] = User::select('classes.name as class_name', 'users.id as user_id', 'users.id_no as id_no', 'users.first_name as first_name', 'users.last_name as last_name')->where('role_id', 4)
-        //     ->join('classes', 'classes.id', '=', 'users.class')
-        //     ->orderBy('users.created_at', 'DESC')
-        //     ->get();
         $data['students'] = User::where('role_id', 4)->get();
         $data['classes'] = Classes::orderBy('name')->get();
         return view('admin.groups.create')->with($data);
@@ -123,15 +119,13 @@ class GroupController extends Controller
             ->orderBy('users.created_at', 'DESC')
             ->get();
         $data['group'] = Group::findOrFail($id);
-        // $data['classes'] = Classes::find($data['group']->id);
-        $data['classes'] = Classes::findOrFail($data['group']->class_id);
+        $data['classes'] = Classes::findOrFail($data['group']->id);
         $selected_students = $data['group']->student_ids;
         $student_ids = explode(',', $selected_students);
         foreach ($student_ids as $student_id) {
             $student_details[] = User::where('id', $student_id)->first();
         }
         $data['student_details'] = $student_details;
-        // dd($data);
         return view('admin.groups.view')->with($data);
     }
 
@@ -155,7 +149,8 @@ class GroupController extends Controller
 
         // dd($data['selected_students']);
         $data['classes'] = Classes::orderBy('name')->get();
-        $data['students_by_grooup'] = Classes::orderBy('name')->get();
+        // $data['students_by_grooup'] = Classes::orderBy('name')->get();
+        // dd($data);
 
         return view('admin.groups.edit')->with($data);
     }

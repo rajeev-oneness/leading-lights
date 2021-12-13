@@ -56,6 +56,12 @@ class CommonController extends Controller
             return response()->json($students_details);
         }
     }
+    public function getStudentByClassId(Request $request){
+        $class = $request->class_id;
+            $students_details = User::where('role_id',4)->where('class',$class)->latest()->get();
+            return response()->json($students_details);
+        
+    }
     public function checkEmailExistence(Request $request){
         $email = $request->email;
         $already_existence = User::where('email',$email)->first();

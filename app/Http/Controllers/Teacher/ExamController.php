@@ -148,8 +148,6 @@ class ExamController extends Controller
     // View descriptive type question
     public function viewDescQuestion(Request $request,$id){
         $questions = Question::where('exam_id',$id)->get();
-        // dd($questions);
-        // return response()->json($questions);
         return view('teacher.exam.desc_question_view',compact('questions'));
     }
 
@@ -275,7 +273,7 @@ class ExamController extends Controller
     // View Mixed type question
      public function viewMixedQuestion(Request $request,$id){
         $questions = Question::where('exam_id',$id)->get();
-        return view('teacher.exam.mcq_question_view',compact('questions'));
+        return view('teacher.exam.mixed_question_view',compact('questions'));
     }
 
     /* Exam result section*/

@@ -24,6 +24,7 @@
                                             <div class="col-lg-12">
                                                 <form class="form" action="{{ route('hr.attendanceStudent') }}"
                                                     method="POST" enctype="multipart/form-data">
+                                                    @csrf
                                                     <div class="form-row">
                                                         <div class="form-group col-sm-6">
                                                             <div
@@ -39,7 +40,7 @@
                                                                         {{ $group->name }}</option>
                                                                 @endforeach --}}
                                                                 @foreach ($classes as $class)
-                                                                    <option value="{{ $class->id . '-class' }}"
+                                                                    <option value="{{ $class->id }}"
                                                                         @if (old('class') == $class->id) selected @endif>
                                                                         {{ $class->name }}</option>
                                                                 @endforeach
@@ -82,7 +83,7 @@
                 if (class_id !== '') {
                     $.ajax({
                         type: 'POST',
-                        url: "{{ route('getStudentByClass') }}",
+                        url: "{{ route('getStudentByClassId') }}",
                         data: {
                             _token: "{{ csrf_token() }}",
                             class_id: class_id

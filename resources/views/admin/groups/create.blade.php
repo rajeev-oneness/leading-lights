@@ -95,11 +95,10 @@
                                 @endif
                             </div>
                         </div> --}}
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="form-group edit-box">
                                 <label for="review">Students Name<span class="text-danger">*</span></label>
-                                <select class="student_ids form-control" name="student_ids[]" multiple="multiple"
-                                    id="student_ids">
+                                <select  id="choices-multiple-remove-button"  name="student_ids[]" multiple>
                                     @foreach ($students as $student)
                                         <option value="{{ $student->id }}">{{ $student->first_name }}
                                             {{ $student->last_name }} - {{ $student->id_no }}</option>

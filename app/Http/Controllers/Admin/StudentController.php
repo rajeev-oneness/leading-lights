@@ -66,14 +66,14 @@ class StudentController extends Controller
         $student->first_name = $request->first_name;
         $student->last_name = $request->last_name;
         $student->email = $request->email;
-        $student->password = Hash::make($id_no);
+        $student->password = Hash::make($id_no.date('Y-m-d H:i:s'));
         $student->id_no = $id_no;
         $student->class = $request->class;
+        $student->role_id = 4;
         $student->save();
 
         //Send notification
-        // dd($student);
-        // Notification::route('mail', $request->email)->notify(new WelcomeMail($student,$password));
+        // Notification::route('mail', $request->email)->notify(new WelcomeMail($student));
 
         return redirect()->route('admin.students.index')->with('success', 'Student added');
     }
@@ -201,11 +201,9 @@ class StudentController extends Controller
 
     public function deactivate_account($id)
     {
-        // dd('test');
         $user = User::findOrFail($id);
         if ($user->status == 1) {
             $user->deactivated = 1;
-            $user->password = Hash::make($user->id_no);
             $user->save();
             Notification::route('mail', $user->email)->notify(new AccountDeactivateMail($user));
             return response()->json(['success' => true, 'data' => 'inactivated']);

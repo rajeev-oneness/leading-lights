@@ -45,9 +45,6 @@ class AccountActivationMail extends Notification
                 ->subject('Your account has been activated by Admin :)')
                 ->line('Your account has been activated')
                 ->line('You can now access leading light web portal.')
-                ->line('Your login credential is: ')
-                ->line('User id : '.$this->user['email'])
-                ->line('Password : '.$this->user['id_no'])
                 ->line('Thank you for using our application!');
     }
 

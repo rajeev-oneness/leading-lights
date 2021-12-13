@@ -9,4 +9,8 @@ class Group extends Model
 {
     use HasFactory;
     protected $table='student_groups';
+    public function students()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

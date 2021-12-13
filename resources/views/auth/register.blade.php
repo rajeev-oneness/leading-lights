@@ -294,6 +294,9 @@
                 return false;
             } else {
                 $("#registrationForm").submit();
+                $('#btn_submit').text('Loading...');
+                document.getElementById("btn_submit").disabled = true;
+                document.getElementById("btn_submit").style.cursor = 'no-drop';
             }
         });
 

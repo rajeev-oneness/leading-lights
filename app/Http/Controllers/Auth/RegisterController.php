@@ -130,7 +130,7 @@ class RegisterController extends Controller
             $user->dob = $data['dob'];
             $user->class = $data['class'];
             $user->gender = $data['gender'];
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
             $user->image = $imageName;
             $user->special_course_ids = $special_course_ids;
             $user->country_code = $data['country_code'];
@@ -180,6 +180,18 @@ class RegisterController extends Controller
             $certificate->user_id = $user->id;
             $certificate->image = $certificate_image;
             $certificate->save();
+
+            // $admin_details = User::select('email')->where('role_id', 1)->first();
+            // $admin_email = $admin_details['email'];
+            $admin_email = "abcd12300@yopmail.com";
+            $email_data = array(
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'email' => $data['email'],
+                'id_no' => $id_no,
+                'user_type' => 'student'
+            );
+            FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
             DB::commit();
             return $user;
         } catch (Exception $e) {
@@ -253,7 +265,7 @@ class RegisterController extends Controller
             $user->doj = $request->doj;
             $user->gender = $request->gender;
             $user->id_no = $id_no;
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
             $user->image = $imageName;
             $user->mobile = $request->mobile;
             $user->country_code = $request->country_code;
@@ -272,8 +284,9 @@ class RegisterController extends Controller
             $certificate->user_id = $user->id;
             $certificate->save();
 
-            $admin_details = User::select('email')->where('role_id', 1)->first();
-            $admin_email = $admin_details['email'];
+            // $admin_details = User::select('email')->where('role_id', 1)->first();
+            // $admin_email = $admin_details['email'];
+            $admin_email = "abcd12300@yopmail.com";
             $email_data = array(
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -342,7 +355,7 @@ class RegisterController extends Controller
             $user->doj = $request->doj;
             $user->gender = $request->gender;
             $user->id_no = $id_no;
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
             $user->image = $imageName;
             $user->mobile = $request->mobile;
             $admin_details = User::select('email')->where('role_id', 1)->first();
@@ -361,8 +374,9 @@ class RegisterController extends Controller
             $certificate->save();
 
 
-            $admin_details = User::select('email')->where('role_id', 1)->first();
-            $admin_email = $admin_details['email'];
+            // $admin_details = User::select('email')->where('role_id', 1)->first();
+            // $admin_email = $admin_details['email'];
+            $admin_email = "abcd12300@yopmail.com";
             $email_data = array(
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -370,7 +384,7 @@ class RegisterController extends Controller
                 'id_no' => $id_no,
                 'user_type' => 'hr'
             );
-            // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+            FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
 
             return redirect()->route('hr_login')->with('success', 'Your registration is successful, waiting for admin approval');
         }

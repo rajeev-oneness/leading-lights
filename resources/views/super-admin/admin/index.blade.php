@@ -54,8 +54,10 @@
                                     <td>{{ $admin->email }}</td>
                                     <td>{{ $admin->mobile }}</td>
                                     <td class="text-center">
-                                        @if ($admin->status == 1)
+                                        @if ($admin->status == 1 && $admin->deactivated == 0)
                                             <span class="badge badge-success">Approved</span>
+                                        @elseif ($admin->status == 1 && $admin->deactivated == 1)
+                                            <span class="badge badge-danger">Deactivated</span>
                                         @else
                                             <span class="badge badge-warning">Pending</span>
                                         @endif

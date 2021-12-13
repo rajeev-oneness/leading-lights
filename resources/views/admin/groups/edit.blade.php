@@ -54,28 +54,8 @@
                                 @endif
                             </div>
                         </div>
-                        {{-- <div class="col-lg-6">
-                            <div class="form-group edit-box">
-                                <label for="class_id">Class</label>
-                                <label for="review">Class<span class="text-danger">*</span></label>
-                                <select class="form-control" name="class_id" id="class_id">
-                                    <option value="">Select Class</option>
-                                    @foreach ($classes as $class)
-                                        <option value="{{ $class->id }}" @if ($class->id === $group->class_id)
-                                            selected
-                                    @endif>{{ $class->name }}</option>
-                                    @endforeach
-                                </select>
-                                @if ($errors->has('class_id'))
-                                    <span style="color: red;">{{ $errors->first('class_id') }}</span>
-                                @endif
-                            </div>
-                        </div> --}}
-
-
                         <div class="col-lg-12">
                             <div class="form-group edit-box">
-                                {{-- <label for="name">Students Name</label> --}}
                                 <label for="review">Students Name<span class="text-danger">*</span></label>
                                 <?php
                                 //get the old values from form
@@ -83,27 +63,16 @@
                                 
                                 //get data from database table field
                                 $ids = explode(',', $group->student_ids);
-                                
                                 //stay the values after form submission
                                 if ($old) {
                                     $ids = $old;
                                 }
                                 ?>
-                                {{-- <select id="choices-multiple-remove-button" name="student_ids[]" multiple>
-                                    @foreach ($students as $student)
-                                        <option value="{{ $student->user_id }}"  echo in_array($student->user_id, $ids) ? 'selected' : ''; >
-                                            {{ $student->first_name }}
-                                            {{ $student->last_name }} - {{ $student->id_no }}</option>
-                                    @endforeach
-                                </select> --}}
-
-                                <select class="student_ids form-control" name="student_ids[]" multiple="multiple"
-                                    id="student_ids">
+                                <select id="choices-multiple-remove-button" name="student_ids[]" multiple>
 
                                     @foreach ($students as $student)
-                                        {{-- <option value="{{$student->id}}">{{ $student->first_name }} {{ $student->last_name }}</option> --}}
                                         <option value="{{ $student->id }}" @php
-                                            echo in_array($student->group_id, $ids) ? 'selected' : '';
+                                            echo in_array($student->id, $ids) ? 'selected' : '';
                                         @endphp>
                                             {{ $student->first_name }} {{ $student->last_name }} -
                                             {{ $student->id_no }}
