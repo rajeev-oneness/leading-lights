@@ -10,7 +10,7 @@
                     <ul class="breadcrumb p-0">
                         <li><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="{{ route('admin.special-courses.index') }}">All Courses List</a></li>
+                        <li><a href="{{ route('admin.special-courses.index') }}">Special Courses List</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
                         <li><a href="#" class="active">Add Course</a></li>
                     </ul>
@@ -26,7 +26,6 @@
                     <div class="row m-0 pt-3">
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                {{-- <label for="title">Course title</label> --}}
                                 <label for="review">Course title<span class="text-danger">*</span></label>
                                 <input type="text" name="title" class="form-control" id="title"
                                     value="{{ old('title') }}">
@@ -38,7 +37,7 @@
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 {{-- <label for="class_id">Class</label> --}}
-                                <label for="review">Class<span class="text-danger">*</span></label>
+                                <label for="review">Class</label>
                                 <select name="class_id" id="class_id" class="form-control">
                                     <option value="">Select Class</option>
                                     @foreach ($classes as $class)
@@ -62,9 +61,8 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-6">
+                        {{-- <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                {{-- <label for="end_date">End Date</label> --}}
                                 <label for="review">End Date<span class="text-danger">*</span></label>
                                 <input type="date" id="end_date" class="form-control" name="end_date"
                                     value="{{ old('end_date') }}">
@@ -72,10 +70,9 @@
                                     <span style="color: red;">{{ $errors->first('end_date') }}</span>
                                 @endif
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                <label for="fees">Fees</label>
                                 <label for="review">Fees<span class="text-danger">*</span></label>
                                 <input type="number" id="fees" class="form-control" name="fees"
                                     value="{{ old('fees') }}">

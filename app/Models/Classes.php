@@ -14,4 +14,9 @@ class Classes extends Model
     {
         return $this->hasOne(User::class);
     }
+
+    public function course_details()
+    {
+        return $this->hasOne(SpecialCourse::class);
+    }
 }

@@ -22,8 +22,7 @@
                     href="{{ route('admin.teachers.index') }}"><i class="fa fa-user"
                         aria-hidden="true"></i>Teacher
                     Management</a></li>
-            <li class="{{ Request::is('admin/hr*') ? 'active' : '' }}"><a href="{{ route('admin.hr.index') }}"><i
-                        class="fa fa-user" aria-hidden="true"></i>HR
+            <li class="{{ Request::is('admin/hr*') ? 'active' : '' }}"><a href="{{ route('admin.hr.index') }}"><i class="fas fa-user-tie"></i></i>HR
                     Management</a></li>
             <li class="{{ Request::is('admin/transaction*') ? 'active' : '' }}"><a
                     href="{{ route('admin.transaction.index') }}"><i class="fas fa-wallet"></i>Transaction
@@ -35,28 +34,28 @@
             <li class="{{ Request::is('admin/video*') ? 'active' : '' }}"><a
                     href="{{ route('admin.video.index') }}"><i class="fa fa-video-camera"
                         aria-hidden="true"></i>Free/Paid video Management</a></li>
-            <li class="{{ Request::is('admin/qualification*') ? 'active' : '' }}"><a
-                    href="{{ route('admin.qualifications.index') }}"><i class="fas fa-chalkboard"></i>Academic
-                    Qualification
-                    Management</a></li>
             <li class="{{ Request::is('admin/classes*') ? 'active' : '' }}"><a
-                    href="{{ route('admin.classes.index') }}"><i class="fas fa-chalkboard"></i>Student Class
+                    href="{{ route('admin.classes.index') }}"><i class="fas fa-chalkboard-teacher"></i>Regular Class
                     Management</a></li>
+            <li class="{{ Request::is('admin/special-courses*') ? 'active' : '' }}"><a
+                        href="{{ route('admin.special-courses.index') }}"><i class="fas fa-book-reader"></i>Special Course
+                        Management</a>
+           </li>
             <li class="{{ Request::is('admin/subjects*') ? 'active' : '' }}"><a
                     href="{{ route('admin.subjects.index') }}"><i class="fas fa-book-open"></i>Student Subject
                     Management</a></li>
             <li class="{{ Request::is('admin/groups*') ? 'active' : '' }}"><a
                     href="{{ route('admin.groups.index') }}"><i class="fas fa-users"></i>Student Group
                     Management</a></li>
+                <li class="{{ Request::is('admin/qualification*') ? 'active' : '' }}"><a
+                href="{{ route('admin.qualifications.index') }}"><i class="fas fa-chalkboard"></i>Academic
+                Qualification
+                Management</a></li>
             <li class="{{ Request::is('admin/arrange-classes*') ? 'active' : '' }}"><a
                     href="{{ route('admin.arrange_classes') }}"><i class="fas fa-chalkboard"></i>Arrange Class
                     Management</a></li>
             <li class="{{ Request::is('admin/exams*') ? 'active' : '' }}"><a
                     href="{{ route('admin.exams.index') }}"><i class="fas fa-chalkboard"></i>Manage Exams</a></li>
-            <li class="{{ Request::is('admin/special-courses*') ? 'active' : '' }}"><a
-                    href="{{ route('admin.special-courses.index') }}"><i class="fas fa-book-open"></i>Course
-                    Management</a>
-            </li>
             <li class="{{ Request::is('admin/courses*') ? 'active' : '' }}"><a
                     href="{{ route('admin.courses.index') }}"><i class="fas fa-book-open"></i>Flash Course
                     Management</a>

@@ -10,7 +10,7 @@
 						<ul class="breadcrumb p-0">
 							<li><a href="{{ route('admin.dashboard')}}">Home</a></li>
 							<li class="text-white"><i class="fa fa-chevron-right"></i></li>
-							<li><a href="{{ route('admin.special-courses.index')}}">All Courses List</a></li>
+							<li><a href="{{ route('admin.special-courses.index')}}">Special Courses List</a></li>
 							<li class="text-white"><i class="fa fa-chevron-right"></i></li>
 							<li><a href="#" class="active">Edit Course</a></li>
 						</ul>
@@ -38,7 +38,7 @@
 								<div class="col-lg-6">
 									<div class="form-group edit-box">
 										{{-- <label for="class_id">Class</label> --}}
-										<label for="review">Class<span class="text-danger">*</span></label>
+										<label for="review">Class</label>
 										<select class="form-control" name="class_id" id="class_id">
 											<option value="">Select Class</option>
 											@foreach ($classes as $class)
@@ -59,17 +59,6 @@
 									<input type="date" id="start_date" class="form-control" name="start_date" value="{{ $course_details->start_date }}">
 									@if ($errors->has('start_date'))
 										<span style="color: red;">{{ $errors->first('start_date') }}</span>
-									@endif
-								</div>
-								</div>
-								
-								<div class="col-lg-6">
-									<div class="form-group edit-box">
-									{{-- <label for="end_date">End Date</label> --}}
-									<label for="review">End Date<span class="text-danger">*</span></label>
-									<input type="date" id="end_date" class="form-control" name="end_date" value="{{ $course_details->end_date }}" >
-									@if ($errors->has('end_date'))
-										<span style="color: red;">{{ $errors->first('end_date') }}</span>
 									@endif
 								</div>
 								</div>
