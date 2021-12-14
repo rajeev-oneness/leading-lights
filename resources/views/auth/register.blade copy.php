@@ -21,7 +21,7 @@
                                 @csrf
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
-                                        <label for="first_name"><b>First Name</b><span class="text-danger">*</span> </label>
+                                        <label for="first_name">First Name<span class="text-danger">*</span> </label>
                                         <input class="form-control" id="first_name" name="first_name" type="text"
                                             placeholder="" value="{{ old('first_name') }}">
                                         <div class="error" style="color : red;">Please Fill This field.</div>
@@ -32,7 +32,7 @@
 
                                     </div>
                                     <div class="form-group col-sm-6">
-                                        <label for="last_name"><b>Last Name</b><span class="text-danger">*</span></label>
+                                        <label for="last_name">Last Name<span class="text-danger">*</span></label>
                                         <input class="form-control" id="last_name" name="last_name" type="text"
                                             placeholder="" value="{{ old('last_name') }}">
                                         <div class="error" style="color : red;">Please Fill This field.</div>
@@ -44,7 +44,7 @@
 
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
-                                        <label for="email"><b>Email address</b> <span class="text-danger">*</span></label>
+                                        <label for="email">Email address<span class="text-danger">*</span></label>
                                         <input class=" form-control" type="email" name="email" id="email"
                                             value="{{ old('email') }}">
                                         <div class="error" style="color : red;">Please Fill This field.</div>
@@ -55,20 +55,19 @@
                                         <span class="text-success email-success"></span>
                                     </div>
                                     <div class="form-group col-sm-6">
-                                        <label for="mobile"><b>Phone Number</b> <span class="text-danger">*</span></label>
-                                        <div class="row m-0 ">
-                                            <div class="responsive-error col-6 col-lg-4 pl-0 pr-1">
+                                        <label for="mobile">Phone Number<span class="text-danger">*</span></label>
+                                        <div class="d-sm-flex align-items-top justify-content-between">
+                                            <div class="responsive-error">
                                                 <?php $phonecodes = \App\Models\Country::Where('phonecode', '!=', '')
                                                     ->select('phonecode')
-                                                    ->orderBy('phonecode')
                                                     ->get(); ?>
-                                                <select class="form-control p-1" required name="country_code"
+                                                <select class="form-control" required name="country_code"
                                                     id="country_code">
                                                     <?php if($phonecodes){?>
                                                     <?php foreach($phonecodes as $code){?>
-                                                    <option value="+{{ $code->phonecode }}"
+                                                    <option value="{{ $code->phonecode }}"
                                                         {{ old('country_code') == $code->phonecode ? 'selected' : '' }}>
-                                                        +{{ $code->phonecode }}</option>
+                                                        {{ $code->phonecode }}</option>
                                                     <?php } } ?>
                                                 </select>
                                                 <div class="error" style="color : red;">Please Fill This field.
@@ -81,8 +80,8 @@
                                                     </span>
                                                 @endif
                                             </div>
-                                            <div class="responsive-error col-6 col-lg-8 p-0">
-                                                <input class=" form-control pl-2" type="number" name="mobile" id="mobile"
+                                            <div class="responsive-error">
+                                                <input class=" form-control" type="number" name="mobile" id="mobile"
                                                     value="{{ old('mobile') }}" onkeyup="mobileValidation()">
                                                 <div class="error" style="color : red;">Please Fill This field.
                                                 </div>
@@ -97,7 +96,7 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
-                                        <label for="gender"><b>Gender</b> <span class="text-danger">*</span></label>
+                                        <label for="gender">Gender<span class="text-danger">*</span></label>
                                         <select name="gender" id="gender" class="form-control">
                                             <option value="">Please Select</option>
                                             <option value="Male" @if (old('gender') == 'Male')  selected @endif>Male</option>
@@ -106,7 +105,7 @@
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                     </div>
                                     <div class="form-group col-sm-6">
-                                        <label for=""><b>Date Of Birth</b> <span class="text-danger">*</span></label>
+                                        <label for="">Date Of Birth<span class="text-danger">*</span></label>
                                         <input class="form-control datepicker" type="text" name="dob"
                                             value="{{ old('dob') }}">
                                         <div class="error" style="color : red;">Please Fill This field.</div>
@@ -115,24 +114,9 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="form-row wh_class">
-                                    <small class="col-12 p-0 mb-2"><b>Which Class You are Applying For</b><span class="text-danger">*</span></small>
-                                    <div class="form-group col-sm-12">
-                                        <select name="class" class="form-control">
-                                            <option value="" selected disabled>Select Class</option>
-                                            @foreach ($classes as $class)
-                                                <option value="{{ $class->id }}" @if (old('class') == $class->name)
-                                                    selected
-                                            @endif>{{ $class->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    
-                                </div>
-                                <div class="form-row wh_class actv_bg">
-                                    <small class="col-12 p-0 mb-2"><b>Which Course You are Applying For</b> <span class="text-danger">*</span></small>
+                                <div class="form-row">
                                     <div class="form-group col-sm-6">
-                                        <!--<label for="">Class<span class="text-danger">*</span></label>-->
+                                        <label for="">Class<span class="text-danger">*</span></label>
                                         <select name="class" class="form-control" id="class">
                                             <option value="">Select Class</option>
                                             @foreach ($classes as $class)
@@ -147,26 +131,20 @@
                                         @enderror
                                     </div>
                                     <div class="form-group col-sm-6">
+                                        <label for="">Special Course</label>
                                         {{-- <select  class="form-control" name="course_id" id="choices-multiple-remove-button" multiple name="course_id[]" class="course_id">
                                       
                                     </select> --}}
                                         <select class="special_course_ids form-control" name="special_course_ids[]"
                                             multiple="multiple" id="special_course_ids">
-                                            <option value="">Select Courses</option>
-                                            @foreach ($special_courses as $course)
-                                                <option value="{{ $course->id }}">{{ $course->title }}</option>
-                                            @endforeach
+
                                         </select>
                                     </div>
-                                    
-                                </div>
-                                <div class="form-row">
                                     <div class="form-group col-sm-6">
-                                        <label for="image"><b>Upload Profile Picture</b> <span
+                                        <label for="image">Upload Profile Picture(png,jpg,jpeg only)<span
                                                 class="text-danger">*</span></label>
-                                        <input type="file" class="form-control upload_btn" name="image"
+                                        <input type="file" class="form-control" name="image"
                                             value="{{ old('image') }}">
-                                            <small><b>(png, jpg, jpeg only)</b></small>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                         @error('image')
                                             <span class="text-danger">{{ $message }}</span>
@@ -174,11 +152,10 @@
 
                                     </div>
                                     <div class="form-group col-sm-6">
-                                        <label for="certificate"><b>Upload Documents</b><span
+                                        <label for="certificate">Upload Documents(pdf only)<span
                                                 class="text-danger">*</span></label>
-                                        <input type="file" class="form-control upload_btn" name="certificate"
+                                        <input type="file" class="form-control" name="certificate"
                                             value="{{ old('certificate') }}">
-                                            <small><b>(pdf only)</b></small>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                         @error('certificate')
                                             <span class="text-danger">{{ $message }}</span>
@@ -317,6 +294,9 @@
                 return false;
             } else {
                 $("#registrationForm").submit();
+                $('#btn_submit').text('Loading...');
+                document.getElementById("btn_submit").disabled = true;
+                document.getElementById("btn_submit").style.cursor = 'no-drop';
             }
         });
 

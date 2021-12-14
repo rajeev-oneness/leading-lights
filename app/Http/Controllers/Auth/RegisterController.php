@@ -58,8 +58,9 @@ class RegisterController extends Controller
 
     public function showRegistrationForm()
     {
-        $classes = Classes::orderBy('name')->get();
-        return view('auth.register', compact('classes'));
+        $classes = Classes::latest()->get();
+        $special_courses = SpecialCourse::where('class_id',null)->latest()->get();
+        return view('auth.register', compact('classes','special_courses'));
     }
     /**
      * Get a validator for an incoming registration request.
