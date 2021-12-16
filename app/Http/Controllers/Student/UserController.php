@@ -43,7 +43,7 @@ class UserController extends Controller
         // dd($data['special_classes']);
         $data['student'] = User::where('id', $current_user_id)->first();
         $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
-        $data['certificates'] = DB::table('certificate')->where('user_id', $current_user_id)->first();
+        $data['certificates'] = Certificate::where('user_id', $current_user_id)->first();
         $data['announcements'] = Announcement::where('class_id', Auth::user()->class)->get();
         return view('student.profile')->with($data);
     }

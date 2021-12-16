@@ -43,7 +43,7 @@ class TeacherController extends Controller
             ->whereDate('date', '=', date('Y-m-d'))->orderBy('arrange_classes.created_at', 'desc')->get();
 
         $data['teacher'] = User::where('id', $current_user_id)->first();
-        $data['certificates'] = DB::table('certificate')->where('user_id', $current_user_id)->get();
+        $data['certificates'] = Certificate::where('user_id', $current_user_id)->get();
         return view('teacher.profile')->with($data);
     }
 

@@ -19,6 +19,12 @@
                 {{-- <section class=" " oncopy="return false;" oncut="return false;" onpaste="return false;"
                     oncontextmenu="return false;"> --}}
                     <div class="card mb-3">
+                        <div class="card-header justify-content-center">
+                            Leading Lights
+                        </div>
+                        <div>
+                            <h5 class="card-tittle text-center">Class: {{ $exam->class_details }}</h5>
+                        </div>
                         <div class="card-body">
                             @if ($questions->count() > 0)
                                 <form action="{{ route('user.exam.start', $exam->id) }}" method="POST" name="exam">

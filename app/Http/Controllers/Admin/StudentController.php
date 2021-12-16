@@ -18,6 +18,7 @@ use App\Notifications\RejectionMail;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
+use App\Models\Certificate;
 
 class StudentController extends Controller
 {
@@ -88,7 +89,7 @@ class StudentController extends Controller
     {
         $data['student'] = User::find($id);
         $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
-        $data['certificates'] = DB::table('certificate')->where('user_id', $id)->get();
+        $data['certificates'] = Certificate::where('user_id', $id)->get();
         return view('admin.student.view')->with($data);
     }
 

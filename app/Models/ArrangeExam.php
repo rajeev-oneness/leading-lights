@@ -17,4 +17,14 @@ class ArrangeExam extends Model
     {
         return $this->hasMany(Question::class);
     }
+
+    public function subject_details()
+    {
+        return $this->hasMany(Subject::class);
+    }
+
+    public function class_details()
+    {
+        return $this->belongsTo(Classes::class);
+    }
 }
