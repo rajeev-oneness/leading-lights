@@ -20,11 +20,11 @@ class ArrangeExam extends Model
 
     public function subject_details()
     {
-        return $this->hasMany(Subject::class);
+        return $this->belongsTo(Subject::class,'subject','id');
     }
 
     public function class_details()
     {
-        return $this->belongsTo(Classes::class);
+        return $this->belongsTo(Classes::class,'class');
     }
 }

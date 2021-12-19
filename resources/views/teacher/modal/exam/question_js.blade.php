@@ -74,15 +74,24 @@
             $('.textarea_error').text('');
             $("#dynamicAddRemove").append(`<hr>
         <div class="form-group">
-        <label for="question">Question<span class="text-danger">*</span></label>
-        <textarea type="text" name="addMoreInputFields[${i}][question]" class="form-control" cols="2" rows="2"></textarea>
-        <span class="textarea_error${i} text-danger"></span>
+            <label for="question">Question<span class="text-danger">*</span></label>
+            <textarea type="text" name="addMoreInputFields[${i}][question]" class="form-control" cols="2" rows="2"></textarea>
+            <span class="textarea_error${i} text-danger"></span>
         </div>
         <div class="form-group">
-        <label for="image">Image</label>
-        <input type="file" class="form-control-file" name="addMoreInputFields[${i}][image]" id="image">
-        <span class="file_error${i} text-danger"></span>
+            <label for="image">Image</label>
+            <input type="file" class="form-control-file" name="addMoreInputFields[${i}][image]" id="image">
+            <span class="file_error${i} text-danger"></span>
         </div>
+        <div class="form-group">
+            <label for="marks">Marks</label>
+            <select id="marks" class="form-control" name="addMoreInputFields[${i}][marks]">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+         </div>
         `);
             ++i;
             ++k;
@@ -770,14 +779,23 @@
             $('.textarea_error').text('');
             $("#dynamicAddRemoveMixed").append(`<hr>
         <div class="form-group">
-        <label for="question">Question<span class="text-danger">*</span></label>
-        <textarea type="text" name="addMoreInputFields[${i}][question1]" class="form-control" cols="2" rows="2"></textarea>
-        <span class="textarea_error${i} text-danger"></span>
+            <label for="question">Question<span class="text-danger">*</span></label>
+            <textarea type="text" name="addMoreInputFields[${i}][question1]" class="form-control" cols="2" rows="2"></textarea>
+            <span class="textarea_error${i} text-danger"></span>
         </div>
         <div class="form-group">
-        <label for="image">Image</label>
-        <input type="file" class="form-control-file" name="addMoreInputFields[${i}][image1]" id="image">
-        <span class="file_error${i} text-danger"></span>
+            <label for="image">Image</label>
+            <input type="file" class="form-control-file" name="addMoreInputFields[${i}][image1]" id="image">
+            <span class="file_error${i} text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="marks">Marks<span class="text-danger">*</span></label>
+            <select id="marks" class="form-control" name="addMoreInputFields[${i}][marks]">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
         </div>
         <input type="hidden" name="addMoreInputFields[${i}][question_type]" value="2">
         `);

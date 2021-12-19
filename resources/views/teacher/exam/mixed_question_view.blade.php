@@ -44,6 +44,7 @@
                                     </li>
                                 @endforeach
                             </ol>
+                            <p class="font-weight-bold">Marks: <span>{{ $question->marks }}</span></p>
                             <hr>
                         @endforeach
                     @else

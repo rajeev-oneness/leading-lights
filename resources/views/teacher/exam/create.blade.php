@@ -82,6 +82,18 @@
                                         @endif
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p class="des  mr-2"><span class="mr-2"><i
+                                            class="fa fa-circle"></i></span>Type of exam<span
+                                        class="text-danger">*</span></p>
+                                    <input type="text" name="type_of_exam" id="type_of_exam" class="form-control"
+                                        value="{{ old('type_of_exam') }}" autocomplete="off">
+                                    @if ($errors->has('type_of_exam'))
+                                        <span style="color: red;">{{ $errors->first('type_of_exam') }}</span>
+                                    @endif
+                                    </div>
+                                </div>
                                 <div class="row align-items-center justify-content-between">
                                     <div class="col-md-3">
                                         <p class="des  mr-2"><span class="mr-2"><i
@@ -126,10 +138,10 @@
                                     </div>
                                     <div class="col-md-3 mt-3">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                                    class="fa fa-circle"></i></span>Exam Type<span
+                                                    class="fa fa-circle"></i></span>Exam Category<span
                                                 class="text-danger">*</span></p>
                                         <select name="exam_type" id="exam-type" class="form-control">
-                                            <option value="">Select Exam Type</option>
+                                            <option value="">Select Exam Category</option>
                                             <option value="1">MCQ</option>
                                             <option value="2">Descriptive</option>
                                             <option value="3">Mixed(MCQ & Descriptive)</option>

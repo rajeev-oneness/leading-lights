@@ -27,6 +27,15 @@
                                 <input type="file" class="form-control-file" name="addMoreInputFields[0][image1]">
                                 <span class="file_error text-danger"></span>
                             </div>
+                            <div class="form-group">
+                                <label for="marks">Marks<span class="text-danger">*</span></label>
+                                <select id="marks" class="form-control" name="addMoreInputFields[0][marks]">
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
                             <input type="hidden" name="addMoreInputFields[0][question_type]" value="2">
                         </div>
                         <div>

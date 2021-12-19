@@ -35,6 +35,7 @@
                                 <th>Sl. No</th>
                                 <th>Class</th>
                                 <th>Subject</th>
+                                <th>Exam Category</th>
                                 <th>Student Id</th>
                                 <th>Date</th>
                                 <th>Marks</th>
@@ -67,6 +68,16 @@
                                         @endif
                                     </td>
                                     <td>{{ $subject_details->name }}</td>
+                                    <td>
+                                        @if ($exam->exam_type == 1)
+                                            <span>MCQ</span>
+                                        @elseif ($exam->exam_type == 2)
+                                            <span>Descriptive</span>
+                                        @else
+                                            <span>Mixed(MCQ & Desc.)</span>
+                                        @endif
+                                    </td>
+
                                     <td>{{ $user_details->id_no }}</td>
                                     <td>{{ $exam->created_at->format('d-m-Y') }}</td>
                                     <td>

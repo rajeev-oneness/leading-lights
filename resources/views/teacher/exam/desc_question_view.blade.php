@@ -32,24 +32,12 @@
                                         class="img-fluid rounded  mx-auto w-100 mb-3">
                                 </div>
                             @endif
-                            <ol>
-                                @foreach ($question->optionData as $option)
-                                    <li>
-                                        <div class="form-check">
-                                            <input type="radio" class="form-check-input" name="ans{{ $i + 1 }}"
-                                                value="{{ $option->option }}" id="" @if ($option->option === $question->answer)
-                                            checked
-                                @endif>
-                                {{ $option->option }}
-                </div>
-                </li>
-                @endforeach
-                </ol>
-
-                @endforeach
-            @else
-                <h2 class="text-danger">Oops. No data found</h2>
-                @endif
+                            <p class="font-weight-bold">Marks: <span>{{ $question->marks }}</span></p>
+                            <hr>
+                        @endforeach
+                    @else
+                        <h5 class="text-danger">Oops. No data found</h5>
+                    @endif
             </div>
         </div>
     </div>

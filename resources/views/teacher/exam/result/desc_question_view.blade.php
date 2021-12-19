@@ -13,15 +13,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row m-0 dashboard-content-header">
-                <div class="col-md-6">
-                    <ul class="breadcrumb p-0">
-                        <li><a href="{{ route('teacher.studentExamSubmission') }}">Exam List</a></li>
-                        <li class="text-info"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#">Answer Sheet</a></li>
-                    </ul>
-                </div>
-            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item active"><a href="{{ route('teacher.studentExamSubmission') }}">Exam List</a></li>
+                  <li class="breadcrumb-item " aria-current="page">Answer Sheet</li>
+                </ol>
+            </nav>
             <div class="card mb-3">
                 <div class="card-body">
                     {{-- <a href="{{ route('teacher.exam.index') }}" class="btn btn-primary btn-lg"><i class="fa fa-arrow-left"></i> Back</a> --}}
@@ -49,7 +46,7 @@
                                         $right_answer = App\Models\Question::find($exam->question_id)->answer;
                                     @endphp
                                     <p>{{ $right_answer }}</p>
-                                        
+
                                     @endif
                                 @else
                                     <p>No Answer</p>
@@ -57,9 +54,9 @@
 
                             </div>
                             @if (!$exam_result)
-                            
+
                             @if ($exam->answer)
-                                @if ($exam->question_type == 2 || $exam->question_type == null)              
+                                @if ($exam->question_type == 2 || $exam->question_type == null)
                                 <div class="mb-3">
                                     <p><strong>Is it correct answer?</strong></p>
                                     <div class="form-check form-check-inline">

@@ -37,18 +37,18 @@
                                     <div class="form-check">
                                         <input type="radio" class="form-check-input" name="ans{{ $i + 1 }}"
                                             value="{{ $option->option }}" id="" @if ($option->option === $question->answer)
-                                        checked
-                            @endif>
-                            {{ $option->option }}
+                                            checked @endif>
+                                        {{ $option->option }}
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ol>
+                        <p class="font-weight-bold">Marks: <span>{{ $question->marks }}</span></p>
+                         <hr>
+                    @endforeach
                 </div>
-                </li>
-                @endforeach
-                </ol>
-
-                @endforeach
             </div>
         </div>
-    </div>
     @include('teacher.layouts.static_footer')
     </div>
     </div>

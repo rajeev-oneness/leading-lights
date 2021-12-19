@@ -52,6 +52,7 @@
                                     <tr>
                                         <th>Sl no</th>
                                         <th>Subject</th>
+                                        <th>Exam Category</th>
                                         <th>Exam Date</th>
                                         <th>Exam Time</th>
                                         <th>Action</th>
@@ -68,6 +69,16 @@
                                                 $subject_details = App\Models\Subject::find($exam->subject);
                                             @endphp
                                             <td>{{ $subject_details->name }}</td>
+
+                                            <td>
+                                                @if ($exam->exam_type == 1)
+                                                    <span>MCQ</span>
+                                                @elseif ($exam->exam_type == 2)
+                                                    <span>Descriptive</span>
+                                                @else
+                                                    <span>Mixed(MCQ & Desc.)</span>
+                                                @endif
+                                            </td>
                                             <td>{{ $exam->date }}</td>
                                             <td>{{ date('h:i A', strtotime($exam->start_time)) }} <span
                                                     class="text-success">to</span>
@@ -83,7 +94,7 @@
                                                     ->first();
                                                     $today_date = date('Y-m-d');
                                                     $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
-                                                    
+
                                                     $exam_date = $exam->date;
                                                     $start_time = $exam->start_time;
                                                     $end_time = $exam->end_time;
@@ -94,13 +105,14 @@
 
                                                     <a href="{{ route('user.exam.start',$exam->id) }}" class="btn-pill btn btn-primary mb-1">Start Exam</a>
 
-                                                @elseif ($exam_date == $today_date && $current_time < $exam_start_time)
-                                                        <button class="btn-pill btn-transition btn btn-success"><i
-                                                            class="fa fa-dot-circle"> Upcoming</i></button>
                                                     @elseif ($result)
                                                         <button class="btn-pill btn-transition btn btn-success"><i
                                                                 class="fa fa-check"> Submitted</i></button>
-                                                    @elseif($exam_date > $today_date)
+                                                    @elseif ($exam_date == $today_date && $current_time < $exam_start_time)
+                                                        <button class="btn-pill btn-transition btn btn-success"><i
+                                                            class="fa fa-dot-circle"> Upcoming</i></button>
+
+                                                    @elseif($exam_date > $today_date && !$result)
                                                         <button class="btn-pill btn-transition btn btn-success"><i
                                                                 class="fa fa-dot-circle"> Upcoming</i></button>
                                                     @else
@@ -111,10 +123,18 @@
                                             </td>
                                             <td>
                                                 @if ($result && $result->total_marks >= 0 && $total_marks)
-                                                    <span> <span
-                                                            class="text-success">{{ $result['total_marks'] }}</span> /
-                                                        <span
-                                                            class="text-info">{{ $exam->full_marks }}</span></span>
+                                                    <span>
+                                                        @if ($exam->pass_marks <= $result->total_marks)
+                                                            <span class="text-success">{{ $result['total_marks'] }}
+                                                            </span>
+                                                        @else
+                                                            <span class="text-danger">{{ $result['total_marks'] }}
+                                                            </span>
+                                                        @endif
+
+                                                        /
+                                                        <span class="text-info">{{ $exam->full_marks }}</span>
+                                                    </span>
                                                 @else
                                                     <span><span class="text-danger">Not published</span> / <span
                                                             class="text-info">{{ $exam->full_marks }}</span></span>
@@ -203,17 +223,17 @@
                                                         ->first();
                                                         $today_date = date('Y-m-d');
                                                         $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
-                                                        
+
                                                         $exam_date = $exam->date;
                                                         $start_time = $exam->start_time;
                                                         $end_time = $exam->end_time;
                                                         $exam_start_time = date('H:i', strtotime($exam->start_time));
                                                     @endphp
-    
+
                                                     @if (!$result && $exam_date == $today_date && ($current_time >= $exam_start_time && $current_time <= $end_time))
-    
+
                                                         <a href="{{ route('user.exam.start',$exam->id) }}" class="btn-pill btn btn-primary mb-1">Start Exam</a>
-    
+
                                                     @elseif ($exam_date == $today_date && $current_time < $exam_start_time)
                                                             <button class="btn-pill btn-transition btn btn-success"><i
                                                                 class="fa fa-dot-circle"> Upcoming</i></button>
@@ -227,7 +247,7 @@
                                                             <button class="btn-pill btn-transition btn btn-danger"><i
                                                                     class="fa fa-dot-circle"> Expired</i></button>
                                                     @endif
-    
+
                                                 </td>
                                                 <td>
                                                     @if ($result && $result->total_marks >= 0 && $total_marks)

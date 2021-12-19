@@ -44,9 +44,11 @@ class ExamController extends Controller
             'full_marks' => 'required',
             'negative_marks' => 'required',
             'pass_marks' => 'required',
-            'exam_type' => 'required'
-            // 'result_date' => 'required',
+            'exam_type' => 'required',
+            'type_of_exam' => 'required'
             // 'upload_file' => 'required|mimes:pdf'
+        ],[
+           'exam_type.required' => 'Exam category field is required'
         ]);
 
         $exam_start_time = date('H:i', strtotime($request->start_time));
@@ -56,7 +58,7 @@ class ExamController extends Controller
         $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
         $time = new DateTime($request->date . $request->start_time);
         $time->add(new DateInterval('PT' . $minutes_to_add . 'M'));
-        
+
         $new_time = $time->format('H:i');
         // dd($new_time);
         if ($exam_start_time > $exam_end_time) {
@@ -84,7 +86,7 @@ class ExamController extends Controller
         if ($arrange_exam == 0 && $group_arrange_exam == 0) {
             $class = $request->class;
             $after_explode_class = explode('-', $class);
-            
+
             $exam_date = $request->date;
             $result_date = date('Y-m-d', strtotime($exam_date. ' + 15 days'));
 
@@ -107,6 +109,7 @@ class ExamController extends Controller
             $exam->pass_marks = $request->pass_marks;
             $exam->negative_marks = $request->negative_marks;
             $exam->exam_type = $request->exam_type;
+            $exam->type_of_exam = $request->type_of_exam;
             $exam->save();
 
             return redirect()->route('teacher.exam.index')->with('success', 'Exam upload successfully');
@@ -118,29 +121,27 @@ class ExamController extends Controller
     // Add descriptive type question
     public function addQuestion(Request $request){
         // dd($request->all());
+        $current_user_id = Auth::user()->id;
+        $exam_id = $request->exam_id;
         foreach ($request->addMoreInputFields as $key => $input_field) {
-            // dd(count($input_field));
-            // dd($input_field['question'],$input_field['image']);
-            if (count($input_field) == 2) {
+            // Check if any image provide or not
+            // If Exist then it's store otherwise store null value
+            $imageName = null;
+            if (!empty($input_field['image'])) {
                 $image = $input_field['image'];
+                $imageName = imageUpload($image,'question/'.$current_user_id.'/'.$exam_id);
             }
             $req_question = $input_field['question'];
-
-            $current_user_id = Auth::user()->id;
-            $exam_id = $request->exam_id;
-            if(count($input_field) == 2){
-                $imageName = imageUpload($image,'question/'.$current_user_id.'/'.$exam_id);
-            }else{
-                $imageName = null;
-            }
+            $req_marks = $input_field['marks'];
 
             // dd($question,$imageName);
             $question = new Question();
             $question->exam_id = $exam_id;
             $question->question = $req_question;
             $question->image = $imageName;
+            $question->marks = $req_marks;
             $question->save();
-            
+
         }
         return redirect()->back()->with('question_add_success','Question added successfully');
     }
@@ -169,7 +170,7 @@ class ExamController extends Controller
             $req_question = $input_field['question'];
             $req_answer = $input_field['answer'];
             $req_option = $input_field['option'];
-    
+
             //Store question, right answer and image in "questions" table
             $question = new Question();
             $question->question = $req_question;
@@ -177,7 +178,7 @@ class ExamController extends Controller
             $question->image = $imageName;
             $question->answer = $req_answer;
             $question->save();
-    
+
             //Store question id and all options in "question_options" table
             $question_id = $question->id;
             if (count($req_option) > 0) {
@@ -186,7 +187,7 @@ class ExamController extends Controller
                     $options->option = $option;
                     $options->question_id = $question_id;
                     $options->save();
-                }  
+                }
             }
 
         }
@@ -222,7 +223,8 @@ class ExamController extends Controller
                 $req_question = $input_field['question2'];
                 $req_answer = $input_field['answer'];
                 $req_option = $input_field['option'];
-        
+
+
                 //Store question, right answer, question_type and image in "questions" table
                 $question = new Question();
                 $question->question = $req_question;
@@ -231,7 +233,7 @@ class ExamController extends Controller
                 $question->image = $imageName;
                 $question->answer = $req_answer;
                 $question->save();
-        
+
                 //Store question id and all options in "question_options" table
                 $question_id = $question->id;
                 if (count($req_option) > 0) {
@@ -240,7 +242,7 @@ class ExamController extends Controller
                         $options->option = $option;
                         $options->question_id = $question_id;
                         $options->save();
-                    }  
+                    }
                 }
             }
 
@@ -255,6 +257,7 @@ class ExamController extends Controller
                         $imageName = imageUpload($image,'question/'.$current_user_id.'/'.$exam_id);
                     }
                     $req_question = $input_field['question1'];
+                    $req_marks = $input_field['marks'];
 
                     $current_user_id = Auth::user()->id;
                     $exam_id = $request->exam_id;
@@ -263,11 +266,12 @@ class ExamController extends Controller
                     $question->question = $req_question;
                     $question->question_type = $req_question_type;
                     $question->image = $imageName;
+                    $question->marks = $req_marks;
                     $question->save();
             }
         }
         return redirect()->back()->with('question_add_success','Question added successfully');
-    
+
     }
 
     // View Mixed type question
@@ -301,7 +305,7 @@ class ExamController extends Controller
             ->orderBy('results.created_at', 'DESC')
             ->get();
             // dd($submitted_exams_detail);
-            
+
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['student_wise_result'])) {
@@ -432,12 +436,12 @@ class ExamController extends Controller
                                 $no_ans++;
                             }
                         }
-                        
-                    // } 
+
+                    // }
                 }
             }
 
-            // Calculation of total marks for Descriptive question 
+            // Calculation of total marks for Descriptive question
             // if ($exam_details->exam_type == 1) {
                 if ($yes_ans > 0) {
                     $total_marks = $yes_ans * 2;
@@ -480,7 +484,7 @@ class ExamController extends Controller
             ->first();
             // dd($data['exam_details']);
             // dd($data['exam_result']);
-            return view('teacher.exam.result.desc_question_view')->with($data);   
+            return view('teacher.exam.result.desc_question_view')->with($data);
         }
     }
 }

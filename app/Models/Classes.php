@@ -20,7 +20,7 @@ class Classes extends Model
         return $this->hasOne(SpecialCourse::class);
     }
 
-    public function exam_details()
+    public function exam()
     {
         return $this->hasMany(ArrangeExam::class);
     }
