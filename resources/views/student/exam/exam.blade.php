@@ -297,7 +297,7 @@
 
         // Confirmation before submit an exam
         $('#btn_submit').on('click',function() {
-            event.preventDefault();
+            event.preventDefault(); 
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: 'btn btn-success',

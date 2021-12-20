@@ -22,7 +22,8 @@
                             class="fa fa-download mr-2"></i>Report Card</a>
                 </div>
             </div>
-            <h5>Regular Exam</h5>
+            <h5>Leading Lights School
+            </h5>
             <div class="tabs-animation">
                 <div class="card mb-3">
                     @if (session('regular_exam_upload_success'))
@@ -141,15 +142,15 @@
                                                 @endif
                                             </td>
                                             <td>{{ $exam->result_date }}</td>
-                                            <td>
-                                                {{-- @if ($already_upload && $already_upload->comment)
+                                            {{-- <td>
+                                                @if ($already_upload && $already_upload->comment)
                                                     <span data-toggle="tooltip" data-placement="top"
                                                         title="{{ $already_upload->comment }}">{{ \Illuminate\Support\Str::limit($already_upload->comment, 15) }}</span>
                                                 @else
                                                     <span>N/A</span>
-                                                @endif --}}
+                                                @endif
 
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -159,7 +160,8 @@
                 </div>
 
             </div>
-            <h5>Group Wise Exam</h5>
+            <h5>Leading Lights Coaching
+            </h5>
             <div class="tabs-animation">
                 <div class="card mb-3">
                     @if (session('regular_exam_upload_success'))
@@ -280,13 +282,13 @@
 
             </div>
 
+            @include('teacher.layouts.static_footer')
         </div>
-        @include('teacher.layouts.static_footer')
     </div>
     <script>
         $(document).ready(function() {
             $('#exam_table').DataTable();
-            // $('#exam_table1').DataTable();
+            $('#exam_table1').DataTable();
         });
         // $(document).on('change', 'input[name^="upload_doc"]', function(ev) {
         //     let exam_id = ev.target.id;
