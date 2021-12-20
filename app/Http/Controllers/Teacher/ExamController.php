@@ -112,7 +112,7 @@ class ExamController extends Controller
             $exam->type_of_exam = $request->type_of_exam;
             $exam->save();
 
-            return redirect()->route('teacher.exam.index')->with('success', 'Exam upload successfully');
+            return redirect()->route('teacher.exam.index')->with('success', 'Exam upload successfully.You can now add questions.');
         } else {
             return redirect()->back()->with('error', 'Exam already schedule this time')->withInput();;
         }

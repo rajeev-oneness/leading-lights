@@ -212,7 +212,7 @@
                                             id="file_err">{{ $errors->first('upload_file') }}</span>
                                     @endif
                                 </div> --}}
-                                <button class="btn-pill btn btn-dark mt-4">Assign Now</button>
+                                <button class="btn-pill btn btn-dark mt-4">Create Exam</button>
                             </form>
                         </div>
                     </div>
@@ -250,7 +250,7 @@
         setTimeout(() => {
             $('.alert-success').css('display', 'none');
             $('.alert-warning').css('display', 'none');
-        }, 4000);
+        }, 10000);
         $(document).ready(function() {
             $('#exam_table').DataTable();
         });
