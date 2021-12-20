@@ -36,6 +36,7 @@
                                         class="img-fluid rounded  mx-auto w-100 mb-3">
                                 </div>
                             @endif
+                            <p class="font-weight-bold">Mraks: {{ $exam->marks }}</p>
                             <div>
                                 @if ($exam->answer)
                                     <label for=""><strong>Answers</strong></label>
@@ -53,32 +54,66 @@
                                 @endif
 
                             </div>
+                            @if ($exam_type == 2 || ($exam_type == 3 && $exam->question_type == 2))
+                                <p class="font-weight-bold">
+                                    Teacher marks: <span>{{ $exam->answer_marks }}</span>
+                                </p>
+                            @endif
+
                             @if (!$exam_result)
 
                             @if ($exam->answer)
                                 @if ($exam->question_type == 2 || $exam->question_type == null)
-                                <div class="mb-3">
-                                    <p><strong>Is it correct answer?</strong></p>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="answer{{ $i + 1 }}"
-                                            id="flexRadioDefault1" value="1">
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                            Yes
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="answer{{ $i + 1 }}"
-                                            id="flexRadioDefault2" value="0">
-                                        <label class="form-check-label" for="flexRadioDefault2">
-                                            No
-                                        </label>
-                                    </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                   <div class="form-group">
+                                       <label for="given_answer">Answer marks</label>
+                                       @if ($exam->marks == "2")
+                                            <select name="answer{{ $i + 1 }}" id="" class="form-control">
+                                                <option value="0">0</option>
+                                                <option value="0.5">0.5</option>
+                                                <option value="1">1</option>
+                                                <option value="1.5">1.5</option>
+                                                <option value="2">2</option>
+                                            </select>
+                                       @endif
+                                       @if ($exam->marks == "3")
+                                            <select name="answer{{ $i + 1 }}" id="" class="form-control">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                       @endif
+                                       @if ($exam->marks == "4")
+                                            <select name="answer{{ $i + 1 }}" id="" class="form-control">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                            </select>
+                                       @endif
+                                       @if ($exam->marks == "5")
+                                            <select name="answer{{ $i + 1 }}" id="" class="form-control">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                            </select>
+                                       @endif
+                                   </div>
                                 </div>
+                            </div>
                                 @endif
                             @endif
                             @endif
                             @if ($exam_type == 3)
                             <input type="hidden" name="question_type[]" value="{{ $exam->question_type }}">
+                            @elseif ($exam_type == 2)
+                            <input type="hidden" name="question_type[]" value="">
                             @endif
                             <hr>
                         @endforeach

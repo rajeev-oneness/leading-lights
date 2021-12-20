@@ -7,6 +7,7 @@ use App\Models\ArrangeExam;
 use App\Models\Exam;
 use App\Models\Question;
 use App\Models\Result;
+use App\Models\TempExam;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -157,6 +158,34 @@ class ExamController extends Controller
             }
             $result->save();
             return redirect()->route('user.exam.index')->with('Success', 'Thank you :)');
+        }
+    }
+
+    /*
+        For descriptive type question student can save answer
+        The answer store in  "temp_exam" table for tempory purpose
+    */
+    public function answer_save(Request $request)
+    {
+        if ($request->ajax()) {
+            $current_user_id = Auth::user()->id;
+            $question_id = $request->question_id;
+            $answer = $request->answer;
+
+            $already_answerd = TempExam::where('user_id',$current_user_id)->where('question_id',$question_id)->first();
+
+            if (!$already_answerd) {
+                $temp_exam = new TempExam();
+                $temp_exam->user_id = $current_user_id;
+                $temp_exam->question_id = $question_id;
+                $temp_exam->answer = $answer;
+                $temp_exam->save();
+            }else{
+                $already_answerd->answer = $answer;
+                $already_answerd->save();
+            }
+
+            return response()->json('success');
         }
     }
 }

@@ -412,8 +412,6 @@ class ExamController extends Controller
             // dd($request->all());
             // dd($request->index);
             $current_user_id = Auth::user()->id;
-            $yes_ans = 0;
-            $no_ans = 0;
             $total_marks = 0;
             $data = $request->all();
             $exam_details = ArrangeExam::find($request->exam_id);
@@ -423,30 +421,18 @@ class ExamController extends Controller
                 if (isset($data['question_id' . $i])) {
                     // $exam = new Exam();
 
-                    $question = Question::where('id', $data['question_id' . $i])->first();
+                    $student_answer = Exam::where('question_id', $data['question_id' . $i])->first();
 
-                    // For MCQ Question
-                    // It's calculate right and wrong answer
-                    // if ($exam_details->exam_type == 1) {
-                        if ($data['question_type'][($i-1)] == 2 || $data['question_type'][($i-1)] == null) {
-                            if ($data['answer' . $i] == 1) {
-                                $yes_ans++;
-                            }
-                            if ($data['answer' . $i] == 0) {
-                                $no_ans++;
-                            }
-                        }
-
-                    // }
+                    /* For desc question
+                     It's claculate total marks frm the teacher given marks */
+                    if ($data['question_type'][($i-1)] == 2 || $data['question_type'][($i-1)] == null) {
+                            $total_marks = $total_marks + $data['answer' . $i];
+                            $student_answer->answer_marks = $data['answer' . $i];
+                            $student_answer->save();
+                    }
                 }
             }
 
-            // Calculation of total marks for Descriptive question
-            // if ($exam_details->exam_type == 1) {
-                if ($yes_ans > 0) {
-                    $total_marks = $yes_ans * 2;
-                }
-            // }
 
             // dd($yes_ans,$no_ans);
             // Save result details
@@ -460,11 +446,7 @@ class ExamController extends Controller
             if ($exam_details->exam_type == 3) {
                 $total_marks = $total_marks + $result->temp_marks;
             }
-            // if ($exam_details->exam_type == 1) {
-                $result->yes_ans = $yes_ans;
-                $result->no_ans = $no_ans;
-                $result->total_marks = $total_marks;
-            // }
+            $result->total_marks = $total_marks;
             // dd($total_marks);
             $result->save();
 

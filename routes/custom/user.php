@@ -25,6 +25,7 @@ Route::group(['middleware' => ['payment.confirm']], function () {
         // Exam
         Route::get('exam', [ExamController::class, 'index'])->name('exam.index');
         Route::any('exam/start/{id}', [ExamController::class, 'exam'])->name('exam.start');
+        Route::post('exam/answer_save', [ExamController::class, 'answer_save'])->name('exam.start.ans.save');
 
         Route::post('upload-task', [UserController::class, 'upload_homework'])->name('upload_homework');
         Route::post('class-attendance', [UserController::class, 'class_attendance'])->name('class_attendance');

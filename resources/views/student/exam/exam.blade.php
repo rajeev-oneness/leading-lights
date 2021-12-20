@@ -54,6 +54,8 @@
                                         <input type="hidden" name="question_id{{ $key + 1 }}"
                                             value="{{ $question->id }}">
                                         <input type="hidden" name="answer{{ $key + 1 }}" value="">
+
+
                                         <h5>{{ $key + 1 }}. {{ $question->question }}</h5>
                                         @if ($question->image)
                                             <div class="pdf-box"
@@ -79,16 +81,39 @@
                                                 @endforeach
                                             </ol>
                                         @elseif ($exam->exam_type == 2)
-                                            <div class="form-group">
-                                                <label for="answer"><b>Answer: </b></label>
-                                                <textarea name="answer{{ $key + 1 }}" id="" cols="3" rows="3" class="form-control" id="answer"></textarea>
+                                        <div class="row">
+                                            @php
+                                                $stored_answer = App\Models\TempExam::where('question_id',$question->id)->where('user_id',Auth::user()->id)->first();
+                                            @endphp
+                                            <div class="col-md-10">
+                                                <div class="form-group">
+                                                    <label for="answer"><b>Answer: </b></label>
+                                                    @if ($stored_answer)
+                                                        <textarea name="answer{{ $key + 1 }}"  cols="3" rows="3" class="form-control" id="answer{{ $key + 1 }}">{{ $stored_answer->answer }}</textarea>
+                                                    @else
+                                                      <textarea name="answer{{ $key + 1 }}"  cols="3" rows="3" class="form-control" id="answer{{ $key + 1 }}"></textarea>
+                                                    @endif
+
+                                                </div>
                                             </div>
+                                            <div class="col-md-2">
+                                                <button type="submit" class="btn btn-primary" id="save_ans" value="save_ans" name="save_ans" onclick="saveAnswer({{ $exam->id }},{{ $question->id }},{{ $key + 1}})"><i class="fa fa-save"></i> Save</button>
+                                            </div>
+                                        </div>
                                         @endif
                                         @if ($exam->exam_type == 3 && $question->question_type == 2)
-                                        <div class="form-group">
-                                            <label for="answer"><b>Answer: </b></label>
-                                            <textarea name="answer{{ $key + 1 }}" id="" cols="3" rows="3" class="form-control" id="answer"></textarea>
-                                        </div>
+                                            <div class="row">
+                                                <div class="col-md-10">
+                                                    <div class="form-group">
+                                                        <label for="answer"><b>Answer: </b></label>
+                                                        <textarea name="answer{{ $key + 1 }}" id="" cols="3" rows="3" class="form-control" id="answer"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="submit"><i class="fa fa-save"></i> Save</button>
+                                                </div>
+                                            </div>
+
                                         @endif
                                         <input type="hidden" name="question_type[]" value="{{ $question->question_type }}">
                                         <p class="font-weight-bold">Marks: <span>{{ $question->marks }}</span></p>
@@ -98,8 +123,8 @@
                                     <input type="hidden" name="exam_id" value="{{ $exam->id }}">
                                     <input type="hidden" name="is_user_submitted" value="0" id="is_user_submitted">
 
-                                    <input type="submit" value="Submit" class="btn btn-primary btn-lg"
-                                    id="btn_submit">
+                                    <input type="submit" value="submit" class="btn btn-primary btn-lg"
+                                    id="btn_submit" name="btn_submit">
                                 </form>
                             @else
                                 <h2 class="text-danger">Oops. No data found</h2>
@@ -124,7 +149,6 @@
             var x = setInterval(function() {
                 var now = new Date().getTime();
                 var distance = countDownDate - now;
-                console.log(distance);
 
                 var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -222,6 +246,55 @@
             })
         }
 
+        // Save ans
+        function saveAnswer(exam_id,question_id,index) {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "To save your answer!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, SAVE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var answer = document.getElementById('answer'+index).value;
+                    $.ajax({
+                        url: "{{ route('user.exam.start.ans.save') }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            answer: answer,
+                            exam_id: exam_id,
+                            question_id : question_id
+                        },
+                        dataType: 'json',
+                        type: 'post',
+                        success: function(response) {
+                            location.reload();
+                        }
+                    });
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'You can continue your exam :)',
+                        'error'
+                    )
+                }
+            })
+        }
+
         // Confirmation before submit an exam
         $('#btn_submit').on('click',function() {
             event.preventDefault();
@@ -235,7 +308,7 @@
 
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
-                text: "To submit your answer sheett!",
+                text: "To submit your answer sheet!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, SUBMIT it!',
