@@ -85,6 +85,7 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
+        dd($request->all());
         $this->validator($request->all())->validate();
         event(new Registered($user = $this->create($request->all())));
         return redirect()->route('login')->with('success', 'Your registration is successful, waiting for admin approval');
@@ -175,7 +176,7 @@ class RegisterController extends Controller
             if (count($feedata) > 0) {
                 DB::table('fees')->insert($feedata);
             }
-            //Store certificate 
+            //Store certificate
             $certificate_image =  imageUpload($data['certificate'], 'student_certificate');
             $certificate = new Certificate();
             $certificate->user_id = $user->id;
@@ -278,7 +279,7 @@ class RegisterController extends Controller
             // dd($noti);
 
 
-            //Store certificate 
+            //Store certificate
             $file_name =  imageUpload($request->certificate, 'teacher_certificate');
             $certificate = new Certificate();
             $certificate->image = $file_name;
@@ -367,7 +368,7 @@ class RegisterController extends Controller
             $user_id = $user->id;
             createNotification($user_id, 0, 0, 'user_registration');
 
-            //Store certificate 
+            //Store certificate
             $file_name =  imageUpload($request->certificate, 'hr_certificate');
             $certificate = new Certificate();
             $certificate->image = $file_name;

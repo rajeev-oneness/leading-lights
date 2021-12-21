@@ -66,9 +66,9 @@
                                                     id="country_code">
                                                     <?php if($phonecodes){?>
                                                     <?php foreach($phonecodes as $code){?>
-                                                    <option value="+{{ $code->phonecode }}"
+                                                    <option value="{{ $code->phonecode }}"
                                                         {{ old('country_code') == $code->phonecode ? 'selected' : '' }}>
-                                                        +{{ $code->phonecode }}</option>
+                                                        {{ $code->phonecode }}</option>
                                                     <?php } } ?>
                                                 </select>
                                                 <div class="error" style="color : red;">Please Fill This field.
@@ -115,25 +115,26 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="form-row wh_class">
+                                <div class="form-row wh_class" id="first_block">
                                     <small class="col-12 p-0 mb-2"><b>Which Class You are Applying For</b><span class="text-danger">*</span></small>
                                     <div class="form-group col-sm-12">
-                                        <select name="class" class="form-control">
-                                            <option value="" selected disabled>Select Class</option>
+                                        <select name="class" class="form-control" id="class_wise">
+                                            <option value="" selected>Select Class</option>
                                             @foreach ($classes as $class)
                                                 <option value="{{ $class->id }}" @if (old('class') == $class->name)
                                                     selected
                                             @endif>{{ $class->name }}</option>
                                             @endforeach
                                         </select>
+                                        <div class="error" style="color : red;">Please Fill This field.</div>
                                     </div>
-                                    
+
                                 </div>
-                                <div class="form-row wh_class actv_bg">
+                                <div class="form-row wh_class" id="second_block">
                                     <small class="col-12 p-0 mb-2"><b>Which Course You are Applying For</b> <span class="text-danger">*</span></small>
                                     <div class="form-group col-sm-6">
                                         <!--<label for="">Class<span class="text-danger">*</span></label>-->
-                                        <select name="class" class="form-control" id="class">
+                                        <select name="class" class="form-control" id="class_wise_combo">
                                             <option value="">Select Class</option>
                                             @foreach ($classes as $class)
                                                 <option value="{{ $class->id }}" @if (old('class') == $class->name)
@@ -148,7 +149,7 @@
                                     </div>
                                     <div class="form-group col-sm-6">
                                         {{-- <select  class="form-control" name="course_id" id="choices-multiple-remove-button" multiple name="course_id[]" class="course_id">
-                                      
+
                                     </select> --}}
                                         <select class="special_course_ids form-control" name="special_course_ids[]"
                                             multiple="multiple" id="special_course_ids">
@@ -157,8 +158,9 @@
                                                 <option value="{{ $course->id }}">{{ $course->title }}</option>
                                             @endforeach
                                         </select>
+                                        <div class="error" style="color : red;" id="special_course_id_err">Please Fill This field.</div>
                                     </div>
-                                    
+
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
@@ -222,9 +224,11 @@
                 gender = $('[name="gender"]').val(),
                 dob = $('[name="dob"]').val(),
                 class_id = $('[name="class"]').val(),
+                class_wise = $('#class_wise').val(),
+                class_wise_combo = $('#class_wise_combo').val(),
+                special_course_ids = $('#special_course_ids').val(),
                 image = $('[name="image"]').val(),
                 certificate = $('[name="certificate"]').val();
-
             if (!first_name) {
                 $('[name="first_name"]').next('.error').fadeIn(100);
                 errorFlagOne = 1;
@@ -279,12 +283,40 @@
             } else {
                 $('[name="dob"]').next('.error').fadeOut(100);
             }
-            if (!class_id) {
-                $('[name="class"]').next('.error').fadeIn(100);
+            if (class_wise) {
+                $('#class_wise_combo').next('.error').fadeOut(100);
+                $('#class_wise').next('.error').fadeOut(100);
+
+            } else {
+                if (class_wise_combo) {
+                    $('#class_wise').next('.error').fadeOut(100);
+
+                }else{
+                    $('#class_wise').next('.error').fadeIn(100);
+                    errorFlagOne = 1;
+                }
+
+            }
+            if (class_wise_combo) {
+                $('#class_wise_combo').next('.error').fadeOut(100);
+                $('#class_wise').next('.error').fadeOut(100);
+
+            } else {
+                if (class_wise) {
+                    $('#class_wise_combo').next('.error').fadeOut(100);
+                }else{
+                    $('#class_wise_combo').next('.error').fadeIn(100);
+                    errorFlagOne = 1;
+                }
+
+            }
+            if (class_wise_combo && special_course_ids.length == 0) {
+                $('#special_course_id_err').fadeIn(100);
                 errorFlagOne = 1;
             } else {
-                $('[name="class"]').next('.error').fadeOut(100);
+                $('#special_course_id_err').fadeOut(100);
             }
+
             if (!image) {
                 $('[name="image"]').next('.error').fadeIn(100);
                 errorFlagOne = 1;
@@ -390,8 +422,8 @@
             }
         }
 
-        $('#class').on('change', function() {
-            let class_id = $('#class').val();
+        $('#class_wise_combo').on('change', function() {
+            let class_id = $('#class_wise_combo').val();
             $.ajax({
                 url: "{{ route('getCourseByClass') }}",
                 data: {
@@ -424,5 +456,30 @@
             endDate: new Date(),
             // daysOfWeekDisabled: [0]
         });
+
+        $('#class_wise').on('change',function() {
+            if ($('#class_wise').val() != "") {
+                $('#class_wise_combo').prop('disabled', true);
+                $('#special_course_ids').prop('disabled', true);
+                $('#first_block').addClass("actv_bg");
+                $('#second_block').removeClass("actv_bg");
+            }else{
+                $('#class_wise_combo').prop('disabled', false);
+                $('#special_course_ids').prop('disabled', false);
+                $('#first_block').removeClass("actv_bg");
+                $('#second_block').removeClass("actv_bg");
+            }
+        })
+        $('#class_wise_combo').on('change',function() {
+            if ($('#class_wise_combo').val() != "") {
+                $('#class_wise').prop('disabled', true);
+                $('#first_block').removeClass("actv_bg");
+                $('#second_block').addClass("actv_bg");
+            }else{
+                $('#class_wise').prop('disabled', false);
+                $('#first_block').removeClass("actv_bg");
+                $('#second_block').removeClass("actv_bg");
+            }
+        })
     </script>
 @endsection

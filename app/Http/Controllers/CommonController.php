@@ -27,8 +27,8 @@ class CommonController extends Controller
         return response()->json(array(
             'msg' 	    => $message,
             'result'	=> $res
-        )); 
-    } 
+        ));
+    }
     public function getCourseByClass(Request $request){
         $course_details = SpecialCourse::where('class_id',$request->class_id)->get();
         if ($course_details) {
@@ -41,8 +41,8 @@ class CommonController extends Controller
         return response()->json(array(
             'msg' 	    => $message,
             'result'	=> $res
-        )); 
-    } 
+        ));
+    }
 
     public function getStudentByClass(Request $request){
         $class = $request->class_id;
@@ -66,7 +66,7 @@ class CommonController extends Controller
         }
         return response()->json(array(
             'msg' 	    => $message
-        )); 
+        ));
 
     }
 }
