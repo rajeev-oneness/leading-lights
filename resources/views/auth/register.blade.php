@@ -291,7 +291,12 @@
                 if (class_wise_combo) {
                     $('#class_wise').next('.error').fadeOut(100);
 
-                }else{
+                }
+                else if (special_course_ids.length > 0) {
+                    $('#class_wise_combo').next('.error').fadeOut(100);
+                    $('#class_wise').next('.error').fadeOut(100);
+                }
+                else{
                     $('#class_wise').next('.error').fadeIn(100);
                     errorFlagOne = 1;
                 }
@@ -304,7 +309,12 @@
             } else {
                 if (class_wise) {
                     $('#class_wise_combo').next('.error').fadeOut(100);
-                }else{
+                }
+                else if (special_course_ids.length > 0) {
+                    $('#class_wise_combo').next('.error').fadeOut(100);
+                    $('#class_wise').next('.error').fadeOut(100);
+                }
+                else{
                     $('#class_wise_combo').next('.error').fadeIn(100);
                     errorFlagOne = 1;
                 }
@@ -316,6 +326,7 @@
             } else {
                 $('#special_course_id_err').fadeOut(100);
             }
+
 
             if (!image) {
                 $('#img_err').fadeIn(100);

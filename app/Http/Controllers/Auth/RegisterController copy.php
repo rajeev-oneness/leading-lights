@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Admin\Notification;
 use App\Models\Certificate, App\Models\Fee;
 use App\Models\OtherPaymentDetails;
-use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Notification as FacadesNotification;
 
@@ -77,7 +76,7 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'dob' => ['required', 'date'],
             'gender' => ['required'],
-            // 'class' => ['required'],
+            'class' => ['required'],
             'image' => 'required| mimes:png,jpg,jpeg',
             'mobile' => ['required'],
             'certificate' => ['required', 'mimes:pdf']
@@ -86,7 +85,6 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        // dd($request->all());
         $this->validator($request->all())->validate();
         event(new Registered($user = $this->create($request->all())));
         return redirect()->route('login')->with('success', 'Your registration is successful, waiting for admin approval');
@@ -144,66 +142,36 @@ class RegisterController extends Controller
 
             // Fee generate
             $feedata = [];
-            if($user->class > 0){
-                if (!empty($data['special_course_ids']) && count($data['special_course_ids']) > 0){
-                    foreach ($data['special_course_ids'] as $key => $course) {
-                        $s_course = SpecialCourse::where('id', $course)->first();
-                        $course_start_date = $s_course->start_date;
-                        if ($s_course) {
-                            $next_date = date('Y-m-d',strtotime($course_start_date.'first day of +1 month'));
-                            $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
-                            $feedata[] = [
-                                'user_id' => $user->id,
-                                'class_id' => 0,
-                                'course_id' => $s_course->id,
-                                'fee_type' => 'course_fee',
-                                'due_date' => $next_due_date,
-                                'payment_month' => date('F'),
-                                'amount' => $s_course->monthly_fees,
-                            ];
-                        }
-                    }
-                }
-                if (empty($data['special_course_ids'])){
-                    $check_class = Classes::where('id', $user->class)->first();
-                    if ($check_class) {
-                        $next_date = date('Y-m-d',strtotime('first day of +2 month'));
-                        $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+            if (!empty($data['special_course_ids']) && count($data['special_course_ids']) > 0) {
+                foreach ($data['special_course_ids'] as $key => $course) {
+                    $s_course = SpecialCourse::where('id', $course)->first();
+                    if ($s_course) {
                         $feedata[] = [
                             'user_id' => $user->id,
-                            'class_id' => $check_class->id,
-                            'course_id' => 0,
-                            'fee_type' => 'admission_fee',
-                            'due_date' => $next_due_date,
-                            'payment_month' => date('F'),
-                            'amount' => $check_class->monthly_fees + $check_class->admission_fees,
+                            'class_id' => 0,
+                            'course_id' => $s_course->id,
+                            'fee_type' => 'course_fee',
+                            'due_date' => date('Y-m-d', strtotime('+1 day')),
+                            'payment_month' => date('F', strtotime('+1 day')),
+                            'amount' => $s_course->monthly_fees,
                         ];
                     }
                 }
             }
-            if ($user->class == 0) {
-                if (!empty($data['special_course_ids']) && count($data['special_course_ids']) > 0) {
-                    foreach ($data['special_course_ids'] as $key => $course) {
-                        $s_course = SpecialCourse::where('id', $course)->first();
-                        $course_start_date = $s_course->start_date;
-                        if ($s_course) {
-                            $next_date = date('Y-m-d',strtotime($course_start_date.'first day of +1 month'));
-                            $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
-                            $feedata[] = [
-                                'user_id' => $user->id,
-                                'class_id' => 0,
-                                'course_id' => $s_course->id,
-                                'fee_type' => 'course_fee',
-                                'due_date' => $next_due_date,
-                                'payment_month' => date('F'),
-                                'amount' => $s_course->monthly_fees,
-                            ];
-                        }
-                    }
+            if ($user->class > 0) {
+                $check_class = Classes::where('id', $user->class)->first();
+                if ($check_class) {
+                    $feedata[] = [
+                        'user_id' => $user->id,
+                        'class_id' => $check_class->id,
+                        'course_id' => 0,
+                        'fee_type' => 'admission_fee',
+                        'due_date' => date('Y-m-d', strtotime('+1 day')),
+                        'payment_month' => date('F', strtotime('+1 day')),
+                        'amount' => $check_class->monthly_fees + $check_class->admission_fees,
+                    ];
                 }
-
             }
-
             if (count($feedata) > 0) {
                 DB::table('fees')->insert($feedata);
             }
@@ -224,7 +192,7 @@ class RegisterController extends Controller
                 'id_no' => $id_no,
                 'user_type' => 'student'
             );
-            // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+            FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
             DB::commit();
             return $user;
         } catch (Exception $e) {

@@ -40,9 +40,8 @@
                                                         case 'course_fee' : $feeType = 'Course Fee';break;
                                                         case 'class_fee' : $feeType = 'Class Fee';break;
                                                     }
-                                                    // echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
+                                                    echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
                                                 @endphp
-                                                <span>{{ $feeType }} <span class="badge badge-info">{{ getNameofClassOrCourse($duePayment) }}</span></span>
                                             </td>
                                             <td>{{date('M d, Y',strtotime($duePayment->due_date))}}</td>
                                             <td>{{$duePayment->amount}}</td>
@@ -56,7 +55,7 @@
                                                             data-name="Leading Lights"
                                                             data-description=""
                                                             data-image="{{ asset('img/logo.jpg') }}"
-                                                            data-theme.color="#F0FFF0">
+                                                            data-theme.color="#ff7529">
                                                     </script>
                                                 </form>
                                             </td>
@@ -95,9 +94,8 @@
                                                         case 'course_fee' : $feeType = 'Course Fee';break;
                                                         case 'class_fee' : $feeType = 'Class Fee';break;
                                                     }
-                                                    // echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
+                                                    echo $feeType;
                                                 @endphp
-                                                <span>{{ $feeType }} <span class="badge badge-info">{{ getNameofClassOrCourse($duePayment) }}</span></span>
                                             </td>
                                             <td>&#x20B9;{{$successPayment->amount}}</td>
                                             <td>

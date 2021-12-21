@@ -183,7 +183,7 @@ class StudentController extends Controller
             $user->status = 1;
             $user->rejected = 0;
             $user->save();
-            Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
+            // Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
             return response()->json(['success' => true, 'data' => 'activated']);
         }
     }
@@ -218,6 +218,6 @@ class StudentController extends Controller
             $user->save();
             Notification::route('mail', $user->email)->notify(new AccountActivationMail($user));
             return response()->json(['success' => true,'data' => 'inactivated']);
-        } 
+        }
     }
 }

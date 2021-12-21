@@ -164,20 +164,16 @@
                                     </div>
                                     <div class="col-md-5">
                                         <?php
-                                        
+
                                         $special_course_ids = explode(',', $student->special_course_ids);
                                         foreach ($special_course_ids as $course_id) {
                                             $course_details[] = App\Models\SpecialCourse::find($course_id);
                                         }
                                         ?>
                                         @if ($student->special_course_ids !== null)
-                                            <div class="student-list border-info">
-                                                <ol>
-                                                    @foreach ($course_details as $course)
-                                                        <li>{{ $course->title }}</li>
-                                                    @endforeach
-                                                </ol>
-                                            </div>
+                                            @foreach ($course_details as $course)
+                                                <span class="badge badge-primary mb-2">{{ $course->title }}</span>
+                                            @endforeach
                                         @else
                                             N/A
                                         @endif

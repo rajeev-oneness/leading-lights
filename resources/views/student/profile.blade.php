@@ -62,7 +62,7 @@
                                     if ($student->class) {
                                         $class_details = App\Models\Classes::find($student->class);
                                     }
-                                    
+
                                     ?>
                                     <p>{{ $class_details->name ? $class_details->name : 'N/A' }}</p>
                                 </div>
@@ -76,20 +76,16 @@
                                 </div>
                                 <div class="col-md-6">
                                     <?php
-                                    
+
                                     $special_course_ids = explode(',', $student->special_course_ids);
                                     foreach ($special_course_ids as $course_id) {
                                         $course_details[] = App\Models\SpecialCourse::find($course_id);
                                     }
                                     ?>
                                     @if ($student->special_course_ids !== null)
-                                        <div class="student-list border-info">
-                                            <ol>
-                                                @foreach ($course_details as $course)
-                                                    <li>{{ $course->title }}</li>
-                                                @endforeach
-                                            </ol>
-                                        </div>
+                                        @foreach ($course_details as $course)
+                                            <span class="badge badge-primary mb-2">{{ $course->title }}</span>
+                                        @endforeach
                                     @else
                                         N/A
                                     @endif
@@ -306,9 +302,9 @@
                                         <div class="card-shadow-primary profile-responsive card-border mb-3 card">
                                             <div class="dropdown-menu-header">
                                                 <div class="dropdown-menu-header-inner">
-                                                    
+
                                                         <img src="assets/images/pro3.png" class="img-fluid mx-auto d-block w-100">
-                                                    
+
                                                 </div>
                                             </div>
                                             <ul class="list-group list-group-flush">
@@ -320,19 +316,19 @@
                                                                     <span class="head">Live Class</span>
                                                                 </div>
                                                             </div>
-                                                            
+
                                                             <div class="widget-content-left d-sm-flex align-items-center">
                                                                 <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
                                                                 <div class="widget-subheading">
-                                                                    
+
                                                                         Today<br/><span class="text">7:30 pm</span>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </li>                                   
+                                                </li>
                                             </ul>
-                                        </div>                            
+                                        </div>
                                     </div> -->
                                     </div>
                                 </div>
