@@ -169,7 +169,7 @@
                                         <input type="file" class="form-control upload_btn" name="image"
                                             value="{{ old('image') }}">
                                             <small><b>(png, jpg, jpeg only)</b></small>
-                                        <div class="error" style="color : red;">Please Fill This field.</div>
+                                        <div class="error" style="color : red;" id="img_err">Please Fill This field.</div>
                                         @error('image')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -181,7 +181,7 @@
                                         <input type="file" class="form-control upload_btn" name="certificate"
                                             value="{{ old('certificate') }}">
                                             <small><b>(pdf only)</b></small>
-                                        <div class="error" style="color : red;">Please Fill This field.</div>
+                                        <div class="error" style="color : red;" id="doc_err">Please Fill This field.</div>
                                         @error('certificate')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -318,29 +318,29 @@
             }
 
             if (!image) {
-                $('[name="image"]').next('.error').fadeIn(100);
+                $('#img_err').fadeIn(100);
                 errorFlagOne = 1;
             } else {
-                $('[name="image"]').next('.error').fadeOut(100);
+                $('#img_err').fadeOut(100);
             }
 
             var allowedImageExtensions = /(\.jpg|\.jpeg|\.png)$/i;
             if (!allowedImageExtensions.exec(image) && image != '') {
-                $('[name="image"]').next('.error').html(
+                $('#img_err').html(
                     'Please upload file having jpg,jpeg and png extensions').fadeIn(100);
                 errorFlagOne = 1;
             }
 
             if (!certificate) {
-                $('[name="certificate"]').next('.error').fadeIn(100);
+                $('#doc_err').fadeIn(100);
                 errorFlagOne = 1;
             } else {
-                $('[name="certificate"]').next('.error').fadeOut(100);
+                $('#doc_err').fadeOut(100);
             }
 
             var allowedExtensions = /(\.pdf)$/i;
             if (!allowedExtensions.exec(certificate) && certificate != '') {
-                $('[name="certificate"]').next('.error').html(
+                $('#doc_err').html(
                     'Please upload file having pdf extensions').fadeIn(100);
                 errorFlagOne = 1;
             }
