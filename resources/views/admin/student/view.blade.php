@@ -144,15 +144,20 @@
                                         {{-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> --}}
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row mb-2">
                                     <div class="col-md-7">
                                         <label>Class :</label>
                                     </div>
                                     <div class="col-md-5">
                                         <?php
-                                        $class_details = App\Models\Classes::find($student->class);
+                                        if ($student->class) {
+                                            $class_details = App\Models\Classes::findOrFail($student->class);
+                                            echo $class_details->name;
+                                        }else{
+                                            echo "N/A";
+                                        }
+
                                         ?>
-                                        <p>{{ $class_details->name ? $class_details->name : 'N/A' }}</p>
                                     </div>
                                     <div class="col-md-2">
                                         <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> -->

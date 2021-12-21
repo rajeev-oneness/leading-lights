@@ -96,7 +96,7 @@ class UserController extends Controller
         if (Hash::check($request->old_password, $hashedPassword)) { //To check db stored pass & provided pass
             if (!Hash::check($request->password, $hashedPassword)) {
                 $user = User::findOrFail(Auth::id());
-                $user->password = Hash::make($request->password); //hash a password  
+                $user->password = Hash::make($request->password); //hash a password
 
                 $postdata = array(
                     'password'   => bcrypt($request->input('password')),
@@ -188,7 +188,7 @@ class UserController extends Controller
         $previous_payment = Payment::where('user_id', $current_user_id)->orderBy('id', 'desc')->first();
 
         if (!empty($previous_payment)) {
-            //Next date for payment 
+            //Next date for payment
             $next_due_date = $previous_payment->next_due_date;
             $today_date = date('Y-m-d');
 
@@ -542,11 +542,21 @@ class UserController extends Controller
     public function availableCourses(Request $request)
     {
         $user = $request->user();
-        $courses = SpecialCourse::where('class_id', $user->class);
-        if ($user->special_course_ids != '') {
-            $user_courses = explode(',', $user->special_course_ids);
-            $courses = $courses->whereNotIn('id', $user_courses);
+        if ($user->class) {
+            $courses = SpecialCourse::where('class_id', $user->class);
+            if ($user->special_course_ids != '') {
+                $user_courses = explode(',', $user->special_course_ids);
+                $courses = $courses->whereNotIn('id', $user_courses);
+            }
+        }else{
+            // dd($user->special_course_ids);
+            if ($user->special_course_ids != '') {
+                $user_courses = explode(',', $user->special_course_ids);
+                // dd($user_courses);
+                $courses = SpecialCourse::whereNotIn('id', $user_courses)->where('class_id','=',null);
+            }
         }
+
         $courses = $courses->latest()->get();
         return view('student.new_course', compact('courses'));
     }
@@ -563,14 +573,17 @@ class UserController extends Controller
         $user = $request->user();
         foreach ($selectedCourses as $course_id) {
             $course = SpecialCourse::find($course_id);
+            $course_start_date = $course->start_date;
             if ($course) {
+                $next_date = date('Y-m-d',strtotime($course_start_date.'first day of +1 month'));
+                $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
                 $newFee = new \App\Models\Fee;
                 $newFee->user_id = $user->id;
                 $newFee->class_id = 0;
                 $newFee->course_id = $course->id;
                 $newFee->fee_type = 'course_fee';
-                $newFee->due_date = date("Y-m-d", strtotime("+1 day"));
-                $newFee->payment_month = date("F", strtotime("+1 day"));
+                $newFee->due_date = $next_due_date;
+                $newFee->payment_month = date("F");
                 $newFee->amount = $course->monthly_fees;
                 $newFee->save();
 
