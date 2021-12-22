@@ -30,6 +30,12 @@
                                 </thead>
                                 <tbody>
                                     @foreach($data->due_payment as $dueIndex => $duePayment)
+                                    @php
+                                        $user_id = $duePayment->user_id;
+                                        $class_id = $duePayment->class_id;
+                                        $course_id = $duePayment->course_id;
+
+                                    @endphp
                                         <tr>
                                             <td>{{$duePayment->id}}</td>
                                             <td>
@@ -45,6 +51,11 @@
                                                 <span>{{ $feeType }} <span class="badge badge-info">{{ getNameofClassOrCourse($duePayment) }}</span></span>
                                             </td>
                                             <td>
+                                                @if (Auth::user()->special_course_ids)
+
+                                                @else
+
+                                                @endif
                                                 @if ($duePayment->fee_type != 'admission_fee')
                                                     {{date('M d, Y',strtotime($duePayment->due_date))}}
                                                 @endif

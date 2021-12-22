@@ -158,7 +158,7 @@ class RegisterController extends Controller
                                 'course_id' => $s_course->id,
                                 'fee_type' => 'course_fee',
                                 'due_date' => $next_due_date,
-                                'payment_month' => date('F'),
+                                'payment_month' => date('F',strtotime('+1 day')),
                                 'amount' => $s_course->monthly_fees,
                             ];
                         }
@@ -175,7 +175,7 @@ class RegisterController extends Controller
                             'course_id' => 0,
                             'fee_type' => 'admission_fee',
                             'due_date' => $next_due_date,
-                            'payment_month' => date('F'),
+                            'payment_month' => date('F',strtotime('+1 day')),
                             'amount' => $check_class->monthly_fees + $check_class->admission_fees,
                         ];
                     }
@@ -195,7 +195,7 @@ class RegisterController extends Controller
                                 'course_id' => $s_course->id,
                                 'fee_type' => 'course_fee',
                                 'due_date' => $next_due_date,
-                                'payment_month' => date('F'),
+                                'payment_month' => date('F',strtotime('+1 day')),
                                 'amount' => $s_course->monthly_fees,
                             ];
                         }
