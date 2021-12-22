@@ -131,7 +131,7 @@
                                 </div>
                                 <div class="form-row wh_class" id="second_block">
                                     <small class="col-12 p-0 mb-2"><b>Which Course You are Applying For</b> <span class="text-danger">*</span></small>
-                                    <div class="form-group col-sm-6">
+                                    <div class="form-group col-sm-12">
                                         <!--<label for="">Class<span class="text-danger">*</span></label>-->
                                         <select name="class" class="form-control" id="class_wise_combo">
                                             <option value="">Select Class</option>
@@ -146,13 +146,13 @@
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    <div class="form-group col-sm-6">
+                                    <div class="form-group col-sm-12">
                                         {{-- <select  class="form-control" name="course_id" id="choices-multiple-remove-button" multiple name="course_id[]" class="course_id">
 
                                     </select> --}}
+                                        <label for=""><b>Select Course</b></label>
                                         <select class="special_course_ids form-control" name="special_course_ids[]"
                                             multiple="multiple" id="special_course_ids">
-                                            <option value="">Select Courses</option>
                                             @foreach ($special_courses as $course)
                                                 <option value="{{ $course->id }}">{{ $course->title }}</option>
                                             @endforeach

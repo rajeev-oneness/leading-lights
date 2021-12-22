@@ -2,7 +2,7 @@
     namespace App\Http\Controllers\Teacher;
 
 use Illuminate\Support\Facades\Auth,Illuminate\Support\Facades\Route;
-    
+
     Route::get('dashboard', [DashboardController::class,'index'])->name('dashboard');
     Route::get('profile', [TeacherController::class,'index'])->name('profile');
     Route::post('update-profile', [TeacherController::class,'updateProfile'])->name('updateProfile');
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth,Illuminate\Support\Facades\Route;
 
     Route::any('attendance',[TeacherController::class,'attendance'])->name('attendance');
     Route::get('access-class',[TeacherController::class,'class'])->name('class');
-    Route::get('student-submission',[TeacherController::class,'studentSubmission'])->name('studentSubmission');
+    Route::get('task-submission',[TeacherController::class,'studentSubmission'])->name('studentSubmission');
     Route::get('video-call',[TeacherController::class,'videoCall'])->name('videoCall');
 
     /* Exam */
@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Auth,Illuminate\Support\Facades\Route;
     Route::post('class-attendance',[TeacherController::class,'class_attendance'])->name('class_attendance');
 
 
-    Route::post('exam-marks/{id}',[TeacherController::class,'examMarks'])->name('examMarks');  
+    Route::post('exam-marks/{id}',[TeacherController::class,'examMarks'])->name('examMarks');
     Route::post('exam-comment/{id}',[TeacherController::class,'examComment'])->name('examComment');
 
     Route::post('view-participation',[TeacherController::class,'view_participation'])->name('view_participation');

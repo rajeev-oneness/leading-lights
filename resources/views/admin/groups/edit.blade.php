@@ -60,7 +60,7 @@
                                 <?php
                                 //get the old values from form
                                 $old = old('student_ids');
-                                
+
                                 //get data from database table field
                                 $ids = explode(',', $group->student_ids);
                                 //stay the values after form submission

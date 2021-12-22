@@ -61,7 +61,7 @@
                         <i class="metismenu-icon fa fa-upload"></i>Upload home task
                     </a>
                 </li>
-                <li class="{{ Request::is('teacher/student-submission') ? 'mm-active' : '' }}">
+                <li class="{{ Request::is('teacher/task-submission') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.studentSubmission') }}">
                         <i class="metismenu-icon fa fa-subscript"></i>Student’s Task submission
 

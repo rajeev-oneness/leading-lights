@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use App\Models\Certificate;
+use App\Models\SpecialCourse;
 
 class StudentController extends Controller
 {
@@ -104,6 +105,7 @@ class StudentController extends Controller
         $data = array();
         $data['student'] = User::find($id);
         $data['classes'] = Classes::latest()->get();
+        $data['special_courses'] = SpecialCourse::latest()->get();
         return view('admin.student.edit')->with($data);
     }
 
@@ -138,6 +140,13 @@ class StudentController extends Controller
         } else {
             $imageName = $student->image;
         }
+
+        $special_course_ids = $request->special_course_ids;
+        // $group->class_id = $request->class_id;
+        if ($special_course_ids) {
+            $s_course_ids= implode(',', $special_course_ids);
+        }
+
         $student->first_name = $request->first_name;
         $student->last_name = $request->last_name;
         $student->gender = $request->gender;
@@ -148,9 +157,9 @@ class StudentController extends Controller
         $student->address = $request->address;
         $student->image = $imageName;
         // $student->fathers_name = $request->fathers_name;
-        // $student->status = $request->status;
+        $student->special_course_ids = $s_course_ids;
         $student->save();
-        return redirect()->route('admin.students.index')->with('success', 'Student updated');
+        return redirect()->route('admin.students.index')->with('success', 'Student details updated');
     }
 
     /**

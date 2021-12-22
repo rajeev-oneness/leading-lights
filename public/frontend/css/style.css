@@ -1936,7 +1936,7 @@ hr.new5 {
 .select2-container--default .select2-selection--multiple {
     border: 1px solid #ced4da !important;
     outline: 0;
-    height:37px;
+    /*height:37px;*/
 }
 .upload_btn{
     padding:6px 8px !important;
