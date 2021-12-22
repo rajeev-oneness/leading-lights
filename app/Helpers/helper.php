@@ -273,6 +273,18 @@ function getNameofClassOrCourse($feeStructure)
 	return $response;
 }
 
+function getNameofCourse($fee_details)
+{
+	$response = '';
+    if ($fee_details->course_id > 0) {
+		$course = \App\Models\SpecialCourse::where('id', $fee_details->course_id)->first();
+		if ($course) {
+			$response = $course->title;
+		}
+	}
+	return $response;
+}
+
 function extraDateFineCalculation($class_id,$course_id,$due_date,$user_id){
     $previous_payment = DB::table('fees')
                         ->where('user_id',$user_id)

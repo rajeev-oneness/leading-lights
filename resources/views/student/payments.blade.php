@@ -44,7 +44,11 @@
                                                 @endphp
                                                 <span>{{ $feeType }} <span class="badge badge-info">{{ getNameofClassOrCourse($duePayment) }}</span></span>
                                             </td>
-                                            <td>{{date('M d, Y',strtotime($duePayment->due_date))}}</td>
+                                            <td>
+                                                @if ($duePayment->fee_type != 'admission_fee')
+                                                    {{date('M d, Y',strtotime($duePayment->due_date))}}
+                                                @endif
+                                            </td>
                                             <td>
                                                 @php
                                                     if ($duePayment->class_id > 0 && $duePayment->course_id > 0) {
@@ -158,39 +162,5 @@
             });
         });
         $('.razorpay-payment-button').addClass('mb-2 mr-2 btn-pill btn btn-primary btn-lg');
-        $('.razorpay-payment-button').on('click',function() {
-            event.preventDefault();
-            const swalWithBootstrapButtons = Swal.mixin({
-                customClass: {
-                    confirmButton: 'btn btn-success',
-                    cancelButton: 'btn btn-danger'
-                },
-                buttonsStyling: false
-            })
-
-            swalWithBootstrapButtons.fire({
-                title: 'Are you sure?',
-                text: "To make payment!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, SURE!',
-                cancelButtonText: 'No, cancel!',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    event.preventDefault();
-                    document.getElementById('payment_form').submit();
-                } else if (
-                    /* Read more about handling dismissals below */
-                    result.dismiss === Swal.DismissReason.cancel
-                ) {
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'Your payment is declined :)',
-                        'error'
-                    )
-                }
-            })
-        })
     </script>
 @endsection

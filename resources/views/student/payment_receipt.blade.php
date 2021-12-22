@@ -45,7 +45,7 @@
                     </td>
                 </tr>
             @endif
-            
+
         </tbody>
     </table>
     <p  class="text-success"><strong>Payment Information</strong></p>
@@ -56,12 +56,19 @@
                     @php
                         $feeType = 'Admission Fees';
                         switch($fee_details->fee_type){
-                            case 'admission_fee' : $feeType = 'Admission Fees with 1 month class fee';break;
-                            case 'course_fee' : $feeType = 'Course Fee';break;
-                            case 'class_fee' : $feeType = 'Class Fee';break;
+                            case 'admission_fee' :
+                                $feeType = 'Admission Fees with 1 month class fee';
+                                break;
+                            case 'course_fee' :
+                                $feeType = 'Course Fee';
+                                break;
+                            case 'class_fee' :
+                                $feeType = 'Class Fee';
+                                break;
                         }
-                        echo $feeType;
+                        // echo $feeType;
                     @endphp
+                    <span>{{ $feeType }} <span class="badge badge-info">{{ getNameofCourse($fee_details) }}</span></span>
                 </td>
                 <td>Rs. {{ $fee_details->amount }}</td>
             </tr>

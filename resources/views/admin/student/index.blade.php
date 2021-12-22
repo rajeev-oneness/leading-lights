@@ -61,20 +61,15 @@
                                         $special_course_ids = $student->special_course_ids;
                                         $course_detail = App\Models\SpecialCourse::find($special_course_ids);
                                     }
-                                    
+
                                     $class_details = App\Models\Classes::find($student->class);
                                     ?>
                                     <td>
-
-                                        <?php
-                                       if($class_details){
-                                        ?>
-                                        <span
-                                            class="text-success">{{ $class_details->name ? $class_details->name : '' }}</span>
-                                    </td>
-                                    <?php
-                                       }
-                                       ?>
+                                        @if ($class_details)
+                                            <span class="text-success">{{ $class_details->name ? $class_details->name : '' }}</span>
+                                        @else
+                                            <span class="text-danger">N/A</span>
+                                        @endif
 
                                     <td>
                                         <span class="text-info">
@@ -92,7 +87,7 @@
                                                     {{ $course_detail['title'] }}
                                                 @endif
                                             @else
-                                                N/A
+                                                <span class="text-danger">N/A</span>
                                             @endif
 
                                         </span>

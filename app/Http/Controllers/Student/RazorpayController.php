@@ -181,7 +181,7 @@ class RazorpayController extends Controller
                             $other_payment_details->fees_type = 'monthly_fees';
 
                             $previous_payment = OtherPaymentDetails::where('user_id', Auth::user()->id)->where('class_id', $request->class_id)->orderBy('id', 'desc')->first();
-                            //Next date for payment 
+                            //Next date for payment
                             $next_due_date = date('Y-m-d', strtotime("+1 months", strtotime($previous_payment->next_due_date)));
 
                             $other_payment_details->payment_month = $previous_payment->next_due_date;
