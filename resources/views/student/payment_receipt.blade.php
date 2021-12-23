@@ -90,7 +90,7 @@
             </tr>
             <tr>
                 <td>Date</td>
-                <td>{{ date('d-m-Y h:i A', strtotime($transaction->created_at)) }}</td>
+                <td>{{ date('d-m-Y', strtotime($transaction->created_at)) }} {{ getAsiaTime24($transaction->created_at) }}</td>
             </tr>
             @endif
         </tbody>
