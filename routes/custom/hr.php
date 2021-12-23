@@ -14,10 +14,12 @@ Route::post('certificate-upload/',[HRController::class,'certificate_upload'])->n
 // ---------------Attendance--------------------------
 Route::any('attendance',[HRController::class,'attendance'])->name('attendance');
 Route::any('attendance/details',[HRController::class,'attendanceFor'])->name('attendanceFor');
-Route::any('attendance/details/date',[HRController::class,'attendanceStudent'])->name('attendanceStudent');
+// Route::any('attendance/details/date',[HRController::class,'attendanceStudent'])->name('attendanceStudent');
 Route::any('attendance/date',[HRController::class,'attendanceShow'])->name('attendanceDate');
 Route::any('attendance/details/show/{id}',[HRController::class,'attendanceStudentShow'])->name('show.teacher.attendance');
 
+Route::any('attendance/student/details',[HRController::class,'attendanceStudent'])->name('attendanceStudent');
+Route::any('attendance/student/show',[HRController::class,'studentAttendanceDetails'])->name('studentAttendanceDetails');
 // ----------------------Event Management----------------------------
 Route::any('event-management', [HRController::class, 'manageEvent'])->name('manage-event');
 Route::post('event-management/store', [HRController::class, 'uploadEvevnt'])->name('manage-event.store');

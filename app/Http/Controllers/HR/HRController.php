@@ -80,7 +80,7 @@ class HRController extends Controller
             return view('hr.attendance')->with($data);
         }
     }
-    /* 
+    /*
         From here HR can select which type of user attendance he/she want to visit
         student Attendance or teacher attendance
     */
@@ -137,15 +137,15 @@ class HRController extends Controller
         // return view('hr.attendance_date');
         $user_id = $request->user_id;
         if ($request->ajax()) {
+            // dd($user_id);
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                dd($request->date,$user_id);
                 $attendance = Attendance::where('date', $request->date)
                 ->where('user_id', $user_id)
                 ->latest()
                 ->get();
             }
-            
-            dd($attendance);
+
+            // dd($attendance);
             return response()->json($attendance);
         }
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -168,10 +168,13 @@ class HRController extends Controller
                         ->first();
                     $data['specific_attendance'] = Attendance::where('user_id', $user_id)
                         ->whereDate('date', '=', $date)->latest()->take(4)->get();
+                    $data['user_id'] = $user_id;
                     // dd($data);
                     // dd($data['specific_attendance']);
                     // dd($data['no_of_working_hours']->total);
                 } else {
+                    // dd($user_id);
+                    // dd($request->all());
                     $this->validate($request, [
                         'start_date' => 'required|date',
                         'end_date' => 'required|date'
@@ -183,7 +186,7 @@ class HRController extends Controller
                     $to = date($request->end_date);
                     $data['start_date'] = $request->start_date;
                     $data['end_date'] = $request->end_date;
-
+                    $data['user_id'] = $request->user_id;
                     // $available_att = Attendance::where('user_id',$user_id)->whereBetween('date', [$from, $to])->latest()->get();
                     // dd( $available_att);
 
@@ -218,6 +221,7 @@ class HRController extends Controller
                         return view('hr.attendance_date', compact('absent_date'));
                     }
                 } elseif (isset($data['checked_attendance'])) {
+                    // dd($data);
                     // if ($data['checked_attendance']->count() > 0) {
                         return view('hr.attendance_date')->with($data);
                     // } else {
@@ -228,7 +232,113 @@ class HRController extends Controller
                     //     return view('hr.attendance_date')->with($attendance);
                     // }
                 }
-            } 
+            }
+        }
+    }
+
+    public function attendanceStudent(Request $request)
+    {
+        // dd($request->all());
+        $user_id = $request->student_id;
+        $attendance = Attendance::where('user_id', $user_id)
+        ->where('date', date('Y-m-d'))
+        ->latest()
+        ->get();
+        if (empty($attendance)) {
+            $attendance_status = 0;
+        } else {
+            $attendance_status = 1;
+        }
+        $date = date('Y-m-d');
+        $specific_attendance = array(
+            "date" => $date,
+            "attendance_status" => $attendance_status
+        );
+        // ddd($data);
+        return view('hr.student_attendance',compact('user_id'))->with($specific_attendance);
+    }
+
+    public function studentAttendanceDetails(Request $request)
+    {
+        //  dd($request->all());
+        $user_id = $request->user_id;
+        if (isset($_POST['submit_btn'])) {
+
+            if ($_POST['submit_btn'] === 'attendance') {
+                $this->validate($request, [
+                    'date' => 'required|'
+                ]);
+                $date = $request->date;
+                $data['specific_date'] = $date;
+                $attendance = Attendance::where('user_id', $user_id)
+                ->where('date', $date)->first();
+                if (empty($attendance)) {
+                    $attendance_status = 0;
+                } else {
+                    $attendance_status = 1;
+                }
+                $data['specific_attendance'] = array(
+                    "date" => $date,
+                    "attendance_status" => $attendance_status
+                );
+            } else {
+                $this->validate($request, [
+                    'start_date' => 'required|date',
+                    'end_date' => 'required|date'
+                ]);
+                if ($request->start_date > $request->end_date) {
+                    return redirect()->back();
+                    return redirect()->route('hr.studentAttendanceDetails')->with('error', 'Please select valid range');
+                }
+                $from = date($request->start_date);
+                $to = date($request->end_date);
+                $data['start_date'] = $request->start_date;
+                $data['end_date'] = $request->end_date;
+
+                $start = strtotime($from);
+                $end = strtotime($to);
+
+                $days_between = floor(abs($end - $start) / 86400);
+                // dd($days_between);
+                if ($days_between  > 30) {
+                    return redirect()->route('hr.studentAttendanceDetails')->with('error', 'You can view 30 days attendence');
+                }
+
+                for ($i = $from; $i <= $to ; $i++) {
+                   $attendance = Attendance::where('user_id',$user_id)->whereDate('date', $i)->first();
+                   if (empty($attendance)) {
+                       $absent_date[] = array(
+                           "date" => $i,
+                           "attendance_status" => 0
+                       );
+                   }else{
+                       $present_date[] = array(
+                        "date" => $i,
+                        "attendance_status" => 1
+                    );
+                   }
+                }
+                if (empty($absent_date)) {
+                    $absent_date = [];
+
+                }
+                if (empty($present_date)) {
+                    $present_date = [];
+                }
+                $attendance = array_merge($absent_date,$present_date);
+                $data['checked_attendance'] = $attendance;
+            }
+            if (isset($data['specific_attendance'])) {
+                if ($data['specific_attendance']) {
+                    return view('hr.student_attendance',compact('user_id'))->with($data);
+                } else {
+                    $absent_date =  $date;
+                    return view('hr.student_attendance', compact('absent_date'));
+                }
+                    // return view('hr.student_attendance')->with($data);
+            } elseif (isset($data['checked_attendance'])) {
+                    return view('hr.student_attendance',compact('user_id'))->with($data);
+            }
         }
     }
     // Events
@@ -335,7 +445,7 @@ class HRController extends Controller
         if (Hash::check($request->old_password, $hashedPassword)) { //To check db stored pass & provided pass
             if (!Hash::check($request->password, $hashedPassword)) {
                 $user = User::findOrFail(Auth::id());
-                $user->password = Hash::make($request->password); //hash a password  
+                $user->password = Hash::make($request->password); //hash a password
 
                 $postdata = array(
                     'password'   => bcrypt($request->input('password')),

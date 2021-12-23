@@ -8,7 +8,7 @@
                         <div class="page-title-icon">
                             <i class="fa fa-users"></i>
                         </div>
-                        <div>Attendance
+                        <div>Student Attendance
                         </div>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                                 <div class="card-header-title mb-4">
                                     Attendance Date Wise
                                 </div>
-                                <form class="form" action="{{ route('hr.attendanceDate') }}" method="POST" autocomplete="off">
+                                <form class="form" action="{{ route('hr.studentAttendanceDetails') }}" method="POST" autocomplete="off">
                                     @csrf
                                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                         <div class="d-sm-flex align-items-baseline">
@@ -83,7 +83,7 @@
                                         </button>
                                     </div>
                                 @endif
-                                <form class="form" action="{{ route('hr.attendanceDate') }}" method="POST" autocomplete="off">
+                                <form class="form" action="{{ route('hr.studentAttendanceDetails') }}" method="POST" autocomplete="off">
                                     @csrf
                                     <div class="d-sm-flex">
                                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -144,75 +144,38 @@
                                             <tr>
                                                 <th>Sl. No</th>
                                                 <th>Date</th>
-                                                @if (isset($specific_attendance) || isset($absent_date))
-                                                    <th>Start Time</th>
-                                                    <th>End Time</th>
-                                                @endif
                                                 <th class="text-center">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @if (isset($specific_attendance))
-                                                @foreach ($specific_attendance as $i => $attendance)
-                                                    @php
-                                                        $no_of_working_hours1 = App\Models\Attendance::whereDate('date', '=', $attendance->date)
-                                                            ->selectRaw("SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(logout_time,login_time) )) ) as 'total'")
-                                                            ->first();
-                                                    @endphp
                                                     <tr class="bg-tr">
-                                                        <td>{{ $i + 1 }}</td>
-                                                        <td>{{ $attendance->date }}</td>
-                                                        <td>{{ $attendance->login_time }}</td>
-                                                        <td>{{ $attendance->logout_time ? $attendance->logout_time : 'N/A' }}
+                                                        <td>{{  "1" }}</td>
+                                                        <td>{{ $specific_attendance['date'] }}</td>
                                                         </td>
                                                         <td>
-                                                            @if ($i == 0 && isset($no_of_working_hours1))
-                                                                <span>{{ $no_of_working_hours1->total }} <span
-                                                                        class="badge badge-info">Total time</span></span>
-                                                            <span class="btn btn-light openBtn"
-                                                            data-toggle="modal" data-target="#attendance_details"
-                                                             data-id="{{ $attendance->date }}" data-user-id = "{{ $user_id ?? ''}}">
-                                                            <a href="#"><i class="fa fa-info-circle mr-2" data-toggle="tooltip"
-                                                            data-placement="top" title="View All"></i></a>
-                                                            </span>
+                                                            @if ($specific_attendance['attendance_status'] == 0)
+                                                            <span class="mr-2"><i
+                                                                class="fa fa-check-circle text-danger"></i></span>ABSENT
                                                             @else
-                                                                <span class="mr-2"><i
-                                                                        class="fa fa-check-circle text-success"></i></span>PRESENT
+                                                            <span class="mr-2"><i
+                                                                class="fa fa-check-circle text-success"></i></span>PRESENT
                                                             @endif
                                                         </td>
                                                     </tr>
-                                                @endforeach
                                             @elseif (isset($checked_attendance))
                                                 @foreach ($checked_attendance as $i => $attendance)
-                                                    @php
-                                                        $no_of_working_hours1 = App\Models\Attendance::whereDate('date', '=', $attendance['date'])
-                                                            ->selectRaw("SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(logout_time,login_time) )) ) as 'total'")
-                                                            ->first();
-                                                    @endphp
                                                     <tr class="bg-tr">
                                                         <td>{{ $i + 1 }}</td>
                                                         <td>{{ $attendance['date'] }}</td>
                                                         </td>
-                                                        <td class="text-center">
-                                                            @if (isset($no_of_working_hours1))
-                                                                <span>
-                                                                    @if ($no_of_working_hours1->total)
-                                                                        {{ $no_of_working_hours1->total  }}
-                                                                        <span class="badge badge-info">Total Time </span>
-                                                                        <span class="btn btn-light openBtn"
-                                                                        data-toggle="modal" data-target="#attendance_details"
-                                                                        data-id="{{ $attendance['date'] }}" data-user-id = "{{ $user_id ?? ''}}">
-                                                                        <a href="#"><i class="fa fa-info-circle mr-2" data-toggle="tooltip"
-                                                                        data-placement="top" title="View All"></i></a>
-                                                                        </span>
-                                                                    @else
-                                                                        <span class="mr-2"><i class="fa fa-exclamation-circle text-danger"></i></span>ABSENT
-                                                                    @endif
-                                                                </span>
-
+                                                        <td>
+                                                            @if ($attendance['attendance_status'] == 0)
+                                                            <span class="mr-2"><i
+                                                                class="fa fa-check-circle text-danger"></i></span>ABSENT
                                                             @else
-                                                                <span class="mr-2"><i
-                                                                        class="fa fa-check-circle text-success"></i></span>PRESENT
+                                                            <span class="mr-2"><i
+                                                                class="fa fa-check-circle text-success"></i></span>PRESENT
                                                             @endif
                                                         </td>
                                                     </tr>
