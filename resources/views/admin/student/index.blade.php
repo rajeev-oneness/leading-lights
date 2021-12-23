@@ -76,13 +76,13 @@
                                             @if ($student->special_course_ids !== null)
 
                                                 @if (str_contains($student->special_course_ids, ','))
-                                                    <div class="student-list">
-                                                        <ol>
+                                                    {{-- <div class="student-list"> --}}
+                                                        {{-- <ol> --}}
                                                             @foreach ($course_details as $course)
-                                                                <li>{{ $course['title'] }}</li>
+                                                                <span class="badge badge-primary">{{ $course['title'] }}</span class="badge badge-primary">
                                                             @endforeach
-                                                        </ol>
-                                                    </div>
+                                                        {{-- </ol> --}}
+                                                    {{-- </div> --}}
                                                 @else
                                                     {{ $course_detail['title'] }}
                                                 @endif

@@ -1564,7 +1564,7 @@ hr.new5 {
     #testimonial {
         background-size: cover;
     }
-    /*#caption {  
+    /*#caption {
     top: 9%;
 }*/
 }
@@ -1711,8 +1711,8 @@ hr.new5 {
     ul.why-list li:before {
         top: -5px;
     }
-    /*.inputtext {   
-    height: 24px !important;  
+    /*.inputtext {
+    height: 24px !important;
 }*/
     #caption {
         top: 9%;
@@ -1923,7 +1923,7 @@ hr.new5 {
     .topbar {
         text-align: center;
     }
-    
+
     .heading h1 {
         font-size: 21px;
         line-height: 31px;
@@ -1977,13 +1977,18 @@ hr.new5 {
     left: 6px;
     font-size: 12px;
 }
+.email-err{
+    position: absolute;
+    left: 6px;
+    font-size: 12px;
+}
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    margin: 0; 
+    margin: 0;
 }
 .form-control{
     padding-left: .5rem !important;
@@ -2014,7 +2019,8 @@ input[type=number]::-webkit-outer-spin-button {
     border-radius: 50%;
 }
 .datepicker table tr td.disabled:hover {
-    background: #efefef !important;
+
+   background: #efefef !important;
     color: #999;
     cursor: default;
     border-radius: 50%;

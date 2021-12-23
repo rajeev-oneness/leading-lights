@@ -94,6 +94,10 @@
 ;
     overflow-y: scroll;
 }
+
+.swal2-cancel{
+  margin-right: 10px;
+}
 /*.student-list ol li{
 white-space: nowrap;
   overflow: hidden;

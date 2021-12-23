@@ -150,7 +150,7 @@ class RegisterController extends Controller
                         $s_course = SpecialCourse::where('id', $course)->first();
                         $course_start_date = $s_course->start_date;
                         if ($s_course) {
-                            $next_date = date('Y-m-d',strtotime($course_start_date.'first day of +1 month'));
+                            $next_date = date('Y-m-01',strtotime($course_start_date));
                             $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
                             $feedata[] = [
                                 'user_id' => $user->id,
@@ -158,7 +158,7 @@ class RegisterController extends Controller
                                 'course_id' => $s_course->id,
                                 'fee_type' => 'course_fee',
                                 'due_date' => $next_due_date,
-                                'payment_month' => date('F',strtotime('+1 day')),
+                                'payment_month' => date("F",strtotime($course_start_date)),
                                 'amount' => $s_course->monthly_fees,
                             ];
                         }
@@ -175,7 +175,7 @@ class RegisterController extends Controller
                             'course_id' => 0,
                             'fee_type' => 'admission_fee',
                             'due_date' => $next_due_date,
-                            'payment_month' => date('F',strtotime('+1 day')),
+                            'payment_month' => date('F',strtotime($next_due_date)),
                             'amount' => $check_class->monthly_fees + $check_class->admission_fees,
                         ];
                     }
@@ -187,7 +187,7 @@ class RegisterController extends Controller
                         $s_course = SpecialCourse::where('id', $course)->first();
                         $course_start_date = $s_course->start_date;
                         if ($s_course) {
-                            $next_date = date('Y-m-d',strtotime($course_start_date.'first day of +1 month'));
+                            $next_date = date('Y-m-01',strtotime($course_start_date));
                             $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
                             $feedata[] = [
                                 'user_id' => $user->id,
@@ -195,7 +195,7 @@ class RegisterController extends Controller
                                 'course_id' => $s_course->id,
                                 'fee_type' => 'course_fee',
                                 'due_date' => $next_due_date,
-                                'payment_month' => date('F',strtotime('+1 day')),
+                                'payment_month' => date("F",strtotime($course_start_date)),
                                 'amount' => $s_course->monthly_fees,
                             ];
                         }

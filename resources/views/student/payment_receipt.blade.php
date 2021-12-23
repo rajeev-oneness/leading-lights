@@ -72,6 +72,13 @@
                 </td>
                 <td>Rs. {{ $fee_details->amount }}</td>
             </tr>
+
+            @if ($fee_details->fee_type == 'course_fee')
+                <tr>
+                    <td>Payment for</td>
+                    <td>{{ $fee_details->payment_month }}</td>
+                </tr>
+            @endif
             @if($transaction = $fee_details->transaction_details)
             <tr>
                 <td>Transaction Id</td>

@@ -79,9 +79,9 @@
                                                         $amount = $duePayment->amount;
                                                     }
                                                 @endphp
-                                                <span>{{ $amount }}
+                                                <span>&#x20B9;{{ $amount }}
                                                     @if (isset($fine))
-                                                        <span data-toggle="tooltip" data-placement="top" title="Fine" class="badge badge-warning">+{{ $fine }}</span>
+                                                        <span data-toggle="tooltip" data-placement="top" title="Fine" class="badge badge-warning">+&#x20B9;{{ $fine }}</span>
                                                     @endif
                                                 </span>
                                             </td>
@@ -136,7 +136,7 @@
                                                     }
                                                     // echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
                                                 @endphp
-                                                <span>{{ $feeType }} <span class="badge badge-info">{{ getNameofClassOrCourse($duePayment) }}</span></span>
+                                                <span>{{ $feeType }} <span class="badge badge-info">{{ getNameofClassOrCourse($successPayment) }}</span></span>
                                             </td>
                                             <td>&#x20B9;{{$successPayment->amount}}</td>
                                             <td>

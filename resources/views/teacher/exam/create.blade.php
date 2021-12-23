@@ -21,7 +21,7 @@
               </nav>
             <div class="card mb-3">
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row m-0">
                         <div class="col-lg-12">
                             <div class="card-header-title mb-4">
                                 Arrange Exam
@@ -45,7 +45,7 @@
                             <form class="form" action="{{ route('teacher.exam.store') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
-                                <div class="d-sm-flex align-items-top justify-content-between mb-5">
+                                <div class="row justify-content-between m-0">
                                     {{-- <select class="form-control" id="class" name="class">
                                         <option value="" selected>Class</option>
                                         @foreach ($classes as $class)
@@ -53,7 +53,7 @@
                                                 {{ $class->name }}</option>
                                         @endforeach
                                     </select> --}}
-                                    <div class="responsive-error">
+                                    <div class="col-lg-6 responsive-error">
                                         <select name="class" id="class_name" class="form-control">
                                             <option value="">Select Class/Groups</option>
                                             @foreach ($groups as $group)
@@ -69,7 +69,7 @@
                                             <span style="color: red;">{{ $errors->first('class') }}</span>
                                         @endif
                                     </div>
-                                    <div class="responsive-error">
+                                    <div class="col-lg-6 responsive-error">
                                         <select class="form-control" id="subject" name="subject">
                                             <option value="" selected>Subject</option>
                                             @foreach ($subjects as $subject)
@@ -82,10 +82,10 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row m-0">
                                     <div class="col-md-12">
                                         <p class="des  mr-2"><span class="mr-2"><i
-                                            class="fa fa-circle"></i></span>Type of exam<span
+                                            class="fa fa-circle"></i></span>Name of exam<span
                                         class="text-danger">*</span></p>
                                     <input type="text" name="type_of_exam" id="type_of_exam" class="form-control"
                                         value="{{ old('type_of_exam') }}" autocomplete="off">
@@ -94,7 +94,7 @@
                                     @endif
                                     </div>
                                 </div>
-                                <div class="row align-items-center justify-content-between">
+                                <div class="row justify-content-between m-0">
                                     <div class="col-md-3">
                                         <p class="des  mr-2"><span class="mr-2"><i
                                                     class="fa fa-circle"></i></span>Exam Date<span
@@ -136,7 +136,7 @@
                                             <span style="color: red;">{{ $errors->first('start_time') }}</span>
                                         @endif
                                     </div>
-                                    <div class="col-md-3 mt-3">
+                                    <div class="col-md-3">
                                         <p class="des  mr-2"><span class="mr-2"><i
                                                     class="fa fa-circle"></i></span>Exam Category<span
                                                 class="text-danger">*</span></p>
@@ -151,7 +151,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="row mt-3 mb-3">
+                                <div class="row m-0 mt-0 mb-0">
                                     <div class="col-md-4">
                                         <p class="des  mr-2"><span class="mr-2"><i
                                                     class="fa fa-circle"></i></span>Full Marks<span
@@ -212,7 +212,10 @@
                                             id="file_err">{{ $errors->first('upload_file') }}</span>
                                     @endif
                                 </div> --}}
-                                <button class="btn-pill btn btn-dark mt-4">Create Exam</button>
+                                <div class="col-12 text-right">
+                                    <button class="btn-pill btn btn-dark mt-4">Create Now</button>
+                                </div>
+
                             </form>
                         </div>
                     </div>
@@ -250,7 +253,7 @@
         setTimeout(() => {
             $('.alert-success').css('display', 'none');
             $('.alert-warning').css('display', 'none');
-        }, 10000);
+        }, 4000);
         $(document).ready(function() {
             $('#exam_table').DataTable();
         });

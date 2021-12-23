@@ -573,7 +573,7 @@ class UserController extends Controller
             $course = SpecialCourse::find($course_id);
             $course_start_date = $course->start_date;
             if ($course) {
-                $next_date = date('Y-m-d',strtotime($course_start_date.'first day of +1 month'));
+                $next_date = date('Y-m-01',strtotime($course_start_date));
                 $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
                 $newFee = new \App\Models\Fee;
                 $newFee->user_id = $user->id;
@@ -581,7 +581,7 @@ class UserController extends Controller
                 $newFee->course_id = $course->id;
                 $newFee->fee_type = 'course_fee';
                 $newFee->due_date = $next_due_date;
-                $newFee->payment_month = date("F");
+                $newFee->payment_month = date("F",strtotime($course_start_date));
                 $newFee->amount = $course->monthly_fees;
                 $newFee->save();
 

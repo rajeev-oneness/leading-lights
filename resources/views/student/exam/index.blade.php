@@ -17,10 +17,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="float-right">
+                {{-- <div class="float-right">
                     <a class="btn-pill btn btn-primary btn-lg" href="{{ route('user.report_generate') }}"><i
                             class="fa fa-download mr-2"></i>Report Card</a>
-                </div>
+                </div> --}}
             </div>
             <h5>Leading Lights School
             </h5>
