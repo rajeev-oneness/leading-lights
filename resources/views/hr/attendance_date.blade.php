@@ -125,7 +125,7 @@
                                     </div>
                                     <input type="hidden" name="user_id" value="{{ $user_id ?? '' }}">
                                     <button type="submit" class="btn-pill btn btn-dark mt-4" value="attendance_range"
-                                        name="submit_btn">Proceed</button>
+                                        name="submit_btn">Proceed </button>
 
                                 </form>
                             </div>

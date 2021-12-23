@@ -36,7 +36,7 @@
                                         class="img-fluid rounded  mx-auto w-100 mb-3">
                                 </div>
                             @endif
-                            <p class="font-weight-bold">Mraks: {{ $exam->marks }}</p>
+                            <p class="font-weight-bold">Marks: {{ $exam->marks }}</p>
                             <div>
                                 @if ($exam->answer)
                                     <label for=""><strong>Answers</strong></label>
