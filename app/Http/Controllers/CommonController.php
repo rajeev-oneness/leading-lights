@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Classes;
 use App\Models\Event;
+use App\Models\notice;
 use App\Models\SpecialCourse;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -12,8 +13,9 @@ use Illuminate\Support\Facades\Auth;
 class CommonController extends Controller
 {
     public function index(Request $request){
-        $events = Event::latest()->get();
-        return view('welcome',compact('events'));
+        $data['events'] = Event::latest()->get();
+        $data['notices'] = notice::latest()->get();
+        return view('welcome')->with($data);
     }
     public function getFeesByClass(Request $request){
         $class_details = Classes::where('id',$request->class_id)->first();

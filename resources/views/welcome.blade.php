@@ -70,7 +70,7 @@
                                          <img src="images/1.png" class="img-fluid mx-auto pos-ab">
                                          <img src="images/2.png" class="img-fluid mx-auto pos-ab">
                                          <img src="images/3.png" class="img-fluid mx-auto pos-ab">
-                                        
+
                                    </div>   -->
                                 </div>
                             </div>
@@ -109,10 +109,6 @@
             <a href=""><i class="fa fa-phone"></i></a>
         </div>
     </div>
-
-
-
-
     <!-- features part end -->
     <section id="about">
         <div class="container">
@@ -150,17 +146,29 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div id="testimonials-list" class="owl-carousel">
+                        @foreach ($notices as $key => $notice)
                         <div class="item">
                             <div class="shadow-effect">
-                                <div class="testimonial-name">Leading Lights!!!!!!!! Now at NAYABAD</div>
-                                <img class="imgPlaceholder img-fluid" src="{{ asset('frontend/images/t1.png') }}" alt="">
-                                <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum
-                                    auctor, nisi elit consequat</p>
+                                <div class="testimonial-name">{{ $notice->title }}</div>
+                                <img class="imgPlaceholder img-fluid"
+                                    src="
+                                    @if ($key == 0)
+                                        {{ asset('frontend/images/t1.png') }}
+                                    @elseif ($key == 1)
+                                        {{ asset('frontend/images/t2.png') }}
+                                    @elseif ($key == 2)
+                                        {{ asset('frontend/images/t3.png') }}
+                                    @else
+                                        {{ asset('frontend/images/t3.png') }}
+                                    @endif
+                                    " alt="" >
+                                {!! $notice->desc !!}
                             </div>
 
                         </div>
+                        @endforeach
 
-                        <div class="item">
+                        {{-- <div class="item">
                             <div class="shadow-effect">
                                 <div class="testimonial-name">Leading Lights!!!!!!!! Now at NAYABAD</div>
                                 <img class="imgPlaceholder img-fluid" src="{{ asset('frontend/images/t2.png') }}" alt="">
@@ -178,7 +186,7 @@
                                 <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum
                                     auctor, nisi elit consequat</p>
                             </div>
-                        </div>
+                        </div> --}}
 
 
                     </div>
