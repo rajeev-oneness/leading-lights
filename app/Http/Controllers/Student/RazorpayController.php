@@ -42,8 +42,14 @@ class RazorpayController extends Controller
                                 $newFee = true;
                             }
                         } elseif ($fee->course_id != 0) {
-                            // dd('test2');
                             $course = \App\Models\SpecialCourse::where('id', $fee->course_id)->first();
+
+                            $user_details = User::find($fee->user_id);
+                            $all_available_courses_ids = explode(',', $user->special_course_ids);
+                            if (!in_array($course->id, $all_available_courses_ids)) {
+                                $user_details->special_course_ids = $user_details->special_course_ids . ','. $course->id;
+                                $user_details->save();
+                            }
 
                             $next_date = date('Y-m-d',strtotime($course->start_date.'first day of +1 month'));
                             $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
@@ -52,6 +58,7 @@ class RazorpayController extends Controller
                                 $amount = $course->monthly_fees;
                                 $newFee = true;
                             }
+
                         }
                         // dd('test3');
                         if ($newFee && $amount > 0) {

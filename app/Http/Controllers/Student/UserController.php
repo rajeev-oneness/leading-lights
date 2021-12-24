@@ -585,11 +585,6 @@ class UserController extends Controller
                 $newFee->amount = $course->monthly_fees;
                 $newFee->save();
 
-                // Save special course id in "users" table
-                $user_details = User::find($user->id);
-                $user_details->special_course_ids = $course->id;
-                $user_details->save();
-
                 // Notification
                 createNotification($user->id, 0, 0, 'join_course_student');
             }
