@@ -29,7 +29,7 @@ class ExamController extends Controller
     {
         $data['groups'] = Group::latest()->where('teacher_id', Auth::user()->id)->get();
         $data['subjects'] = Subject::latest()->get();
-        $data['classes'] = Classes::orderBy('name')->get();
+        $data['classes'] = Classes::latest()->get();
         return view('teacher.exam.create')->with($data);
     }
 

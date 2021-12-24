@@ -142,9 +142,9 @@
                                                 class="text-danger">*</span></p>
                                         <select name="exam_type" id="exam-type" class="form-control">
                                             <option value="">Select Exam Category</option>
-                                            <option value="1">MCQ</option>
-                                            <option value="2">Descriptive</option>
-                                            <option value="3">Mixed(MCQ & Descriptive)</option>
+                                            <option value="1" {{ old('exam_type') == 1 ? 'selected' : '' }}>MCQ</option>
+                                            <option value="2" {{ old('exam_type') == 2 ? 'selected' : '' }}>Descriptive</option>
+                                            <option value="3" {{ old('exam_type') == 3 ? 'selected' : '' }}>Mixed(MCQ & Descriptive)</option>
                                         </select>
                                         @if ($errors->has('exam_type'))
                                             <span style="color: red;">{{ $errors->first('exam_type') }}</span>
@@ -253,7 +253,7 @@
         setTimeout(() => {
             $('.alert-success').css('display', 'none');
             $('.alert-warning').css('display', 'none');
-        }, 4000);
+        }, 10000);
         $(document).ready(function() {
             $('#exam_table').DataTable();
         });
