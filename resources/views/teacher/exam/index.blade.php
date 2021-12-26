@@ -109,7 +109,7 @@
                                             </span>
                                         @else
                                             <span data-toggle="modal" data-target="#mixedExamModal"
-                                                data-id="{{ $exam->id }}" class="add_question_section">
+                                                data-id="{{ $exam->id }}" data-total-marks="{{ $exam->total_marks }}" class="add_question_section">
                                                 <a href="#"><i class="fa fa-plus mr-2" data-toggle="tooltip"
                                                         data-placement="top" title="Add Questions"></i></a>
                                             </span>

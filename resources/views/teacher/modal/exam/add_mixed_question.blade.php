@@ -15,6 +15,8 @@
                         @csrf
                         <input type="hidden" name="exam_id" id="exam_id">
                         <div id="dynamicAddRemoveMixed">
+                            <p class="font-weight-bold text-center">Question No: 1</p>
+                            <p class="font-weight-bold text-center" id="exam_total_marks"></p>
                             <div class="form-group">
                                 <label for="question">Question<span class="text-danger">*</span></label>
                                 <textarea cols="2" name="addMoreInputFields[0][question1]" rows="2"
@@ -39,6 +41,7 @@
                             <input type="hidden" name="addMoreInputFields[0][question_type]" value="2">
                         </div>
                         <div>
+                            <p class="font-weight-bold" id="remaining_question_marks"></p>
                             <button type="button" name="add" id="dynamic-ar-mixed-desc" class="btn btn-primary mt-3"><i class="fa fa-plus mr-2"></i>Add Descriptive</button>
                             <button type="button" name="add" id="dynamic-ar-mixed-mcq" class="btn btn-primary mt-3"><i class="fa fa-plus mr-2"></i>Add MCQ</button>
                             <button type="submit" class="btn btn-primary float-right mt-3" id="btn_mixed_submit">Save</button>
