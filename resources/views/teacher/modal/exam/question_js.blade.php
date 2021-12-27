@@ -5,9 +5,10 @@
 
     $(document).on("click", ".add_question_section", function() {
         var exam_id = $(this).data('id');
-        var exam_total_marks = $(this).data('total-marks');
+        var exam_full_marks = $(this).data('full-marks');
         $(".modal-body #exam_id").val(exam_id);
-        $(".modal-body #exam_total_marks").val(exam_total_marks);
+        // $(".modal-body #exam_total_marks").val(exam_total_marks);
+        // $(".modal-header #exam_full_marks").append(exam_full_marks);
     });
     // Descriptive Question
 
@@ -78,18 +79,19 @@
         } else {
             $('.textarea_error').text('');
             $("#dynamicAddRemove").append(`<hr>
+            <p class="font-weight-bold text-center">Question No: ${k+2}</p>
         <div class="form-group">
-            <label for="question">Question<span class="text-danger">*</span></label>
+            <label for="question" class="font-weight-bold">Question<span class="text-danger">*</span></label>
             <textarea type="text" name="addMoreInputFields[${i}][question]" class="form-control" cols="2" rows="2"></textarea>
             <span class="textarea_error${i} text-danger"></span>
         </div>
         <div class="form-group">
-            <label for="image">Image</label>
+            <label for="image" class="font-weight-bold">Image</label>
             <input type="file" class="form-control-file" name="addMoreInputFields[${i}][image]" id="image">
             <span class="file_error${i} text-danger"></span>
         </div>
         <div class="form-group">
-            <label for="marks">Marks</label>
+            <label for="marks" class="font-weight-bold">Marks</label>
             <select id="marks" class="form-control" name="addMoreInputFields[${i}][marks]">
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -98,6 +100,7 @@
             </select>
          </div>
         `);
+        document.getElementById('dynamicAddRemove').scrollIntoView(false);
             ++i;
             ++k;
         }
@@ -169,6 +172,7 @@
 
     $("#dynamic-ar-mcq").click(function() {
         var errorFlagOne = 0;
+        var individual_marks = 0;
         var inputs = document.getElementById('dynamicAddRemoveMCQ').getElementsByTagName('input');
         var all_textarea = document.getElementById('dynamicAddRemoveMCQ').getElementsByTagName('textarea');
         for (var i = 0; i < inputs.length; ++i) {
@@ -260,6 +264,11 @@
             }
         }
 
+        for (let index = 0; index < all_textarea.length; ++index) {
+            // console.log(k);
+            individual_marks = 1;
+        }
+
         for (var i = 0; i < all_textarea.length; ++i) {
             let textarea_value = all_textarea[i].value;
             if (all_textarea[i].type === 'textarea') {
@@ -290,8 +299,11 @@
         if (errorFlagOne == 1) {
             return false;
         } else {
-
+            // question_total_marks = (question_total_marks + individual_marks);
+            // console.log(individual_marks,question_total_marks);
+            // $('#remaining_question_marks').text(`Total marks ${question_total_marks}`);
             $("#dynamicAddRemoveMCQ").append(`<hr>
+            <p class="font-weight-bold text-center">Question No: ${k+2}</p>
         <div class="form-group">
         <label for="question"><b>Question</b><span class="text-danger">*</span></label>
         <textarea type="text" name="addMoreInputFields[${i}][question]" class="form-control" cols="2" rows="2"></textarea>
@@ -332,13 +344,14 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-6">
-                    <label for=""><b>Right Answer<span class="text-danger">*</span></b></label>
+                    <label for=""><b>Right Option<span class="text-danger">*</span></b></label>
                     <input type="text" name="addMoreInputFields[${i}][answer]" class="form-control">
                     <span class="answer_err${i} text-danger"></span>
                 </div>
             </div>
         </div>
         `);
+        document.getElementById('dynamicAddRemoveMCQ').scrollIntoView(false);
             ++i;
             ++k;
         }
@@ -348,6 +361,7 @@
         e.preventDefault();
         // Start
         var errorFlagOne = 0;
+        // var exam_full_marks = $(".modal-header #exam_full_marks").val();
         var inputs = document.getElementById('dynamicAddRemoveMCQ').getElementsByTagName('input');
         var all_textarea = document.getElementById('dynamicAddRemoveMCQ').getElementsByTagName('textarea');
         for (var i = 0; i < inputs.length; ++i) {
@@ -666,6 +680,7 @@
         </div>
         <input type="hidden" name="addMoreInputFields[${i}][question_type]" value="1">
         `);
+        document.getElementById('dynamicAddRemoveMixed').scrollIntoView(false);
             ++i;
             ++k;
         }
@@ -841,6 +856,7 @@
         </div>
         <input type="hidden" name="addMoreInputFields[${i}][question_type]" value="2">
         `);
+        document.getElementById('dynamicAddRemoveMixed').scrollIntoView(false);
             ++i;
             ++k;
         }

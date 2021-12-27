@@ -96,7 +96,7 @@
                                     @if ($exam->date >= date('Y-m-d'))
                                         @if ($exam->exam_type == 1)
                                             <span data-toggle="modal" data-target="#mcqExamModal"
-                                                data-id="{{ $exam->id }}" class="add_question_section">
+                                                data-id="{{ $exam->id }}" data-full-marks="{{ $exam->full_marks }}" class="add_question_section">
                                                 <a href="#"><i class="fa fa-plus mr-2" data-toggle="tooltip"
                                                         data-placement="top" title="Add Questions"></i></a>
                                             </span>
