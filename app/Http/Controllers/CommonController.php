@@ -21,10 +21,8 @@ class CommonController extends Controller
 
     public function availableCourses()
     {
-        $data['events'] = Event::latest()->get();
-        $data['notices'] = notice::latest()->get();
-        $data['special_courses'] = SpecialCourse::where('class_id',null)->latest()->get();
-        return view('flash_courses')->with($data);
+        $data['courses'] = SpecialCourse::where('class_id',null)->latest()->get();
+        return view('special_courses')->with($data);
     }
     public function getFeesByClass(Request $request){
         $class_details = Classes::where('id',$request->class_id)->first();

@@ -41,16 +41,25 @@ class SpecialCoursesController extends Controller
     public function store(Request $request)
     {
         Validator::make($request->all(), [
-            'title' => 'required',
+            'title' => 'required | max:255',
             // 'class_id' => 'required',
             'start_date' => 'required|date',
             // 'end_date' => 'required|date',
             'fees' => 'required | min:1',
+            'description' => 'required| max:255',
+            'image' => 'required| mimes:png,jpg'
         ], $messages = [
             'title.required' => 'The course title field is required.',
             'title.unique' => 'The course title  must  be unique',
             // 'class_id.required' => 'Please choose available class',
         ])->validate();
+
+        if($request->hasFile('image')){
+            $image = $request->file('image');
+            $imageName = imageUpload($image,'courses');
+        }else{
+            $imageName = null;
+        }
 
         $courses = new SpecialCourse();
         $courses->title = $request->title;
@@ -62,6 +71,8 @@ class SpecialCoursesController extends Controller
         $courses->start_date = $request->start_date;
         // $courses->end_date = $request->end_date;
         $courses->monthly_fees = $request->fees; 
+        $courses->image = $imageName; 
+        $courses->description = $request->description;
         $courses->save();
         return redirect()->route('admin.special-courses.index')->with('success','Course added successful');
     }
@@ -105,11 +116,20 @@ class SpecialCoursesController extends Controller
             'start_date' => 'required|date',
             // 'end_date' => 'required|date',
             'fees' => 'required | min:1',
+            'description' => 'required| max:255',
+            'image' => 'nullable | mimes:png,jpg'
         ], $messages = [
             'title.required' => 'The course title field is required.',
             'title.unique' => 'The course title  must  be unique',
             // 'class_id.required' => 'Please choose available class',
         ])->validate();
+
+        if($request->hasFile('image')){
+            $image = $request->file('image');
+            $imageName = imageUpload($image,'courses');
+        }else{
+            $imageName = null;
+        }
 
         $courses = SpecialCourse::find($id);
         $courses->title = $request->title;
@@ -121,7 +141,9 @@ class SpecialCoursesController extends Controller
         
         $courses->start_date = $request->start_date;
         // $courses->end_date = $request->end_date;
-        $courses->monthly_fees = $request->fees; 
+        $courses->monthly_fees = $request->fees;
+        $courses->image = $imageName; 
+        $courses->description = $request->description; 
         $courses->save();
         return redirect()->route('admin.special-courses.index')->with('success','Course details updated');
     }

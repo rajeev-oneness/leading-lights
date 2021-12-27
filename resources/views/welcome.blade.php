@@ -221,12 +221,11 @@
                                 <div class="features-box">
                                     <div class="">
                                         <img src="
-                                                {{ asset('frontend/images/course1.jpg') }}" class="img-fluid mx-auto">
+                                                {{ asset($course->image) }}" class="img-fluid mx-auto">
                                     </div>
                                     <div class="features-text">
                                         <h6>{{ $course->title }}</h6>
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                            Ipsum.Ipsum is simply dummy text of the printing.</p>
+                                        <p>{{ $course->description }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -275,7 +274,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-5">
-                    <a href="#" class="btn btn-add">View All</a>
+                    <a href="{{ route('available_courses') }}" class="btn btn-add">View All</a>
                 </div>
             </div>
         </div>
@@ -350,7 +349,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-5">
-                    <a href="{{ route('available_courses') }}" class="btn btn-add">View All</a>
+                    <a href="#" class="btn btn-add">View All</a>
                 </div>
             </div>
         </div>

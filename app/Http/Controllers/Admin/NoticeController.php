@@ -49,7 +49,7 @@ class NoticeController extends Controller
         $notice->desc = $request->desc;
         $notice->save();
 
-        return redirect()->route('admin.notice.index')->with('success','Notice added successfully');
+        return redirect()->route('admin.notice.index')->with('success','News added successfully');
     }
 
     /**
@@ -97,7 +97,7 @@ class NoticeController extends Controller
         $notice->desc = $request->desc;
         $notice->save();
 
-        return redirect()->route('admin.notice.index')->with('success','Notice updated successfully');
+        return redirect()->route('admin.notice.index')->with('success','News updated successfully');
     }
 
     /**
@@ -108,6 +108,7 @@ class NoticeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        notice::find($id)->delete();
+        return redirect()->route('admin.notice.index')->with('success','News deleted successfully');
     }
 }

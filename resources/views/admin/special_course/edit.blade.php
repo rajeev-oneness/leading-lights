@@ -37,6 +37,17 @@
 								</div>
 								<div class="col-lg-6">
 									<div class="form-group edit-box">
+										<label for="description">Description<span class="text-danger">*</span></label>
+										<textarea name="description" id="description" cols="3" rows="2" class="form-control">
+											{{ $course_details->description ?? old('description') }}
+										</textarea>
+										@if ($errors->has('description'))
+											<span style="color: red;">{{ $errors->first('description') }}</span>
+										@endif
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="form-group edit-box">
 										{{-- <label for="class_id">Class</label> --}}
 										<label for="review">Class</label>
 										<select class="form-control" name="class_id" id="class_id">
@@ -71,6 +82,16 @@
 										<span style="color: red;">{{ $errors->first('fees') }}</span>
 									@endif
 								</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="form-group edit-box">
+										<label for="review">Image<span class="text-danger">*</span></label>
+										<input type="file" id="image" class="form-control" name="image"
+											value="{{ old('image') }}">
+										@if ($errors->has('image'))
+											<span style="color: red;">{{ $errors->first('image') }}</span>
+										@endif
+									</div>
 								</div>
 							</div>
 							<div class="form-group d-flex justify-content-end">
