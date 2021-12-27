@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth, Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 Route::get('/', [CommonController::class, 'index'])->name('land_page');
+Route::get('/available-courses', [CommonController::class, 'availableCourses'])->name('available_courses');
 
 Auth::routes();
 

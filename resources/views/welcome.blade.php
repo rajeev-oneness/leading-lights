@@ -216,6 +216,47 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="owl-carousel owl-theme test-boxes">
+                        @foreach ($special_courses as $course)
+                            <div class="item">
+                                <div class="features-box">
+                                    <div class="">
+                                        <img src="
+                                                {{ asset('frontend/images/course1.jpg') }}" class="img-fluid mx-auto">
+                                    </div>
+                                    <div class="features-text">
+                                        <h6>{{ $course->title }}</h6>
+                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                                            Ipsum.Ipsum is simply dummy text of the printing.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                        {{-- <div class="item">
+                            <div class="features-box">
+                                <div class="">
+                                    <img src="
+                                            {{ asset('frontend/images/course2.jpg') }} " class="   img-fluid mx-auto">
+                                </div>
+                                <div class="features-text">
+                                    <h6>Abacus</h6>
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                                        Ipsum.Ipsum is simply dummy text of the printing.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="features-box">
+                                <div class="">
+                                    <img src="
+                                            {{ asset('frontend/images/course3.jpg') }}" class="img-fluid mx-auto">
+                                </div>
+                                <div class="features-text">
+                                    <h6>Online Coaching</h6>
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                                        Ipsum.Ipsum is simply dummy text of the printing.</p>
+                                </div>
+                            </div>
+                        </div>
                         <div class="item">
                             <div class="features-box">
                                 <div class="">
@@ -228,7 +269,43 @@
                                         Ipsum.Ipsum is simply dummy text of the printing.</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center mt-5">
+                    <a href="#" class="btn btn-add">View All</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
+                        <h2>Flash Courses</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="owl-carousel owl-theme test-boxes">
+                            <div class="item">
+                                <div class="features-box">
+                                    <div class="">
+                                        <img src="
+                                                {{ asset('frontend/images/course1.jpg') }}" class="img-fluid mx-auto">
+                                    </div>
+                                    <div class="features-text">
+                                        <h6>Drawing</h6>
+                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                                            Ipsum.Ipsum is simply dummy text of the printing.</p>
+                                    </div>
+                                </div>
+                            </div>
                         <div class="item">
                             <div class="features-box">
                                 <div class="">
@@ -273,11 +350,12 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-5">
-                    <a href="#" class="btn btn-add">View All</a>
+                    <a href="{{ route('available_courses') }}" class="btn btn-add">View All</a>
                 </div>
             </div>
         </div>
     </section>
+
     <!-- consulting part end -->
     <section id="gallery">
         <div class="container">
