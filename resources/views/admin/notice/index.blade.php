@@ -11,7 +11,7 @@
                     <ul class="breadcrumb p-0">
                         <li><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#" class="active">All Notices</a></li>
+                        <li><a href="#" class="active">All News</a></li>
 
                     </ul>
                 </div>
@@ -20,8 +20,8 @@
             <hr>
             <div class="dashboard-body-content">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5>Notices</h5>
-                    <a href="{{ route('admin.notice.create') }}" class="actionbutton btn btn-sm">ADD NOTICES</a>
+                    <h5>News</h5>
+                    <a href="{{ route('admin.notice.create') }}" class="actionbutton btn btn-sm">ADD NEWS</a>
                 </div>
                 <hr>
                 @if (session('success'))

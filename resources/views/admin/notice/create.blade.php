@@ -10,16 +10,16 @@
                     <ul class="breadcrumb p-0">
                         <li><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="{{ route('admin.notice.index') }}">All Notices</a></li>
+                        <li><a href="{{ route('admin.notice.index') }}">All News</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#" class="active">Add notice</a></li>
+                        <li><a href="#" class="active">Add News</a></li>
                     </ul>
                 </div>
                 @include('admin.layouts.navbar')
             </div>
             <hr>
             <div class="dashboard-body-content">
-                <h5>Add Notice</h5>
+                <h5>Add News</h5>
                 <hr>
                 <form action="{{ route('admin.notice.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf

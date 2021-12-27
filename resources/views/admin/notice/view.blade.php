@@ -10,9 +10,9 @@
                     <ul class="breadcrumb p-0">
                         <li><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="{{ route('admin.notice.index') }}">All Notices</a></li>
+                        <li><a href="{{ route('admin.notice.index') }}">All News</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#" class="active">View notice</a></li>
+                        <li><a href="#" class="active">View news</a></li>
                     </ul>
                 </div>
                 @include('admin.layouts.navbar')

@@ -16,8 +16,8 @@
                                 <div class="col-lg-5 col-12 order-md-1 order-2">
                                     <div class="banner-text">
                                         <div class="">
-                                            <img src="
-                                                    {{ asset('frontend/images/light.png') }}" class="img-fluid">
+                                            {{-- <img src="
+                                                    {{ asset('frontend/images/light.png') }}" class="img-fluid"> --}}
                                             <p class="head">QUALITY <span class="bold">EARLY
                                                     EDUCATION</span> IS NOT
                                                 A LUXURY, BUT A <span class="color">NECESSITY</span> <span
@@ -32,7 +32,7 @@
                                 <div class="col-md-5 col-12 order-md-2 order-1">
                                     <div class="banner-imgs">
 
-                                        <!--  <img src="images/banner1.png" class="img-fluid"> -->
+                                         {{-- <img src="{{ asset('frontend/images/banner1.png') }}" class="img-fluid">  --}}
 
                                     </div>
                                 </div>
@@ -143,6 +143,7 @@
                     </div>
                 </div>
             </div>
+            @if ($notices->count() > 0)
             <div class="row">
                 <div class="col-sm-12">
                     <div id="testimonials-list" class="owl-carousel">
@@ -189,7 +190,7 @@
                         </div> --}}
 
 
-                    </div>
+                    </div>   
                 </div>
             </div>
             <div class="row">
@@ -197,6 +198,9 @@
                     <a href="#" class="btn btn-add">View All</a>
                 </div>
             </div>
+            @else
+                 <h4 class="text-center">No news available</h4>
+            @endif
         </div>
     </section>
 
@@ -402,6 +406,7 @@
                     </div>
                 </div>
             </div>
+            @if ($events->count() > 0)
             <div class="row">
                 <div class="col-lg-12">
                     <div class="owl-carousel owl-theme events-boxes">
@@ -477,6 +482,9 @@
                     <a href="#" class="btn btn-add">View All</a>
                 </div>
             </div>
+            @else
+                <h4 class="text-center">No events available</h4>
+            @endif
         </div>
         <div class='ripple-background'>
             <div class='circle xxlarge shade1'></div>

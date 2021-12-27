@@ -62,7 +62,7 @@
             </li>
             <li><a href="#"><i class="fa fa-file" aria-hidden="true"></i>Report Generation</a></li>
             <li class="{{ Request::is('admin/notice*') ? 'active' : '' }}"><a
-                href="{{ route('admin.notice.index') }}"><i class="fas fa-snowman"></i></i>Notice
+                href="{{ route('admin.notice.index') }}"><i class="fa fa-newspaper-o"></i></i>News
                 Management</a>
              </li>
             <li class="{{ Request::is('admin/events*') ? 'active' : '' }}"><a
