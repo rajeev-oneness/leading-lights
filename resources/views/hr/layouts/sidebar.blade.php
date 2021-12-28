@@ -57,6 +57,11 @@
                         <i class="metismenu-icon fa fa-bullhorn"></i>Announcement
                     </a>
                 </li>
+                <li class="{{ Request::is('hr/student-galary') ? 'mm-active' : '' }}">
+                    <a href="{{ route('hr.student_galary') }}">
+                        <i class="metismenu-icon fas fa-image"></i>Student Galary
+                    </a>
+                </li>
                 <li class="{{ Request::is('hr/download_report') ? 'mm-active' : '' }}">
                     <a href="{{ route('hr.download_report') }}">
                         <i class="metismenu-icon fa fa-download"></i>Download report

@@ -15,6 +15,7 @@ Route::get('/', [CommonController::class, 'index'])->name('land_page');
 Route::get('/available-courses', [CommonController::class, 'availableCourses'])->name('available_courses');
 Route::get('/flash-courses', [CommonController::class, 'flashCourses'])->name('flash_courses');
 Route::get('/flash-courses-details/{id}', [CommonController::class, 'flashCourseDetails'])->name('flash_course_details');
+Route::get('/student-galary', [CommonController::class, 'studentGalary'])->name('student-galary');
 
 Auth::routes();
 

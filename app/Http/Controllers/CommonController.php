@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Event;
 use App\Models\notice;
 use App\Models\SpecialCourse;
+use App\Models\StudentGalary;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,7 @@ class CommonController extends Controller
         $data['notices'] = notice::latest()->get();
         $data['special_courses'] = SpecialCourse::where('class_id',null)->latest()->get();
         $data['flash_courses'] = Course::latest()->get();
+        $data['photos'] = StudentGalary::latest()->get();
         return view('welcome')->with($data);
     }
 
@@ -30,6 +32,11 @@ class CommonController extends Controller
     {
         $data['courses'] = Course::latest()->get();
         return view('flash_courses')->with($data);
+    }
+    public function studentGalary()
+    {
+        $data['photos'] = StudentGalary::latest()->get();
+        return view('student_galary')->with($data);
     }
     public function flashCourseDetails(Request $request,$id)
     {

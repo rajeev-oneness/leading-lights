@@ -28,5 +28,8 @@ Route::post('event-management/store', [HRController::class, 'uploadEvevnt'])->na
 Route::any('announcement', [HRController::class, 'Announcement'])->name('announcement');
 Route::post('announcement/store', [HRController::class, 'announcementUpload'])->name('announcement.store');
 
+// ------------------------Student Galary--------------------------
+Route::any('student-galary', [HRController::class, 'studentGalary'])->name('student_galary');
+
 // -----------------------Notice----------------------------
 Route::any('download_report', [HRController::class, 'downloadReport'])->name('download_report');

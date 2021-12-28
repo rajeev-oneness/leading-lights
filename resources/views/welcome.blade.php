@@ -190,7 +190,7 @@
                         </div> --}}
 
 
-                    </div>   
+                    </div>
                 </div>
             </div>
             {{-- <div class="row">
@@ -213,6 +213,7 @@
                     </div>
                 </div>
             </div>
+            @if ($special_courses->count() > 0)
             <div class="row">
                 <div class="col-lg-12">
                     <div class="owl-carousel owl-theme test-boxes">
@@ -277,6 +278,10 @@
                     <a href="{{ route('available_courses') }}" class="btn btn-add">View All</a>
                 </div>
             </div>
+            @else
+                <p class="text-warning">No new courses available</p>
+            @endif
+
         </div>
     </section>
 
@@ -289,6 +294,7 @@
                     </div>
                 </div>
             </div>
+            @if ($flash_courses->count() > 0)
             <div class="row">
                 <div class="col-lg-12">
                     <div class="owl-carousel owl-theme test-boxes">
@@ -314,6 +320,9 @@
                     <a href="{{ route('flash_courses') }}" class="btn btn-add">View All</a>
                 </div>
             </div>
+            @else
+                <p class="text-warning">No flash courses available</p>
+            @endif
         </div>
     </section>
 
@@ -352,7 +361,42 @@
             </div>
         </div>
     </section>
-
+    {{-- <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
+                        <h2>Student Galary</h2>
+                    </div>
+                </div>
+            </div>
+            @if ($photos->count() > 0)
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="owl-carousel owl-theme test-boxes">
+                        @foreach ($photos as $photo)
+                            <div class="item">
+                                <div class="features-box">
+                                    <div class="">
+                                        <img src="
+                                                {{ asset($photo->image) }}" class="img-fluid mx-auto">
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center mt-5">
+                    <a href="{{ route('student-galary') }}" class="btn btn-add">View All</a>
+                </div>
+            </div>
+            @else
+                <p class="text-warning">No photos available</p>
+            @endif
+        </div>
+    </section> --}}
 
     <!-- partner end -->
 

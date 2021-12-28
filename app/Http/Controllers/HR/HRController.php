@@ -13,6 +13,7 @@ use App\Models\Announcement;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\StudentGalary;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -565,5 +566,30 @@ class HRController extends Controller
         $user->save();
 
         return redirect()->back();
+    }
+
+    // Student Galary
+    public function studentGalary(Request $request)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET'){
+            $photos = StudentGalary::where('user_id',Auth::user()->id)->latest()->get();;
+            return view('hr.student_galary',compact('photos'));
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+            Validator::make($request->all(), [
+                'upload_file' => 'required|mimes:jpg,jpeg,png',
+            ], $messages = [
+                'upload_file.required' => 'This field is required.',
+                'upload_file.mimes' => 'Please upload pdf file',
+            ])->validate();
+        }
+        $image = $request->file('upload_file');
+        $fileName = imageUpload($image, 'student_galary');
+
+        $galary = new StudentGalary();
+        $galary->image = $fileName;
+        $galary->user_id = Auth::user()->id;
+        $galary->save();
+        return redirect()->back()->with('success','SUccessfully image uploaded');
     }
 }

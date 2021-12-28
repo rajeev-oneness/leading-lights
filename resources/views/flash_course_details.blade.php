@@ -115,11 +115,43 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
-                        <h2>Flash course_details Details</h2>
+                        <h2>Courses Details</h2>
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row m-0 mt-5">
+                <div class="col-12 col-lg-8 leftpart_course">
+                    <div class="course_titl">
+                        <h4>{{ $course_details->title }}</h4>
+                    </div>
+                    <div class="course_image">
+                        <img src="{{ asset($course_details->image) }}" class="img-fluid mx-auto">
+                    </div>
+                    <p>
+                        {{ $course_details->description }}
+                    </p>
+                    <p>
+                        {!! $course_details->course_content !!}
+                    </p>
+                </div>
+                <div class="col-12 col-lg-4 rightpart_course">
+                    <div class="card shadow-sm">
+                        <h5>Course Features</h5>
+                        <div class="fea_list">
+                            <p><span><i class="fa fa-user"></i> Enrolled :</span> 1200 students</p>
+                            <p><span><i class="fa fa-clock-o"></i> Duration :</span>  2 hours</p>
+                            <p><span><i class="fa fa-clipboard"></i> Lectures :</span>  8</p>
+                            <p><span><i class="fa fa-clone"></i> Categories :</span>Technology</p>
+                            <p><span><i class="fa fa-tags"></i> Tags :</span>Android, JavaScript</p>
+                        </div>
+                        <div class="col-12 text-center mt-3 price_bg">
+                                <h3>Price: <span>&#8377;{{ $course_details->fees }}</span></h3>
+                                <a class="btn btn-add btn-radius" href="javascript:void(0);">ENROLL COURSE</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-none">
                 <div class="col-lg-12">
                     <div class="row m-0">
                             <div class="col-12 col-lg-4 mb-3 pl-1 pr-1">
