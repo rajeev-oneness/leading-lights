@@ -115,32 +115,32 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
-                        <h2>Flash Courses</h2>
+                        <h2>Flash course_details Details</h2>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row m-0">
-                        @foreach ($courses as $course)
                             <div class="col-12 col-lg-4 mb-3 pl-1 pr-1">
                                 <a href="">
                                     <div class="item">
                                         <div class="features-box">
                                             <div class="">
                                                 <img src="
-                                                        {{ asset($course->image) }}" class="img-fluid mx-auto">
+                                                        {{ asset($course_details->image) }}" class="img-fluid mx-auto">
                                             </div>
                                             <div class="features-text">
-                                                <h6>{{ $course->title }}</h6>
-                                                <p>{{ $course->description }}</p>
-                                                <a href="{{ route('flash_course_details',$course->id) }}">Read more</a>
+                                                <span><span class="font-weight-bold"> Start date:</span> {{ date('d-F-y',strtotime($course_details->start_date)) }}</span><br>
+                                                <span><span class="font-weight-bold"> Fees: &#8377;</span>{{ $course_details->fees }}</span>
+                                                <h6>{{ $course_details->title }}</h6>
+                                                <p>{{ $course_details->description }}</p>
+                                                {!! $course_details->course_content !!}
                                             </div>
                                         </div>
                                     </div>
                                 </a>
                             </div>
-                        @endforeach
                     </div>
                 </div>
             </div>

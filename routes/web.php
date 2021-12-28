@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth, Illuminate\Support\Facades\Route;
 Route::get('/', [CommonController::class, 'index'])->name('land_page');
 Route::get('/available-courses', [CommonController::class, 'availableCourses'])->name('available_courses');
 Route::get('/flash-courses', [CommonController::class, 'flashCourses'])->name('flash_courses');
+Route::get('/flash-courses-details/{id}', [CommonController::class, 'flashCourseDetails'])->name('flash_course_details');
 
 Auth::routes();
 

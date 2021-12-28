@@ -31,6 +31,11 @@ class CommonController extends Controller
         $data['courses'] = Course::latest()->get();
         return view('flash_courses')->with($data);
     }
+    public function flashCourseDetails(Request $request,$id)
+    {
+        $data['course_details'] = Course::find($id);
+        return view('flash_course_details')->with($data);
+    }
     public function getFeesByClass(Request $request){
         $class_details = Classes::where('id',$request->class_id)->first();
         if ($class_details) {
