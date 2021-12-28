@@ -10,16 +10,16 @@
                     <ul class="breadcrumb p-0">
                         <li><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="{{ route('admin.classes.index') }}">All Classes List</a></li>
+                        <li><a href="{{ route('admin.courses.index') }}">All Courses List</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#" class="active">Add class</a></li>
+                        <li><a href="#" class="active">Add Course</a></li>
                     </ul>
                 </div>
                 @include('admin.layouts.navbar')
             </div>
             <hr>
             <div class="dashboard-body-content">
-                <h5>Add Class</h5>
+                <h5>Add Course</h5>
                 <hr>
                 <form action="{{ route('admin.courses.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -39,9 +39,53 @@
                             <div class="form-group edit-box">
                                 {{-- <label for="description">Description</label> --}}
                                  <label for="review">Description<span class="text-danger">*</span></label>
-                                <textarea name="description"></textarea>
+                                <textarea name="description" class="form-control" cols="2" rows="2">{{ old('description') }}</textarea>
                                 @if ($errors->has('description'))
                                     <span style="color: red;">{{ $errors->first('description') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group edit-box">
+                                {{-- <label for="description">Description</label> --}}
+                                 <label for="review">This course includes<span class="text-danger">*</span></label>
+                                <textarea name="course_content" class="form-control" cols="2" rows="2">{{ old('course_content') }}</textarea>
+                                @if ($errors->has('course_content'))
+                                    <span style="color: red;">{{ $errors->first('course_content') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <div class="form-group edit-box">
+                                {{-- <label for="start_date">Start Date</label> --}}
+                                 <label for="review">Start Date<span class="text-danger">*</span></label>
+                                <input type="date" id="start_date" class="form-control" name="start_date"
+                                    value="{{ old('start_date') }}">
+                                @if ($errors->has('start_date'))
+                                    <span style="color: red;">{{ $errors->first('start_date') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group edit-box">
+                                {{-- <label for="image">Cover Image</label> --}}
+                                 <label for="review">No of sessions<span class="text-danger">*</span></label>
+                                <input type="number" id="sessions" class="form-control" name="sessions"
+                                    value="{{ old('sessions') }}">
+                                @if ($errors->has('sessions'))
+                                    <span style="color: red;">{{ $errors->first('sessions') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group edit-box">
+                                {{-- <label for="fees">Fees</label> --}}
+                                 <label for="review">Fees(INR)<span class="text-danger">*</span></label>
+                                <input type="number" id="fees" class="form-control" name="fees"
+                                    value="{{ old('fees') }}">
+                                @if ($errors->has('fees'))
+                                    <span style="color: red;">{{ $errors->first('fees') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -56,69 +100,6 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="form-group edit-box">
-                                {{-- <label for="time">Assigned teacher</label> --}}
-                                 <label for="review">Assigned teacher<span class="text-danger">*</span></label>
-                                <select class="form-control" name="teacher_id" id="teacher_id">
-                                    <option value="">Please select teacher</option>
-                                    @if ($teachers)
-                                        @foreach ($teachers as $teacher)
-                                            <option value="{{ $teacher->id }}">{{ $teacher->first_name }}
-                                                {{ $teacher->last_name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                @if ($errors->has('teacher_id'))
-                                    <span style="color: red;">{{ $errors->first('teacher_id') }}</span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group edit-box">
-                                {{-- <label for="start_date">Start Date</label> --}}
-                                 <label for="review">Start Date<span class="text-danger">*</span></label>
-                                <input type="date" id="start_date" class="form-control" name="start_date"
-                                    value="{{ old('start_date') }}">
-                                @if ($errors->has('start_date'))
-                                    <span style="color: red;">{{ $errors->first('start_date') }}</span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="col-lg-6">
-                            <div class="form-group edit-box">
-                                {{-- <label for="end_date">End Date</label> --}}
-                                 <label for="review">End Date<span class="text-danger">*</span></label>
-                                <input type="date" id="end_date" class="form-control" name="end_date"
-                                    value="{{ old('end_date') }}">
-                                @if ($errors->has('end_date'))
-                                    <span style="color: red;">{{ $errors->first('end_date') }}</span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group edit-box">
-                                {{-- <label for="fees">Fees</label> --}}
-                                 <label for="review">Fees<span class="text-danger">*</span></label>
-                                <input type="number" id="fees" class="form-control" name="fees"
-                                    value="{{ old('fees') }}">
-                                @if ($errors->has('fees'))
-                                    <span style="color: red;">{{ $errors->first('fees') }}</span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group edit-box">
-                                {{-- <label for="duration">Duration in days</label> --}}
-                                 <label for="review">Duration in days<span class="text-danger">*</span></label>
-                                <input type="number" id="duration" class="form-control" name="duration"
-                                    value="{{ old('duration') }}">
-                                @if ($errors->has('duration'))
-                                    <span style="color: red;">{{ $errors->first('duration') }}</span>
-                                @endif
-                            </div>
-                        </div>
                     </div>
                     <div class="form-group d-flex justify-content-end">
                         <button type="submit" class="actionbutton">SAVE</button>
@@ -128,6 +109,6 @@
         </div>
     </div>
     <script>
-        CKEDITOR.replace('description');
+        CKEDITOR.replace('course_content');
     </script>
 @endsection

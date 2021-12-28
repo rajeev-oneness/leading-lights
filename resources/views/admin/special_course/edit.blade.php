@@ -91,6 +91,9 @@
 										@if ($errors->has('image'))
 											<span style="color: red;">{{ $errors->first('image') }}</span>
 										@endif
+										@if ($course_details->image)
+											<img src="{{ asset($course_details->image) }}" alt="" height="100" width="100">
+										@endif
 									</div>
 								</div>
 							</div>

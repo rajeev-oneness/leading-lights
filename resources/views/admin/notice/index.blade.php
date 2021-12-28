@@ -38,7 +38,7 @@
                             <tr>
                                 <th>Serial No</th>
                                 <th>Title</th>
-                                <th>Created Date</th>
+                                <th>Publish Date</th>
                                 <th style="width:100px">Action</th>
                             </tr>
                         </thead>

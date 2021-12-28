@@ -115,7 +115,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
-                        <h2>Popular Courses</h2>
+                        <h2>Flash Courses</h2>
                     </div>
                 </div>
             </div>
@@ -132,6 +132,8 @@
                                                         {{ asset($course->image) }}" class="img-fluid mx-auto">
                                             </div>
                                             <div class="features-text">
+                                                <span><span class="font-weight-bold"> Start date:</span> {{ date('d-F-y',strtotime($course->start_date)) }}</span><br>
+                                                <span><span class="font-weight-bold"> Fees: &#8377;</span>{{ $course->fees }}</span>
                                                 <h6>{{ $course->title }}</h6>
                                                 <p>{{ $course->description }}</p>
                                             </div>

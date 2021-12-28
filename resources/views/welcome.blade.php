@@ -193,11 +193,11 @@
                     </div>   
                 </div>
             </div>
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-lg-12 text-center mt-5">
                     <a href="#" class="btn btn-add">View All</a>
                 </div>
-            </div>
+            </div> --}}
             @else
                  <h4 class="text-center">No news available</h4>
             @endif
@@ -292,64 +292,26 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="owl-carousel owl-theme test-boxes">
+                        @foreach ($flash_courses as $course)
                             <div class="item">
                                 <div class="features-box">
                                     <div class="">
                                         <img src="
-                                                {{ asset('frontend/images/course1.jpg') }}" class="img-fluid mx-auto">
+                                                {{ asset($course->image) }}" class="img-fluid mx-auto">
                                     </div>
                                     <div class="features-text">
-                                        <h6>Drawing</h6>
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                            Ipsum.Ipsum is simply dummy text of the printing.</p>
+                                        <h6>{{ $course->title }}</h6>
+                                        <p>{{ $course->description }}</p>
                                     </div>
                                 </div>
                             </div>
-                        <div class="item">
-                            <div class="features-box">
-                                <div class="">
-                                    <img src="
-                                            {{ asset('frontend/images/course2.jpg') }} " class="   img-fluid mx-auto">
-                                </div>
-                                <div class="features-text">
-                                    <h6>Abacus</h6>
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum.Ipsum is simply dummy text of the printing.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="features-box">
-                                <div class="">
-                                    <img src="
-                                            {{ asset('frontend/images/course3.jpg') }}" class="img-fluid mx-auto">
-                                </div>
-                                <div class="features-text">
-                                    <h6>Online Coaching</h6>
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum.Ipsum is simply dummy text of the printing.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="features-box">
-                                <div class="">
-                                    <img src="
-                                            {{ asset('frontend/images/course1.jpg') }}" class="img-fluid mx-auto">
-                                </div>
-                                <div class="features-text">
-                                    <h6>Drawing</h6>
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum.Ipsum is simply dummy text of the printing.</p>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-5">
-                    <a href="#" class="btn btn-add">View All</a>
+                    <a href="{{ route('flash_courses') }}" class="btn btn-add">View All</a>
                 </div>
             </div>
         </div>

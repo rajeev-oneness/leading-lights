@@ -25,19 +25,19 @@
                     <div class="col-12 pt-3 pb-3 pl-0 pr-0">
                         <h5 class="text-blue">Basic details</h5>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-6">
                         <div class="form-group">
-                            <label for="title">Class Name</label>
+                            <label for="title">Course Title</label>
                             <input type="text" id="title" value="{{ $course_details->title }}" readonly>
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-6">
                         <div class="form-group">
-                            <label for="teacher_id">Assigned teacher</label>
-                            <input type="text" id="teacher_id"
-                                value="{{ $teacher->first_name }} {{ $teacher->last_name }}" readonly>
+                            <label for="title">Description</label>
+                            <div>{{ $course_details->description }}</div>
                         </div>
                     </div>
+                   
                     <div class="col-lg-3">
                         <div class="form-group">
                             <label for="start_date">Start Date</label>
@@ -46,20 +46,20 @@
                     </div>
                     <div class="col-lg-3">
                         <div class="form-group">
-                            <label for="end_date">End Date</label>
-                            <input type="text" id="end_date" value="{{ $course_details->end_date }}" readonly>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <label for="duration">Duration in days</label>
-                            <input type="text" id="duration" value="{{ $course_details->duration }}" readonly>
+                            <label for="start_date">No of sessions</label>
+                            <input type="text" id="start_date" value="{{ $course_details->sessions }}" readonly>
                         </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="form-group">
                             <label for="fees">Fees(INR)</label>
                             <input type="text" id="fees" value="{{ $course_details->fees }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="title">This course includes</label>
+                            <div>{!! $course_details->course_content !!}</div>
                         </div>
                     </div>
 

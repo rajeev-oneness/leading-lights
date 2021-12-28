@@ -24,7 +24,7 @@
                 <form action="{{ route('admin.notice.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row m-0 pt-3">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="form-group edit-box">
                                 {{-- <label for="name">Holiday Name</label> --}}
                                 <label for="title">Title<span class="text-danger">*</span></label>
@@ -34,16 +34,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="form-group edit-box">
-                                {{-- <label for="date">Date</label> --}}
-                                <label for="review">Date</label>
-                                <input type="date" id="date" class="form-control" name="date" value="{{ old('date') }}">
-                                @if ($errors->has('date'))
-                                    <span style="color: red;">{{ $errors->first('date') }}</span>
-                                @endif
-                            </div>
-                        </div>
+                        <input type="hidden" id="date" class="form-control" name="date" value="{{ old('date') }}">
                         <div class="col-lg-12">
                             <div class="form-group edit-box">
                                 <label for="desc">Description<span class="text-danger">*</span></label>

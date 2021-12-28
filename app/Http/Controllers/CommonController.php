@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classes;
+use App\Models\Course;
 use App\Models\Event;
 use App\Models\notice;
 use App\Models\SpecialCourse;
@@ -16,6 +17,7 @@ class CommonController extends Controller
         $data['events'] = Event::latest()->get();
         $data['notices'] = notice::latest()->get();
         $data['special_courses'] = SpecialCourse::where('class_id',null)->latest()->get();
+        $data['flash_courses'] = Course::latest()->get();
         return view('welcome')->with($data);
     }
 
@@ -23,6 +25,11 @@ class CommonController extends Controller
     {
         $data['courses'] = SpecialCourse::where('class_id',null)->latest()->get();
         return view('special_courses')->with($data);
+    }
+    public function flashCourses()
+    {
+        $data['courses'] = Course::latest()->get();
+        return view('flash_courses')->with($data);
     }
     public function getFeesByClass(Request $request){
         $class_details = Classes::where('id',$request->class_id)->first();

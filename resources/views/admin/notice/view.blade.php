@@ -33,14 +33,6 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
-                                 <label for="date" class="font-weight-bold">Date</label>
-                                <div>
-                                    {{ $notice->date ?? 'N/A'}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group edit-box">
                                 <label for="desc" class="font-weight-bold">Description</label>
                                <div>
                                    {!! $notice->desc !!}
