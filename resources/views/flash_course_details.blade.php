@@ -115,7 +115,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
-                        <h2>Courses Details</h2>
+                        <h2>Course Details</h2>
                     </div>
                 </div>
             </div>
@@ -127,22 +127,21 @@
                     <div class="course_image">
                         <img src="{{ asset($course_details->image) }}" class="img-fluid mx-auto">
                     </div>
-                    <p>
-                        {{ $course_details->description }}
-                    </p>
-                    <p>
+                    <p class="font-weight-bold">This course includes</p>
+                    <div style="border: 1px">
                         {!! $course_details->course_content !!}
-                    </p>
+                    </div>
+
                 </div>
                 <div class="col-12 col-lg-4 rightpart_course">
                     <div class="card shadow-sm">
                         <h5>Course Features</h5>
                         <div class="fea_list">
-                            <p><span><i class="fa fa-user"></i> Enrolled :</span> 1200 students</p>
-                            <p><span><i class="fa fa-clock-o"></i> Duration :</span>  2 hours</p>
-                            <p><span><i class="fa fa-clipboard"></i> Lectures :</span>  8</p>
-                            <p><span><i class="fa fa-clone"></i> Categories :</span>Technology</p>
-                            <p><span><i class="fa fa-tags"></i> Tags :</span>Android, JavaScript</p>
+                            <p>
+                                {{ $course_details->description }}
+                            </p>
+                            <p><span><i class="fa fa-clipboard"></i> No of sessions :</span>  {{ $course_details->sessions }}</p>
+                            <p><span><i class="fas fa-calendar-alt"></i> Start Date :</span>{{ date('d-F-y',strtotime($course_details->start_date)) }}</p>
                         </div>
                         <div class="col-12 text-center mt-3 price_bg">
                                 <h3>Price: <span>&#8377;{{ $course_details->fees }}</span></h3>
