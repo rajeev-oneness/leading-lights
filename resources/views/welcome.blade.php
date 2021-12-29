@@ -297,19 +297,23 @@
             @if ($flash_courses->count() > 0)
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="owl-carousel owl-theme test-boxes">
+                    <div class="row m-0">
                         @foreach ($flash_courses as $course)
-                            <div class="item">
-                                <div class="features-box">
-                                    <div class="">
-                                        <img src="
-                                                {{ asset($course->image) }}" class="img-fluid mx-auto">
+                            <div class="col-12 col-lg-4 mb-3 pl-1 pr-1">
+                                <a href="">
+                                    <div class="item">
+                                        <div class="features-box">
+                                            <div class="">
+                                                <img src="
+                                                        {{ asset($course->image) }}" class="img-fluid mx-auto">
+                                            </div>
+                                            <div class="features-text">
+                                                <h6>{{ $course->title }}</h6>
+                                                <p>{{ $course->description }}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="features-text">
-                                        <h6>{{ $course->title }}</h6>
-                                        <p>{{ $course->description }}</p>
-                                    </div>
-                                </div>
+                                </a>
                             </div>
                         @endforeach
                     </div>
@@ -356,7 +360,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-5">
-                    <a href="#" class="btn btn-add">View All</a>
+                    <a href="{{ route('student-galary') }}" class="btn btn-add">View All</a>
                 </div>
             </div>
         </div>
@@ -370,11 +374,11 @@
                     </div>
                 </div>
             </div>
-            @if ($photos->count() > 0)
+            @if ($student_photos->count() > 0)
             <div class="row">
                 <div class="col-lg-12">
                     <div class="owl-carousel owl-theme test-boxes">
-                        @foreach ($photos as $photo)
+                        @foreach ($student_photos as $photo)
                             <div class="item">
                                 <div class="features-box">
                                     <div class="">
@@ -492,8 +496,9 @@
             @if ($events->count() > 0)
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="owl-carousel owl-theme events-boxes">
+                    <div class="row m-0">
                         @foreach ($events as $event)
+                        <div class="col-12 col-lg-4 mb-3 pl-1 pr-1">
                             <div class="item">
                                 <div class="features-box">
                                     <div class="">
@@ -517,6 +522,7 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
                         @endforeach
                         {{-- <div class="item">
                             <div class="features-box">
@@ -562,7 +568,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-5">
-                    <a href="#" class="btn btn-add">View All</a>
+                    <a href="{{ route('available_events') }}" class="btn btn-add">View All</a>
                 </div>
             </div>
             @else
@@ -638,7 +644,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-5">
-                    <a href="#" class="btn btn-add">View All</a>
+                    <a href="{{ route('vlog') }}" class="btn btn-add">View All</a>
                 </div>
             </div>
         </div>

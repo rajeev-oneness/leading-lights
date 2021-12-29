@@ -16,6 +16,9 @@ Route::get('/available-courses', [CommonController::class, 'availableCourses'])-
 Route::get('/flash-courses', [CommonController::class, 'flashCourses'])->name('flash_courses');
 Route::get('/flash-courses-details/{id}', [CommonController::class, 'flashCourseDetails'])->name('flash_course_details');
 Route::get('/student-galary', [CommonController::class, 'studentGalary'])->name('student-galary');
+Route::get('/available-events', [CommonController::class, 'availableEvents'])->name('available_events');
+Route::get('/vlog', [CommonController::class, 'vlog'])->name('vlog');
+Route::get('/vlog-details', [CommonController::class, 'vlogDetails'])->name('vlogDetails');
 
 Auth::routes();
 

@@ -115,7 +115,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
-                        <h2>Student Galary</h2>
+                        <h2>Vlog Details Page</h2>
                     </div>
                 </div>
             </div>

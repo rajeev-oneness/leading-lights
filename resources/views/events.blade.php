@@ -115,21 +115,21 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
-                        <h2>Student Galary</h2>
+                        <h2>Latest Events</h2>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row m-0">
-                        @foreach ($photos as $photo)
+                        @foreach ($events as $event)
                             <div class="col-12 col-lg-4 mb-3 pl-1 pr-1">
                                 <a href="#">
                                     <div class="item card border-0 cou_list">
                                         <div class="features-box">
                                             <div class="">
                                                 <img src="
-                                                        {{ asset($photo->image) }}" class="img-fluid mx-auto">
+                                                        {{ asset($event->image) }}" class="img-fluid mx-auto">
                                             </div>
                                         </div>
                                     </div>

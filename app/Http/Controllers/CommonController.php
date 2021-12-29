@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Auth;
 class CommonController extends Controller
 {
     public function index(Request $request){
-        $data['events'] = Event::latest()->get();
+        $data['events'] = Event::latest()->take(3)->get();
         $data['notices'] = notice::latest()->get();
         $data['special_courses'] = SpecialCourse::where('class_id',null)->latest()->get();
-        $data['flash_courses'] = Course::latest()->get();
-        $data['photos'] = StudentGalary::latest()->get();
+        $data['flash_courses'] = Course::latest()->take(3)->get();
+        $data['student_photos'] = StudentGalary::latest()->get();
         return view('welcome')->with($data);
     }
 
@@ -37,6 +37,21 @@ class CommonController extends Controller
     {
         $data['photos'] = StudentGalary::latest()->get();
         return view('student_galary')->with($data);
+    }
+    public function availableEvents()
+    {
+        $data['events'] = Event::latest()->get();
+        return view('events')->with($data);
+    }
+    public function vlog()
+    {
+        $data['photos'] = StudentGalary::latest()->get();
+        return view('vlog')->with($data);
+    }
+    public function vlogDetails()
+    {
+        $data['photos'] = StudentGalary::latest()->get();
+        return view('vlog_details')->with($data);
     }
     public function flashCourseDetails(Request $request,$id)
     {
