@@ -131,6 +131,21 @@
                                                 <img src="
                                                         {{ asset($event->image) }}" class="img-fluid mx-auto">
                                             </div>
+                                            <div class="features-text">
+                                                <h6>{{ $event->title }}</h6>
+                                                <span class="text-success">{{ date('M d, Y', strtotime($event->start_date)) }}
+                                                    @if ($event->end_date)
+                                                        - {{ date('M d, Y', strtotime($event->end_date)) }}
+                                                    @endif
+                                                </span>
+                                                <br>
+                                                <span class="text-success">{{ date('h:i A', strtotime($event->start_time)) }}
+                                                    @if ($event->end_time)
+                                                        - {{ date('h:i A', strtotime($event->end_time)) }}
+                                                    @endif
+                                                </span>
+                                                {!! $event->desc !!}
+                                            </div>
                                         </div>
                                     </div>
                                 </a>

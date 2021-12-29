@@ -35,19 +35,28 @@
 								</div>
 								<div class="col-lg-12">
 									<div class="form-group edit-box">
-										<label for="video_url">Video URL<span class="text-danger">*</span></label>
-										<input type="text" name="video_url" class="form-control" id="video_url" value="{{ old('video_url') }}">
-										@if ($errors->has('video_url'))
-											<span style="color: red;">{{ $errors->first('video_url') }}</span>
-										@endif
-									</div>
+									<label for="description">Description<span class="text-danger">*</span></label>
+									<textarea name="description">{{ old('description') }}</textarea>
+									@if ($errors->has('description'))
+										<span style="color: red;">{{ $errors->first('description') }}</span>
+									@endif
 								</div>
-								<div class="col-lg-12">
+								</div>
+                                <div class="col-lg-12">
 									<div class="form-group edit-box">
-									<label for="content">Video Content<span class="text-danger">*</span></label>
-									<textarea name="video_content">{{ old('video_content') }}</textarea>
-									@if ($errors->has('video_content'))
-										<span style="color: red;">{{ $errors->first('video_content') }}</span>
+									<label for="content">Upload image/video<span class="text-danger">*</span></label>
+									<input type="file" name="image" class="form-control" id="image" value="{{ old('image') }}">
+									@if ($errors->has('image'))
+										<span style="color: red;">{{ $errors->first('image') }}</span>
+									@endif
+								</div>
+								</div>
+                                <div class="col-lg-12">
+									<div class="form-group edit-box">
+									<label for="content">Facebook Link<span class="text-danger">*</span></label>
+									<input type="text" name="facebook_link" class="form-control" id="facebook_link" value="{{ old('facebook_link') }}">
+									@if ($errors->has('facebook_link'))
+										<span style="color: red;">{{ $errors->first('facebook_link') }}</span>
 									@endif
 								</div>
 								</div>
@@ -60,6 +69,6 @@
 				</div>
 			</div>
 <script>
-	CKEDITOR.replace( 'video_content' );
+	CKEDITOR.replace( 'description' );
 </script>
 @endsection

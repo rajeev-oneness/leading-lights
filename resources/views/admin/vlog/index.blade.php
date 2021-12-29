@@ -38,8 +38,7 @@
 					<tr>
 						<th>Serial No</th>
 						<th>Title</th>
-						<th>Video URL</th>
-						<th style="width:100px" class="text-center">Status</th>
+                        <th>Publish date</th>
 						<th style="width:100px">Action</th>
 					</tr>
 				</thead>
@@ -47,17 +46,10 @@
 					@foreach ($vlogs as $key => $vlog)
 						<tr>
 							<td>{{ $key + 1 }}</td>
-							<td>{{ $vlog->title }}</td>
-							<td>{{ $vlog->video_url }}</td>
-							<td class="text-center">
-								@if ($vlog->status == 1)
-								<span class="badge badge-success">Active</span>
-								@else
-								<span class="badge badge-warning">Inactive</span>
-								@endif
-							</td>
+							<td>{{ \Illuminate\Support\Str::limit($vlog->title,15) }}</td>
+                            <td>{{ date('Y-m-d',strtotime($vlog->created_at)) }}</td>
 							<td>
-								{{-- <a href="{{ route('admin.vlog.show',$vlog->id) }}"><i class="far fa-eye"></i></a> --}}
+								<a href="{{ route('admin.vlog.show',$vlog->id) }}"><i class="far fa-eye"></i></a>
 								<a href="{{ route('admin.vlog.edit',$vlog->id) }}" class="ml-2"><i class="far fa-edit"></i></a>
 								<a href="javascript:void(0);" class="ml-2" data-toggle="modal" data-target="#exampleModal" onclick="deleteForm({{ $vlog->id }})"><i class="far fa-trash-alt text-danger"></i></a>
 								<form id="delete_form_{{ $vlog->id }}" action="{{ route('admin.vlog.destroy',$vlog->id) }}" method="POST">
@@ -112,7 +104,7 @@
 		}
 
 		setTimeout(function(){
-  			$(".alert-success").hide();        
+  			$(".alert-success").hide();
 		}, 5000);
-	</script>	
+	</script>
  @endsection

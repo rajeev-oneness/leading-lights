@@ -3,7 +3,9 @@
     "ignorePaths": [],
     "dictionaryDefinitions": [],
     "dictionaries": [],
-    "words": [],
+    "words": [
+        "Vlog"
+    ],
     "ignoreWords": [],
     "import": [],
     "language": "en,en-GB,en-US"

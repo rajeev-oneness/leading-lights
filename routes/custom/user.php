@@ -20,6 +20,7 @@ Route::group(['middleware' => ['payment.confirm']], function () {
         Route::get('classes', [UserController::class, 'classes'])->name('classes')->middleware('payment.confirm');
         Route::get('dairy', [UserController::class, 'dairy'])->name('dairy');
         Route::get('homework', [UserController::class, 'homework'])->name('homework');
+        Route::any('testimonial', [UserController::class, 'testimonial'])->name('testimonial');
         // Route::get('exam',[UserController::class,'exam'])->name('exam');
 
         // Exam

@@ -34,31 +34,36 @@
 										@endif
 									</div>
 								</div>
-								<div class="col-lg-12">
+                                <div class="col-lg-12">
 									<div class="form-group edit-box">
-										<label for="video_url">Video URL<span class="text-danger">*</span></label>
-										<input type="text" name="video_url" class="form-control" id="video_url" value="{{ $vlog_details->video_url }}">
-										@if ($errors->has('video_url'))
-											<span style="color: red;">{{ $errors->first('video_url') }}</span>
-										@endif
-									</div>
-								</div>
-								<div class="col-lg-12">
-									<div class="form-group edit-box">
-									<label for="content">Video Content<span class="text-danger">*</span></label>
-									<textarea name="video_content">{{ $vlog_details->video_content }}</textarea>
-									@if ($errors->has('video_content'))
-										<span style="color: red;">{{ $errors->first('video_content') }}</span>
+									<label for="description">Description<span class="text-danger">*</span></label>
+									<textarea name="description">{{ $vlog_details->description ?? old('description') }}</textarea>
+									@if ($errors->has('description'))
+										<span style="color: red;">{{ $errors->first('description') }}</span>
 									@endif
 								</div>
 								</div>
-								<div class="col-lg-12">
+                                <div class="col-lg-12">
 									<div class="form-group edit-box">
-									<label for="name">Status</label>
-									<select class="form-control" name="status">
-										<option value="1" @if($vlog_details->status == 1) selected @endif>Active</option>
-										<option value="0" @if($vlog_details->status == 0) selected @endif>Inactive</option>
-									</select>
+									<label for="content">Upload image/video<span class="text-danger">*</span></label>
+									<input type="file" name="image" class="form-control" id="image" value="{{ old('image') }}">
+                                    @if ($vlog_details->file_path)
+                                        <div>
+                                            <img src="{{ asset($vlog_details->file_path) }}" alt="" height="100px" width="150px">
+                                        </div>
+                                    @endif
+                                    @if ($errors->has('image'))
+										<span style="color: red;">{{ $errors->first('image') }}</span>
+									@endif
+								</div>
+								</div>
+                                <div class="col-lg-12">
+									<div class="form-group edit-box">
+									<label for="content">Facebook Link<span class="text-danger">*</span></label>
+									<input type="text" name="facebook_link" class="form-control" id="facebook_link" value="{{ $vlog_details->facebook_link  ?? old('facebook_link') }}">
+									@if ($errors->has('facebook_link'))
+										<span style="color: red;">{{ $errors->first('facebook_link') }}</span>
+									@endif
 								</div>
 								</div>
 							</div>
@@ -70,6 +75,6 @@
 				</div>
 			</div>
 <script>
-	CKEDITOR.replace( 'video_content' );
+	CKEDITOR.replace( 'description' );
 </script>
 @endsection

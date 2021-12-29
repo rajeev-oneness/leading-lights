@@ -8,7 +8,9 @@ use App\Models\Event;
 use App\Models\notice;
 use App\Models\SpecialCourse;
 use App\Models\StudentGalary;
+use App\Models\Testimonial;
 use App\Models\User;
+use App\Models\VLOG;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,7 +21,9 @@ class CommonController extends Controller
         $data['notices'] = notice::latest()->get();
         $data['special_courses'] = SpecialCourse::where('class_id',null)->latest()->get();
         $data['flash_courses'] = Course::latest()->take(3)->get();
-        $data['student_photos'] = StudentGalary::latest()->get();
+        $data['student_photos'] = StudentGalary::latest()->take(8)->get();
+        $data['testimonials'] = Testimonial::latest()->get();
+        $data['vlogs'] = VLOG::latest()->take(3)->get();
         return view('welcome')->with($data);
     }
 
@@ -35,7 +39,7 @@ class CommonController extends Controller
     }
     public function studentGalary()
     {
-        $data['photos'] = StudentGalary::latest()->get();
+        $data['student_photos'] = StudentGalary::latest()->get();
         return view('student_galary')->with($data);
     }
     public function availableEvents()
@@ -45,12 +49,12 @@ class CommonController extends Controller
     }
     public function vlog()
     {
-        $data['photos'] = StudentGalary::latest()->get();
+        $data['vlogs'] = VLOG::latest()->get();
         return view('vlog')->with($data);
     }
-    public function vlogDetails()
+    public function vlogDetails($id)
     {
-        $data['photos'] = StudentGalary::latest()->get();
+        $data['vlog_details'] = VLOG::find($id);
         return view('vlog_details')->with($data);
     }
     public function flashCourseDetails(Request $request,$id)

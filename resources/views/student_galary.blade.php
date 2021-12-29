@@ -120,23 +120,15 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="row m-0">
-                        @foreach ($photos as $photo)
-                            <div class="col-12 col-lg-4 mb-3 pl-1 pr-1">
-                                <a href="#">
-                                    <div class="item card border-0 cou_list">
-                                        <div class="features-box">
-                                            <div class="">
-                                                <img src="
-                                                        {{ asset($photo->image) }}" class="img-fluid mx-auto">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        @endforeach
+                @foreach ($student_photos as $photo)
+                    <div class="col-12 col-lg-3 p-1">
+                        <div class="card item">
+                            <a href="{{ asset($photo->image) }}" data-lightbox="photos">
+                                <img src="{{ asset($photo->image) }}" class="card-img-top img-fluid">
+                            </a>
+                        </div>
                     </div>
+                @endforeach
                 </div>
             </div>
         </div>

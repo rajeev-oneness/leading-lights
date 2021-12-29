@@ -340,8 +340,68 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-6">
+            <div class="row m-0 student_gallery">
+                @foreach ($student_photos as $photo)
+                    <div class="col-12 col-lg-3 p-1">
+                        <div class="card item">
+                            <a href="{{ asset($photo->image) }}" data-lightbox="photos">
+                                <img src="{{ asset($photo->image) }}" class="card-img-top img-fluid">
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+                {{-- <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g2.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g2.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g3.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g3.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g4.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g4.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g5.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g5.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g2.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g2.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g1.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g1.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g4.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g4.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div> --}}
+
+                <!--<div class="col-lg-6 d-none">
                     <ul class="gallery">
                         <li class="first"><img src="{{ asset('frontend/images/g1.jpg') }}"
                                 class="img-fluid mx-auto w-100"></li>
@@ -349,14 +409,14 @@
                         <li><img src="{{ asset('frontend/images/g3.jpg') }}" class="img-fluid mx-auto w-100"></li>
                     </ul>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6 d-none">
                     <ul class="gallery">
                         <li><img src="{{ asset('frontend/images/g4.jpg') }}" class="img-fluid mx-auto w-100"></li>
                         <li><img src="{{ asset('frontend/images/g5.jpg') }}" class="img-fluid mx-auto w-100"></li>
                         <li class="first"><img src="{{ asset('frontend/images/g6.jpg') }}"
                                 class="img-fluid mx-auto w-100"></li>
                     </ul>
-                </div>
+                </div>-->
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-5">
@@ -419,65 +479,29 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="owl-carousel owl-theme testi-boxes">
+                        @foreach ($testimonials as $testimonial)
                         <div class="item">
                             <div class="media p-3 align-items-center img">
                                 <!-- <div class="quote">
                                              <img src="images/quote.png" class="img-fluid">
                                         </div> -->
-                                <img src="{{ asset('frontend/images/img-1.jpg') }}" alt="John Doe"
+                                @php
+                                    if ($testimonial->user->image) {
+                                        $profile_image_path = $testimonial->user->image;
+                                    } else {
+                                        $profile_image_path = 'frontend/images/img-1.jpg';
+                                    }
+
+                                @endphp
+                                <img src="{{ $profile_image_path }}" alt="John Doe"
                                     class="img-fluid">
                                 <div class="media-body">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                        unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                        It has survived not only five centuries, but also the leap into electronic
-                                        typesetting.</p>
-                                    <h4>Johanathon Doe</h4>
+                                    {!! $testimonial->content !!}
+                                    <h4>{{ $testimonial->user->first_name }} {{ $testimonial->user->last_name }}</h4>
                                 </div>
                             </div>
                         </div>
-                        <div class="item">
-                            <div class="media  p-3 align-items-center img">
-                                <img src="{{ asset('frontend/images/img-1.jpg') }}" alt="John Doe"
-                                    class="img-fluid">
-                                <div class="media-body">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                        unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                        It has survived not only five centuries, but also the leap into electronic
-                                        typesetting.</p>
-                                    <h4>Johanathon Doe</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="media  p-3 align-items-center img">
-                                <img src="{{ asset('frontend/images/img-1.jpg') }}" alt="John Doe"
-                                    class="img-fluid">
-                                <div class="media-body">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                        unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                        It has survived not only five centuries, but also the leap into electronic
-                                        typesetting.</p>
-                                    <h4>Johanathon Doe</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="media  p-3 align-items-center img">
-                                <img src="{{ asset('frontend/images/img-1.jpg') }}" alt="John Doe"
-                                    class="img-fluid">
-                                <div class="media-body">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                        unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                        It has survived not only five centuries, but also the leap into electronic
-                                        typesetting.</p>
-                                    <h4>Johanathon Doe</h4>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -583,7 +607,64 @@
             <div class='circle small shade5'></div>
         </div>
     </section>
+
     <section id="vlog">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
+                        <h2>Recent Vlog</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-0">
+                @foreach ($vlogs as $vlog)
+                    <div class="col-12 col-lg-4 mb-3 mb-lg-0">
+                        <div class="card border-0 shadow-sm">
+                            <a href="{{ route('vlogDetails',$vlog->id) }}">
+                                @php
+                                        $file_path = $vlog->file_path;
+                                        $file_extension= explode('.',$file_path)[1];
+                                @endphp
+                                @if ($file_extension === 'jpg' || $file_extension === 'jpeg' || $file_extension === 'png')
+                                <div class="bl_img">
+                                    <img src="{{ asset($file_path) }}" alt="" class="img-fluid mx-auto">
+                                </div>
+                                @else
+                                <div class="bl_img">
+                                    <video class="img-fluid mx-auto" controls>
+                                        <source src="{{ asset($file_path) }}" type="video/{{ $file_extension }}">
+                                    Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                @endif
+                                {{-- <div class="bl_img">
+                                    <img src="{{ asset('frontend/images/blog1.jpg') }}" class="img-fluid mx-auto">
+
+                                </div> --}}
+                                <div class="card-body">
+                                    <div class="date-sec">
+                                        <i class="far fa-calendar-alt"></i>{{ date('M',strtotime($vlog->created_at)) }} <span>{{ date('d',strtotime($vlog->created_at)) }}</span>, {{ date('Y',strtotime($vlog->created_at)) }}
+                                        <h5><i class="far fa-user"></i>By Admin</h5>
+                                    </div>
+                                    <h2>{{ \Illuminate\Support\Str::limit($vlog->title,50) }}</h2>
+                                    {!! \Illuminate\Support\Str::limit($vlog->description,350) !!}
+                                    <span class="text-right">Read More <i class="fas fa-arrow-right ml-1"></i></span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center mt-5">
+                    <a href="{{ route('vlog') }}" class="btn btn-add">View All</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--<section id="vlog" class="d-none">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -648,7 +729,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section>-->
 
     <!-- testimonial end -->
 

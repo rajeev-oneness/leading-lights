@@ -80,6 +80,11 @@
                     </a>
                 </li>
                 @if (Auth::user()->status == 1)
+                <li class="{{ Request::is('user/testimonial') ? 'mm-active' : '' }}">
+                    <a href="{{ route('user.testimonial') }}">
+                        <i class="metismenu-icon fa fa-cog"></i>Testimonial
+                    </a>
+                </li>
                 <li class="{{ Request::is('user/change-password') ? 'mm-active' : '' }}">
                     <a href="{{ route('user.changePassword') }}">
                         <i class="metismenu-icon fa fa-cog"></i>Settings

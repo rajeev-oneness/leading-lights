@@ -23,6 +23,8 @@ use App\Models\Event;
 use App\Models\OtherPaymentDetails;
 use App\Models\Payment;
 use App\Models\SpecialCourse;
+use App\Models\Testimonial;
+use App\Models\VLOG;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -591,5 +593,23 @@ class UserController extends Controller
         }
         return redirect(route('user.payment'));
         // return view('student.course_checkout',compact('all_courses','total_amount'));
+    }
+
+    public function testimonial(Request $request)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            return view('student.testimonial');
+        }else{
+            $this->validate($request,[
+                'content' => 'required'
+            ]);
+
+            $testimonial = new Testimonial();
+            $testimonial->content = $request->content;
+            $testimonial->user_id = Auth::user()->id;
+            $testimonial->save();
+
+            return redirect()->back()->with('success','Testimonial successfully updated');
+        }
     }
 }
