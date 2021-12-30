@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Auth,Illuminate\Support\Facades\Route;
     Route::post('update-profile', [TeacherController::class,'updateProfile'])->name('updateProfile');
     Route::get('change-password', [TeacherController::class,'changePassword'])->name('changePassword');
     Route::post('update-password', [TeacherController::class,'updatePassword'])->name('updatePassword');
-    Route::get('home-task',[TeacherController::class,'homeTask'])->name('homeTask');
-    Route::post('upload-home-task',[TeacherController::class,'uploadHomeTask'])->name('uploadHomeTask');
+
+    Route::get('home-task',[HomeTaskController::class,'index'])->name('homeTask');
+    Route::get('home-task/create',[HomeTaskController::class,'create'])->name('homeTask.create');
+    Route::post('home-task/store',[HomeTaskController::class,'store'])->name('homeTask.store');
 
     Route::any('attendance',[TeacherController::class,'attendance'])->name('attendance');
     Route::get('access-class',[TeacherController::class,'class'])->name('class');

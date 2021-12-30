@@ -56,9 +56,9 @@
                         <i class="metismenu-icon fa fa-window-restore"></i>Access Class
                     </a>
                 </li>
-                <li class="{{ Request::is('teacher/home-task') ? 'mm-active' : '' }}">
+                <li class="{{ Request::is('teacher/home-task*') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.homeTask') }}">
-                        <i class="metismenu-icon fa fa-upload"></i>Upload home task
+                        <i class="metismenu-icon fas fa-tasks"></i>Home task
                     </a>
                 </li>
                 <li class="{{ Request::is('teacher/task-submission') ? 'mm-active' : '' }}">

@@ -15,11 +15,17 @@
                         <div class="page-title-icon">
                             <i class="fa fa-upload"></i>
                         </div>
-                        <div>Upload home task
+                        <div>Home Task
                         </div>
                     </div>
                 </div>
             </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item active"><a href="{{ route('teacher.homeTask') }}">History of Task</a></li>
+                  <li class="breadcrumb-item " aria-current="page">Arrange Home Task </li>
+                </ol>
+              </nav>
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="row">
@@ -35,8 +41,8 @@
                                     </button>
                                 </div>
                             @endif
-                            <form class="form" action="{{ route('teacher.uploadHomeTask') }}" method="POST"
-                                enctype="multipart/form-data">
+                            <form class="form" action="{{ route('teacher.homeTask.store') }}" method="POST"
+                                enctype="multipart/form-data" id="homeTaskForm">
                                 @csrf
                                 <div class="d-sm-flex align-items-top justify-content-between mb-4">
                                     {{-- <select class="form-control" id="class" name="class">
@@ -116,13 +122,14 @@
                                 <!--  <p class="des dec"><span class="mr-2"><i class="fa fa-circle"></i></span>Set Quiestion Mannually</p>
                                                     <textarea cols="80" id="editor1" name="editor1" rows="10"></textarea> -->
                                 <div class="card-header-title mb-4">
-                                    Upload Quiestion Paper as a Document (Only accept pdf format)</div>
+                                    </div>
+                                <h5 class="font-weight-bold">Upload Question Paper as a Document (Only accept pdf format)</h5>
                                 <div class="file-upload">
                                     <button class="file-upload-btn" type="button"
                                         onclick="$('.file-upload-input').trigger( 'click' )">Add file</button>
                                     <div class="image-upload-wrap">
                                         <input class="file-upload-input" type='file' onchange="readURL(this);"
-                                            accept="image/*" name="upload_file" id="upload_file" />
+                                            accept="" name="upload_file" id="upload_file" />
                                         <div class="drag-text">
                                             <h3>Drag and drop a file or select add file</h3>
                                         </div>
@@ -150,52 +157,10 @@
                                         <span></span>
                                     </div>
                                 </div> --}}
-                                <button type="submit" class="btn-pill btn btn-dark mt-4" name="submit">Assign Now</button>
-
+                                <div class="float-right">
+                                    <button type="submit" class="btn-pill btn btn-dark mt-4" id="btn_submit" class="float-right">Create Now</button>
+                                </div>
                             </form>
-
-                            <div class="card-header-title mb-4 mt-4"> History Of Task </div>
-                            <div class="table-responsive">
-                                <table class="table table-hover bg-table" id="task_table">
-                                    <thead>
-                                        <tr>
-                                            <th>Serial no</th>
-                                            <th>Class/Group</th>
-                                            <th>Subject</th>
-                                            <th>Submission Date</th>
-                                            <th>Submission Time</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($tasks as $i => $task)
-                                            <tr class="bg-tr">
-                                                <th>{{ $i + 1 }}</th>
-                                                @php
-                                                    if ($task->group_id) {
-                                                        $group_details = App\Models\Group::find($task->group_id);
-                                                    }
-                                                    if ($task->class) {
-                                                        $class_details = App\Models\Classes::find($task->class);
-                                                    }
-                                                    $subject_details = App\Models\Subject::find($task->subject);
-                                                @endphp
-                                                <td>
-                                                    @if ($task->class)
-                                                        {{ $class_details->name }} <span
-                                                            class="badge badge-secondary">Class</span>
-                                                    @else
-                                                        {{ $group_details->name }} <span
-                                                            class="badge badge-secondary">Group</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{ $subject_details->name }}</td>
-                                                <td>{{ $task->submission_date }}</td>
-                                                <td>{{ $task->submission_time }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -204,6 +169,40 @@
         @include('teacher.layouts.static_footer')
     </div>
     <script>
+        $('#btn_submit').on('click',function(){
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "To upload this home task!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, SUBMIT it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    document.getElementById('homeTaskForm').submit();
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'You can continue to create this task :)',
+                        'error'
+                    )
+                }
+            })
+        });
         $('#class_name').on('click', function() {
             var class_name = $('#class_name').val();
             var after_split = class_name.split("-")[1];

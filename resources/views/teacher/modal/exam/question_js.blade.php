@@ -3,7 +3,7 @@
     var k = 0;
     var question_total_marks = 0;
 
-    $(document).on("click", ".add_question_section", function() {
+    $(document).on("click", ".add_question_section", function () {
         var exam_id = $(this).data('id');
         var exam_full_marks = $(this).data('full-marks');
         $(".modal-body #exam_id").val(exam_id);
@@ -12,7 +12,7 @@
     });
     // Descriptive Question
 
-    $("#dynamic-ar").click(function() {
+    $("#dynamic-ar").click(function () {
         // Start
         var errorFlagOne = 0;
         var inputs = document.getElementById('dynamicAddRemove').getElementsByTagName('input');
@@ -100,77 +100,116 @@
             </select>
          </div>
         `);
-        document.getElementById('dynamicAddRemove').scrollIntoView(false);
+            document.getElementById('dynamicAddRemove').scrollIntoView(false);
             ++i;
             ++k;
         }
     });
 
-    $('#btnSubmit').on('click', function(e) {
-        e.preventDefault();
-        // Start
-        var errorFlagOne = 0;
-        var inputs = document.getElementById('dynamicAddRemove').getElementsByTagName('input');
-        var all_textarea = document.getElementById('dynamicAddRemove').getElementsByTagName('textarea');
-        for (var i = 0; i < inputs.length; ++i)
-            if (inputs[i].type === 'file') {
-                if (inputs[i].value !== '') {
-                    var filetype = inputs[i].value.split('.')[1];
-                    var match = ['image/jpeg', 'image/jpg'];
+    $('#btnSubmit').on('click', function (e) {
 
-                    if ((filetype == 'jpg') || (filetype == 'jpeg') || (filetype == 'png')) {
 
-                    } else {
-                        setTimeout(() => {
-                            $('.file_error').html('');
-                        }, 5000);
-                        $('.file_error').text('Plz select a valid type image.Only jpg,jpeg and png allowed');
-                        errorFlagOne = 1;
+        event.preventDefault();
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "To save question into this exam!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, SUBMIT it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                event.preventDefault();
+                // Start
+                var errorFlagOne = 0;
+                var inputs = document.getElementById('dynamicAddRemove').getElementsByTagName('input');
+                var all_textarea = document.getElementById('dynamicAddRemove').getElementsByTagName(
+                    'textarea');
+                for (var i = 0; i < inputs.length; ++i)
+                    if (inputs[i].type === 'file') {
+                        if (inputs[i].value !== '') {
+                            var filetype = inputs[i].value.split('.')[1];
+                            var match = ['image/jpeg', 'image/jpg'];
+
+                            if ((filetype == 'jpg') || (filetype == 'jpeg') || (filetype == 'png')) {
+
+                            } else {
+                                setTimeout(() => {
+                                    $('.file_error').html('');
+                                }, 5000);
+                                $('.file_error').text(
+                                    'Plz select a valid type image.Only jpg,jpeg and png allowed');
+                                errorFlagOne = 1;
+                            }
+
+                        }
+
                     }
 
-                }
-
-            }
-
-        for (var i = 0; i < all_textarea.length; ++i) {
-            let textarea_value = all_textarea[i].value;
-            if (all_textarea[i].type === 'textarea') {
-                if (all_textarea[i].value === '') {
-                    if (i == 0) {
-                        setTimeout(() => {
-                            $('.textarea_error').text('');
-                        }, 5000);
-                        $('.textarea_error').text('Question filed can\'t be blank');
-                    } else {
-                        setTimeout(() => {
-                            $('.textarea_error' + (i)).text('');
-                        }, 5000);
-                        $('.textarea_error' + (i + 1)).text('Question filed can\'t be blank');
+                for (var i = 0; i < all_textarea.length; ++i) {
+                    let textarea_value = all_textarea[i].value;
+                    if (all_textarea[i].type === 'textarea') {
+                        if (all_textarea[i].value === '') {
+                            if (i == 0) {
+                                setTimeout(() => {
+                                    $('.textarea_error').text('');
+                                }, 5000);
+                                $('.textarea_error').text('Question filed can\'t be blank');
+                            } else {
+                                setTimeout(() => {
+                                    $('.textarea_error' + (i)).text('');
+                                }, 5000);
+                                $('.textarea_error' + (i + 1)).text('Question filed can\'t be blank');
+                            }
+                            errorFlagOne = 1;
+                        }
+                        if (textarea_value.length > 500) {
+                            setTimeout(() => {
+                                $('.textarea_error').text(
+                                    'You can update a question within 500 characters');
+                            }, 5000);
+                            errorFlagOne = 1;
+                        }
                     }
-                    errorFlagOne = 1;
                 }
-                if (textarea_value.length > 500) {
-                    setTimeout(() => {
-                        $('.textarea_error').text('You can update a question within 500 characters');
-                    }, 5000);
-                    errorFlagOne = 1;
+
+                // End
+
+                if (errorFlagOne == 1) {
+                    return false;
+                } else {
+                    $('.desc-question-form').submit();
                 }
+                setTimeout(() => {
+                    window.location.href =
+                        "{{ route('teacher.exam.index') }}";
+                }, 2000);
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'You can continue to add question into this exam :)',
+                    'error'
+                )
             }
-        }
-
-        // End
-
-        if (errorFlagOne == 1) {
-            return false;
-        } else {
-            $('.desc-question-form').submit();
-        }
+        })
 
     });
 
     // MCQ Question
 
-    $("#dynamic-ar-mcq").click(function() {
+    $("#dynamic-ar-mcq").click(function () {
         var errorFlagOne = 0;
         var individual_marks = 0;
         var inputs = document.getElementById('dynamicAddRemoveMCQ').getElementsByTagName('input');
@@ -351,149 +390,187 @@
             </div>
         </div>
         `);
-        document.getElementById('dynamicAddRemoveMCQ').scrollIntoView(false);
+            document.getElementById('dynamicAddRemoveMCQ').scrollIntoView(false);
             ++i;
             ++k;
         }
     });
 
-    $('#btn_mcq_submit').on('click', function(e) {
+    $('#btn_mcq_submit').on('click', function (e) {
         e.preventDefault();
-        // Start
-        var errorFlagOne = 0;
-        // var exam_full_marks = $(".modal-header #exam_full_marks").val();
-        var inputs = document.getElementById('dynamicAddRemoveMCQ').getElementsByTagName('input');
-        var all_textarea = document.getElementById('dynamicAddRemoveMCQ').getElementsByTagName('textarea');
-        for (var i = 0; i < inputs.length; ++i) {
-            if (inputs[i].type === 'file') {
-                if (inputs[i].value !== '') {
-                    var filetype = inputs[i].value.split('.')[1];
-                    var match = ['image/jpeg', 'image/jpg'];
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
 
-                    if ((filetype == 'jpg') || (filetype == 'jpeg') || (filetype == 'png')) {
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "To save question into this exam!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, SUBMIT it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Start
+                var errorFlagOne = 0;
+                // var exam_full_marks = $(".modal-header #exam_full_marks").val();
+                var inputs = document.getElementById('dynamicAddRemoveMCQ').getElementsByTagName(
+                    'input');
+                var all_textarea = document.getElementById('dynamicAddRemoveMCQ').getElementsByTagName(
+                    'textarea');
+                for (var i = 0; i < inputs.length; ++i) {
+                    if (inputs[i].type === 'file') {
+                        if (inputs[i].value !== '') {
+                            var filetype = inputs[i].value.split('.')[1];
+                            var match = ['image/jpeg', 'image/jpg'];
 
-                    } else {
-                        if (k > 0) {
-                            setTimeout(() => {
-                                $('.file_error' + k).html('');
-                            }, 5000);
-                            $('.file_error' + k).text(
-                                'Plz select a valid type image.Only jpg,jpeg and png allowed');
-                        } else {
-                            setTimeout(() => {
-                                $('.file_error').html('');
-                            }, 5000);
-                            $('.file_error').text(
-                                'Plz select a valid type image.Only jpg,jpeg and png allowed');
+                            if ((filetype == 'jpg') || (filetype == 'jpeg') || (filetype == 'png')) {
+
+                            } else {
+                                if (k > 0) {
+                                    setTimeout(() => {
+                                        $('.file_error' + k).html('');
+                                    }, 5000);
+                                    $('.file_error' + k).text(
+                                        'Plz select a valid type image.Only jpg,jpeg and png allowed'
+                                    );
+                                } else {
+                                    setTimeout(() => {
+                                        $('.file_error').html('');
+                                    }, 5000);
+                                    $('.file_error').text(
+                                        'Plz select a valid type image.Only jpg,jpeg and png allowed'
+                                    );
+                                }
+                                errorFlagOne = 1;
+                            }
+
                         }
-                        errorFlagOne = 1;
-                    }
-
-                }
-
-            }
-            if (inputs[i].type === 'text') {
-                if (inputs[i].value == '') {
-                    if (k > 0) {
-                        setTimeout(() => {
-                            $('.option_1_err' + (k)).text('');
-                        }, 5000);
-                        $('.option_1_err' + (k)).text('Option 1 can\'t be blank');
-
-                        setTimeout(() => {
-                            $('.option_2_err' + (k)).text('');
-                        }, 5000);
-                        $('.option_2_err' + (k)).text('Option 2 can\'t be blank');
-
-                        setTimeout(() => {
-                            $('.option_3_err' + (k)).text('');
-                        }, 5000);
-                        $('.option_3_err' + (k)).text('Option 3 can\'t be blank');
-
-                        setTimeout(() => {
-                            $('.option_4_err' + (k)).text('');
-                        }, 5000);
-                        $('.option_4_err' + (k)).text('Option 4 can\'t be blank');
-
-                        setTimeout(() => {
-                            $('.answer_err' + (k)).text('');
-                        }, 5000);
-                        $('.answer_err' + (k)).text('Right answer can\'t be blank');
-
-                    } else {
-                        setTimeout(() => {
-                            $('.option_1_err').text('');
-                        }, 5000);
-                        $('.option_1_err').text('Option 1 can\'t be blank');
-
-                        setTimeout(() => {
-                            $('.option_2_err').text('');
-                        }, 5000);
-                        $('.option_2_err').text('Option 2 can\'t be blank');
-
-                        setTimeout(() => {
-                            $('.option_3_err').text('');
-                        }, 5000);
-                        $('.option_3_err').text('Option 3 can\'t be blank');
-
-                        setTimeout(() => {
-                            $('.option_4_err').text('');
-                        }, 5000);
-                        $('.option_4_err').text('Option 4 can\'t be blank');
-
-                        setTimeout(() => {
-                            $('.answer_err').text('');
-                        }, 5000);
-                        $('.answer_err').text('Right answer can\'t be blank');
 
                     }
-                    errorFlagOne = 1;
-                }
+                    if (inputs[i].type === 'text') {
+                        if (inputs[i].value == '') {
+                            if (k > 0) {
+                                setTimeout(() => {
+                                    $('.option_1_err' + (k)).text('');
+                                }, 5000);
+                                $('.option_1_err' + (k)).text('Option 1 can\'t be blank');
 
-            }
-        }
+                                setTimeout(() => {
+                                    $('.option_2_err' + (k)).text('');
+                                }, 5000);
+                                $('.option_2_err' + (k)).text('Option 2 can\'t be blank');
 
-        for (var i = 0; i < all_textarea.length; ++i) {
-            let textarea_value = all_textarea[i].value;
-            if (all_textarea[i].type === 'textarea') {
-                if (all_textarea[i].value === '') {
-                    if (k == 0) {
-                        setTimeout(() => {
-                            $('.textarea_error').text('');
-                        }, 5000);
-                        $('.textarea_error').text('Question filed can\'t be blank');
-                    } else {
-                        setTimeout(() => {
-                            $('.textarea_error' + (k)).text('');
-                        }, 5000);
-                        $('.textarea_error' + (k)).text('Question filed can\'t be blank');
+                                setTimeout(() => {
+                                    $('.option_3_err' + (k)).text('');
+                                }, 5000);
+                                $('.option_3_err' + (k)).text('Option 3 can\'t be blank');
+
+                                setTimeout(() => {
+                                    $('.option_4_err' + (k)).text('');
+                                }, 5000);
+                                $('.option_4_err' + (k)).text('Option 4 can\'t be blank');
+
+                                setTimeout(() => {
+                                    $('.answer_err' + (k)).text('');
+                                }, 5000);
+                                $('.answer_err' + (k)).text('Right answer can\'t be blank');
+
+                            } else {
+                                setTimeout(() => {
+                                    $('.option_1_err').text('');
+                                }, 5000);
+                                $('.option_1_err').text('Option 1 can\'t be blank');
+
+                                setTimeout(() => {
+                                    $('.option_2_err').text('');
+                                }, 5000);
+                                $('.option_2_err').text('Option 2 can\'t be blank');
+
+                                setTimeout(() => {
+                                    $('.option_3_err').text('');
+                                }, 5000);
+                                $('.option_3_err').text('Option 3 can\'t be blank');
+
+                                setTimeout(() => {
+                                    $('.option_4_err').text('');
+                                }, 5000);
+                                $('.option_4_err').text('Option 4 can\'t be blank');
+
+                                setTimeout(() => {
+                                    $('.answer_err').text('');
+                                }, 5000);
+                                $('.answer_err').text('Right answer can\'t be blank');
+
+                            }
+                            errorFlagOne = 1;
+                        }
+
                     }
-                    errorFlagOne = 1;
                 }
-                if (textarea_value.length > 500) {
-                    setTimeout(() => {
-                        $('.textarea_error').text('You can update a question within 500 characters');
-                    }, 5000);
-                    errorFlagOne = 1;
-                }
-            }
-        }
 
-        // End
-        if (errorFlagOne == 1) {
-            return false;
-        } else {
-            $('.question-form').submit();
-        }
+                for (var i = 0; i < all_textarea.length; ++i) {
+                    let textarea_value = all_textarea[i].value;
+                    if (all_textarea[i].type === 'textarea') {
+                        if (all_textarea[i].value === '') {
+                            if (k == 0) {
+                                setTimeout(() => {
+                                    $('.textarea_error').text('');
+                                }, 5000);
+                                $('.textarea_error').text('Question filed can\'t be blank');
+                            } else {
+                                setTimeout(() => {
+                                    $('.textarea_error' + (k)).text('');
+                                }, 5000);
+                                $('.textarea_error' + (k)).text('Question filed can\'t be blank');
+                            }
+                            errorFlagOne = 1;
+                        }
+                        if (textarea_value.length > 500) {
+                            setTimeout(() => {
+                                $('.textarea_error').text(
+                                    'You can update a question within 500 characters');
+                            }, 5000);
+                            errorFlagOne = 1;
+                        }
+                    }
+                }
+
+                // End
+                if (errorFlagOne == 1) {
+                    return false;
+                } else {
+                    $('.question-form').submit();
+                }
+                setTimeout(() => {
+                    window.location.href =
+                        "{{ route('teacher.exam.index') }}";
+                }, 2000);
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'You can continue to add question :)',
+                    'error'
+                )
+            }
+        })
 
     });
 
-    // Mixed Question 
+    // Mixed Question
 
-    $("#dynamic-ar-mixed-mcq").click(function() {
+    $("#dynamic-ar-mixed-mcq").click(function () {
         var errorFlagOne = 0;
         var inputs = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('input');
-        var all_marks  = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('select');
+        var all_marks = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('select');
         // console.log(all_marks);
         var all_textarea = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('textarea');
         var question_type = $(`input:hidden[name="addMoreInputFields[${k}][question_type]"]`).val();
@@ -616,10 +693,10 @@
             var individual_marks;
             if (question_type == 1) {
                 individual_marks = 1;
-            }else{
+            } else {
                 individual_marks = parseInt(all_marks[index].value);
             }
-            
+
         }
 
         // End
@@ -680,17 +757,17 @@
         </div>
         <input type="hidden" name="addMoreInputFields[${i}][question_type]" value="1">
         `);
-        document.getElementById('dynamicAddRemoveMixed').scrollIntoView(false);
+            document.getElementById('dynamicAddRemoveMixed').scrollIntoView(false);
             ++i;
             ++k;
         }
     });
-    $("#dynamic-ar-mixed-desc").click(function() {
+    $("#dynamic-ar-mixed-desc").click(function () {
         // Start
-        var errorFlagOne = 0;      
+        var errorFlagOne = 0;
         var individual_marks = 0;
         var inputs = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('input');
-        var all_marks  = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('select');
+        var all_marks = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('select');
         // console.log(all_marks);
         var question_type = $(`input:hidden[name="addMoreInputFields[${k}][question_type]"]`).val();
         var all_textarea = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('textarea');
@@ -789,13 +866,13 @@
         for (let index = 0; index < all_marks.length; ++index) {
             if (question_type == 1) {
                 individual_marks = 1;
-            }else{
+            } else {
                 individual_marks = parseInt(all_marks[index].value);
-               
+
             }
-            
+
         }
-        
+
 
         for (var i = 0; i < all_textarea.length; ++i) {
             let textarea_value = all_textarea[i].value;
@@ -856,143 +933,185 @@
         </div>
         <input type="hidden" name="addMoreInputFields[${i}][question_type]" value="2">
         `);
-        document.getElementById('dynamicAddRemoveMixed').scrollIntoView(false);
+            document.getElementById('dynamicAddRemoveMixed').scrollIntoView(false);
             ++i;
             ++k;
         }
     });
 
 
-    $('#btn_mixed_submit').on('click', function(e) {
-        e.preventDefault();
-        // Start
-        var errorFlagOne = 0;
-        var inputs = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('input');
-        var all_textarea = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName('textarea');
-        var question_type = $(`input:hidden[name="addMoreInputFields[${k}][question_type]"]`).val();
-        for (var i = 0; i < inputs.length; ++i) {
-            if (inputs[i].type === 'file') {
-                if (inputs[i].value !== '') {
-                    var filetype = inputs[i].value.split('.')[1];
-                    var match = ['image/jpeg', 'image/jpg'];
+    $('#btn_mixed_submit').on('click', function (e) {
 
-                    if ((filetype == 'jpg') || (filetype == 'jpeg') || (filetype == 'png')) {
+        event.preventDefault();
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
 
-                    } else {
-                        if (k > 0) {
-                            setTimeout(() => {
-                                $('.file_error' + k).html('');
-                            }, 5000);
-                            $('.file_error' + k).text(
-                                'Plz select a valid type image.Only jpg,jpeg and png allowed');
-                        } else {
-                            setTimeout(() => {
-                                $('.file_error').html('');
-                            }, 5000);
-                            $('.file_error').text(
-                                'Plz select a valid type image.Only jpg,jpeg and png allowed');
-                        }
-                        errorFlagOne = 1;
-                    }
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "To save question into this exam!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, SUBMIT it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                event.preventDefault();
+                // Start
+                var errorFlagOne = 0;
+                var inputs = document.getElementById('dynamicAddRemoveMixed').getElementsByTagName(
+                    'input');
+                var all_textarea = document.getElementById('dynamicAddRemoveMixed')
+                    .getElementsByTagName('textarea');
+                var question_type = $(`input:hidden[name="addMoreInputFields[${k}][question_type]"]`)
+                    .val();
+                for (var i = 0; i < inputs.length; ++i) {
+                    if (inputs[i].type === 'file') {
+                        if (inputs[i].value !== '') {
+                            var filetype = inputs[i].value.split('.')[1];
+                            var match = ['image/jpeg', 'image/jpg'];
 
-                }
+                            if ((filetype == 'jpg') || (filetype == 'jpeg') || (filetype == 'png')) {
 
-            }
-            if (question_type == 1) {
-                if (inputs[i].type === 'text') {
-                    if (inputs[i].value == '') {
-                        if (k > 0) {
-                            setTimeout(() => {
-                                $('.option_1_err' + (k)).text('');
-                            }, 5000);
-                            $('.option_1_err' + (k)).text('Option 1 can\'t be blank');
-
-                            setTimeout(() => {
-                                $('.option_2_err' + (k)).text('');
-                            }, 5000);
-                            $('.option_2_err' + (k)).text('Option 2 can\'t be blank');
-
-                            setTimeout(() => {
-                                $('.option_3_err' + (k)).text('');
-                            }, 5000);
-                            $('.option_3_err' + (k)).text('Option 3 can\'t be blank');
-
-                            setTimeout(() => {
-                                $('.option_4_err' + (k)).text('');
-                            }, 5000);
-                            $('.option_4_err' + (k)).text('Option 4 can\'t be blank');
-
-                            setTimeout(() => {
-                                $('.answer_err' + (k)).text('');
-                            }, 5000);
-                            $('.answer_err' + (k)).text('Right answer can\'t be blank');
-
-                        } else {
-                            setTimeout(() => {
-                                $('.option_1_err').text('');
-                            }, 5000);
-                            $('.option_1_err').text('Option 1 can\'t be blank');
-
-                            setTimeout(() => {
-                                $('.option_2_err').text('');
-                            }, 5000);
-                            $('.option_2_err').text('Option 2 can\'t be blank');
-
-                            setTimeout(() => {
-                                $('.option_3_err').text('');
-                            }, 5000);
-                            $('.option_3_err').text('Option 3 can\'t be blank');
-
-                            setTimeout(() => {
-                                $('.option_4_err').text('');
-                            }, 5000);
-                            $('.option_4_err').text('Option 4 can\'t be blank');
-
-                            setTimeout(() => {
-                                $('.answer_err').text('');
-                            }, 5000);
-                            $('.answer_err').text('Right answer can\'t be blank');
+                            } else {
+                                if (k > 0) {
+                                    setTimeout(() => {
+                                        $('.file_error' + k).html('');
+                                    }, 5000);
+                                    $('.file_error' + k).text(
+                                        'Plz select a valid type image.Only jpg,jpeg and png allowed'
+                                        );
+                                } else {
+                                    setTimeout(() => {
+                                        $('.file_error').html('');
+                                    }, 5000);
+                                    $('.file_error').text(
+                                        'Plz select a valid type image.Only jpg,jpeg and png allowed'
+                                        );
+                                }
+                                errorFlagOne = 1;
+                            }
 
                         }
-                        errorFlagOne = 1;
+
                     }
+                    if (question_type == 1) {
+                        if (inputs[i].type === 'text') {
+                            if (inputs[i].value == '') {
+                                if (k > 0) {
+                                    setTimeout(() => {
+                                        $('.option_1_err' + (k)).text('');
+                                    }, 5000);
+                                    $('.option_1_err' + (k)).text('Option 1 can\'t be blank');
 
-                }
-            }
-        }
+                                    setTimeout(() => {
+                                        $('.option_2_err' + (k)).text('');
+                                    }, 5000);
+                                    $('.option_2_err' + (k)).text('Option 2 can\'t be blank');
 
-        for (var i = 0; i < all_textarea.length; ++i) {
-            let textarea_value = all_textarea[i].value;
-            if (all_textarea[i].type === 'textarea') {
-                if (all_textarea[i].value === '') {
-                    if (k == 0) {
-                        setTimeout(() => {
-                            $('.textarea_error').text('');
-                        }, 5000);
-                        $('.textarea_error').text('Question filed can\'t be blank');
-                    } else {
-                        setTimeout(() => {
-                            $('.textarea_error' + (k)).text('');
-                        }, 5000);
-                        $('.textarea_error' + (k)).text('Question filed can\'t be blank');
+                                    setTimeout(() => {
+                                        $('.option_3_err' + (k)).text('');
+                                    }, 5000);
+                                    $('.option_3_err' + (k)).text('Option 3 can\'t be blank');
+
+                                    setTimeout(() => {
+                                        $('.option_4_err' + (k)).text('');
+                                    }, 5000);
+                                    $('.option_4_err' + (k)).text('Option 4 can\'t be blank');
+
+                                    setTimeout(() => {
+                                        $('.answer_err' + (k)).text('');
+                                    }, 5000);
+                                    $('.answer_err' + (k)).text('Right answer can\'t be blank');
+
+                                } else {
+                                    setTimeout(() => {
+                                        $('.option_1_err').text('');
+                                    }, 5000);
+                                    $('.option_1_err').text('Option 1 can\'t be blank');
+
+                                    setTimeout(() => {
+                                        $('.option_2_err').text('');
+                                    }, 5000);
+                                    $('.option_2_err').text('Option 2 can\'t be blank');
+
+                                    setTimeout(() => {
+                                        $('.option_3_err').text('');
+                                    }, 5000);
+                                    $('.option_3_err').text('Option 3 can\'t be blank');
+
+                                    setTimeout(() => {
+                                        $('.option_4_err').text('');
+                                    }, 5000);
+                                    $('.option_4_err').text('Option 4 can\'t be blank');
+
+                                    setTimeout(() => {
+                                        $('.answer_err').text('');
+                                    }, 5000);
+                                    $('.answer_err').text('Right answer can\'t be blank');
+
+                                }
+                                errorFlagOne = 1;
+                            }
+
+                        }
                     }
-                    errorFlagOne = 1;
                 }
-                if (textarea_value.length > 500) {
-                    setTimeout(() => {
-                        $('.textarea_error').text('You can update a question within 500 characters');
-                    }, 5000);
-                    errorFlagOne = 1;
-                }
-            }
-        }
 
-        // End
-        if (errorFlagOne == 1) {
-            return false;
-        } else {
-            $('.mixed-question-form').submit();
-        }
+                for (var i = 0; i < all_textarea.length; ++i) {
+                    let textarea_value = all_textarea[i].value;
+                    if (all_textarea[i].type === 'textarea') {
+                        if (all_textarea[i].value === '') {
+                            if (k == 0) {
+                                setTimeout(() => {
+                                    $('.textarea_error').text('');
+                                }, 5000);
+                                $('.textarea_error').text('Question filed can\'t be blank');
+                            } else {
+                                setTimeout(() => {
+                                    $('.textarea_error' + (k)).text('');
+                                }, 5000);
+                                $('.textarea_error' + (k)).text('Question filed can\'t be blank');
+                            }
+                            errorFlagOne = 1;
+                        }
+                        if (textarea_value.length > 500) {
+                            setTimeout(() => {
+                                $('.textarea_error').text(
+                                    'You can update a question within 500 characters');
+                            }, 5000);
+                            errorFlagOne = 1;
+                        }
+                    }
+                }
+
+                // End
+                if (errorFlagOne == 1) {
+                    return false;
+                } else {
+                    $('.mixed-question-form').submit();
+                }
+                setTimeout(() => {
+                    window.location.href =
+                    "{{ route('teacher.exam.index') }}";
+                }, 2000);
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'You can continue to add question into this exam  :)',
+                    'error'
+                )
+            }
+        })
 
     });
+
 </script>

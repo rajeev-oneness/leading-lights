@@ -20,9 +20,11 @@
                 </ol>
               </nav>
             <div class="card mb-3">
+                <div class="card-header qtitle justify-content-center">
+                    Leading Lights
+                </div>
                 <div class="card-body">
                     {{-- <a href="{{ route('teacher.exam.index') }}" class="btn btn-primary btn-lg"><i class="fa fa-arrow-left"></i> Back</a> --}}
-                    <div class="card-header-title mb-4">Exam details</div>
                     @if ($questions->count() > 0)
                         @foreach ($questions as $i => $question)
                             <h5>{{ $i + 1 }}. {{ $question->question }}</h5>

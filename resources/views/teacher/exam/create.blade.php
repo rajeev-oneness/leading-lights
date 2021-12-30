@@ -43,7 +43,7 @@
                                 </div>
                             @endif
                             <form class="form" action="{{ route('teacher.exam.store') }}" method="POST"
-                                enctype="multipart/form-data">
+                                enctype="multipart/form-data" id="examForm">
                                 @csrf
                                 <div class="row justify-content-between m-0">
                                     {{-- <select class="form-control" id="class" name="class">
@@ -213,7 +213,7 @@
                                     @endif
                                 </div> --}}
                                 <div class="col-12 text-right">
-                                    <button class="btn-pill btn btn-dark mt-4">Create Now</button>
+                                    <button class="btn-pill btn btn-dark mt-4" id="create_now">Create Now</button>
                                 </div>
 
                             </form>
@@ -233,6 +233,43 @@
     @include('teacher.modal.exam.view_mcq_question')
     @include('teacher.modal.exam.question_js')
     <script>
+        $('#create_now').on('click',function(){
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "To create this exam!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, SUBMIT it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    document.getElementById('examForm').submit();
+                    setTimeout(() => {
+                        window.location.href = "{{ route('teacher.exam.index') }}";
+                    }, 2000);
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'You can continue to create this exam :)',
+                        'error'
+                    )
+                }
+            })
+        });
         $('#class_name').on('click', function() {
             var class_name = $('#class_name').val();
             var after_split = class_name.split("-")[1];
