@@ -23,8 +23,7 @@
             <div class="tabs-animation">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <div class="row">
-                            @if (session('success'))
+                        @if (session('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     {{ session('success') }}
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -32,6 +31,7 @@
                                     </button>
                                 </div>
                             @endif
+                        <div class="row">
                             <div class="col-lg-12">
                                 <div class="row mt-4">
                                     <div class="col-lg-12">
@@ -94,6 +94,7 @@
                             </div>
                         </div>
                     </div>
+                    @if ($photos->count() > 0)
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="row m-0">
@@ -114,6 +115,9 @@
                             </div>
                         </div>
                     </div>
+                    @else
+                        <h5 class="text-center">No photos available</h5>
+                    @endif
                 </div>
             </section>
         </div>

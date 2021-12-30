@@ -94,7 +94,7 @@ class CourseController extends Controller
     {
         $data = array();
         $data['course_details'] = Course::find($id);
-        return view('admin.course.edit')->with($data); 
+        return view('admin.course.edit')->with($data);
     }
 
     /**
@@ -119,19 +119,19 @@ class CourseController extends Controller
         $course = Course::find($id);
         if($request->hasFile('image')){
             $image = $request->file('image');
-            if ($course->image) {
-                $image_name = explode('/', $course->image)[2];
-                if(File::exists('upload/course/'.$image_name)) {
-                    File::delete('upload/course/'.$image_name);
-                }
-                
-            }
+            // if ($course->image) {
+            //     $image_name = explode('/', $course->image)[2];
+            //     if(File::exists('upload/course/'.$image_name)) {
+            //         File::delete('upload/course/'.$image_name);
+            //     }
+
+            // }
             $imageName = imageUpload($image,'course');
         }else{
             $imageName = $course->image;
         }
 
-        
+
         $course->title = $request->title;
         $course->description = $request->description;
         $course->course_content = $request->course_content;
