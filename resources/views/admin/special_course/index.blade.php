@@ -58,21 +58,21 @@
                                     <td>{{ $course->class_id ? $course->class_details->name : 'N/A'  }}</td>
                                     <td>{{ $course->title }}</td>
                                     <td>{{ $course->start_date }}</td>
-                                    <td>{{ $course->monthly_fees }}</td>
+                                    <td>&#x20B9;{{ $course->monthly_fees }}</td>
                                     <td>
                                         {{-- <a href="{{ route('admin.courses.show', $course->id) }}"><i
                                                 class="far fa-eye"></i></a> --}}
                                         {{-- <a href="{{ route('admin.monthly_payment_check') }}"><i class="fa fa-envelope" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Send email for renewal"></i></a> --}}
-                                        
+
                                         <a href="{{ route('admin.special-courses.edit', $course->id) }}" class="ml-2"><i
                                                 class="far fa-edit"></i></a>
-                                                
-                                        <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
+
+                                        {{-- <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
                                             data-target="#exampleModal" onclick="sendEmailForm({{ $course->id }})"><i class="fa fa-envelope" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Send email for renewal"></i></a>
                                         <form id="send_email_form_{{ $course->id }}"
                                             action="{{ route('admin.monthly_payment_check', $course->id) }}" method="POST">
                                             @csrf
-                                        </form>
+                                        </form> --}}
                                         {{-- <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
                                             data-target="#exampleModal" onclick="deleteForm({{ $course->id }})"><i
                                                 class="far fa-trash-alt text-danger"></i></a>

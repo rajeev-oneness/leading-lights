@@ -20,11 +20,14 @@
                 </ol>
             </nav>
             <div class="card mb-3">
+                <div class="card-header qtitle justify-content-center">
+                    Leading Lights
+                </div>
                 <div class="card-body">
                     {{-- <a href="{{ route('teacher.exam.index') }}" class="btn btn-primary btn-lg"><i class="fa fa-arrow-left"></i> Back</a> --}}
                     <div class="card-header-title mb-4">Answer Sheet</div>
                     <form action="{{ route('teacher.studentSubmittedAnswer', [$exam_id, $user_id]) }}" method="POST"
-                        name="exam">
+                        name="exam" id="examForm">
                         @csrf
                         @foreach ($exam_details as $i => $exam)
                             <input type="hidden" name="question_id{{ $i + 1 }}" value="{{ $exam->question_id }}">
@@ -120,7 +123,7 @@
                         <input type="hidden" name="index" value="{{ $i + 1 }}">
                         <input type="hidden" name="exam_id" value="{{ $exam_id }}">
                         @if (!$exam_result)
-                        <input type="submit" value="Submit" class="btn btn-primary btn-lg">
+                        <input type="submit" value="Save" class="btn btn-primary btn-lg" id="btn_submit">
                         @endif
                     </form>
                 </div>
@@ -130,4 +133,43 @@
     </div>
     </div>
     </div>
+    <script>
+        $('#btn_submit').on('click',function(){
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "To submit the marks into this exam!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, SUBMIT it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    document.getElementById('examForm').submit();
+                    setTimeout(() => {
+                        window.location.href = "{{ route('teacher.exam.index') }}";
+                    }, 2000);
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'You can continue to review this exam :)',
+                        'error'
+                    )
+                }
+            })
+        });
+    </script>
 @endsection

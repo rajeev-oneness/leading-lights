@@ -119,14 +119,21 @@
                                         @endif
                                         @if ($exam->exam_type == 3 && $question->question_type == 2)
                                             <div class="row">
+                                                @php
+                                                    $stored_answer = App\Models\TempExam::where('question_id',$question->id)->where('user_id',Auth::user()->id)->first();
+                                                @endphp
                                                 <div class="col-md-12">
                                                     <div class="form-group">
                                                         <label for="answer"><b>Answer: </b></label>
-                                                        <textarea name="answer{{ $key + 1 }}" id="" cols="3" rows="3" class="form-control" id="answer"></textarea>
+                                                        @if ($stored_answer)
+                                                            <textarea name="answer{{ $key + 1 }}"  cols="3" rows="3" class="form-control" id="answer{{ $key + 1 }}">{{ $stored_answer->answer }}</textarea>
+                                                        @else
+                                                             <textarea name="answer{{ $key + 1 }}"  cols="3" rows="3" class="form-control" id="answer{{ $key + 1 }}"></textarea>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
-                                                    <button type="submit" class="btn save_btn"><i class="fa fa-save"></i> Save</button>
+                                                    <button type="submit" class="btn save_btn" id="save_ans" value="save_ans" name="save_ans" onclick="saveAnswer({{ $exam->id }},{{ $question->id }},{{ $key + 1}})"><i class="fa fa-save"></i> Save</button>
                                                 </div>
                                             </div>
 
@@ -287,6 +294,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     var answer = document.getElementById('answer'+index).value;
+                    console.log(answer);
                     $.ajax({
                         url: "{{ route('user.exam.start.ans.save') }}",
                         data: {

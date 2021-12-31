@@ -21,7 +21,7 @@
             <div class="dashboard-body-content">
                 <h5>Add Course</h5>
                 <hr>
-                <form action="{{ route('admin.courses.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.courses.store') }}" method="POST" enctype="multipart/form-data" id="courseForm">
                     @csrf
                     <div class="row m-0 pt-3">
                         <div class="col-lg-12">
@@ -55,7 +55,7 @@
                                 @endif
                             </div>
                         </div>
-                        
+
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 {{-- <label for="start_date">Start Date</label> --}}
@@ -102,7 +102,7 @@
                         </div>
                     </div>
                     <div class="form-group d-flex justify-content-end">
-                        <button type="submit" class="actionbutton">SAVE</button>
+                        <button type="submit" class="actionbutton" id="btn_submit">SAVE</button>
                     </div>
                 </form>
             </div>
@@ -110,5 +110,42 @@
     </div>
     <script>
         CKEDITOR.replace('course_content');
+        $('#btn_submit').on("click",function(){
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "To create this course!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, SAVE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    document.getElementById('courseForm').submit();
+                    setTimeout(() => {
+                        window.location.href = "{{ route('teacher.exam.index') }}";
+                    }, 2000);
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'The course has not been created :)',
+                        'error'
+                    )
+                }
+            })
+        });
     </script>
 @endsection

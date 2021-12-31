@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Models\SpecialCourse;
+use App\Models\Testimonial;
 use Illuminate\Support\Facades\Auth, Illuminate\Support\Facades\Route;
 use PHPUnit\Framework\Error\Notice;
 
@@ -41,6 +42,7 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::resource('events', EventController::class);
     Route::resource('qualifications', QualificationController::class);
     Route::resource('notice', NoticeController::class);
+    Route::resource('testimonial', TestimonialController::class);
 
     Route::put('/approve-student/{id}', [StudentController::class, 'approval'])->name('students.approve');
     Route::put('/reject-student/{id}', [StudentController::class, 'reject_student'])->name('students.reject');

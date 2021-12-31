@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddClumnsInSpecialCoursesTable extends Migration
+class AddStatusColumnInTestimonialsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddClumnsInSpecialCoursesTable extends Migration
      */
     public function up()
     {
-        Schema::table('special_courses', function (Blueprint $table) {
-            $table->string('description')->after('title');
-            $table->string('image')->after('title');
+        Schema::table('testimonials', function (Blueprint $table) {
+            $table->tinyInteger('status')->after('content')->default(0)->comment('0:Pending,1:Approved');
         });
     }
 
@@ -26,8 +25,8 @@ class AddClumnsInSpecialCoursesTable extends Migration
      */
     public function down()
     {
-        Schema::table('special_courses', function (Blueprint $table) {
-            //
+        Schema::table('testimonials', function (Blueprint $table) {
+            $table->dropColumn('status');
         });
     }
 }

@@ -22,7 +22,7 @@
                 <h5>Edit Course</h5>
                 <hr>
                 <form action="{{ route('admin.courses.update', $course_details->id) }}" method="POST"
-                    enctype="multipart/form-data">
+                    enctype="multipart/form-data" id="courseForm">
                     @csrf
                     @method('PUT')
                     <div class="row m-0 pt-3">
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                     <div class="form-group d-flex justify-content-end">
-                        <button type="submit" class="actionbutton">UPDATE</button>
+                        <button type="submit" class="actionbutton" id="btn_submit">UPDATE</button>
                     </div>
                 </form>
             </div>
@@ -117,5 +117,42 @@
     </div>
     <script>
         CKEDITOR.replace('course_content');
+        $('#btn_submit').on("click",function(){
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "To update this course!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, SAVE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    document.getElementById('courseForm').submit();
+                    setTimeout(() => {
+                        window.location.href = "{{ route('teacher.exam.index') }}";
+                    }, 2000);
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'The COURSE has not been updated :)',
+                        'error'
+                    )
+                }
+            })
+        });
     </script>
 @endsection
