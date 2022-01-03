@@ -17,10 +17,35 @@
                 </div>
                 @include('admin.layouts.navbar')
             </div>
-            <hr>
-            <div class="dashboard-body-content">
+            {{-- <hr> --}}
+
+            <div class="dashboard-body-content mt-5">
                 <h5>View Testimonial</h5>
+                <div class="float-right">
+                    @if ($testimonial->status == "0")
+                        <a href="{{ route('admin.testimonial.approve') }}"
+                        class="btn btn-info pull-right" onclick="approveTestimonial({{ $testimonial->id }})"
+                        id="approveTestimonial">Approve</a>
+                    @elseif ($testimonial->status == "1")
+                        <a href="{{ route('admin.testimonial.reject') }}"
+                        class="btn btn-info pull-right" onclick="rejectTestimonial({{ $testimonial->id }})"
+                        id="rejectTestimonial">Reject</a>
+                    @elseif ($testimonial->status == "2")
+                    <a href="#" class="btn btn-info pull-right">Rejected</a>
+                    @endif
+                </div>
                 <hr>
+                @if ($testimonial->status == "1")
+                     <h5 class="">This testimonial is verified<i
+                    class="text-success fa fa-check-circle"></i></h5>
+                @elseif ($testimonial->status == "2")
+                    <h5 class="">This testimonial is rejected <i
+                    class="text-danger fa fa-times-circle"></i></h5>
+                @else
+                    <h5 class="">This testimonial is not verified <i
+                    class="text-danger fa fa-exclamation-circle"></i></h5>
+                @endif
+                    <hr>
                     <div class="row">
                         <div class="col-md-4">
                             @php
@@ -44,4 +69,112 @@
             </div>
         </div>
     </div>
+    <script>
+        function approveTestimonial(testimonial_id){
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, APPROVE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    let url = $("#approveTestimonial").attr('href');
+                    let data = {
+                        testimonial_id: testimonial_id,
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "PUT",
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#approveTestimonial").text('Loading...')
+                        },
+                        success: function(response) {
+                            if (response.data === 'approved') {
+                                location.reload();
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    })
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This testimonial status remain same :)',
+                        'error'
+                    )
+                }
+            })
+        }
+        function rejectTestimonial(testimonial_id){
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, REJECT it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    let url = $("#rejectTestimonial").attr('href');
+                    let data = {
+                        testimonial_id: testimonial_id,
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "PUT",
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#rejectTestimonial").text('Loading...')
+                        },
+                        success: function(response) {
+                            if (response.data === 'approved') {
+                                location.reload();
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    })
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This testimonial status remain same :)',
+                        'error'
+                    )
+                }
+            })
+        }
+    </script>
 @endsection

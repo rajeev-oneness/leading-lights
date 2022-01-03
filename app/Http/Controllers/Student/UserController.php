@@ -598,7 +598,8 @@ class UserController extends Controller
     public function testimonial(Request $request)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            return view('student.testimonial');
+            $testimonials = Testimonial::latest()->get();
+            return view('student.testimonial',compact('testimonials'));
         }else{
             $this->validate($request,[
                 'content' => 'required'

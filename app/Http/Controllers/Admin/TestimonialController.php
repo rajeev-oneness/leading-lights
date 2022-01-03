@@ -85,4 +85,31 @@ class TestimonialController extends Controller
     {
         //
     }
+
+    /**
+     * Approved a Testimonial
+     */
+
+     public function approveTestimonial(Request $request)
+     {
+        $testimonial = Testimonial::find($request->testimonial_id);
+        $testimonial->status = 1;
+        $testimonial->save();
+
+        return response()->json(['success' => true, 'data' => 'approved']);
+     }
+     /**
+     * Reject a Testimonial
+     * For Reject a testimonial
+     * we have store the status as 2
+     */
+
+    public function rejectTestimonial(Request $request)
+    {
+       $testimonial = Testimonial::find($request->testimonial_id);
+       $testimonial->status = 2;
+       $testimonial->save();
+
+       return response()->json(['success' => true, 'data' => 'rejected']);
+    }
 }

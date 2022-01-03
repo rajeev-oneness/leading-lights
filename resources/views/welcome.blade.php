@@ -472,7 +472,6 @@
                 <div class="col-lg-12">
                     <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
                         <h2>Testimonials</h2>
-                        <h4>Lorem Ipsum. Proin gravida</h4>
                     </div>
                 </div>
             </div>

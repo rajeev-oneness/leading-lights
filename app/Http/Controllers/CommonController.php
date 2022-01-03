@@ -22,7 +22,7 @@ class CommonController extends Controller
         $data['special_courses'] = SpecialCourse::where('class_id',null)->latest()->get();
         $data['flash_courses'] = Course::latest()->take(3)->get();
         $data['student_photos'] = StudentGalary::latest()->take(8)->get();
-        $data['testimonials'] = Testimonial::latest()->get();
+        $data['testimonials'] = Testimonial::where('status',1)->latest()->get();
         $data['vlogs'] = VLOG::latest()->take(3)->get();
         return view('welcome')->with($data);
     }

@@ -68,4 +68,8 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
 
     //Send email user who not payment yet for special courses
     Route::post('monthly-payment-check/{id}', [ClassController::class, 'monthly_payment_check'])->name('monthly_payment_check');
+
+    // Other functions for  testimonial
+    Route::put('approve-testimonial', [TestimonialController::class, 'approveTestimonial'])->name('testimonial.approve');
+    Route::put('reject-testimonial', [TestimonialController::class, 'rejectTestimonial'])->name('testimonial.reject');
 });

@@ -39,6 +39,7 @@
                                 <th>Added By</th>
                                 <th>Content</th>
                                 <th>Publish Date</th>
+                                <th>Status</th>
                                 <th style="width:100px">Action</th>
                             </tr>
                         </thead>
@@ -49,6 +50,15 @@
                                     <td>{{ $testimonial->user->first_name }} {{ $testimonial->user->last_name }}</td>
                                     <td>{{ \Illuminate\Support\Str::limit($testimonial->content,50) }}</td>
                                     <td>{{ date('Y-m-d',strtotime($testimonial->created_at)) }}</td>
+                                    <td>
+                                        @if ($testimonial->status == "0")
+                                            <span class="badge badge-warning">Pending</span>
+                                        @elseif ($testimonial->status == "1")
+                                            <span class="badge badge-success">Approved</span>
+                                        @elseif ($testimonial->status == "2")
+                                            <span class="badge badge-danger">Rejected</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <a href="{{ route('admin.testimonial.show', $testimonial->id) }}"
                                             class="ml-2"><i class="far fa-eye"></i></a>
