@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-12 text-center mt-3 price_bg">
                                 <h3>Price: <span>&#8377;{{ $course_details->fees }}</span></h3>
-                                <a class="btn btn-add btn-radius" href="javascript:void(0);">ENROLL COURSE</a>
+                                <a class="btn btn-add btn-radius" href="{{ route('student_flash_course_register',$course_details->id) }}">ENROLL COURSE</a>
                         </div>
                     </div>
                 </div>

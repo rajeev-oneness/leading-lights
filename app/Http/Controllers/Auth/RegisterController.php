@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Validator;
 // use App\Http\Controllers\Admin\Notification;
 use App\Http\Controllers\Admin\Notification;
 use App\Models\Certificate, App\Models\Fee;
+use App\Models\Course;
 use App\Models\OtherPaymentDetails;
 use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -340,6 +341,99 @@ class RegisterController extends Controller
             $qualifications = Qualification::orderBy('name')->get();
             return view('auth.hr_register', compact('qualifications'));
         } else if ($request->method() == 'POST') {
+            $this->validate($request, [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'doj' => ['required', 'date'],
+                'gender' => ['required'],
+                'image' => 'required| mimes:png,jpg',
+                'mobile' => ['required'],
+                'qualification' => ['required']
+            ]);
+
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = imageUpload($image, 'profile_image');
+            } else {
+                $imageName = null;
+            }
+
+            // $unique_id = $this->getCode();
+            // $id_no = 'LLHR'.$unique_id;
+            $hr_count = User::where('role_id', 2)->count();
+            $num_padded = sprintf("%05d", ($hr_count + 1));
+            $id_no = 'LLHR' . $num_padded;
+
+            if ($request->qualification === 'Others') {
+
+                Validator::make($request->all(), [
+                    'other_qualification' => 'required|string|max:255|unique:qualifications,name',
+                ], $messages = [
+                    'other_qualification.unique' => 'This qualification name field is already available.',
+                ])->validate();
+                $qualification = new Qualification();
+                $qualification->name = $request->other_qualification;
+                $qualification->save();
+
+                $qualification_id = $qualification->id;
+            } else {
+                $qualification_id = $request->qualification;
+            }
+
+            $user = new User();
+            $user->role_id = 2;
+            $user->first_name = $request->first_name;
+            $user->last_name = $request->last_name;
+            $user->email = $request->email;
+            $user->doj = $request->doj;
+            $user->gender = $request->gender;
+            $user->id_no = $id_no;
+            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
+            $user->image = $imageName;
+            $user->mobile = $request->mobile;
+            $admin_details = User::select('email')->where('role_id', 1)->first();
+            $user->country_code = $request->country_code;
+            $user->qualification_id = $qualification_id;
+            $user->save();
+
+            $user_id = $user->id;
+            createNotification($user_id, 0, 0, 'user_registration');
+
+            //Store certificate
+            $file_name =  imageUpload($request->certificate, 'hr_certificate');
+            $certificate = new Certificate();
+            $certificate->image = $file_name;
+            $certificate->user_id = $user->id;
+            $certificate->save();
+
+
+            // $admin_details = User::select('email')->where('role_id', 1)->first();
+            // $admin_email = $admin_details['email'];
+            $admin_email = "abcd12300@yopmail.com";
+            $email_data = array(
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'id_no' => $id_no,
+                'user_type' => 'hr'
+            );
+            FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+
+            return redirect()->route('hr_login')->with('success', 'Your registration is successful, waiting for admin approval');
+        }
+    }
+
+    // Flash Course Wise registration
+    public function student_flash_course_register(Request $request,$id)
+    {
+        if ($request->method() == 'GET') {
+            $data = array();
+            $data['course_id'] = $id;
+            $data['flash_courses'] = Course::latest()->get();
+            return view('auth.flash_course_register')->with($data);
+        } else if ($request->method() == 'POST') {
+            dd('die');
             $this->validate($request, [
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],

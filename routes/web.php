@@ -22,6 +22,7 @@ Route::get('/vlog-details/{id}', [CommonController::class, 'vlogDetails'])->name
 
 Auth::routes();
 
+Route::any('student/flash-course-register/{id}', [RegisterController::class, 'student_flash_course_register'])->name('student_flash_course_register');
 Route::any('teacher/login', [LoginController::class, 'teacher_login'])->name('teacher_login');
 Route::any('teacher/register', [RegisterController::class, 'teacher_register'])->name('teacher_register');
 Route::any('hr/login', [LoginController::class, 'hr_login'])->name('hr_login');
