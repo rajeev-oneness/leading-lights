@@ -16,7 +16,7 @@
                             <div class="heading">
                                 <h1>Admission Now :)</h1>
                             </div>
-                            <form class="cd-form" method="POST" action="{{ route('register') }}"
+                            <form class="cd-form" method="POST" action="{{ route('student_flash_course_register',$course_id) }}"
                                 enctype="multipart/form-data" id="registrationForm">
                                 @csrf
                                 <div class="form-row">
@@ -114,15 +114,15 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="form-row wh_class" id="first_block">
-                                    <small class="col-12 p-0 mb-2"><b>Which Class You are Applying For</b><span class="text-danger">*</span></small>
+                                <div class="form-row wh_class actv_bg" id="first_block">
+                                    <small class="col-12 p-0 mb-2"><b>Which Course You are Applying For</b><span class="text-danger">*</span></small>
                                     <div class="form-group col-sm-12">
                                         <select name="class" class="form-control" id="class_wise">
                                             <option value="" selected>Select Class</option>
                                             @foreach ($flash_courses as $course)
                                                 <option value="{{ $course->id }}" @if ($course->id == $course_id)
                                                     selected
-                                            @endif>{{ $course->title }}</option>
+                                            @endif>{{ \Illuminate\Support\Str::limit($course->title,50) }}</option>
                                             @endforeach
                                         </select>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
@@ -192,8 +192,6 @@
                 dob = $('[name="dob"]').val(),
                 class_id = $('[name="class"]').val(),
                 class_wise = $('#class_wise').val(),
-                class_wise_combo = $('#class_wise_combo').val(),
-                special_course_ids = $('#special_course_ids').val(),
                 image = $('[name="image"]').val(),
                 certificate = $('[name="certificate"]').val();
             if (!first_name) {
@@ -251,49 +249,12 @@
                 $('[name="dob"]').next('.error').fadeOut(100);
             }
             if (class_wise) {
-                $('#class_wise_combo').next('.error').fadeOut(100);
                 $('#class_wise').next('.error').fadeOut(100);
 
             } else {
-                if (class_wise_combo) {
-                    $('#class_wise').next('.error').fadeOut(100);
-
-                }
-                else if (special_course_ids.length > 0) {
-                    $('#class_wise_combo').next('.error').fadeOut(100);
-                    $('#class_wise').next('.error').fadeOut(100);
-                }
-                else{
                     $('#class_wise').next('.error').fadeIn(100);
                     errorFlagOne = 1;
-                }
-
             }
-            if (class_wise_combo) {
-                $('#class_wise_combo').next('.error').fadeOut(100);
-                $('#class_wise').next('.error').fadeOut(100);
-
-            } else {
-                if (class_wise) {
-                    $('#class_wise_combo').next('.error').fadeOut(100);
-                }
-                else if (special_course_ids.length > 0) {
-                    $('#class_wise_combo').next('.error').fadeOut(100);
-                    $('#class_wise').next('.error').fadeOut(100);
-                }
-                else{
-                    $('#class_wise_combo').next('.error').fadeIn(100);
-                    errorFlagOne = 1;
-                }
-
-            }
-            if (class_wise_combo && special_course_ids.length == 0) {
-                $('#special_course_id_err').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('#special_course_id_err').fadeOut(100);
-            }
-
 
             if (!image) {
                 $('#img_err').fadeIn(100);

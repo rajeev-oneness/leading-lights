@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Validator;
 // use App\Http\Controllers\Admin\Notification;
 use App\Http\Controllers\Admin\Notification;
 use App\Models\Certificate, App\Models\Fee;
+use App\Models\CheckClassOrCourceRegistration;
 use App\Models\Course;
 use App\Models\OtherPaymentDetails;
 use Exception;
@@ -433,87 +434,95 @@ class RegisterController extends Controller
             $data['flash_courses'] = Course::latest()->get();
             return view('auth.flash_course_register')->with($data);
         } else if ($request->method() == 'POST') {
-            dd('die');
+            // dd($request->all());
             $this->validate($request, [
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'doj' => ['required', 'date'],
+                'dob' => ['required', 'date'],
                 'gender' => ['required'],
-                'image' => 'required| mimes:png,jpg',
+                'image' => 'required| mimes:png,jpg,jpeg',
                 'mobile' => ['required'],
-                'qualification' => ['required']
+                'certificate' => ['required', 'mimes:pdf']
             ]);
+            DB::beginTransaction();
+        try {
+            $student_count = User::where('role_id', 4)->count();
+            $num_padded = sprintf("%05d", ($student_count + 1));
+            $id_no = 'LLST' . $num_padded;
 
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = imageUpload($image, 'profile_image');
-            } else {
-                $imageName = null;
-            }
+            $image = $request['image'];
+            $imageName = imageUpload($image, 'profile_image');
 
-            // $unique_id = $this->getCode();
-            // $id_no = 'LLHR'.$unique_id;
-            $hr_count = User::where('role_id', 2)->count();
-            $num_padded = sprintf("%05d", ($hr_count + 1));
-            $id_no = 'LLHR' . $num_padded;
-
-            if ($request->qualification === 'Others') {
-
-                Validator::make($request->all(), [
-                    'other_qualification' => 'required|string|max:255|unique:qualifications,name',
-                ], $messages = [
-                    'other_qualification.unique' => 'This qualification name field is already available.',
-                ])->validate();
-                $qualification = new Qualification();
-                $qualification->name = $request->other_qualification;
-                $qualification->save();
-
-                $qualification_id = $qualification->id;
-            } else {
-                $qualification_id = $request->qualification;
-            }
-
+            // Store student details
             $user = new User();
-            $user->role_id = 2;
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->email = $request->email;
-            $user->doj = $request->doj;
-            $user->gender = $request->gender;
-            $user->id_no = $id_no;
-            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
+            $user->first_name = $request['first_name'];
+            $user->last_name = $request['last_name'];
+            $user->email = $request['email'];
+            $user->mobile = $request['mobile'];
+            $user->id_no =  $id_no;
+            $user->dob = $request['dob'];
+            $user->gender = $request['gender'];
+            $user->password = Hash::make($id_no);
             $user->image = $imageName;
-            $user->mobile = $request->mobile;
-            $admin_details = User::select('email')->where('role_id', 1)->first();
-            $user->country_code = $request->country_code;
-            $user->qualification_id = $qualification_id;
+            $user->flash_course_id = $request['class'];
+            $user->registration_type = 3;
+            $user->country_code = $request['country_code'];
             $user->save();
 
             $user_id = $user->id;
-            createNotification($user_id, 0, 0, 'user_registration');
+            createNotification($user_id, 0, 0, 'student_registration');
+
+            // Fee generate
+            $feedata = [];
+            if($user->flash_course_id > 0){
+                if (!empty($data['class']) && count($data['class']) > 0){
+                        $s_course = Course::where('id', $request['class'])->first();
+                        $course_start_date = $s_course->start_date;
+                        if ($s_course) {
+                            $next_date = date('Y-m-01',strtotime($course_start_date));
+                            $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                            $feedata[] = [
+                                'user_id' => $user->id,
+                                'class_id' => 0,
+                                'course_id' => $s_course->id,
+                                'fee_type' => 'course_fee',
+                                'due_date' => $next_due_date,
+                                'payment_month' => date("F",strtotime($course_start_date)),
+                                'amount' => $s_course->monthly_fees,
+                            ];
+                        }
+                }
+            }
+
+            if (count($feedata) > 0) {
+                DB::table('fees')->insert($feedata);
+            }
 
             //Store certificate
-            $file_name =  imageUpload($request->certificate, 'hr_certificate');
+            $certificate_image =  imageUpload($request['certificate'], 'student_certificate');
             $certificate = new Certificate();
-            $certificate->image = $file_name;
             $certificate->user_id = $user->id;
+            $certificate->image = $certificate_image;
             $certificate->save();
-
 
             // $admin_details = User::select('email')->where('role_id', 1)->first();
             // $admin_email = $admin_details['email'];
             $admin_email = "abcd12300@yopmail.com";
             $email_data = array(
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
+                'first_name' => $request['first_name'],
+                'last_name' => $request['last_name'],
+                'email' => $request['email'],
                 'id_no' => $id_no,
-                'user_type' => 'hr'
+                'user_type' => 'student'
             );
-            FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
-
-            return redirect()->route('hr_login')->with('success', 'Your registration is successful, waiting for admin approval');
+            // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+            DB::commit();
+            return redirect()->route('login')->with('success', 'Your registration is successful, waiting for admin approval');
+        } catch (Exception $e) {
+            DB::rollback();
+            return 0;
+        }
         }
     }
 }

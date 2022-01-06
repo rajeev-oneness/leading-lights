@@ -39,6 +39,7 @@
                                 <th>Student Id</th>
                                 <th>Class</th>
                                 <th>Special Course</th>
+                                <th>Flash Course</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
@@ -93,6 +94,9 @@
                                         </span>
 
 
+                                    </td>
+                                    <td>
+                                        {{ $student->flash_course ? \Illuminate\Support\Str::limit($student->flash_course->title,15) : 'N/A'}}
                                     </td>
                                     {{-- <td>{{ $course_details->title ? $course_details->title : 'N/A' }}</td> --}}
                                     <td>{{ $student->first_name }} {{ $student->last_name }}</td>

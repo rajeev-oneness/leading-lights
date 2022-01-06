@@ -81,4 +81,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Testimonial::class);
     }
+
+    public  function flash_course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 }
