@@ -63,7 +63,7 @@ class LoginController extends Controller
                 }
                 if (Hash::check($req->password, $user->password)) {
                     Auth::login($user);
-                    return redirect()->intended('/home');
+                    return redirect()->route('land_page');
                 } else {
                     $errors['password'] = 'You have entered wrong password';
                 }
@@ -161,7 +161,7 @@ class LoginController extends Controller
                         $attendance->save();
                         // }
 
-                        return redirect()->intended('/home');
+                        return redirect()->route('land_page');
                     } else {
                         $errors['password'] = 'You have entered wrong password';
                     }
@@ -200,7 +200,7 @@ class LoginController extends Controller
 
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
-                        return redirect()->intended('/home');
+                        return redirect()->route('land_page');
                     } else {
                         $errors['password'] = 'You have entered wrong password';
                     }
@@ -237,7 +237,7 @@ class LoginController extends Controller
                     }
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
-                        return redirect()->intended('/home');
+                        return redirect()->route('land_page');
                     } else {
                         $errors['password'] = 'You have entered wrong password';
                     }
@@ -265,7 +265,7 @@ class LoginController extends Controller
                 if ($user->role_id == 5) {
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
-                        return redirect()->intended('/home');
+                        return redirect()->route('land_page');
                     } else {
                         $errors['password'] = 'You have entered wrong password';
                     }

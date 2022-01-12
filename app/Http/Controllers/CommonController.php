@@ -17,14 +17,36 @@ use Illuminate\Support\Facades\Auth;
 class CommonController extends Controller
 {
     public function index(Request $request){
-        $data['events'] = Event::latest()->take(3)->get();
-        $data['notices'] = notice::latest()->get();
-        $data['special_courses'] = SpecialCourse::where('class_id',null)->latest()->get();
-        $data['flash_courses'] = Course::latest()->take(3)->get();
-        $data['student_photos'] = StudentGalary::latest()->take(8)->get();
-        $data['testimonials'] = Testimonial::where('status',1)->latest()->get();
-        $data['vlogs'] = VLOG::latest()->take(3)->get();
-        return view('welcome')->with($data);
+        if (Auth::check()) {
+            $redirectTo = 'user/profile';
+            switch (Auth::user()->role_id) {
+                case 1:
+                    $redirectTo = 'admin/dashboard';
+                    break;
+                case 2:
+                    $redirectTo = 'hr/profile';
+                    break;
+                case 3:
+                    $redirectTo = 'teacher/profile';
+                    break;
+                case 4:
+                    $redirectTo = 'user/profile';
+                    break;
+                case 5:
+                    $redirectTo = 'admin/dashboard';
+                    break;
+            }
+            return redirect($redirectTo);
+        } else {
+            $data['events'] = Event::latest()->take(3)->get();
+            $data['notices'] = notice::latest()->get();
+            $data['special_courses'] = SpecialCourse::where('class_id',null)->latest()->get();
+            $data['flash_courses'] = Course::latest()->take(3)->get();
+            $data['student_photos'] = StudentGalary::latest()->take(8)->get();
+            $data['testimonials'] = Testimonial::where('status',1)->latest()->get();
+            $data['vlogs'] = VLOG::latest()->take(3)->get();
+            return view('welcome')->with($data);
+        }
     }
 
     public function availableCourses()
