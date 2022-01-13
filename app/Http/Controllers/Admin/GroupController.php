@@ -33,7 +33,7 @@ class GroupController extends Controller
     public function create()
     {
         $data['teachers'] = User::where('role_id', 3)->latest()->get();
-        $data['students'] = User::where('role_id', 4)->get();
+        $data['students'] = User::where('role_id', 4)->where('status',1)->get();
         $data['classes'] = Classes::orderBy('name')->get();
         return view('admin.groups.create')->with($data);
     }

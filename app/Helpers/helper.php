@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Fee;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -302,6 +303,23 @@ function extraDateFineCalculation($class_id,$course_id,$due_date,$user_id){
             $diff=date_diff($date1,$date2);
             $extra_date = $diff->format("%a");
             return $extra_date;
+        }else{
+            return 0;
+        }
+    }
+}
+
+/**
+ * Check user make first payment or not
+ */
+
+function checkPaymentStatus($student_id)
+{
+    $all_payment_details = Fee::where('user_id',$student_id)->latest()->get();
+    if ($all_payment_details->count() > 0) {
+        $last_payment = Fee::where('user_id',$student_id)->where('transaction_id','!=',0)->orderBy('id', 'desc')->first();
+        if ( !empty($last_payment)) {
+            return 1;
         }else{
             return 0;
         }

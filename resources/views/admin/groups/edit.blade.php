@@ -71,12 +71,17 @@
                                 <select id="choices-multiple-remove-button" name="student_ids[]" multiple>
 
                                     @foreach ($students as $student)
+                                    @php
+                                        $paymentStatus = checkPaymentStatus($student->id);
+                                    @endphp
+                                    @if($paymentStatus == 1)
                                         <option value="{{ $student->id }}" @php
                                             echo in_array($student->id, $ids) ? 'selected' : '';
                                         @endphp>
                                             {{ $student->first_name }} {{ $student->last_name }} -
                                             {{ $student->id_no }}
                                         </option>
+                                    @endif
                                     @endforeach
                                 </select>
                                 @if ($errors->has('student_ids'))
