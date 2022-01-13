@@ -476,22 +476,20 @@ class RegisterController extends Controller
             // Fee generate
             $feedata = [];
             if($user->flash_course_id > 0){
-                if (!empty($data['class']) && count($data['class']) > 0){
-                        $s_course = Course::where('id', $request['class'])->first();
-                        $course_start_date = $s_course->start_date;
-                        if ($s_course) {
-                            $next_date = date('Y-m-01',strtotime($course_start_date));
-                            $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
-                            $feedata[] = [
-                                'user_id' => $user->id,
-                                'class_id' => 0,
-                                'course_id' => $s_course->id,
-                                'fee_type' => 'course_fee',
-                                'due_date' => $next_due_date,
-                                'payment_month' => date("F",strtotime($course_start_date)),
-                                'amount' => $s_course->monthly_fees,
-                            ];
-                        }
+                $s_course = Course::where('id', $request['class'])->first();
+                $course_start_date = $s_course->start_date;
+                if ($s_course) {
+                    $next_date = date('Y-m-01',strtotime($course_start_date));
+                    $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                    $feedata[] = [
+                        'user_id' => $user->id,
+                        'class_id' => 0,
+                        'course_id' => $s_course->id,
+                        'fee_type' => 'course_fee',
+                        'due_date' => $next_due_date,
+                        'payment_month' => date("F",strtotime($course_start_date)),
+                        'amount' => $s_course->fees,
+                    ];
                 }
             }
 
