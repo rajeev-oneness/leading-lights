@@ -30,8 +30,6 @@ class RazorpayController extends Controller
                         $fee->paid_on = date('Y-m-d');
                         $fee->save();
                         $newFee = false;
-                        if (Auth::user()->registration_type != 3) {
-
                         if ($fee->class_id != 0) {
                             // dd('test1');
                             $class = \App\Models\Classes::where('id', $fee->class_id)->first();
@@ -62,7 +60,6 @@ class RazorpayController extends Controller
                             }
 
                         }
-                    }
                         // dd('test3');
                         if ($newFee && $amount > 0) {
                             // dd($amount);

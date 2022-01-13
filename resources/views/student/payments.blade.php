@@ -23,7 +23,9 @@
                                     <tr>
                                         <th>Order Id</th>
                                         <th>Fees Type</th>
-                                        <th>Next Due Date</th>
+                                        @if (Auth::user()->registration_type != 3)
+                                            <th>Next Due Date</th>
+                                        @endif
                                         <th>Total Cost(&#x20B9;)</th>
                                         <th>Action</th>
                                     </tr>
@@ -48,8 +50,18 @@
                                                     }
                                                     // echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
                                                 @endphp
-                                                <span>{{ $feeType }} <span class="badge badge-info">{{ getNameofClassOrCourse($duePayment) }}</span></span>
+                                                <span>{{ $feeType }}
+                                                    <span class="badge badge-info">
+                                                        @if (Auth::user()->registration_type == 3)
+
+                                                            {{ getNameofFlashCourse($duePayment) }}
+                                                        @else
+                                                            {{ getNameofClassOrCourse($duePayment) }}
+                                                        @endif
+                                                </span>
+                                            </span>
                                             </td>
+                                            @if (Auth::user()->registration_type != 3)
                                             <td>
                                                 @if (Auth::user()->special_course_ids)
 
@@ -60,8 +72,14 @@
                                                     {{date('M d, Y',strtotime($duePayment->due_date))}}
                                                 @endif
                                             </td>
+                                            @endif
                                             <td>
                                                 @php
+                                                    if (Auth::user()->registration_type == 3) {
+                                                        $amount = $duePayment->amount;
+                                                    }
+                                                    else {
+
                                                     if ($duePayment->class_id > 0 && $duePayment->course_id > 0) {
                                                         $extraDate = extraDateFineCalculation($duePayment->class_id,$duePayment->course_id,$duePayment->due_date,Auth::user()->id);
                                                     }
@@ -78,6 +96,7 @@
                                                     }else{
                                                         $amount = $duePayment->amount;
                                                     }
+                                                }
                                                 @endphp
                                                 <span>&#x20B9;{{ $amount }}
                                                     @if (isset($fine))
@@ -136,7 +155,13 @@
                                                     }
                                                     // echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
                                                 @endphp
-                                                <span>{{ $feeType }} <span class="badge badge-info">{{ getNameofClassOrCourse($successPayment) }}</span></span>
+                                                <span>{{ $feeType }} <span class="badge badge-info">
+                                                    @if (Auth::user()->registration_type == 3)
+
+                                                            {{ getNameofFlashCourse($successPayment) }}
+                                                        @else
+                                                            {{ getNameofClassOrCourse($successPayment) }}
+                                                        @endif</span></span>
                                             </td>
                                             <td>&#x20B9;{{$successPayment->amount}}</td>
                                             <td>

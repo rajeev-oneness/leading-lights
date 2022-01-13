@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Course;
 use App\Models\Fee;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
@@ -267,6 +268,17 @@ function getNameofClassOrCourse($feeStructure)
 		}
 	} elseif ($feeStructure->course_id > 0) {
 		$course = \App\Models\SpecialCourse::where('id', $feeStructure->course_id)->first();
+		if ($course) {
+			$response = $course->title;
+		}
+	}
+	return $response;
+}
+function getNameofFlashCourse($feeStructure)
+{
+	$response = '';
+	if ($feeStructure->course_id > 0) {
+		$course = Course::find($feeStructure->course_id);
 		if ($course) {
 			$response = $course->title;
 		}
