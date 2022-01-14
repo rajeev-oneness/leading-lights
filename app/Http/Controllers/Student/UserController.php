@@ -180,7 +180,7 @@ class UserController extends Controller
         $data = (object)[];
         $user = Auth::user();
         $data->due_payment = \App\Models\Fee::where('user_id', $user->id)->where('transaction_id', 0)->latest('id')->get();
-        $data->success_payment = \App\Models\Fee::where('user_id', $user->id)->where('transaction_id', '>', 0)->latest('id')->get();
+        $data->success_payment = \App\Models\Fee::where('user_id', $user->id)->where('transaction_id', '>', 0)->get();
         return view('student.payments', compact('data'));
     }
 

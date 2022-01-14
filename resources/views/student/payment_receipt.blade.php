@@ -20,6 +20,7 @@
                 <td>Student UID</td>
                 <td>{{ $user_details->id_no }}</td>
             </tr>
+            @if ($user_details->class_details && $user_details->flash_course_id == 0)
             <tr>
                 <td>Class Enrollment</td>
                 <td>
@@ -28,7 +29,8 @@
                     @endif
                 </td>
             </tr>
-            @if ($user_details->special_course_id)
+            @endif
+            @if ($user_details->special_course_id && $user_details->flash_course_id == 0)
                 <tr>
                     <td>
                         Course Enrollment
@@ -45,7 +47,6 @@
                     </td>
                 </tr>
             @endif
-
         </tbody>
     </table>
     <p  class="text-success"><strong>Payment Information</strong></p>
@@ -68,7 +69,11 @@
                         }
                         // echo $feeType;
                     @endphp
-                    <span>{{ $feeType }} <span class="badge badge-info">{{ getNameofCourse($fee_details) }}</span></span>
+                    <span>{{ $feeType }}
+                        @if ($user_details->flash_course_id == 0)
+                            <span class="badge badge-info">{{ getNameofCourse($fee_details) }}</span>
+                        @endif
+                    </span>
                 </td>
                 <td>Rs. {{ $fee_details->amount }}</td>
             </tr>
