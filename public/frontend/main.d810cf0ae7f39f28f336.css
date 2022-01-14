@@ -1,8 +1,14 @@
 .course-box h4{
-  font-size: 27px;
-  font-weight: 700;
-  color: #f79256;
-  margin-bottom: 18px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 18px;
+    width: 85%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
 }
 ul{
   padding-left: 0;
@@ -1981,6 +1987,45 @@ table.dataTable.no-footer {
     padding: 0 !important;
     border: 0 !important;
     border-radius: 0 !important;
+}
+.course_item .card{
+    height:180px;
+    background: #f3f3f3;
+    box-shadow: inherit;
+    margin-bottom: 10px;
+}
+.course_item a:nth-child(1){
+  background-color:#d9e6ff;
+}
+
+.course_item a:nth-child(2){
+ background-color:#d9e6ff;
+}
+
+.course_item a:nth-child(3){
+  background-color:#d9e6ff;
+}
+.course_item ul li{
+    line-height: 24px;
+    margin-bottom: 8px;
+    color: #6e6e6e;
+}
+.course_item .bg-dark {
+    background-color: #ccdeff !important;
+}
+.course_item .bg-dark ul li, .course_item .bg-dark h4{
+    color:#05267c;
+}
+.plr-2{
+    padding:0 6px;
+}
+.sec_check{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height:100%;
+    z-index:1;
 }
 /*.paginate_button{
     width: 35px !important;

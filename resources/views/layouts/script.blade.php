@@ -36,7 +36,7 @@
         $(".owl-next").html('<i class="fa fa-angle-double-right"></i>');
     });
 </script>
-<script type="text/javascript">
+<!--<script type="text/javascript">
     $(document).ready(function() {
         var owl = $('.testi-boxes');
         owl.owlCarousel({
@@ -79,7 +79,7 @@
         $(".owl-next").html('<i class="fa fa-angle-double-right"></i>');
 
     });
-</script>
+</script>-->
 <script type="text/javascript">
     $(document).ready(function() {
         var owl = $('.case-boxes');
@@ -119,6 +119,34 @@
         });
 
     });
+</script>
+
+<script type="text/javascript">
+        $('.testi-boxes').owlCarousel({
+            loop: true,
+            dots:false,
+            nav:true,
+            margin: 15,
+            autoplay:true,
+            autoplayTimeout: 5000,
+            smartSpeed: 2500,
+            autoplayHoverPause: true,
+            responsive : {
+                0:{
+    				items:1,
+    				nav:true
+    			},
+    			600:{
+    				items:1,
+    				nav:true
+    			},
+    			1000:{
+    				items:1,
+    				nav:true
+    			}
+            }
+    
+        });
 </script>
 <script type="text/javascript">
     $(document).ready(function() {

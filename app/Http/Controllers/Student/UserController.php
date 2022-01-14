@@ -550,7 +550,12 @@ class UserController extends Controller
                 $user_courses = explode(',', $user->special_course_ids);
                 $courses = $courses->whereNotIn('id', $user_courses);
             }
-        }else{
+        }
+        elseif ($user->flash_course_id) {
+            $user_courses = explode(',', $user->special_course_ids);
+            $courses = SpecialCourse::whereNotIn('id', $user_courses)->where('class_id','=',null);
+        }
+        else{
             if ($user->special_course_ids != '') {
                 $user_courses = explode(',', $user->special_course_ids);
                 $courses = SpecialCourse::whereNotIn('id', $user_courses)->where('class_id','=',null);

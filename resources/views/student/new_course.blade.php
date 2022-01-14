@@ -23,20 +23,22 @@
                         @if($courses)
                             <form action="{{ route('user.add_courses') }}" method="post">
                                 @csrf
-                                <div class="row">
+                                <div class="row course_item m-0">
                                     @foreach($courses as $course)
-                                        <div class="col-md-4">
-                                            <div class="items align-items-center" id="course_box{{ $course->id }}">
+                                        <div class="col-md-4 plr-2">
+                                            <div class="items card" id="course_box{{ $course->id }}">
                                                 <div class="course-box">
                                                     <h4>{{ $course->title }}</h4>
-                                                    <ul>
-                                                        <li><b>Monthly Fees :</b> &#8377;{{ $course->monthly_fees }}
+                                                    <ul class="mb-0">
+                                                        <li>Monthly Fees : <b>&#8377;{{ $course->monthly_fees }}</b>
                                                         </li>
-                                                        <li><b>Start Date : </b>{{ $course->start_date }}</li>
+                                                        <li>Start Date : <b>{{ $course->start_date }}</b></li>
                                                     </ul>
-                                                    <input class="form-check-input-field largerCheckbox" type="checkbox"
+                                                    <div class="sec_check">
+                                                        <input class="form-check-input-field largerCheckbox" type="checkbox"
                                                         value="{{ $course->id }}" id="course_id{{ $course->id }}"
                                                         name="course_id[]">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
