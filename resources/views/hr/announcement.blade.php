@@ -51,7 +51,7 @@
                                                     class="text-danger">*</span></label>
                                             <select class="w-89" id="choices-multiple-remove-button" multiple
                                                 name="class_id[]">
-                                                <option value="">Select Classes</option>
+                                                {{-- <option value="all">All Students</option> --}}
                                                 @foreach ($classes as $class)
                                                     <option value="{{ $class->id }}">{{ $class->name }}</option>
                                                 @endforeach
@@ -101,6 +101,7 @@
                         <div class="col-lg-5">
                             <div class="card-header-title mb-4">
                                 Recent Announcement </div>
+                            @if ($announcements->count() > 0)
                             @foreach ($announcements as $announcement)
                                 <div class="items d-sm-flex align-items-center">
                                     {{-- <div class="pdf-box">
@@ -124,6 +125,9 @@
                                 </div>
                             @endforeach
                             {{ $announcements->links() }}
+                            @else
+                                No announcement available
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -41,7 +41,8 @@ class VideoController extends Controller
         $this->validate($request,[
             'title'          => 'required',
             'video'          =>'mimes:mpeg,ogg,mp4,webm,3gp,mov,flv,avi,wmv,ts|max:100040|required',
-            'video_type'     => 'required'
+            'video_type'     => 'required',
+            'description'    => 'required'
         ]);
 
         if($request->hasFile('video')){
@@ -53,8 +54,10 @@ class VideoController extends Controller
 
         $video = new Video();
         $video->title = $request->title;
+        $video->description = $request->description;
         $video->video = $videoName;
         $video->status = 1;
+        $video->amount = $request->amount;
         $video->video_type = $request->video_type;
         $video->save();
         return redirect()->route('admin.video.index')->with('success','Video added successfully');
@@ -95,7 +98,8 @@ class VideoController extends Controller
         $this->validate($request,[
             'title'          => 'required',
             'video'          =>'mimes:mpeg,ogg,mp4,webm,3gp,mov,flv,avi,wmv,ts|max:100040',
-            'video_type'     => 'required'
+            'video_type'     => 'required',
+            'description'    => 'required'
         ]);
 
         $video = Video::find($id);
@@ -110,8 +114,10 @@ class VideoController extends Controller
             $videoName = $video->video;
         }
         $video->title = $request->title;
+        $video->description = $request->description;
         $video->video = $videoName;
         $video->status = 1;
+        $video->amount = $request->amount;
         $video->video_type = $request->video_type;
         $video->save();
         return redirect()->route('admin.video.index')->with('success','Video details updated successfully');

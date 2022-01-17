@@ -20,7 +20,12 @@ Route::get('/available-events', [CommonController::class, 'availableEvents'])->n
 Route::get('/vlog', [CommonController::class, 'vlog'])->name('vlog');
 Route::get('/vlog-details/{id}', [CommonController::class, 'vlogDetails'])->name('vlogDetails');
 
+Route::get('/video', [CommonController::class, 'video'])->name('video');
+Route::get('/video-details/{id}', [CommonController::class, 'videoDetails'])->name('video_details');
+
 Auth::routes();
+
+Route::any('student/video-subscription/{id}', [RegisterController::class, 'video_subscription'])->name('video_subscription');
 
 Route::any('student/flash-course-register/{id}', [RegisterController::class, 'student_flash_course_register'])->name('student_flash_course_register');
 Route::any('teacher/login', [LoginController::class, 'teacher_login'])->name('teacher_login');

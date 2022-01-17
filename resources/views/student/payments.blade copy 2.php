@@ -23,7 +23,7 @@
                                     <tr>
                                         <th>Order Id</th>
                                         <th>Fees Type</th>
-                                        @if (Auth::user()->registration_type != 3 && Auth::user()->registration_type != 4)
+                                        @if (Auth::user()->registration_type != 3)
                                             <th>Next Due Date</th>
                                         @endif
                                         @if (Auth::user()->registration_type == 3)
@@ -69,15 +69,13 @@
                                                             @else
                                                                 {{ getNameofFlashCourse($duePayment) }}
                                                             @endif
-                                                        @elseif (Auth::user()->registration_type == 4)
-
                                                         @else
                                                             {{ getNameofClassOrCourse($duePayment) }}
                                                         @endif
                                                 </span>
                                             </span>
                                             </td>
-                                            @if (Auth::user()->registration_type != 3 && Auth::user()->registration_type != 4)
+                                            @if (Auth::user()->registration_type != 3)
                                             <td>
                                                 @if ($duePayment->fee_type != 'admission_fee')
                                                     {{date('M d, Y',strtotime($duePayment->due_date))}}

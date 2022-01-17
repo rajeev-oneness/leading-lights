@@ -23,6 +23,7 @@ use App\Models\Certificate, App\Models\Fee;
 use App\Models\CheckClassOrCourceRegistration;
 use App\Models\Course;
 use App\Models\OtherPaymentDetails;
+use App\Models\Video;
 use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Notification as FacadesNotification;
@@ -489,6 +490,101 @@ class RegisterController extends Controller
                         'due_date' => $next_due_date,
                         'payment_month' => date("F",strtotime($course_start_date)),
                         'amount' => $s_course->fees,
+                    ];
+                }
+            }
+
+            if (count($feedata) > 0) {
+                DB::table('fees')->insert($feedata);
+            }
+
+            //Store certificate
+            $certificate_image =  imageUpload($request['certificate'], 'student_certificate');
+            $certificate = new Certificate();
+            $certificate->user_id = $user->id;
+            $certificate->image = $certificate_image;
+            $certificate->save();
+
+            // $admin_details = User::select('email')->where('role_id', 1)->first();
+            // $admin_email = $admin_details['email'];
+            $admin_email = "abcd12300@yopmail.com";
+            $email_data = array(
+                'first_name' => $request['first_name'],
+                'last_name' => $request['last_name'],
+                'email' => $request['email'],
+                'id_no' => $id_no,
+                'user_type' => 'student'
+            );
+            // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+            DB::commit();
+            return redirect()->route('login')->with('success', 'Your registration is successful, waiting for admin approval');
+        } catch (Exception $e) {
+            DB::rollback();
+            return 0;
+        }
+        }
+    }
+
+    // Flash Course Wise registration
+    public function video_subscription(Request $request,$id)
+    {
+        if ($request->method() == 'GET') {
+            $data = array();
+            $data['video_id'] = $id;
+            $data['videos'] = Video::where('video_type',1)->latest()->get();
+            return view('auth.video_subscription')->with($data);
+        } else if ($request->method() == 'POST') {
+            // dd($request->all());
+            $this->validate($request, [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'dob' => ['required', 'date'],
+                'gender' => ['required'],
+                'image' => 'required| mimes:png,jpg,jpeg',
+                'mobile' => ['required'],
+                'certificate' => ['required', 'mimes:pdf']
+            ]);
+            DB::beginTransaction();
+        try {
+            $student_count = User::where('role_id', 4)->count();
+            $num_padded = sprintf("%05d", ($student_count + 1));
+            $id_no = 'LLST' . $num_padded;
+
+            $image = $request['image'];
+            $imageName = imageUpload($image, 'profile_image');
+
+            // Store student details
+            $user = new User();
+            $user->first_name = $request['first_name'];
+            $user->last_name = $request['last_name'];
+            $user->email = $request['email'];
+            $user->mobile = $request['mobile'];
+            $user->id_no =  $id_no;
+            $user->dob = $request['dob'];
+            $user->gender = $request['gender'];
+            $user->password = Hash::make($id_no);
+            $user->image = $imageName;
+            $user->video_id = $request['class'];
+            $user->registration_type = 4;
+            $user->country_code = $request['country_code'];
+            $user->save();
+
+            $user_id = $user->id;
+            createNotification($user_id, 0, 0, 'student_registration');
+
+            // Fee generate
+            $feedata = [];
+            if($user->video_id > 0){
+                $video_details= Video::where('id', $request['class'])->first();
+                if ($video_details) {
+                    $feedata[] = [
+                        'user_id' => $user->id,
+                        'class_id' => 0,
+                        'course_id' => $video_details->id,
+                        'fee_type' => 'course_fee',
+                        'payment_month' => date("F",strtotime(date('Y-m-d'))),
+                        'amount' => $video_details->amount,
                     ];
                 }
             }

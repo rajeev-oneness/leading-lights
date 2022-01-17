@@ -199,7 +199,7 @@
                     </div>
                 @endif
                 @if ($student->status === 1)
-                    <div class="row mt-5">
+                    <div class="row mt-5 mb-5">
                         <div class="col-lg-7">
                             <div class="card">
                                 <div class="card-body">
@@ -486,7 +486,7 @@
                                         @foreach ($announcements as $key => $announcement)
                                             <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
 
-                                                <div class="items align-items-center items-height">
+                                                <div class="items align-items-center" style="200px">
                                                     <div class="pdf-text">
                                                         <h4>{{ $announcement->title }}</h4>
                                                         {!! $announcement->description !!}

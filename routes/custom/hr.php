@@ -22,7 +22,7 @@ Route::any('attendance/student/details',[HRController::class,'attendanceStudent'
 Route::any('attendance/student/show',[HRController::class,'studentAttendanceDetails'])->name('studentAttendanceDetails');
 // ----------------------Event Management----------------------------
 Route::any('event-management', [HRController::class, 'manageEvent'])->name('manage-event');
-Route::post('event-management/store', [HRController::class, 'uploadEvevnt'])->name('manage-event.store');
+Route::post('event-management/store', [HRController::class, 'uploadEvent'])->name('manage-event.store');
 
 // -----------------------Announcement----------------------------
 Route::any('announcement', [HRController::class, 'Announcement'])->name('announcement');

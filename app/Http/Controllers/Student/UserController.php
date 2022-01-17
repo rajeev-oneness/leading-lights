@@ -46,7 +46,10 @@ class UserController extends Controller
         $data['student'] = User::where('id', $current_user_id)->first();
         $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
         $data['certificates'] = Certificate::where('user_id', $current_user_id)->first();
-        $data['announcements'] = Announcement::where('class_id', Auth::user()->class)->get();
+        $data['announcements'] = Announcement::where('class_id', Auth::user()->class)
+                                ->orWhere('class_id','all')
+                                ->latest()
+                                ->get();
         return view('student.profile')->with($data);
     }
 
@@ -163,7 +166,10 @@ class UserController extends Controller
                 ->get(['arrange_classes.id', 'name as title', 'date', 'start_time as description'])->toArray();
             return response()->json(array_merge($classes, $special_classes));
         }
-        $events = Event::where('class_id', Auth::user()->class)->get();
+        $events = Event::where('class_id', Auth::user()->class)
+                        ->orWhere('class_id',null)
+                        ->latest()
+                        ->get();
         $announcements = Announcement::where('class_id', Auth::user()->class)->get();
         return view('student.dairy', compact('events', 'announcements'));
     }

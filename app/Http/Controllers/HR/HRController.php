@@ -347,13 +347,13 @@ class HRController extends Controller
     {
         $data['groups'] = Group::latest()->get();
         // $data['subjects'] = Subject::latest()->get();
-        $data['classes'] = Classes::orderBy('name')->get();
-        $data['events'] = Event::where('user_id', Auth::user()->id)->paginate(2);
+        $data['classes'] = Classes::latest()->get();
+        $data['events'] = Event::where('user_id', Auth::user()->id)->latest()->paginate(3);
         // return view('teacher.hometask',compact('classes'));
         return view('hr.manage_event')->with($data);
     }
 
-    public function uploadEvevnt(Request $request)
+    public function uploadEvent(Request $request)
     {
         Validator::make($request->all(), [
             'class' => 'required',
@@ -376,19 +376,26 @@ class HRController extends Controller
             $fileName = null;
         }
 
-        $class = $request->class;
-        $after_explode_class = explode('-', $class);
-
         $event = new Event();
         $event->user_id = Auth::user()->id;
-        if ($after_explode_class[1] === 'class') {
-            $event->class_id = $after_explode_class[0];
-            $event->group_id = null;
-        }
-        if ($after_explode_class[1] === 'group') {
-            $event->group_id = $after_explode_class[0];
+
+        //Request class id
+        $class = $request->class;
+        if ($class === 'all') {
             $event->class_id = null;
+        }else{
+            $after_explode_class = explode('-', $class);
+
+            if ($after_explode_class[1] === 'class') {
+                $event->class_id = $after_explode_class[0];
+                $event->group_id = null;
+            }
+            if ($after_explode_class[1] === 'group') {
+                $event->group_id = $after_explode_class[0];
+                $event->class_id = null;
+            }
         }
+
         $event->title = $request->title;
         $event->start_date = $request->start_date;
         $event->end_date = $request->end_date;
@@ -408,7 +415,7 @@ class HRController extends Controller
         $notification->class_id = $class;
         $notification->group_id = 0;
         $event->type = 'event_create';
-        $notification->title = 'Event createt';
+        $notification->title = 'Event created';
         $notification->message = 'Please Update and check';
         $notification->route = 'hr.manage-event';
         $notification->save();
@@ -523,22 +530,23 @@ class HRController extends Controller
             'desc.required' => 'The description field is required.',
         ])->validate();
 
-        $class = $request->class_id;
         $user_id = Auth::user()->id;
-
 
         $announcement = new Announcement();
         $announcement->user_id = $user_id;
-        $announcement->title = $request->title;
-        $announcement->class_id = implode(',', $request->class_id);
 
+        $class = $request->class_id;
+
+        if ($class === 'all') {
+            $announcement->class_id = null;
+        }else{
+            $announcement->class_id = implode(',', $request->class_id);
+        }
+
+        $announcement->title = $request->title;
         $announcement->date = $request->date;
         $announcement->description = $request->desc;
-        // dd($announcement->description);
         $announcement->save();
-
-        // dd($announcement);
-
 
         // createNotification($user_id, $class, 0, 'announcement_create');
 

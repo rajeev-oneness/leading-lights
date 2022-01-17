@@ -10,6 +10,7 @@ use App\Models\SpecialCourse;
 use App\Models\StudentGalary;
 use App\Models\Testimonial;
 use App\Models\User;
+use App\Models\Video;
 use App\Models\VLOG;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +46,7 @@ class CommonController extends Controller
             $data['student_photos'] = StudentGalary::latest()->take(8)->get();
             $data['testimonials'] = Testimonial::where('status',1)->latest()->get();
             $data['vlogs'] = VLOG::latest()->take(3)->get();
+            $data['videos'] = Video::latest()->take(3)->get();
             return view('welcome')->with($data);
         // }
     }
@@ -84,6 +86,17 @@ class CommonController extends Controller
         $data['course_details'] = Course::find($id);
         return view('flash_course_details')->with($data);
     }
+    public function video()
+    {
+        $data['videos'] = Video::latest()->get();
+        return view('video')->with($data);
+    }
+    public function videoDetails(Request $request,$id)
+    {
+        $data['videoDetails'] = Video::find($id);
+        return view('video_details')->with($data);
+    }
+
     public function getFeesByClass(Request $request){
         $class_details = Classes::where('id',$request->class_id)->first();
         if ($class_details) {

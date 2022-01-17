@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Fee;
 use App\Models\OtherPaymentDetails;
 use App\Models\User, DB;
+use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Notifications\PaymentSuccessMail;
@@ -32,7 +33,7 @@ class RazorpayController extends Controller
                         $fee->save();
                         $newFee = false;
 
-                        if (Auth::user()->registration_type != 3) {
+                        if (Auth::user()->registration_type != 3 && Auth::user()->registration_type != 4) {
 
                             if ($fee->class_id != 0) {
                                 // dd('test1');
@@ -89,6 +90,37 @@ class RazorpayController extends Controller
                                 if ($course) {
                                     $feeType = 'course_fee';
                                     $amount = $course->monthly_fees;
+                                    $newFee = true;
+                                }
+                            }
+
+                        }
+                        if (Auth::user()->registration_type == 4) {
+                            $paymentCount = Fee::where('user_id',Auth::user()->id)->count();
+
+                            if ($paymentCount > 1) {
+                                $course = Video::where('id', $fee->course_id)->first();
+
+                                $user_details = User::find($fee->user_id);
+                                $user_details->video_id = $course->id;
+                                $user_details->save();
+                                // if ($user_details->special_course_ids == '') {
+                                //     $user_details->special_course_ids = $course->id;
+                                //     $user_details->save();
+                                // }
+                                // else{
+                                //     $all_available_courses_ids = explode(',', $user->special_course_ids);
+                                //     if (!in_array($course->id, $all_available_courses_ids)) {
+                                //         $user_details->special_course_ids = $user_details->special_course_ids . ','. $course->id;
+                                //         $user_details->save();
+                                //     }
+                                // }
+
+                                // $next_date = date('Y-m-d',strtotime($course->start_date.'first day of +1 month'));
+                                // $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                                if ($course) {
+                                    $feeType = 'course_fee';
+                                    $amount = $course->amount;
                                     $newFee = true;
                                 }
                             }

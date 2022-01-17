@@ -42,6 +42,7 @@
                         <i class="fa fa-graduation-cap metismenu-icon"></i>Students Profile
                     </a>
                 </li>
+                @if (Auth::user()->registration_type != 4)
                 @if (Auth::user()->status == 1)
                 <li class="{{ Request::is('user/attendance') ? 'mm-active' : '' }}">
                     <a href="{{ route('user.attendance') }}">
@@ -73,6 +74,7 @@
                         <i class="metismenu-icon fa fa-book"></i>Join New Course
                     </a>
                 </li>
+                @endif
                 @endif
                 <li class="{{ Request::is('user/payment') ? 'mm-active' : '' }}">
                     <a href="{{ route('user.payment') }}">

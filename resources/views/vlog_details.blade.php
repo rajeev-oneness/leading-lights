@@ -66,9 +66,9 @@
                     {{-- <div class="blog_detimg">
                         <img src="{{ asset($photo->image) }}" class="img-fluid mx-auto">
                     </div> --}}
-                    <h6 class="pt-3 pb-3">
+                    {{-- <h6 class="pt-3 pb-3">
 						<span>BY ADMIN </span> |  <span>{{ date('d M Y',strtotime($vlog_details->created_at)) }}</span>
-					</h6>
+					</h6> --}}
 					{!! $vlog_details->description !!}
 					<ul class="social_link">
 						{{-- <li><a href=""><i class="fas fa-share-alt"></i> &nbsp; | &nbsp; Share</a></li> --}}

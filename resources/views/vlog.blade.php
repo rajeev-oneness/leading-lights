@@ -34,7 +34,7 @@
                                 <div class="card-body">
                                     <div class="date-sec">
                                         <i class="far fa-calendar-alt"></i>{{ date('M',strtotime($vlog->created_at)) }} <span>{{ date('d',strtotime($vlog->created_at)) }}</span>, {{ date('Y',strtotime($vlog->created_at)) }}
-                                        <h5><i class="far fa-user"></i>By Admin</h5>
+                                        {{-- <h5><i class="far fa-user"></i>By Admin</h5> --}}
                                     </div>
                                     <h2>{{ \Illuminate\Support\Str::limit($vlog->title,50) }}</h2>
                                     {!! \Illuminate\Support\Str::limit($vlog->description,350) !!}

@@ -61,7 +61,7 @@
                                                 class="text-danger">*</span></label>
                                         <div class="col-sm-10">
                                             <select name="class" id="class_name" class="form-control">
-                                                <option value="">Select Class</option>
+                                                <option value="all">All Students</option>
                                                 {{-- @foreach ($groups as $group)
                                                     <option value="{{ $group->id . '-group' }}" class="text-info">
                                                         {{ $group->name }}</option>
@@ -123,8 +123,8 @@
                                             <span for="start_time" class="des dec"><i
                                                     class="fa fa-circle color-icon mr-2 mb-2"></i>Start Time<span
                                                     class="text-danger">*</span></span>
-                                            <input type="text" id="start_time" name="start_time"
-                                                class="form-control clockpicker" value="{{ old('start_time') }}">
+                                            <input type="time" id="start_time" name="start_time"
+                                                class="form-control" value="{{ old('start_time') }}">
                                             @error('start_time')
                                                 <span class="text-danger">
                                                     {{ $message }}
@@ -135,8 +135,8 @@
                                             <span for="end_time" class="des dec"><i
                                                     class="fa fa-circle color-icon mr-2 mb-2"></i>End Time<span
                                                     class="text-danger">*</span></span>
-                                            <input type="text" id="end_time" name="end_time"
-                                                class="form-control clockpicker" value="{{ old('end_time') }}">
+                                            <input type="time" id="end_time" name="end_time"
+                                                class="form-control" value="{{ old('end_time') }}">
                                             @error('end_time')
                                                 <span class="text-danger">
                                                     {{ $message }}
@@ -164,6 +164,7 @@
                             <div class="col-lg-4">
                                 <div class="card-header-title mb-4">
                                     Recent Event </div>
+                                @if ($announcements->count() > 0)
                                 @foreach ($events as $event)
                                     <div class="items align-items-center">
                                         <div class="pdf-box">
@@ -229,6 +230,9 @@
                                     </ul>
                                   </nav> --}}
                                 {{ $events->links() }}
+                                @else
+                                No events available
+                                @endif
                             </div>
                         </div>
                     </div>

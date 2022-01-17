@@ -42,10 +42,10 @@
                 <a href="{{ route('admin.vlog.index') }}"><i class="fa fa-video-camera"
                         aria-hidden="true"></i>VLOG
                     Management</a></li>
-            {{-- <li
+            <li
                 class="{{ Request::is('admin/video*') ? 'active' : '' }}">
                 <a href="{{ route('admin.video.index') }}"><i class="fa fa-video-camera"
-                        aria-hidden="true"></i>Free/Paid video Management</a></li> --}}
+                        aria-hidden="true"></i>Free/Paid video Management</a></li>
             <li
                 class="{{ Request::is('admin/classes*') ? 'active' : '' }}">
                 <a href="{{ route('admin.classes.index') }}"><i
