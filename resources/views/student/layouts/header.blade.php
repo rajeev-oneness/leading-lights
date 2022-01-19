@@ -154,7 +154,7 @@
                                 <div class="menu-header-content text-dark p-3">
                                     <h5 class="menu-header-title">Notifications</h5>
                                     <h6 class="menu-header-subtitle">You have @if (count($notification) > 0)
-                                            <b>{{ $notification->unreadCount }}</b> unread messages
+                                            <b>{{ $notification->unreadCount }}</b> unread
                                             {{ $notification->unreadCount == 1 ? 'notification' : 'notifications' }}
                                         @endif
                                 </div>
@@ -374,16 +374,34 @@
                                         <div class="scrollbar-container ps">
                                             <ul class="nav flex-column">
                                                 <li class="nav-item-header nav-item">Activity</li>
-                                                <li class="nav-item">
-                                                    <a href="{{ route('hr.profile') }}"
-                                                        class="nav-link">Profile
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="{{ route('hr.changePassword') }}"
-                                                        class="nav-link">Change
-                                                        Password</a>
-                                                </li>
+                                                @php
+                                                  $checkPaymentStatus = checkPaymentStatus(Auth::user()->id);
+                                                @endphp
+                                                @if (Auth::user()->registration_type == 4 && $checkPaymentStatus == 1 )
+                                                    <li class="nav-item">
+                                                        <a href="{{ route('hr.profile') }}"
+                                                            class="nav-link">Profile
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="{{ route('hr.changePassword') }}"
+                                                            class="nav-link">Change
+                                                            Password</a>
+                                                    </li>
+                                                @endif
+                                                @if (Auth::user()->registration_type != 4)
+                                                    <li class="nav-item">
+                                                        <a href="{{ route('hr.profile') }}"
+                                                            class="nav-link">Profile
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="{{ route('hr.changePassword') }}"
+                                                            class="nav-link">Change
+                                                            Password</a>
+                                                    </li>
+                                                @endif
+                                                
                                             </ul>
                                         </div>
                                     </div>

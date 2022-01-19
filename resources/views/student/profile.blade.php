@@ -198,8 +198,8 @@
                         </div>
                     </div>
                 @endif
-                @if ($student->status === 1)
-                    <div class="row mt-5">
+                @if ($student->status === 1 && $student->registration_type != 4)
+                    <div class="row mt-5 mb-5">
                         <div class="col-lg-7">
                             <div class="card">
                                 <div class="card-body">
@@ -246,10 +246,6 @@
                                                     </ul>
                                                 </div>
                                             </div>
-                                            {{-- @empty
-                                <div class="col-md-12">
-                                    <p class="alert alert-warning">No class available for today</p>
-                                </div> --}}
                                         @endforeach
                                         @foreach ($special_classes as $class)
                                             <div class="col-md-12 col-lg-6 col-xl-6">
@@ -290,195 +286,17 @@
                                                     </ul>
                                                 </div>
                                             </div>
-                                            {{-- @empty
-                                <div class="col-md-12">
-                                    <p class="alert alert-warning">No class available for today</p>
-                                </div> --}}
                                         @endforeach
                                         @if ($special_classes->count() == 0 && $classes->count() == 0)
                                             <div class="col-md-12">
                                                 <p class="alert alert-warning">No class available for today</p>
                                             </div>
                                         @endif
-                                        <!--  <div class="col-md-12 col-lg-6 col-xl-4">
-                                        <div class="card-shadow-primary profile-responsive card-border mb-3 card">
-                                            <div class="dropdown-menu-header">
-                                                <div class="dropdown-menu-header-inner">
-
-                                                        <img src="assets/images/pro3.png" class="img-fluid mx-auto d-block w-100">
-
-                                                </div>
-                                            </div>
-                                            <ul class="list-group list-group-flush">
-                                                <li class="bg-warm-flame list-group-item">
-                                                    <div class="widget-content p-0">
-                                                        <div class="widget-content-wrapper justify-content-between">
-                                                            <div class="widget-content-left mr-3">
-                                                                <div class="icon-wrapper m-0">
-                                                                    <span class="head">Live Class</span>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="widget-content-left d-sm-flex align-items-center">
-                                                                <div class="widget-heading text-dark"><img src="assets/images/calander.png" class="img-fluid mx-auto"></div>
-                                                                <div class="widget-subheading">
-
-                                                                        Today<br/><span class="text">7:30 pm</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div> -->
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="col-sm-12 col-lg-5">
-                    <div class="card-hover-shadow-2x mb-3 card bg-card">
-                        <div class="card-header-tab card-header">
-                            <div class="card-header-title font-size-lg text-capitalize font-weight-normal not">
-                                Notifications
-                            </div>
-
-                        </div>
-                        <div class="scroll-area-lg">
-                            <div class="scrollbar-container ps ps--active-y">
-                                <div class="p-2">
-                                    <ul class="todo-list-wrapper list-group list-group-flush">
-                                        <li class="list-group-item">
-
-                                            <div class="widget-content p-0">
-                                                <div class="d-sm-flex align-items-center not">
-                                                    <div class="">
-                                                                    <img src="
-                                                        {{ asset('frontend/assets/images/alart.png') }}"
-                                                        class="img-fluid">
-
-                                                    </div>
-                                                    <div class="ml-3">
-                                                        <div class="widget-subheading"><i>Proin gravida
-                                                                nibh vel velit auctor aliquet. sollicitudin,
-                                                                lorem quis bibendum auctor, nisi elit
-                                                                consequat</i></div>
-
-                                                        <div class="d-sm-flex align-items-center">
-
-                                                            <div class="widget-subheading">
-
-                                                                Today<br><span class="text">7:30
-                                                                    pm</span>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="list-group-item">
-
-                                            <div class="widget-content p-0">
-                                                <div class="d-sm-flex align-items-center not">
-                                                    <div class="">
-                                                                    <img src="
-                                                        {{ asset('frontend/assets/images/alart.png') }}"
-                                                        class="img-fluid">
-
-                                                    </div>
-                                                    <div class="ml-3">
-                                                        <div class="widget-subheading"><i>Proin gravida
-                                                                nibh vel velit auctor aliquet. sollicitudin,
-                                                                lorem quis bibendum auctor, nisi elit
-                                                                consequat</i></div>
-
-                                                        <div class="d-sm-flex align-items-center">
-
-                                                            <div class="widget-subheading">
-
-                                                                Today<br><span class="text">7:30
-                                                                    pm</span>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="list-group-item">
-
-                                            <div class="widget-content p-0">
-                                                <div class="d-sm-flex align-items-center not">
-                                                    <div class="">
-                                                                    <img src="
-                                                        {{ asset('frontend/assets/images/alart.png') }}"
-                                                        class="img-fluid">
-
-                                                    </div>
-                                                    <div class="ml-3">
-                                                        <div class="widget-subheading"><i>Proin gravida
-                                                                nibh vel velit auctor aliquet. sollicitudin,
-                                                                lorem quis bibendum auctor, nisi elit
-                                                                consequat</i></div>
-
-                                                        <div class="d-sm-flex align-items-center">
-
-                                                            <div class="widget-subheading">
-
-                                                                Today<br><span class="text">7:30
-                                                                    pm</span>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="list-group-item">
-
-                                            <div class="widget-content p-0">
-                                                <div class="d-sm-flex align-items-center not">
-                                                    <div class="">
-                                                                    <img src="
-                                                        {{ asset('frontend/assets/images/alart.png') }}"
-                                                        class="img-fluid">
-
-                                                    </div>
-                                                    <div class="ml-3">
-                                                        <div class="widget-subheading"><i>Proin gravida
-                                                                nibh vel velit auctor aliquet. sollicitudin,
-                                                                lorem quis bibendum auctor, nisi elit
-                                                                consequat</i></div>
-
-                                                        <div class="d-sm-flex align-items-center">
-
-                                                            <div class="widget-subheading">
-
-                                                                Today<br><span class="text">7:30
-                                                                    pm</span>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
-                                    <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
-                                    </div>
-                                </div>
-                                <div class="ps__rail-y" style="top: 0px; height: 400px; right: 0px;">
-                                    <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 232px;">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
-                        <div class="col-lg-5 mt-4 mt-lg-0">
+                        <div class="col-lg-5 mt-4 mt-lg-0 mb-5">
                             <div class="card border-0">
                                 <div class="card-body">
                                     <div class="card-header-title font-size-lg text-capitalize ">

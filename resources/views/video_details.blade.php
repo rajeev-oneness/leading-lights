@@ -44,10 +44,21 @@
                                 <!--{{ $videoDetails->description }}-->
                             </p>
                         </div>
+                        @if ($videoDetails->video_type == 1)
                         <div class="col-12 text-center mt-3 price_bg">
-                                <h3>Price: <span>&#8377;{{ $videoDetails->amount }}</span></h3>
-                                <a class="btn btn-add btn-radius" href="{{ route('video_subscription',$videoDetails->id) }}">SUBSCRIPTION</a>
+                            <h3>Download full video</h3>
+                            <a class="btn btn-add btn-radius" href="{{ route('video_subscription',$videoDetails->id) }}">Pay INR {{ $videoDetails->amount }}</a>
                         </div>
+                        @endif
+                        @if ($videoDetails->video_type == 0)
+                            <div class="price_tag free_bg">
+                                Free
+                            </div>
+                        @else
+                            <div class="price_tag paid_bg">
+                                Paid
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

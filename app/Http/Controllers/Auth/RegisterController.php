@@ -568,6 +568,8 @@ class RegisterController extends Controller
             $user->video_id = $request['class'];
             $user->registration_type = 4;
             $user->country_code = $request['country_code'];
+            $user->status = 1;
+            $user->rejected = 0;
             $user->save();
 
             $user_id = $user->id;
@@ -612,7 +614,7 @@ class RegisterController extends Controller
             );
             // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
             DB::commit();
-            return redirect()->route('login')->with('success', 'Your registration is successful, waiting for admin approval');
+            return redirect()->route('login')->with('success', 'Your registration is successful, now you can login');
         } catch (Exception $e) {
             DB::rollback();
             return 0;

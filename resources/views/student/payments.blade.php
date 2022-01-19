@@ -58,23 +58,30 @@
                                                     }
                                                     // echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
                                                 @endphp
-                                                <span>{{ $feeType }}
-                                                    <span class="badge badge-info">
-                                                        @if (Auth::user()->registration_type == 3)
-                                                            @php
-                                                                $paymentStatus = checkPaymentStatus(Auth::user()->id);
-                                                            @endphp
-                                                            @if ($paymentStatus == 1)
-                                                                {{ getNameofClassOrCourse($duePayment) }}
+                                                <span>
+                                                    @if (Auth::user()->registration_type != 4)
+                                                         {{ $feeType }}
+                                                         <span class="badge badge-info">
+                                                            @if (Auth::user()->registration_type == 3)
+                                                                @php
+                                                                    $paymentStatus = checkPaymentStatus(Auth::user()->id);
+                                                                @endphp
+                                                                @if ($paymentStatus == 1)
+                                                                    {{ getNameofClassOrCourse($duePayment) }}
+                                                                @else
+                                                                    {{ getNameofFlashCourse($duePayment) }}
+                                                                @endif
+                                                            @elseif (Auth::user()->registration_type == 4)
+                                                                {{-- One Time Payment --}}
                                                             @else
-                                                                {{ getNameofFlashCourse($duePayment) }}
+                                                                {{ getNameofClassOrCourse($duePayment) }}
                                                             @endif
-                                                        @elseif (Auth::user()->registration_type == 4)
-
-                                                        @else
-                                                            {{ getNameofClassOrCourse($duePayment) }}
-                                                        @endif
-                                                </span>
+                                                        </span>
+                                                    @endif
+                                                    @if (Auth::user()->registration_type == 4)
+                                                            One Time Payment
+                                                    @endif
+                                                    
                                             </span>
                                             </td>
                                             @if (Auth::user()->registration_type != 3 && Auth::user()->registration_type != 4)
@@ -193,16 +200,26 @@
                                                     }
                                                     // echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
                                                 @endphp
-                                                <span>{{ $feeType }} <span class="badge badge-info">
-                                                        @if (Auth::user()->registration_type == 3)
-                                                            @if ($successIndex == 0)
-                                                                {{ getNameofFlashCourse($successPayment) }}
+                                                <span>
+                                                    @if (Auth::user()->registration_type == 4)
+                                                        One Time Payment
+                                                    @endif
+                                                    @if(Auth::user()->registration_type != 4)
+                                                      
+                                                        {{ $feeType }} 
+                                                        <span class="badge badge-info">
+                                                            @if (Auth::user()->registration_type == 3)
+                                                                @if ($successIndex == 0)
+                                                                    {{ getNameofFlashCourse($successPayment) }}
+                                                                @else
+                                                                    {{ getNameofClassOrCourse($successPayment) }}
+                                                                @endif
                                                             @else
                                                                 {{ getNameofClassOrCourse($successPayment) }}
                                                             @endif
-                                                        @else
-                                                            {{ getNameofClassOrCourse($successPayment) }}
-                                                        @endif</span></span>
+                                                        </span>
+                                                    @endif
+                                                </span>   
                                             </td>
                                             <td>&#x20B9;{{$successPayment->amount}}</td>
                                             <td>
@@ -211,7 +228,11 @@
                                                         <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
                                                     </span>
                                                 </button>
-                                                <a class="mb-2 mr-2 btn-pill btn btn-info btn-lg" href="{{ route('user.payment_receipt', $successPayment->id) }}"><i class="fa fa-download mr-2"></i>Download Receipt</a>
+                                                @if (Auth::user()->registration_type == 4)
+                                                    
+                                                @else  
+                                                    <a class="mb-2 mr-2 btn-pill btn btn-info btn-lg" href="{{ route('user.payment_receipt', $successPayment->id) }}"><i class="fa fa-download mr-2"></i>Download Receipt</a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

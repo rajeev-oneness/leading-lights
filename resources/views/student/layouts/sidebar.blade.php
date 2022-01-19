@@ -37,11 +37,23 @@
             </div>
             <img src="{{ asset('frontend/images/shadow.png') }}" class="img-fluid mx-auto w-100">
             <ul class="vertical-nav-menu">
+                @php
+                    $checkPaymentStatus = checkPaymentStatus(Auth::user()->id);
+                @endphp
+                @if (Auth::user()->registration_type == 4 && $checkPaymentStatus == 1)
                 <li class="{{ Request::is('user/profile') ? 'mm-active' : '' }}">
                     <a href="{{ route('user.profile') }}">
                         <i class="fa fa-graduation-cap metismenu-icon"></i>Students Profile
                     </a>
                 </li>
+                @endif
+                @if (Auth::user()->registration_type != 4)
+                <li class="{{ Request::is('user/profile') ? 'mm-active' : '' }}">
+                    <a href="{{ route('user.profile') }}">
+                        <i class="fa fa-graduation-cap metismenu-icon"></i>Students Profile
+                    </a>
+                </li>
+                @endif
                 @if (Auth::user()->registration_type != 4)
                 @if (Auth::user()->status == 1)
                 <li class="{{ Request::is('user/attendance') ? 'mm-active' : '' }}">
@@ -81,17 +93,32 @@
                         <i class="metismenu-icon fa fa-credit-card"></i>Payments
                     </a>
                 </li>
+                
                 @if (Auth::user()->status == 1)
-                <li class="{{ Request::is('user/testimonial') ? 'mm-active' : '' }}">
-                    <a href="{{ route('user.testimonial') }}">
-                        <i class="metismenu-icon fa fa-cog"></i>Testimonial
-                    </a>
-                </li>
-                <li class="{{ Request::is('user/change-password') ? 'mm-active' : '' }}">
-                    <a href="{{ route('user.changePassword') }}">
-                        <i class="metismenu-icon fa fa-cog"></i>Settings
-                    </a>
-                </li>
+                    @if (Auth::user()->registration_type == 4 && $checkPaymentStatus == 1)
+                        <li class="{{ Request::is('user/testimonial') ? 'mm-active' : '' }}">
+                            <a href="{{ route('user.testimonial') }}">
+                                <i class="metismenu-icon fa fa-cog"></i>Testimonial
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('user/change-password') ? 'mm-active' : '' }}">
+                            <a href="{{ route('user.changePassword') }}">
+                                <i class="metismenu-icon fa fa-cog"></i>Settings
+                            </a>
+                        </li>
+                    @endif
+                    @if(Auth::user()->registration_type != 4)
+                        <li class="{{ Request::is('user/testimonial') ? 'mm-active' : '' }}">
+                            <a href="{{ route('user.testimonial') }}">
+                                <i class="metismenu-icon fa fa-cog"></i>Testimonial
+                            </a>
+                        </li>
+                        <li class="{{ Request::is('user/change-password') ? 'mm-active' : '' }}">
+                            <a href="{{ route('user.changePassword') }}">
+                                <i class="metismenu-icon fa fa-cog"></i>Settings
+                            </a>
+                        </li>
+                    @endif
                 @endif
 
             </ul>

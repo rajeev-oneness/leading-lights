@@ -14,7 +14,7 @@ class ModifyClassIdColumnInEventsTable extends Migration
     public function up()
     {
         Schema::table('events', function (Blueprint $table) {
-            // $table->dropColumn('class_id');
+            $table->dropColumn('class_id');
         });
         Schema::table('events', function (Blueprint $table) {
             $table->string('class_id')->after('user_id')->nullable();

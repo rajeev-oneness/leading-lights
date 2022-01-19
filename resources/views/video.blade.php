@@ -44,6 +44,15 @@
                                 {!! \Illuminate\Support\Str::limit($video->description,350) !!}
                                 <span class="text-right">Read More <i class="fas fa-arrow-right ml-1"></i></span>
                             </div>
+                            @if ($video->video_type == 0)
+                                <div class="price_tag free_bg">
+                                    Free
+                                </div>
+                            @else
+                                <div class="price_tag paid_bg">
+                                    Paid
+                                </div>
+                            @endif
                         </a>
                     </div>
                 </div>

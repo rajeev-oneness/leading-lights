@@ -164,7 +164,7 @@
                             <div class="col-lg-4">
                                 <div class="card-header-title mb-4">
                                     Recent Event </div>
-                                @if ($announcements->count() > 0)
+                                @if ($events->count() > 0)
                                 @foreach ($events as $event)
                                     <div class="items align-items-center">
                                         <div class="pdf-box">
