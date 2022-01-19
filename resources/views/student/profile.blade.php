@@ -26,38 +26,38 @@
                                     <!-- <img src="assets/images/edit.png" class="img-fluid mx-auto"> -->
                                 </span></h4>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-5">
                                     <label>DOB :</label>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-7">
                                     <p id="dob">{{ Auth::user()->dob ? Auth::user()->dob : 'N/A' }}</p>
                                 </div>
                                 <div class="col-md-2">
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-5">
                                     <label>Age :</label>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-7">
                                     <p>{{ $student_age ? $student_age : 'N/A' }}</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-5">
                                     <label>Sex :</label>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-7">
                                     <p id="gender">{{ $student->gender ? $student->gender : 'N/A' }}</p>
                                 </div>
                                 <div class="col-md-2">
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-5">
                                     <label>Class :</label>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-7">
                                     <?php
                                         if ($student->class) {
                                             $class_details = App\Models\Classes::findOrFail($student->class);
@@ -73,10 +73,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-5">
                                     <label>Course :</label>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-7">
                                     <?php
 
                                     $special_course_ids = explode(',', $student->special_course_ids);
@@ -97,13 +97,13 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-5">
                                     <label>Student Id :</label>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-7">
                                     <p>{{ $student->id_no ? $student->id_no : 'N/A' }}</p>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-2 col-6">
                                     <!-- <img src="assets/images/edit.png" class="img-fluid mx-auto"> -->
                                 </div>
                             </div>
@@ -199,7 +199,7 @@
                     </div>
                 @endif
                 @if ($student->status === 1)
-                    <div class="row mt-5 mb-5">
+                    <div class="row mt-5">
                         <div class="col-lg-7">
                             <div class="card">
                                 <div class="card-body">
@@ -478,51 +478,57 @@
                         </div>
                     </div>
                 </div> --}}
-                        <div class="col-lg-5">
-                            <h3>Latest Announcements</h3>
-                            @if (!$announcements->isEmpty())
-                                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                                    <div class="carousel-inner">
-                                        @foreach ($announcements as $key => $announcement)
-                                            <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-
-                                                <div class="items align-items-center" style="200px">
-                                                    <div class="pdf-text">
-                                                        <h4>{{ $announcement->title }}</h4>
-                                                        {!! $announcement->description !!}
-                                                        <div
-                                                            class="widget-content-left d-sm-flex align-items-center justify-content-flex-start">
-                                                            <div class="widget-heading text-dark"><img
-                                                                    src="{{ asset('frontend/assets/images/calander.png') }}"
-                                                                    class="img-fluid mx-auto"></div>
-                                                            <div class="widget-subheading ml-3">
-                                                                {{ date('M d, Y', strtotime($announcement->start_date)) }}
-                                                                @if ($announcement->end_date)
-                                                                    -
-                                                                    {{ date('M d, Y', strtotime($announcement->end_date)) }}
-                                                                @endif
+                        <div class="col-lg-5 mt-4 mt-lg-0">
+                            <div class="card border-0">
+                                <div class="card-body">
+                                    <div class="card-header-title font-size-lg text-capitalize ">
+                                        Latest Announcements
+                                    </div>
+                                    @if (!$announcements->isEmpty())
+                                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                                        <div class="carousel-inner">
+                                            @foreach ($announcements as $key => $announcement)
+                                                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+    
+                                                    <div class="items align-items-center items-height">
+                                                        <div class="pdf-text">
+                                                            <h4>{{ $announcement->title }}</h4>
+                                                            {!! $announcement->description !!}
+                                                            <div
+                                                                class="widget-content-left d-sm-flex align-items-center justify-content-flex-start">
+                                                                <div class="widget-heading text-dark"><img
+                                                                        src="{{ asset('frontend/assets/images/calander.png') }}"
+                                                                        class="img-fluid mx-auto"></div>
+                                                                <div class="widget-subheading ml-3">
+                                                                    {{ date('M d, Y', strtotime($announcement->start_date)) }}
+                                                                    @if ($announcement->end_date)
+                                                                        -
+                                                                        {{ date('M d, Y', strtotime($announcement->end_date)) }}
+                                                                    @endif
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+    
                                                 </div>
-
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        </div>
+                                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                                            data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                                            data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
                                     </div>
-                                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
-                                        data-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                    <a class="carousel-control-next" href="#carouselExampleControls" role="button"
-                                        data-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
+                                    @else
+                                        <p class="alert alert-danger mt-5"> No announcements are available </p>
+                                    @endif
                                 </div>
-                            @else
-                                <p class="alert alert-danger"> No announcements are available </p>
-                            @endif
+                            </div>
                         </div>
                     </div>
             </div>

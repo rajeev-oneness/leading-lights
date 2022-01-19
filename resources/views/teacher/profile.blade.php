@@ -29,14 +29,14 @@
                                     <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> -->
                                 </span></h4>
                             <div class="row">
-                                <div class="col-lg-4 col-sm-3">
+                                <div class="col-lg-4 col-sm-3 col-5">
                                     <label>Address:</label>
                                 </div>
-                                <div class="col-lg-6 col-sm-7">
+                                <div class="col-lg-6 col-sm-7 col-7">
                                     <p id="address">{{ $teacher->address ? $teacher->address : 'N/A' }}</p>
                                     <span class="text-danger" id="err_msg"></span>
                                 </div>
-                                <div class="col-lg-2 col-sm-2">
+                                <div class="col-lg-2 col-sm-2 edit_btn">
                                     <img src="https://img.icons8.com/ios-glyphs/30/000000/save--v1.png"
                                         style="display: none" id="save_address"
                                         onclick="saveAddress({{ Auth::user()->id }})" />
@@ -50,10 +50,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-4 col-sm-3">
+                                <div class="col-lg-4 col-sm-3 col-5">
                                     <label>Mob. No:</label>
                                 </div>
-                                <div class="col-lg-6 col-sm-7">
+                                <div class="col-lg-6 col-sm-7 col-7">
                                     <p>{{ $teacher->mobile ? $teacher->mobile : 'N/A' }}</p>
                                 </div>
                                 <div class="col-lg-2 col-sm-2">
@@ -61,10 +61,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-4 col-sm-3">
+                                <div class="col-lg-4 col-sm-3 col-5">
                                     <label>Email Id:</label>
                                 </div>
-                                <div class="col-lg-6 col-sm-7">
+                                <div class="col-lg-6 col-sm-7 col-7">
                                     <p>{{ $teacher->email ? $teacher->email : 'N/A' }}</p>
                                 </div>
                                 <div class="col-lg-2 col-sm-2">
@@ -72,10 +72,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-4 col-sm-3">
+                                <div class="col-lg-4 col-sm-3 col-5">
                                     <label>Employee ID:</label>
                                 </div>
-                                <div class="col-lg-6 col-sm-7">
+                                <div class="col-lg-6 col-sm-7 col-7">
                                     <p>{{ $teacher->id_no ? $teacher->id_no : 'N/A' }}</p>
                                 </div>
                                 <div class="col-lg-2 col-sm-2">
@@ -83,10 +83,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-4 col-sm-3">
+                                <div class="col-lg-4 col-sm-3 col-5">
                                     <label>Academic Qualification:</label>
                                 </div>
-                                <div class="col-lg-6 col-sm-7">
+                                <div class="col-lg-6 col-sm-7 col-7">
                                     <p id="qualification">{{ $teacher->qualification ? $teacher->qualification : 'N/A' }}
                                     </p>
                                 </div>
@@ -123,7 +123,7 @@
                                     <p><span id="bio">{{ $teacher->about_us ? $teacher->about_us : 'N/A' }}</span>
                                         <span class="text-danger" id="err_msg"></span>
                                         @if ($teacher->status == 1)
-                                            <span>
+                                            <span class="bio_edit">
                                                 <img src="https://img.icons8.com/ios-glyphs/30/000000/save--v1.png"
                                                     style="display: none;float: right;" id="save_bio" onclick="saveBio()" />
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"

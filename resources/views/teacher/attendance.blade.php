@@ -87,7 +87,7 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="d-sm-flex align-items-center justify-content-end mb-4 ml-4">
+                                        <div class="d-sm-flex align-items-center justify-content-end mb-4 ml-lg-4">
                                             <div class="align-items-baseline">
                                                 <p class="des  mr-2"><span class="mr-2"><i
                                                             class="fa fa-circle"></i></span>End Date</p>
@@ -124,7 +124,7 @@
                     <div class="tab-content">
                         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-12 table-responsive">
                                     <table class="table table-hover bg-table" id="attendance_table">
                                         <thead>
                                             <tr>
