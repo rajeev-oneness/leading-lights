@@ -20,6 +20,7 @@
                 <td>Student UID</td>
                 <td>{{ $user_details->id_no }}</td>
             </tr>
+            @if ($user_details->class_details && $user_details->flash_course_id == 0)
             <tr>
                 <td>Class Enrollment</td>
                 <td>
@@ -28,7 +29,8 @@
                     @endif
                 </td>
             </tr>
-            @if ($user_details->special_course_id)
+            @endif
+            @if ($user_details->special_course_id && $user_details->flash_course_id == 0)
                 <tr>
                     <td>
                         Course Enrollment
@@ -45,7 +47,6 @@
                     </td>
                 </tr>
             @endif
-            
         </tbody>
     </table>
     <p  class="text-success"><strong>Payment Information</strong></p>
@@ -56,15 +57,33 @@
                     @php
                         $feeType = 'Admission Fees';
                         switch($fee_details->fee_type){
-                            case 'admission_fee' : $feeType = 'Admission Fees with 1 month class fee';break;
-                            case 'course_fee' : $feeType = 'Course Fee';break;
-                            case 'class_fee' : $feeType = 'Class Fee';break;
+                            case 'admission_fee' :
+                                $feeType = 'Admission Fees with 1 month class fee';
+                                break;
+                            case 'course_fee' :
+                                $feeType = 'Course Fee';
+                                break;
+                            case 'class_fee' :
+                                $feeType = 'Class Fee';
+                                break;
                         }
-                        echo $feeType;
+                        // echo $feeType;
                     @endphp
+                    <span>{{ $feeType }}
+                        @if ($user_details->flash_course_id == 0)
+                            <span class="badge badge-info">{{ getNameofCourse($fee_details) }}</span>
+                        @endif
+                    </span>
                 </td>
                 <td>Rs. {{ $fee_details->amount }}</td>
             </tr>
+
+            @if ($fee_details->fee_type == 'course_fee')
+                <tr>
+                    <td>Payment for</td>
+                    <td>{{ $fee_details->payment_month }}</td>
+                </tr>
+            @endif
             @if($transaction = $fee_details->transaction_details)
             <tr>
                 <td>Transaction Id</td>
@@ -76,7 +95,7 @@
             </tr>
             <tr>
                 <td>Date</td>
-                <td>{{ date('d-m-Y h:i A', strtotime($transaction->created_at)) }}</td>
+                <td>{{ date('d-m-Y', strtotime($transaction->created_at)) }} {{ getAsiaTime24($transaction->created_at) }}</td>
             </tr>
             @endif
         </tbody>

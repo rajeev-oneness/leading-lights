@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/style.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/animate.css') }}">
     <link href="{{ asset('frontend/css/responsive.css') }}" rel="stylesheet" media="all">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
 </head>
 
 <body>

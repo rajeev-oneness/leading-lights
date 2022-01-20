@@ -71,4 +71,19 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Models\Classes','class','id');
     }
+
+    public  function group_details()
+    {
+        return $this->hasMany(Group::class);
+    }
+
+    public  function testimonial()
+    {
+        return $this->hasMany(Testimonial::class);
+    }
+
+    public  function flash_course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 }

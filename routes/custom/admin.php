@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Models\SpecialCourse;
+use App\Models\Testimonial;
 use Illuminate\Support\Facades\Auth, Illuminate\Support\Facades\Route;
+use PHPUnit\Framework\Error\Notice;
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+// Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+// Route::post('/login', [LoginController::class, 'login']);
+// Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 // Forgot / Reset Password --------------------------------->
 Route::any('/forgot-password', [ResetPasswordController::class, 'forgotPassword'])->name('forgotPassword');
@@ -39,12 +41,23 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::resource('special-courses', SpecialCoursesController::class);
     Route::resource('events', EventController::class);
     Route::resource('qualifications', QualificationController::class);
+    Route::resource('notice', NoticeController::class);
+    Route::resource('testimonial', TestimonialController::class);
+
     Route::put('/approve-student/{id}', [StudentController::class, 'approval'])->name('students.approve');
     Route::put('/reject-student/{id}', [StudentController::class, 'reject_student'])->name('students.reject');
+    Route::put('/deactivate-student/{id}', [StudentController::class, 'deactivate_account'])->name('students.deactivate');
+    Route::put('/activate-student/{id}', [StudentController::class, 'activate_account'])->name('students.activate');
+
     Route::put('/approve-teacher/{id}', [TeacherController::class, 'approval'])->name('teacher.approve');
     Route::put('/reject-teacher/{id}', [TeacherController::class, 'reject_teacher'])->name('teacher.reject');
+    Route::put('/deactivate-teacher/{id}', [TeacherController::class, 'deactivate_account'])->name('teacher.deactivate');
+    Route::put('/activate-teacher/{id}', [TeacherController::class, 'activate_account'])->name('teacher.activate');
+
     Route::put('/approve-hr/{id}', [HRController::class, 'approval'])->name('hr.approve');
     Route::put('/reject-hr/{id}', [HRController::class, 'reject_hr'])->name('hr.reject');
+    Route::put('/deactivate-hr/{id}', [HRController::class, 'deactivate_account'])->name('hr.deactivate');
+    Route::put('/activate-hr/{id}', [HRController::class, 'activate_account'])->name('hr.activate');
 
     Route::get('/arrange-classes', [ClassController::class, 'arrange_classes'])->name('arrange_classes');
     Route::delete('/delete-arrange-classes/{id}', [ClassController::class, 'delete_arrange_classes'])->name('delete_arrange_classes');
@@ -55,4 +68,8 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
 
     //Send email user who not payment yet for special courses
     Route::post('monthly-payment-check/{id}', [ClassController::class, 'monthly_payment_check'])->name('monthly_payment_check');
+
+    // Other functions for  testimonial
+    Route::put('approve-testimonial', [TestimonialController::class, 'approveTestimonial'])->name('testimonial.approve');
+    Route::put('reject-testimonial', [TestimonialController::class, 'rejectTestimonial'])->name('testimonial.reject');
 });

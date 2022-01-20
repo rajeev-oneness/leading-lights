@@ -35,6 +35,7 @@
                                 <th>Sl. No</th>
                                 <th>Class</th>
                                 <th>Subject</th>
+                                <th>Exam Category</th>
                                 <th>Student Id</th>
                                 <th>Date</th>
                                 <th>Marks</th>
@@ -67,33 +68,47 @@
                                         @endif
                                     </td>
                                     <td>{{ $subject_details->name }}</td>
+                                    <td>
+                                        @if ($exam->exam_type == 1)
+                                            <span>MCQ</span>
+                                        @elseif ($exam->exam_type == 2)
+                                            <span>Descriptive</span>
+                                        @else
+                                            <span>Mixed(MCQ & Desc.)</span>
+                                        @endif
+                                    </td>
+
                                     <td>{{ $user_details->id_no }}</td>
                                     <td>{{ $exam->created_at->format('d-m-Y') }}</td>
                                     <td>
-
                                         @if ($exam->total_marks >= 0 && $total_marks)
-                                            <span> <span class="text-success">{{ $exam->total_marks }}</span> /
-                                                <span class="text-info">{{ $exam->full_marks }}</span></span>
+                                            <span>
+                                                @if ($exam->pass_marks <= $exam->total_marks)
+                                                    <span class="text-success">{{ $exam->total_marks }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-danger">{{ $exam->total_marks }}
+                                                    </span>
+                                                @endif
+
+                                                /
+                                                <span class="text-info">{{ $exam->full_marks }}</span>
+                                            </span>
                                         @else
                                             <span><span class="text-danger">Not published</span> / <span
                                                     class="text-info">{{ $exam->full_marks }}</span></span>
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($exam->exam_type == 1)
-                                            <a href="{{ route('teacher.studentSubmittedAnswer',[$exam->exam_id,$exam->user_id]) }}"><i
-                                                    class="fa fa-eye mr-2" data-toggle="tooltip" data-placement="top"
-                                                    title="View Answer" data-toggle="modal"
-                                                    data-target="#examModal"></i></a>
-                                        @elseif ($exam->exam_type == 2)
+                                        @if ($exam->total_marks >= 0 && $total_marks)
                                             <a href="{{ route('teacher.studentSubmittedAnswer',[$exam->exam_id,$exam->user_id]) }}"><i
                                                     class="fa fa-eye mr-2" data-toggle="tooltip" data-placement="top"
                                                     title="View Answer" data-toggle="modal"
                                                     data-target="#examModal"></i></a>
                                         @else
                                             <a href="{{ route('teacher.studentSubmittedAnswer',[$exam->exam_id,$exam->user_id]) }}"><i
-                                            class="fa fa-eye mr-2" data-toggle="tooltip" data-placement="top"
-                                            title="View Answer" data-toggle="modal"
+                                            class="fa fa-edit mr-2" data-toggle="tooltip" data-placement="top"
+                                            title="Review Answer" data-toggle="modal"
                                             data-target="#examModal"></i></a>
                                         @endif
                                     </td>

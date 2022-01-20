@@ -33,10 +33,7 @@ class GroupController extends Controller
     public function create()
     {
         $data['teachers'] = User::where('role_id', 3)->latest()->get();
-        $data['students'] = User::select('classes.name as class_name', 'users.id as user_id', 'users.id_no as id_no', 'users.first_name as first_name', 'users.last_name as last_name')->where('role_id', 4)
-            ->join('classes', 'classes.id', '=', 'users.class')
-            ->orderBy('users.created_at', 'DESC')
-            ->get();
+        $data['students'] = User::where('role_id', 4)->where('status',1)->get();
         $data['classes'] = Classes::orderBy('name')->get();
         return view('admin.groups.create')->with($data);
     }
@@ -54,22 +51,22 @@ class GroupController extends Controller
         $teacher_id = $request->teacher_id;
         // dd($request->student_ids);
         Validator::make($request->all(), [
-            // 'student_ids' => 'required',
+            'student_ids' => 'required',
             'teacher_id' => 'required',
-            'class_id' => 'required',
+            // 'class_id' => 'required',
             'name' => 'required|unique:student_groups'
         ], $messages = [
             'name.required' => 'The group name field is required.',
             'name.unique' => 'The group name  must  be unique',
             'teacher_id.required' => 'Please choose available teacher',
-            // 'student_ids.required' => 'Please choose available students',
-            'class_id.required' => 'Please choose available class',
+            'student_ids.required' => 'Please choose available students',
+            // 'class_id.required' => 'Please choose available class',
         ])->validate();
 
         $group = new Group();
         $group->name = $request->name;
         $group->teacher_id = $request->teacher_id;
-        $group->class_id = $request->class_id;
+        // $group->class_id = $request->class_id;
         if ($student_ids) {
             $group->student_ids = implode(',', $student_ids);
         }
@@ -122,15 +119,13 @@ class GroupController extends Controller
             ->orderBy('users.created_at', 'DESC')
             ->get();
         $data['group'] = Group::findOrFail($id);
-        // $data['classes'] = Classes::find($data['group']->id);
-        $data['classes'] = Classes::findOrFail($data['group']->class_id);
+        $data['classes'] = Classes::findOrFail($data['group']->id);
         $selected_students = $data['group']->student_ids;
         $student_ids = explode(',', $selected_students);
         foreach ($student_ids as $student_id) {
             $student_details[] = User::where('id', $student_id)->first();
         }
         $data['student_details'] = $student_details;
-        // dd($data);
         return view('admin.groups.view')->with($data);
     }
 
@@ -144,16 +139,18 @@ class GroupController extends Controller
     {
         $data['group'] = Group::findOrFail($id);
         $data['teachers'] = User::where('role_id', 3)->latest()->get();
-        $data['students'] = User::select('classes.name as class_name', 'users.id as user_id', 'users.id_no as id_no', 'users.first_name as first_name', 'users.last_name as last_name')->where('role_id', 4)
-            ->join('classes', 'classes.id', '=', 'users.class')
-            ->orderBy('users.created_at', 'DESC')
-            ->get();
+        // $data['students'] = User::select('classes.name as class_name', 'users.id as user_id', 'users.id_no as id_no', 'users.first_name as first_name', 'users.last_name as last_name')->where('role_id', 4)
+        //     ->join('classes', 'classes.id', '=', 'users.class')
+        //     ->orderBy('users.created_at', 'DESC')
+        //     ->get();
+        $data['students'] = User::where('role_id', 4)->get();
 
         // $data['selected_students'] = User::where('group_ids',  $data['group'])->get();
 
         // dd($data['selected_students']);
         $data['classes'] = Classes::orderBy('name')->get();
-        $data['students_by_grooup'] = Classes::orderBy('name')->get();
+        // $data['students_by_grooup'] = Classes::orderBy('name')->get();
+        // dd($data);
 
         return view('admin.groups.edit')->with($data);
     }
@@ -170,16 +167,16 @@ class GroupController extends Controller
         $student_ids = $request->student_ids;
         $teacher_id = $request->teacher_id;
         Validator::make($request->all(), [
-            // 'student_ids' => 'required',
+            'student_ids' => 'required',
             'teacher_id' => 'required',
             'name' => 'required',
-            'class_id' => 'required',
+            // 'class_id' => 'required',
         ], $messages = [
             'name.required' => 'The group name field is required.',
             'name.unique' => 'The group name  must  be unique',
             'teacher_id.required' => 'The teacher must be assigned',
-            // 'student_ids.required' => 'Please choose any of students', 
-            'class_id.required' => 'Please choose available class',
+            'student_ids.required' => 'Please choose any of students',
+            // 'class_id.required' => 'Please choose available class',
         ])->validate();
         $group =  Group::find($id);
         $assigned_teacher_id = $group->teacher_id;
@@ -189,7 +186,7 @@ class GroupController extends Controller
         if ($student_ids) {
             $group->student_ids = implode(',', $request->student_ids);
         }
-        $group->class_id = $request->class_id;
+        // $group->class_id = $request->class_id;
         $group->save();
 
         $group_id = $group->id;

@@ -49,6 +49,7 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
         $inactive_user = User::where('email', $req->email)->where('status', 0)->where('rejected', 0)->first();
+        $deactivate_user = User::where('email',$req->email)->where('status',1)->where('deactivated',1)->first();
         $user = User::where('email', $req->email)->first();
         if ($user) {
             if ($user->role_id == 4) {
@@ -56,9 +57,13 @@ class LoginController extends Controller
                     auth()->logout();
                     return back()->with('error', 'Your account is not active.')->withInput();
                 }
+                if ($deactivate_user) {
+                    auth()->logout();
+                    return back()->with('error', 'Your account is deactivated by admin.')->withInput();
+                }
                 if (Hash::check($req->password, $user->password)) {
                     Auth::login($user);
-                    return redirect()->intended('/home');
+                    return redirect()->route('home');
                 } else {
                     $errors['password'] = 'You have entered wrong password';
                 }
@@ -71,8 +76,10 @@ class LoginController extends Controller
         return back()->withErrors($errors)->withInput($req->all());
     }
 
+
     public function logout(Request $request)
     {
+
         //Attendance
         $check_attendance = Attendance::where('user_id', Auth::user()->id)
             ->whereDate('date', '=', date('Y-m-d'))
@@ -86,6 +93,16 @@ class LoginController extends Controller
             $check_attendance->save();
         }
 
+        if (Auth::check() && Auth::user()->role_id == 1) {
+            auth()->guard()->logout();
+            $request->session()->invalidate();
+            return redirect()->route('admin_login');
+        }
+        if (Auth::check() && Auth::user()->role_id == 5) {
+            auth()->guard()->logout();
+            $request->session()->invalidate();
+            return redirect()->route('super_admin_login');
+        }
         if (Auth::check() && Auth::user()->role_id == 2) {
             auth()->guard()->logout();
             $request->session()->invalidate();
@@ -113,12 +130,17 @@ class LoginController extends Controller
                 'password' => 'required|string',
             ]);
             $inactive_user = User::where('email', $request->email)->where('status', 0)->where('rejected', 0)->first();
+            $deactivate_user = User::where('email',$request->email)->where('status',1)->where('deactivated',1)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 3) {
                     if ($inactive_user) {
                         auth()->logout();
                         return back()->with('error', 'Your account is not active.');
+                    }
+                    if ($deactivate_user) {
+                        auth()->logout();
+                        return back()->with('error', 'Your account is deactivated by admin.')->withInput();
                     }
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
@@ -139,7 +161,7 @@ class LoginController extends Controller
                         $attendance->save();
                         // }
 
-                        return redirect()->intended('/home');
+                        return redirect()->route('home');
                     } else {
                         $errors['password'] = 'You have entered wrong password';
                     }
@@ -162,13 +184,23 @@ class LoginController extends Controller
                 'email' => 'required|string|email',
                 'password' => 'required|string',
             ]);
-            $user = User::where('email', $request->email)->first();
+            $inactive_user = User::where('email', $request->email)->where('status', 0)->where('rejected', 0)->first();
+            $deactivate_user = User::where('email',$request->email)->where('status',1)->where('deactivated',1)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 2) {
+                    if ($inactive_user) {
+                        auth()->logout();
+                        return back()->with('error', 'Your account is not active.');
+                    }
+                    if ($deactivate_user) {
+                        auth()->logout();
+                        return back()->with('error', 'Your account is deactivated by admin.')->withInput();
+                    }
+
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
-                        return redirect()->intended('/home');
+                        return redirect()->route('home');
                     } else {
                         $errors['password'] = 'You have entered wrong password';
                     }
@@ -190,13 +222,22 @@ class LoginController extends Controller
                 'email' => 'required|string|email',
                 'password' => 'required|string',
             ]);
-            $user = User::where('email', $request->email)->first();
+            $inactive_user = User::where('email', $request->email)->where('status', 0)->first();
+            $deactivate_user = User::where('email',$request->email)->where('status',1)->where('deactivated',1)->first();
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->role_id == 1) {
+                    if ($inactive_user) {
+                        auth()->logout();
+                        return back()->with('error', 'Your account is not active.');
+                    }
+                    if ($deactivate_user) {
+                        auth()->logout();
+                        return back()->with('error', 'Your account is deactivated by admin.')->withInput();
+                    }
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
-                        return redirect()->intended('/home');
+                        return redirect()->route('home');
                     } else {
                         $errors['password'] = 'You have entered wrong password';
                     }
@@ -224,7 +265,7 @@ class LoginController extends Controller
                 if ($user->role_id == 5) {
                     if (Hash::check($request->password, $user->password)) {
                         Auth::login($user);
-                        return redirect()->intended('/home');
+                        return redirect()->route('home');
                     } else {
                         $errors['password'] = 'You have entered wrong password';
                     }

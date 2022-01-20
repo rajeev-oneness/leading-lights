@@ -24,6 +24,7 @@
                                             <div class="col-lg-12">
                                                 <form class="form" action="{{ route('hr.attendanceStudent') }}"
                                                     method="POST" enctype="multipart/form-data">
+                                                    @csrf
                                                     <div class="form-row">
                                                         <div class="form-group col-sm-6">
                                                             <div

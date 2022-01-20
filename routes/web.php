@@ -12,9 +12,22 @@ use Illuminate\Support\Facades\Auth, Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 Route::get('/', [CommonController::class, 'index'])->name('land_page');
+Route::get('/available-courses', [CommonController::class, 'availableCourses'])->name('available_courses');
+Route::get('/flash-courses', [CommonController::class, 'flashCourses'])->name('flash_courses');
+Route::get('/flash-courses-details/{id}', [CommonController::class, 'flashCourseDetails'])->name('flash_course_details');
+Route::get('/student-galary', [CommonController::class, 'studentGalary'])->name('student-galary');
+Route::get('/available-events', [CommonController::class, 'availableEvents'])->name('available_events');
+Route::get('/vlog', [CommonController::class, 'vlog'])->name('vlog');
+Route::get('/vlog-details/{id}', [CommonController::class, 'vlogDetails'])->name('vlogDetails');
+
+Route::get('/video', [CommonController::class, 'video'])->name('video');
+Route::get('/video-details/{id}', [CommonController::class, 'videoDetails'])->name('video_details');
 
 Auth::routes();
 
+Route::any('student/video-subscription/{id}', [RegisterController::class, 'video_subscription'])->name('video_subscription');
+
+Route::any('student/flash-course-register/{id}', [RegisterController::class, 'student_flash_course_register'])->name('student_flash_course_register');
 Route::any('teacher/login', [LoginController::class, 'teacher_login'])->name('teacher_login');
 Route::any('teacher/register', [RegisterController::class, 'teacher_register'])->name('teacher_register');
 Route::any('hr/login', [LoginController::class, 'hr_login'])->name('hr_login');

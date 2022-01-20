@@ -23,13 +23,29 @@
                                     <tr>
                                         <th>Order Id</th>
                                         <th>Fees Type</th>
-                                        <th>Next Due Date</th>
+                                        @if (Auth::user()->registration_type != 3 && Auth::user()->registration_type != 4)
+                                            <th>Next Due Date</th>
+                                        @endif
+                                        @if (Auth::user()->registration_type == 3)
+                                            @php
+                                                $paymentStatus = checkPaymentStatus(Auth::user()->id);
+                                            @endphp
+                                            @if ($paymentStatus == 1)
+                                                <th>Next Due Date</th>
+                                            @endif
+                                        @endif
                                         <th>Total Cost(&#x20B9;)</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($data->due_payment as $dueIndex => $duePayment)
+                                    @php
+                                        $user_id = $duePayment->user_id;
+                                        $class_id = $duePayment->class_id;
+                                        $course_id = $duePayment->course_id;
+
+                                    @endphp
                                         <tr>
                                             <td>{{$duePayment->id}}</td>
                                             <td>
@@ -40,22 +56,110 @@
                                                         case 'course_fee' : $feeType = 'Course Fee';break;
                                                         case 'class_fee' : $feeType = 'Class Fee';break;
                                                     }
-                                                    echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
+                                                    // echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
                                                 @endphp
+                                                <span>
+                                                    @if (Auth::user()->registration_type != 4)
+                                                         {{ $feeType }}
+                                                         <span class="badge badge-info">
+                                                            @if (Auth::user()->registration_type == 3)
+                                                                @php
+                                                                    $paymentStatus = checkPaymentStatus(Auth::user()->id);
+                                                                @endphp
+                                                                @if ($paymentStatus == 1)
+                                                                    {{ getNameofClassOrCourse($duePayment) }}
+                                                                @else
+                                                                    {{ getNameofFlashCourse($duePayment) }}
+                                                                @endif
+                                                            @elseif (Auth::user()->registration_type == 4)
+                                                                {{-- One Time Payment --}}
+                                                            @else
+                                                                {{ getNameofClassOrCourse($duePayment) }}
+                                                            @endif
+                                                        </span>
+                                                    @endif
+                                                    @if (Auth::user()->registration_type == 4)
+                                                            One Time Payment
+                                                    @endif
+                                                    
+                                            </span>
                                             </td>
-                                            <td>{{date('M d, Y',strtotime($duePayment->due_date))}}</td>
-                                            <td>{{$duePayment->amount}}</td>
+                                            @if (Auth::user()->registration_type != 3 && Auth::user()->registration_type != 4)
                                             <td>
-                                                <form action="{!! route('payment.capture') !!}" method="POST" >
+                                                @if ($duePayment->fee_type != 'admission_fee')
+                                                    {{date('M d, Y',strtotime($duePayment->due_date))}}
+                                                @endif
+                                            </td>
+                                            @endif
+                                            @if (Auth::user()->registration_type == 3)
+                                                @php
+                                                    $paymentStatus = checkPaymentStatus(Auth::user()->id);
+                                                @endphp
+                                                @if ($paymentStatus == 1)
+                                                    <td>
+                                                        @if ($duePayment->fee_type != 'admission_fee')
+                                                            {{date('M d, Y',strtotime($duePayment->due_date))}}
+                                                        @endif
+                                                    </td>
+                                                @endif
+                                            @endif
+                                            <td>
+                                                @php
+                                                    if (Auth::user()->registration_type == 3) {
+
+                                                        $paymentStatus = checkPaymentStatus(Auth::user()->id);
+                                                        if ($paymentStatus == 1) {
+                                                            $extraDate = extraDateFineCalculation(0,$duePayment->course_id,$duePayment->due_date,Auth::user()->id);
+
+                                                            if ($extraDate > 0) {
+                                                                $fine = $extraDate * 10;
+                                                                $amount = $duePayment->amount + $fine;
+                                                            }else{
+                                                                $amount = $duePayment->amount;
+                                                            }
+                                                        } else {
+                                                            $amount = $duePayment->amount;
+                                                        }
+
+
+                                                    }
+                                                    else {
+
+                                                    if ($duePayment->class_id > 0 && $duePayment->course_id > 0) {
+                                                        $extraDate = extraDateFineCalculation($duePayment->class_id,$duePayment->course_id,$duePayment->due_date,Auth::user()->id);
+                                                    }
+                                                    if ($duePayment->class_id == 0 && $duePayment->course_id > 0) {
+                                                        $extraDate = extraDateFineCalculation(0,$duePayment->course_id,$duePayment->due_date,Auth::user()->id);
+                                                    }
+                                                    if ($duePayment->class_id > 0 && $duePayment->course_id == 0) {
+                                                        $extraDate = extraDateFineCalculation($duePayment->class_id,0,$duePayment->due_date,Auth::user()->id);
+                                                    }
+
+                                                    if ($extraDate > 0) {
+                                                        $fine = $extraDate * 10;
+                                                        $amount = $duePayment->amount + $fine;
+                                                    }else{
+                                                        $amount = $duePayment->amount;
+                                                    }
+                                                }
+                                                @endphp
+                                                <span>&#x20B9;{{ $amount }}
+                                                    @if (isset($fine))
+                                                        <span data-toggle="tooltip" data-placement="top" title="Fine" class="badge badge-warning">+&#x20B9;{{ $fine }}</span>
+                                                    @endif
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <form action="{!! route('payment.capture') !!}" method="POST" id="payment_form">
                                                     @csrf
                                                     <input type="hidden" name="redirectURL" value="{{route('user.razorpaypayment',$duePayment->id)}}">
                                                     <script src="https://checkout.razorpay.com/v1/checkout.js"
                                                             data-key="{{ env('RAZORPAY_KEY') }}"
-                                                            data-amount="{{($duePayment->amount) * 100}}"
+                                                            data-amount="{{($amount) * 100}}"
                                                             data-name="Leading Lights"
                                                             data-description=""
                                                             data-image="{{ asset('img/logo.jpg') }}"
-                                                            data-theme.color="#ff7529">
+                                                            data-theme.color="#F0FFF0">
                                                     </script>
                                                 </form>
                                             </td>
@@ -94,8 +198,28 @@
                                                         case 'course_fee' : $feeType = 'Course Fee';break;
                                                         case 'class_fee' : $feeType = 'Class Fee';break;
                                                     }
-                                                    echo $feeType;
+                                                    // echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
                                                 @endphp
+                                                <span>
+                                                    @if (Auth::user()->registration_type == 4)
+                                                        One Time Payment
+                                                    @endif
+                                                    @if(Auth::user()->registration_type != 4)
+                                                      
+                                                        {{ $feeType }} 
+                                                        <span class="badge badge-info">
+                                                            @if (Auth::user()->registration_type == 3)
+                                                                @if ($successIndex == 0)
+                                                                    {{ getNameofFlashCourse($successPayment) }}
+                                                                @else
+                                                                    {{ getNameofClassOrCourse($successPayment) }}
+                                                                @endif
+                                                            @else
+                                                                {{ getNameofClassOrCourse($successPayment) }}
+                                                            @endif
+                                                        </span>
+                                                    @endif
+                                                </span>   
                                             </td>
                                             <td>&#x20B9;{{$successPayment->amount}}</td>
                                             <td>
@@ -104,7 +228,17 @@
                                                         <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
                                                     </span>
                                                 </button>
-                                                <a class="mb-2 mr-2 btn-pill btn btn-info btn-lg" href="{{ route('user.payment_receipt', $successPayment->id) }}"><i class="fa fa-download mr-2"></i>Download Receipt</a>
+                                                @if (Auth::user()->registration_type == 4)
+                                                    @php
+                                                        $sub_video = Auth::user()->video_id;
+                                                        $video_details = App\Models\Video::find($sub_video);
+                                                        $file_path = $video_details->paid_video;
+                                                        $file_extension= explode('.',$file_path)[1];
+                                                    @endphp
+                                                    <a class="mb-2 mr-2 btn-pill btn btn-info btn-lg" href="{{ asset($file_path) }}" download><i class="fa fa-download mr-2"></i>Download Video</a>
+                                                @else  
+                                                    <a class="mb-2 mr-2 btn-pill btn btn-info btn-lg" href="{{ route('user.payment_receipt', $successPayment->id) }}"><i class="fa fa-download mr-2"></i>Download Receipt</a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -131,6 +265,6 @@
                 order : [],
             });
         });
-        $('.razorpay-payment-button').addClass('mb-2 mr-2 btn-pill btn btn-primary btn-lg')
+        $('.razorpay-payment-button').addClass('mb-2 mr-2 btn-pill btn btn-primary btn-lg');
     </script>
 @endsection

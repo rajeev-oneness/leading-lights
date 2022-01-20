@@ -11,7 +11,7 @@
                     <ul class="breadcrumb p-0">
                         <li><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#" class="active">All class List</a></li>
+                        <li><a href="#" class="active">All Course List</a></li>
 
                     </ul>
                 </div>
@@ -20,7 +20,7 @@
             <hr>
             <div class="dashboard-body-content">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5>Banner</h5>
+                    <h5>Courses</h5>
                     <a href="{{ route('admin.courses.create') }}" class="actionbutton btn btn-sm">ADD COURSE</a>
                 </div>
                 <hr>
@@ -39,9 +39,8 @@
                                 <th>Serial No</th>
                                 <th>Course Title</th>
                                 <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Duration in days</th>
-                                <th>Fees</th>
+                                <th>No of sessions</th>
+                                <th>Fees(INR)</th>
                                 <th style="width:100px">Action</th>
                             </tr>
                         </thead>
@@ -51,8 +50,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $course->title }}</td>
                                     <td>{{ $course->start_date }}</td>
-                                    <td>{{ $course->end_date }}</td>
-                                    <td>{{ $course->duration }}</td>
+                                    <td>{{ $course->sessions }}</td>
                                     <td>{{ $course->fees }}</td>
                                     <td>
                                         <a href="{{ route('admin.courses.show', $course->id) }}"><i

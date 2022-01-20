@@ -24,7 +24,7 @@ class InsertDataInUsersTable extends Migration
             'status' => 1,
             'id_no' => 'LLSA003567',
         ];
-        DB::table('users')->insert($data);
+        // DB::table('users')->insert($data);
     }
 
     /**

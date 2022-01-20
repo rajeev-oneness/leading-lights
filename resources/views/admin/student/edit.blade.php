@@ -95,8 +95,8 @@
 								</div>
 								<div class="col-lg-6">
 									<div class="form-group edit-box">
-										<label for="class">Class</label>
-										<select name="class" id="class" class="form-control">
+										<label for="class_wise_combo">Class</label>
+										<select name="class" id="class_wise_combo" class="form-control">
 											<option value="">Please select class</option>
 											@foreach ($classes as $class)
 												<option value="{{ $class->id }}" @if ($student->class === $class->id)
@@ -109,6 +109,35 @@
 										@endif
 									</div>
 								</div>
+                                <div class="col-lg-6">
+                                    <?php
+                                        //get the old values from form
+                                        $old = old('special_course_ids');
+
+                                        //get data from database table field
+                                        $ids = explode(',', $student->special_course_ids);
+                                        //stay the values after form submission
+                                        if ($old) {
+                                            $ids = $old;
+                                        }
+                                    ?>
+									<div class="form-group edit-box">
+										<label for="class">Course</label>
+										<select class="special_course_ids form-control" name="special_course_ids[]"
+                                            multiple="multiple" id="special_course_ids">
+                                            <option value="">Select Courses</option>
+                                            @foreach ($special_courses as $course)
+                                                <option value="{{ $course->id }}"
+                                                    @php
+                                                        echo in_array($course->id, $ids) ? 'selected' : '';
+                                                    @endphp>{{ $course->title }}</option>
+                                            @endforeach
+                                        </select>
+										@if ($errors->has('class'))
+										<span style="color: red;">{{ $errors->first('class') }}</span>
+										@endif
+									</div>
+								</div>
 								<div class="col-lg-6 form-group edit-box">
 									<label for="exampleInputEmail1">Upload picture</label>
 									<input type="file" class="form-control" id="image" name="image">
@@ -116,7 +145,7 @@
 									   <span style="color: red;">{{ $errors->first('image') }}</span>
 									@endif
 								</div>
-					
+
 							</div>
 							{{-- <h5 class="text-blue">Status</h5>
 							<div class="row m-0 pt-3">
@@ -144,4 +173,41 @@
 				</div>
 				</div>
 			</div>
+<script>
+    $(document).ready(function() {
+        $('.special_course_ids').select2();
+        var validated = false;
+        $('.error').hide();
+
+    });
+    $('#class_wise_combo').on('change', function() {
+            let class_id = $('#class_wise_combo').val();
+            $.ajax({
+                url: "{{ route('getCourseByClass') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    class_id: class_id
+                },
+                dataType: 'json',
+                type: 'post',
+                beforeSend: function() {
+                    $("#special_course_ids").html('<option value="">** Loading....</option>');
+                },
+                success: function(response) {
+                    if (response.msg == 'success') {
+                        $("#special_course_ids").html('');
+                        var option = '';
+                        $.each(response.result, function(i) {
+                            option += '<option value="' + response.result[i].id + '">' +
+                                response.result[i].title + '</option>';
+                        });
+
+                        $("#special_course_ids").append(option);
+                    } else {
+                        $("#special_course_ids").html('<option value="">No Course Found</option>');
+                    }
+                }
+            });
+        });
+</script>
 @endsection

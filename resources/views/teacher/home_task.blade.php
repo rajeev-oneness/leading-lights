@@ -94,8 +94,8 @@
                                     <div class="d-sm-flex align-items-baseline">
                                         <p class="des  mr-2"><span class="mr-2"><i
                                                     class="fa fa-circle"></i>Submitted by</span></p>
-                                        <div class="input-group clockpicker">
-                                            <input type="text" class="form-control"
+                                        <div class="input-group">
+                                            <input type="time" class="form-control"
                                                 value="{{ old('submission_time') }}" name="submission_time">
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-time"></span>

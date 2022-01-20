@@ -41,7 +41,8 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
-                                {{-- <th style="width:100px">Action</th> --}}
+                                <th style="width:100px" class="text-center">Status</th>
+                                <th style="width:100px">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,7 +53,27 @@
                                     <td>{{ $admin->first_name }} {{ $admin->last_name }}</td>
                                     <td>{{ $admin->email }}</td>
                                     <td>{{ $admin->mobile }}</td>
+                                    <td class="text-center">
+                                        @if ($admin->status == 1)
+                                            <span class="badge badge-success">Approved</span>
+                                        @elseif($admin->rejected == 1)
+                                            <span class="badge badge-danger">Rejected</span>
+                                        @else
+                                            <span class="badge badge-warning">Pending</span>
+                                        @endif
 
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('superAdmin.admin.show', $admin->id) }}"><i
+                                                class="far fa-eye"></i></a>
+                                        <a href="{{ route('superAdmin.admin.edit', $admin->id) }}"
+                                            class="ml-2"><i class="far fa-edit"></i></a>
+                                        {{-- <a href="javascript:void(0);" class="ml-2" data-toggle="modal" data-target="#exampleModal" onclick="deleteForm({{ $hr->id }})"><i class="far fa-trash-alt text-danger"></i></a>
+                                        <form id="delete_form_{{ $hr->id }}" action="{{ route('admin.hr.destroy',$hr->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form> --}}
+                                    </td>
 
                                     {{-- <td>
                                         <a href="{{ route('superAdmin.admin.show',$hr->id) }}"><i class="far fa-eye"></i></a>

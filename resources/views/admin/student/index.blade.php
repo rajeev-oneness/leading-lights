@@ -39,6 +39,7 @@
                                 <th>Student Id</th>
                                 <th>Class</th>
                                 <th>Special Course</th>
+                                <th>Flash Course</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
@@ -61,43 +62,41 @@
                                         $special_course_ids = $student->special_course_ids;
                                         $course_detail = App\Models\SpecialCourse::find($special_course_ids);
                                     }
-                                    
+
                                     $class_details = App\Models\Classes::find($student->class);
                                     ?>
                                     <td>
-
-                                        <?php
-                                       if($class_details){
-                                        ?>
-                                        <span
-                                            class="text-success">{{ $class_details->name ? $class_details->name : '' }}</span>
-                                    </td>
-                                    <?php
-                                       }
-                                       ?>
+                                        @if ($class_details)
+                                            <span class="text-success">{{ $class_details->name ? $class_details->name : '' }}</span>
+                                        @else
+                                            <span class="text-danger">N/A</span>
+                                        @endif
 
                                     <td>
                                         <span class="text-info">
                                             @if ($student->special_course_ids !== null)
 
                                                 @if (str_contains($student->special_course_ids, ','))
-                                                    <div class="student-list">
-                                                        <ol>
+                                                    {{-- <div class="student-list"> --}}
+                                                        {{-- <ol> --}}
                                                             @foreach ($course_details as $course)
-                                                                <li>{{ $course['title'] }}</li>
+                                                                <span class="badge badge-primary">{{ $course['title'] }}</span class="badge badge-primary">
                                                             @endforeach
-                                                        </ol>
-                                                    </div>
+                                                        {{-- </ol> --}}
+                                                    {{-- </div> --}}
                                                 @else
                                                     {{ $course_detail['title'] }}
                                                 @endif
                                             @else
-                                                N/A
+                                                <span class="text-danger">N/A</span>
                                             @endif
 
                                         </span>
 
 
+                                    </td>
+                                    <td>
+                                        {{ $student->flash_course ? \Illuminate\Support\Str::limit($student->flash_course->title,15) : 'N/A'}}
                                     </td>
                                     {{-- <td>{{ $course_details->title ? $course_details->title : 'N/A' }}</td> --}}
                                     <td>{{ $student->first_name }} {{ $student->last_name }}</td>
@@ -111,8 +110,10 @@
 
                                     </td>
                                     <td class="text-center">
-                                        @if ($student->status == 1)
+                                        @if ($student->status == 1 && $student->deactivated == 0)
                                             <span class="badge badge-success">Approved</span>
+                                        @elseif ($student->status == 1 && $student->deactivated == 1)
+                                            <span class="badge badge-danger">Deactivated</span>
                                         @elseif($student->rejected == 1)
                                             <span class="badge badge-danger">Rejected</span>
                                         @else
@@ -149,7 +150,6 @@
         });
 
         function deleteForm(id) {
-            console.log("hello");
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: 'btn btn-success',

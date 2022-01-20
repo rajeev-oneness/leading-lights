@@ -43,7 +43,7 @@ class TeacherController extends Controller
             ->whereDate('date', '=', date('Y-m-d'))->orderBy('arrange_classes.created_at', 'desc')->get();
 
         $data['teacher'] = User::where('id', $current_user_id)->first();
-        $data['certificates'] = DB::table('certificate')->where('user_id', $current_user_id)->get();
+        $data['certificates'] = Certificate::where('user_id', $current_user_id)->get();
         return view('teacher.profile')->with($data);
     }
 
@@ -94,7 +94,7 @@ class TeacherController extends Controller
         if (Hash::check($request->old_password, $hashedPassword)) { //To check db stored pass & provided pass
             if (!Hash::check($request->password, $hashedPassword)) {
                 $user = User::findOrFail(Auth::id());
-                $user->password = Hash::make($request->password); //hash a password  
+                $user->password = Hash::make($request->password); //hash a password
 
                 $postdata = array(
                     'password'   => bcrypt($request->input('password')),
@@ -138,81 +138,6 @@ class TeacherController extends Controller
         );
 
         return $validator;
-    }
-
-    public function homeTask()
-    {
-        $data['groups'] = Group::latest()->where('teacher_id', Auth::user()->id)->get();
-        // dd($data['groups']);
-        $data['subjects'] = Subject::latest()->get();
-        $data['classes'] = Classes::orderBy('name')->get();
-        $data['tasks'] = HomeTask::where('user_id', Auth::user()->id)->latest()->get();
-        // return view('teacher.hometask',compact('classes'));
-        return view('teacher.home_task')->with($data);
-    }
-
-    public function uploadHomeTask(Request $request)
-    {
-        $this->validate($request, [
-            'class' => 'required',
-            'subject' => 'required',
-            'submission_date' => 'required|date',
-            'submission_time' => 'required|date_format:H:i',
-            'upload_file' => 'required|mimes:pdf'
-        ]);
-        // dd($request->all);
-
-        if ($request->hasFile('upload_file')) {
-            $file = $request->file('upload_file');
-            $fileName = imageUpload($file, 'teacher/home_task');
-        } else {
-            $fileName = null;
-        }
-
-        $class = $request->class;
-        $after_explode_class = explode('-', $class);
-
-        $user_id = Auth::user()->id;
-
-        $homeTask = new HomeTask();
-        $homeTask->user_id = $user_id;
-        if ($after_explode_class[1] === 'class') {
-            $homeTask->class = $after_explode_class[0];
-            $homeTask->group_id = null;
-            createNotification($user_id, $after_explode_class[0], 0, 'teacher_upload_homework');
-            // dd($notifi);
-        }
-        if ($after_explode_class[1] === 'group') {
-            $homeTask->group_id = $after_explode_class[0];
-            // dd($after_explode_class[0]);
-            $homeTask->class = null;
-            createNotification($user_id, 0, $after_explode_class[0], 'teacher_upload_homework');
-        }
-        $homeTask->subject = $request->subject;
-        $homeTask->submission_date = $request->submission_date;
-        $homeTask->submission_time = $request->submission_time;
-        $homeTask->upload_file = $fileName;
-        $homeTask->save();
-
-        // dd($homeTask);
-
-        // createNotification($user_id, $class, 0, 'teacher_upload_homework');
-
-
-        $notification = new Notification();
-        $notification->user_id = $user_id;
-        if ($after_explode_class[1] === 'class') {
-            $notification->class_id = $after_explode_class[0];
-        } elseif ($after_explode_class[1] === 'group') {
-            $notification->group_id = $after_explode_class[0];
-        }
-        $notification->type = 'teacher_upload_homework';
-        $notification->title = 'Homework uploaded successfully';
-        $notification->message = 'Please Update and update as needed';
-        $notification->route = 'teacher.homeTask';
-        $notification->save();
-
-        return redirect()->back()->with('success', 'Task upload successfully');
     }
 
     public function attendance(Request $request)
@@ -263,13 +188,28 @@ class TeacherController extends Controller
                     // $available_att = Attendance::where('user_id',Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get();
                     // dd( $available_att);
 
-                    // for ($i = $from; $i <= $to ; $i++) {
-                    //    $attendance_array[] = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
-                    // }
-                    // dd($attendance_array);
+                    for ($i = $from; $i <= $to ; $i++) {
+                       $attendance = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
+                       if (empty($attendance)) {
+                           $absent_date[] = array(
+                               "date" => $i
+                           );
+                       }else{
+                           $present_date[] = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
+                       }
+                    }
+                    if (empty($absent_date)) {
+                        $absent_date = [];
 
+                    }
+                    if (empty($present_date)) {
+                        $present_date = [];
+                    }
+                    $attendance = array_merge($absent_date,$present_date);
+                    // dd($attendance);
 
-                    $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
+                    // $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
+                    $data['checked_attendance'] = $attendance;
                 }
                 if (isset($data['specific_attendance'])) {
                     if ($data['specific_attendance']->count() > 0) {
@@ -279,15 +219,15 @@ class TeacherController extends Controller
                         return view('teacher.attendance', compact('absent_date'));
                     }
                 } elseif (isset($data['checked_attendance'])) {
-                    if ($data['checked_attendance']->count() > 0) {
+                    // if ($data['checked_attendance']->count() > 0) {
                         return view('teacher.attendance')->with($data);
-                    } else {
-                        $attendance = [];
-                        $attendance['date'] = $date;
-                        $attendance['login_time'] = 'N/A';
-                        $attendance['logout_time'] = 'N/A';
-                        return view('teacher.attendance')->with($attendance);
-                    }
+                    // } else {
+                    //     $attendance = [];
+                    //     $attendance['date'] = $date;
+                    //     $attendance['login_time'] = 'N/A';
+                    //     $attendance['logout_time'] = 'N/A';
+                    //     return view('teacher.attendance')->with($attendance);
+                    // }
                 }
             } else {
                 $attendance = Attendance::find($request->attendance_id);

@@ -1,7 +1,7 @@
 @auth
 
     <div class="chat-bubble" id="chat-bubble" style="display: none">
-        <img class="w-100" src="http://leadinglight.dev91.website/frontend/assets/images/chat-bubble.png">
+        <img class="w-100" src="{{asset('frontend/assets/images/chat-bubble.png')}}">
     </div>
 
     <div class="chat chat-hidden" id="chat">

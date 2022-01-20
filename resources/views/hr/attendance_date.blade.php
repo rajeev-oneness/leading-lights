@@ -14,6 +14,17 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="{{ route('hr.attendance') }}">Home</a></li>
+                          {{-- <li class="breadcrumb-item"><a href="{{ route('hr.attendanceDate') }}">Teacher List</a></li> --}}
+                          <li class="breadcrumb-item active" aria-current="page">Attendance</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="row">
                 <div class="card mb-3 col-lg-6">
                     <div class="card-body">
                         <div class="row">
@@ -21,21 +32,21 @@
                                 <div class="card-header-title mb-4">
                                     Attendance Date Wise
                                 </div>
-                                <form class="form" action="{{ route('hr.attendanceDate') }}" method="POST">
+                                <form class="form" action="{{ route('hr.attendanceDate') }}" method="POST" autocomplete="off">
                                     @csrf
-                                    <input type="hidden" name="user_id" value="{{ $user_id }}">
                                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                         <div class="d-sm-flex align-items-baseline">
                                             <p class="des  mr-2"><span class="mr-2"><i
                                                         class="fa fa-circle"></i></span>Attendance Date</p>
                                             @if (isset($specific_attendance))
-                                                @if ($specific_attendance->count() > 0)
                                                     <input type="text" name="date" id="date" class="form-control datepicker"
                                                         value="{{ old('date') ?? $specific_date }}">
-                                                @endif
+                                            @elseif (isset($absent_date))
+                                            <input type="text" name="date" id="date" class="form-control datepicker"
+                                                value="{{ old('date') ?? $absent_date }}">
                                             @else
-                                                <input type="text" name="date" id="date" class="form-control datepicker"
-                                                    value="{{ old('date') }}">
+                                            <input type="text" name="date" id="date" class="form-control datepicker"
+                                            value="{{ old('date') }}">
                                             @endif
                                         </div>
                                     </div>
@@ -44,9 +55,10 @@
                                             <span style="color: red;">{{ $errors->first('date') }}</span>
                                         @endif
                                         {{-- @if ($errors->has('end_date'))
-                                    <span style="color: red;">{{ $errors->first('end_date') }}</span>
-                                @endif --}}
+                                        <span style="color: red;">{{ $errors->first('end_date') }}</span>
+                                    @endif --}}
                                     </div>
+                                    <input type="hidden" name="user_id" value="{{ $user_id ?? '' }}">
                                     <button type="submit" class="btn-pill btn btn-dark mt-4" value="attendance"
                                         name="submit_btn">Proceed</button>
 
@@ -60,7 +72,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="card-header-title mb-4">
-                                    Between Two Days
+                                    Attendance Range Wise
                                 </div>
                                 @if (session('error'))
                                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -71,9 +83,8 @@
                                         </button>
                                     </div>
                                 @endif
-                                <form class="form" action="{{ route('hr.attendanceDate') }}" method="POST">
+                                <form class="form" action="{{ route('hr.attendanceDate') }}" method="POST" autocomplete="off">
                                     @csrf
-                                    <input type="hidden" name="user_id" value="{{ $user_id ?? '' }}" id="user_id">
                                     <div class="d-sm-flex">
                                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                                             <div class=" align-items-baseline">
@@ -81,11 +92,8 @@
                                                             class="fa fa-circle"></i></span>Start Date</p>
 
                                                 @if (isset($checked_attendance))
-                                                    @if ($checked_attendance->count() > 0)
-                                                        <input type="text" name="start_date" id="start_date"
-                                                            class="form-control datepicker"
-                                                            value="{{ old('start_date') ?? $start_date }}">
-                                                    @endif
+                                                    <input type="text" name="start_date" id="start_date" class="form-control datepicker"
+                                                        value="{{ old('start_date') ?? $start_date }}" autocomplete="off">
                                                 @else
                                                     <input type="text" name="start_date" id="start_date"
                                                         class="form-control datepicker" value="{{ old('start_date') }}">
@@ -97,11 +105,9 @@
                                                 <p class="des  mr-2"><span class="mr-2"><i
                                                             class="fa fa-circle"></i></span>End Date</p>
                                                 @if (isset($checked_attendance))
-                                                    @if ($checked_attendance->count() > 0)
-                                                        <input type="text" name="end_date" id="end_date"
-                                                            class="form-control datepicker"
-                                                            value="{{ old('end_date') ?? $end_date }}">
-                                                    @endif
+                                                    <input type="text" name="end_date" id="end_date"
+                                                        class="form-control datepicker"
+                                                        value="{{ old('end_date') ?? $end_date }}" autocomplete="off">
                                                 @else
                                                     <input type="text" name="end_date" id="end_date"
                                                         class="form-control datepicker" value="{{ old('end_date') }}">
@@ -117,8 +123,9 @@
                                             <span style="color: red;">{{ $errors->first('end_date') }}</span>
                                         @endif
                                     </div>
+                                    <input type="hidden" name="user_id" value="{{ $user_id ?? '' }}">
                                     <button type="submit" class="btn-pill btn btn-dark mt-4" value="attendance_range"
-                                        name="submit_btn">Proceed</button>
+                                        name="submit_btn">Proceed </button>
 
                                 </form>
                             </div>
@@ -126,7 +133,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mb-5">
                 <div class="col-lg-12 col-sm-12">
                     <div class="tab-content">
                         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
@@ -135,9 +142,7 @@
                                     <table class="table table-hover bg-table" id="attendance_table">
                                         <thead>
                                             <tr>
-                                                @if (isset($specific_attendance) || isset($absent_date))
-                                                    <th>Sl. No</th>
-                                                @endif
+                                                <th>Sl. No</th>
                                                 <th>Date</th>
                                                 @if (isset($specific_attendance) || isset($absent_date))
                                                     <th>Start Time</th>
@@ -164,11 +169,12 @@
                                                             @if ($i == 0 && isset($no_of_working_hours1))
                                                                 <span>{{ $no_of_working_hours1->total }} <span
                                                                         class="badge badge-info">Total time</span></span>
-                                                                <button type="button" class="btn btn-light openBtn"
-                                                                    data-toggle="modal" data-target="#attendance_details"
-                                                                    title="View All" data-id="{{ $attendance->date }}"><i
-                                                                        class="fa fa-info-circle" aria-hidden="true"></i>
-                                                                </button>
+                                                            <span class="btn btn-light openBtn"
+                                                            data-toggle="modal" data-target="#attendance_details"
+                                                             data-id="{{ $attendance->date }}" data-user-id = "{{ $user_id ?? ''}}">
+                                                            <a href="#"><i class="fa fa-info-circle mr-2" data-toggle="tooltip"
+                                                            data-placement="top" title="View All"></i></a>
+                                                            </span>
                                                             @else
                                                                 <span class="mr-2"><i
                                                                         class="fa fa-check-circle text-success"></i></span>PRESENT
@@ -177,27 +183,33 @@
                                                     </tr>
                                                 @endforeach
                                             @elseif (isset($checked_attendance))
-                                                @foreach ($checked_attendance as $date => $attendance)
+                                                @foreach ($checked_attendance as $i => $attendance)
                                                     @php
-                                                        $no_of_working_hours1 = App\Models\Attendance::whereDate('date', '=', $date)
+                                                        $no_of_working_hours1 = App\Models\Attendance::whereDate('date', '=', $attendance['date'])
                                                             ->selectRaw("SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(logout_time,login_time) )) ) as 'total'")
                                                             ->first();
                                                     @endphp
                                                     <tr class="bg-tr">
-                                                        {{-- <td>{{ $i + 1 }}</td> --}}
-                                                        <td>{{ $date }}</td>
-                                                        {{-- <td>{{ $attendance->login_time }}</td> --}}
-                                                        {{-- <td>{{ $attendance->logout_time ? $attendance->logout_time : 'N/A' }} --}}
+                                                        <td>{{ $i + 1 }}</td>
+                                                        <td>{{ $attendance['date'] }}</td>
                                                         </td>
                                                         <td class="text-center">
                                                             @if (isset($no_of_working_hours1))
-                                                                <span>{{ $no_of_working_hours1->total }} <span
-                                                                        class="badge badge-info">Total time</span></span>
-                                                                <button type="button" class="btn btn-light openBtn"
-                                                                    data-toggle="modal" data-target="#attendance_details"
-                                                                    title="View All" data-id="{{ $date }}"><i
-                                                                        class="fa fa-info-circle" aria-hidden="true"></i>
-                                                                </button>
+                                                                <span>
+                                                                    @if ($no_of_working_hours1->total)
+                                                                        {{ $no_of_working_hours1->total  }}
+                                                                        <span class="badge badge-info">Total Time </span>
+                                                                        <span class="btn btn-light openBtn"
+                                                                        data-toggle="modal" data-target="#attendance_details"
+                                                                        data-id="{{ $attendance['date'] }}" data-user-id = "{{ $user_id ?? ''}}">
+                                                                        <a href="#"><i class="fa fa-info-circle mr-2" data-toggle="tooltip"
+                                                                        data-placement="top" title="View All"></i></a>
+                                                                        </span>
+                                                                    @else
+                                                                        <span class="mr-2"><i class="fa fa-exclamation-circle text-danger"></i></span>ABSENT
+                                                                    @endif
+                                                                </span>
+
                                                             @else
                                                                 <span class="mr-2"><i
                                                                         class="fa fa-check-circle text-success"></i></span>PRESENT
@@ -289,32 +301,32 @@
             $(".modal-body #attendance_id").val(attendance_id);
         });
 
-        function addComment() {
-            var attendance_id = $('#attendance_id').val();
-            var comment = document.getElementById("comment").value;
-            if (comment == '') {
-                $('#err_txt').text('This field can\'t be empty!');
-                return false;
-            }
-            if (comment.length > 255) {
-                $('#err_txt').text('You can add comment within 255 characters');
-                return false;
-            }
-            $.ajax({
-                url: "{{ route('teacher.attendance') }}",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    comment: comment,
-                    attendance_id: attendance_id
-                },
-                dataType: 'json',
-                type: 'post',
-                success: function(response) {
-                    location.reload();
-                }
-            });
+        // function addComment() {
+        //     var attendance_id = $('#attendance_id').val();
+        //     var comment = document.getElementById("comment").value;
+        //     if (comment == '') {
+        //         $('#err_txt').text('This field can\'t be empty!');
+        //         return false;
+        //     }
+        //     if (comment.length > 255) {
+        //         $('#err_txt').text('You can add comment within 255 characters');
+        //         return false;
+        //     }
+        //     $.ajax({
+        //         url: "{{ route('hr.attendanceDate') }}",
+        //         data: {
+        //             _token: "{{ csrf_token() }}",
+        //             comment: comment,
+        //             attendance_id: attendance_id
+        //         },
+        //         dataType: 'json',
+        //         type: 'post',
+        //         success: function(response) {
+        //             location.reload();
+        //         }
+        //     });
 
-        }
+        // }
         $('.datepicker').datepicker({
             format: 'yyyy-mm-dd',
             endDate: new Date,
@@ -324,18 +336,16 @@
         $('.openBtn').on('click', function() {
 
             var date = $(this).data('id');
-            var user_id = $("#user_id").val();
-
-            var url = '{{ route("hr.show.teacher.attendance", ":id") }}';
-            url = url.replace(':id', user_id);
-
+            var user_id = $(this).data('user-id');
+            console.log(date);
             var fragment = "";
             $.ajax({
                     type: 'POST',
-                    url: url,
+                    url: "{{ route('hr.attendanceDate') }}",
                     data: {
                         _token: "{{ csrf_token() }}",
-                        date: date
+                        date: date,
+                        user_id : user_id
                     },
                     dataType: 'json',
 
@@ -362,6 +372,7 @@
                     console.log(xhr);
                     console.log(error);
                 })
+
         });
     </script>
 @endsection

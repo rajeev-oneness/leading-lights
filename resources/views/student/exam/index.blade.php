@@ -17,12 +17,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="float-right">
+                {{-- <div class="float-right">
                     <a class="btn-pill btn btn-primary btn-lg" href="{{ route('user.report_generate') }}"><i
                             class="fa fa-download mr-2"></i>Report Card</a>
-                </div>
+                </div> --}}
             </div>
-            <h5>Regular Exam</h5>
+            <h5>Leading Lights School
+            </h5>
             <div class="tabs-animation">
                 <div class="card mb-3">
                     @if (session('regular_exam_upload_success'))
@@ -52,6 +53,7 @@
                                     <tr>
                                         <th>Sl no</th>
                                         <th>Subject</th>
+                                        <th>Exam Category</th>
                                         <th>Exam Date</th>
                                         <th>Exam Time</th>
                                         <th>Action</th>
@@ -68,6 +70,16 @@
                                                 $subject_details = App\Models\Subject::find($exam->subject);
                                             @endphp
                                             <td>{{ $subject_details->name }}</td>
+
+                                            <td>
+                                                @if ($exam->exam_type == 1)
+                                                    <span>MCQ</span>
+                                                @elseif ($exam->exam_type == 2)
+                                                    <span>Descriptive</span>
+                                                @else
+                                                    <span>Mixed(MCQ & Desc.)</span>
+                                                @endif
+                                            </td>
                                             <td>{{ $exam->date }}</td>
                                             <td>{{ date('h:i A', strtotime($exam->start_time)) }} <span
                                                     class="text-success">to</span>
@@ -83,7 +95,7 @@
                                                     ->first();
                                                     $today_date = date('Y-m-d');
                                                     $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
-                                                    
+
                                                     $exam_date = $exam->date;
                                                     $start_time = $exam->start_time;
                                                     $end_time = $exam->end_time;
@@ -94,13 +106,14 @@
 
                                                     <a href="{{ route('user.exam.start',$exam->id) }}" class="btn-pill btn btn-primary mb-1">Start Exam</a>
 
-                                                @elseif ($exam_date == $today_date && $current_time < $exam_start_time)
-                                                        <button class="btn-pill btn-transition btn btn-success"><i
-                                                            class="fa fa-dot-circle"> Upcoming</i></button>
                                                     @elseif ($result)
                                                         <button class="btn-pill btn-transition btn btn-success"><i
                                                                 class="fa fa-check"> Submitted</i></button>
-                                                    @elseif($exam_date > $today_date)
+                                                    @elseif ($exam_date == $today_date && $current_time < $exam_start_time)
+                                                        <button class="btn-pill btn-transition btn btn-success"><i
+                                                            class="fa fa-dot-circle"> Upcoming</i></button>
+
+                                                    @elseif($exam_date > $today_date && !$result)
                                                         <button class="btn-pill btn-transition btn btn-success"><i
                                                                 class="fa fa-dot-circle"> Upcoming</i></button>
                                                     @else
@@ -111,25 +124,33 @@
                                             </td>
                                             <td>
                                                 @if ($result && $result->total_marks >= 0 && $total_marks)
-                                                    <span> <span
-                                                            class="text-success">{{ $result['total_marks'] }}</span> /
-                                                        <span
-                                                            class="text-info">{{ $exam->full_marks }}</span></span>
+                                                    <span>
+                                                        @if ($exam->pass_marks <= $result->total_marks)
+                                                            <span class="text-success">{{ $result['total_marks'] }}
+                                                            </span>
+                                                        @else
+                                                            <span class="text-danger">{{ $result['total_marks'] }}
+                                                            </span>
+                                                        @endif
+
+                                                        /
+                                                        <span class="text-info">{{ $exam->full_marks }}</span>
+                                                    </span>
                                                 @else
                                                     <span><span class="text-danger">Not published</span> / <span
                                                             class="text-info">{{ $exam->full_marks }}</span></span>
                                                 @endif
                                             </td>
                                             <td>{{ $exam->result_date }}</td>
-                                            <td>
-                                                {{-- @if ($already_upload && $already_upload->comment)
+                                            {{-- <td>
+                                                @if ($already_upload && $already_upload->comment)
                                                     <span data-toggle="tooltip" data-placement="top"
                                                         title="{{ $already_upload->comment }}">{{ \Illuminate\Support\Str::limit($already_upload->comment, 15) }}</span>
                                                 @else
                                                     <span>N/A</span>
-                                                @endif --}}
+                                                @endif
 
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -139,7 +160,8 @@
                 </div>
 
             </div>
-            <h5>Group Wise Exam</h5>
+            <h5>Leading Lights Coaching
+            </h5>
             <div class="tabs-animation">
                 <div class="card mb-3">
                     @if (session('regular_exam_upload_success'))
@@ -175,7 +197,7 @@
                                         <th>Action</th>
                                         <th>Marks/Full Marks</th>
                                         <th>Result Date</th>
-                                        <th>Comment</th>
+                                        {{-- <th>Comment</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -192,68 +214,56 @@
                                             <td>{{ date('h:i A', strtotime($exam->start_time)) }} <span
                                                     class="text-success">to</span>
                                                 {{ date('h:i A', strtotime($exam->end_time)) }}</td>
-                                            <td>
-                                                @php
-                                                    $already_upload = App\Models\SubmitExam::where('exam_id', $exam->id)
-                                                        ->where('id_no', Auth::user()->id_no)
+                                                <td>
+                                                    @php
+                                                        // $already_upload = App\Models\SubmitExam::where('exam_id', $exam->id)
+                                                        //     ->where('id_no', Auth::user()->id_no)
+                                                        //     ->first();
+                                                        $result = App\Models\Result::where('exam_id',$exam->id)->first();
+                                                        $total_marks = App\Models\Result::where('exam_id',$exam->id)
+                                                        ->where('total_marks','!=',null)
                                                         ->first();
-                                                    $today_date = date('Y-m-d');
-                                                    $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
-                                                    
-                                                    $exam_date = $exam->date;
-                                                    $start_time = $exam->start_time;
-                                                    $end_time = $exam->end_time;
-                                                    $exam_start_time = date('H:i', strtotime($exam->start_time));
-                                                @endphp
+                                                        $today_date = date('Y-m-d');
+                                                        $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
 
-                                                @if (!$already_upload && $exam_date == $today_date && ($current_time >= $exam_start_time && $current_time <= $end_time))
-                                                    <a href="{{ asset($exam->upload_file) }}" download="">
-                                                        <button class="btn-pill btn btn-primary mb-1"><i
-                                                                class="fas fa-download"></i>
-                                                            Download Task</button>
-                                                    </a>
-                                                    <form action="{{ route('user.upload_exam') }}" method="POST"
-                                                        enctype="multipart/form-data">
-                                                        @csrf
-                                                        <input class="btn-pill btn btn-primary" type="file"
-                                                            placeholder="Upload" name="upload_doc"
-                                                            id="{{ $exam->id }}">
+                                                        $exam_date = $exam->date;
+                                                        $start_time = $exam->start_time;
+                                                        $end_time = $exam->end_time;
+                                                        $exam_start_time = date('H:i', strtotime($exam->start_time));
+                                                    @endphp
 
-                                                        <input type="hidden" name="exam_id" id="exam_id{{ $exam->id }}"
-                                                            value="{{ $exam->id }}">
-                                                        <input type="hidden" name="subject" id="subject{{ $exam->id }}"
-                                                            value="{{ $exam->subject }}">
-                                                        <button type="submit" class="btn btn-primary" id="upload_doc"
-                                                            value="special_exam" name="submit_btn">Submit</button>
-                                                    </form>
-                                                @elseif ($exam_date == $today_date && $current_time < $exam_start_time)
-                                                        <button class="btn-pill btn-transition btn btn-success"><i
-                                                            class="fa fa-dot-circle"> Upcoming</i></button>
-                                                    @elseif ($already_upload)
-                                                        <button class="btn-pill btn-transition btn btn-success"><i
-                                                                class="fa fa-check"> Submitted</i></button>
-                                                    @elseif($exam_date > $today_date)
-                                                        <button class="btn-pill btn-transition btn btn-success"><i
+                                                    @if (!$result && $exam_date == $today_date && ($current_time >= $exam_start_time && $current_time <= $end_time))
+
+                                                        <a href="{{ route('user.exam.start',$exam->id) }}" class="btn-pill btn btn-primary mb-1">Start Exam</a>
+
+                                                    @elseif ($exam_date == $today_date && $current_time < $exam_start_time)
+                                                            <button class="btn-pill btn-transition btn btn-success"><i
                                                                 class="fa fa-dot-circle"> Upcoming</i></button>
-                                                    @else
-                                                        <button class="btn-pill btn-transition btn btn-danger"><i
-                                                                class="fa fa-dot-circle"> Expired</i></button>
-                                                @endif
+                                                        @elseif ($result)
+                                                            <button class="btn-pill btn-transition btn btn-success"><i
+                                                                    class="fa fa-check"> Submitted</i></button>
+                                                        @elseif($exam_date > $today_date)
+                                                            <button class="btn-pill btn-transition btn btn-success"><i
+                                                                    class="fa fa-dot-circle"> Upcoming</i></button>
+                                                        @else
+                                                            <button class="btn-pill btn-transition btn btn-danger"><i
+                                                                    class="fa fa-dot-circle"> Expired</i></button>
+                                                    @endif
 
-                                            </td>
-                                            <td>
-                                                @if ($already_upload && $already_upload->marks)
-                                                    <span> <span
-                                                            class="text-success">{{ $already_upload->marks }}</span> /
-                                                        <span
-                                                            class="text-info">{{ $exam->full_marks }}</span></span>
-                                                @else
-                                                    <span><span class="text-danger">Not published</span> / <span
-                                                            class="text-info">{{ $exam->full_marks }}</span></span>
-                                                @endif
-                                            </td>
+                                                </td>
+                                                <td>
+                                                    @if ($result && $result->total_marks >= 0 && $total_marks)
+                                                        <span> <span
+                                                                class="text-success">{{ $result['total_marks'] }}</span> /
+                                                            <span
+                                                                class="text-info">{{ $exam->full_marks }}</span></span>
+                                                    @else
+                                                        <span><span class="text-danger">Not published</span> / <span
+                                                                class="text-info">{{ $exam->full_marks }}</span></span>
+                                                    @endif
+                                                </td>
                                             <td>{{ $exam->result_date }}</td>
-                                            <td>
+                                            {{-- <td>
                                                 @if ($already_upload && $already_upload->comment)
                                                     <span data-toggle="tooltip" data-placement="top"
                                                         title="{{ $already_upload->comment }}">{{ \Illuminate\Support\Str::limit($already_upload->comment, 15) }}</span>
@@ -261,7 +271,7 @@
                                                     <span>N/A</span>
                                                 @endif
 
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -272,8 +282,8 @@
 
             </div>
 
+            @include('teacher.layouts.static_footer')
         </div>
-        @include('teacher.layouts.static_footer')
     </div>
     <script>
         $(document).ready(function() {

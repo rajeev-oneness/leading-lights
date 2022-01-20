@@ -115,8 +115,7 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="form-group edit-box">
-                                <label for="desc">Description</label>
-                                <label for="review">Description<span class="text-danger">*</span></label>
+                                <label for="desc">Description<span class="text-danger">*</span><</label>
                                 <textarea name="desc"></textarea>
                                 @if ($errors->has('desc'))
                                     <span style="color: red;">{{ $errors->first('desc') }}</span>

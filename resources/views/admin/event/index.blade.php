@@ -19,11 +19,11 @@
             </div>
             <hr>
             <div class="dashboard-body-content">
-                <div class="d-flex justify-content-between align-items-center">
+                {{-- <div class="d-flex justify-content-between align-items-center">
                     <h5>Event List</h5>
                     <a href="{{ route('admin.events.create') }}" class="actionbutton btn btn-sm">ADD EVENT</a>
                 </div>
-                <hr>
+                <hr> --}}
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}

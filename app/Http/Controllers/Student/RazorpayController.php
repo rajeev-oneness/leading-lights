@@ -7,8 +7,10 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Models\SpecialCourse;
 use App\Http\Controllers\Controller;
+use App\Models\Fee;
 use App\Models\OtherPaymentDetails;
 use App\Models\User, DB;
+use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Notifications\PaymentSuccessMail;
@@ -30,29 +32,110 @@ class RazorpayController extends Controller
                         $fee->paid_on = date('Y-m-d');
                         $fee->save();
                         $newFee = false;
-                        if ($fee->class_id != 0) {
-                            $class = \App\Models\Classes::where('id', $fee->class_id)->first();
-                            if ($class) {
-                                $feeType = 'class_fee';
-                                $amount = $class->monthly_fees;
-                                $newFee = true;
-                            }
-                        } elseif ($fee->course_id != 0) {
-                            $course = \App\Models\SpecialCourse::where('id', $fee->course_id)->first();
-                            if ($course) {
-                                $feeType = 'course_fee';
-                                $amount = $course->monthly_fees;
-                                $newFee = true;
+
+                        if (Auth::user()->registration_type != 3 && Auth::user()->registration_type != 4) {
+
+                            if ($fee->class_id != 0) {
+                                // dd('test1');
+                                $class = \App\Models\Classes::where('id', $fee->class_id)->first();
+                                if ($class) {
+                                    $next_date = date('Y-m-d',strtotime('first day of +2 month'));
+                                    $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+
+                                    $feeType = 'class_fee';
+                                    $amount = $class->monthly_fees;
+                                    $newFee = true;
+                                }
+                            } elseif ($fee->course_id != 0) {
+                                $course = \App\Models\SpecialCourse::where('id', $fee->course_id)->first();
+
+                                $user_details = User::find($fee->user_id);
+                                $all_available_courses_ids = explode(',', $user->special_course_ids);
+                                if (!in_array($course->id, $all_available_courses_ids)) {
+                                    $user_details->special_course_ids = $user_details->special_course_ids . ','. $course->id;
+                                    $user_details->save();
+                                }
+
+                                $next_date = date('Y-m-d',strtotime($course->start_date.'first day of +1 month'));
+                                $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                                if ($course) {
+                                    $feeType = 'course_fee';
+                                    $amount = $course->monthly_fees;
+                                    $newFee = true;
+                                }
+
                             }
                         }
+                        if (Auth::user()->registration_type == 3) {
+                            $paymentCount = Fee::where('user_id',Auth::user()->id)->count();
+
+                            if ($paymentCount > 1) {
+                                $course = SpecialCourse::where('id', $fee->course_id)->first();
+
+                                $user_details = User::find($fee->user_id);
+                                if ($user_details->special_course_ids == '') {
+                                    $user_details->special_course_ids = $course->id;
+                                    $user_details->save();
+                                }
+                                else{
+                                    $all_available_courses_ids = explode(',', $user->special_course_ids);
+                                    if (!in_array($course->id, $all_available_courses_ids)) {
+                                        $user_details->special_course_ids = $user_details->special_course_ids . ','. $course->id;
+                                        $user_details->save();
+                                    }
+                                }
+
+                                $next_date = date('Y-m-d',strtotime($course->start_date.'first day of +1 month'));
+                                $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                                if ($course) {
+                                    $feeType = 'course_fee';
+                                    $amount = $course->monthly_fees;
+                                    $newFee = true;
+                                }
+                            }
+
+                        }
+                        if (Auth::user()->registration_type == 4) {
+                            $paymentCount = Fee::where('user_id',Auth::user()->id)->count();
+
+                            if ($paymentCount > 1) {
+                                $course = Video::where('id', $fee->course_id)->first();
+
+                                $user_details = User::find($fee->user_id);
+                                $user_details->video_id = $course->id;
+                                $user_details->save();
+                                // if ($user_details->special_course_ids == '') {
+                                //     $user_details->special_course_ids = $course->id;
+                                //     $user_details->save();
+                                // }
+                                // else{
+                                //     $all_available_courses_ids = explode(',', $user->special_course_ids);
+                                //     if (!in_array($course->id, $all_available_courses_ids)) {
+                                //         $user_details->special_course_ids = $user_details->special_course_ids . ','. $course->id;
+                                //         $user_details->save();
+                                //     }
+                                // }
+
+                                // $next_date = date('Y-m-d',strtotime($course->start_date.'first day of +1 month'));
+                                // $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                                if ($course) {
+                                    $feeType = 'course_fee';
+                                    $amount = $course->amount;
+                                    $newFee = true;
+                                }
+                            }
+
+                        }
                         if ($newFee && $amount > 0) {
+                            // dd($amount);
                             $newFee = new \App\Models\Fee;
                             $newFee->user_id = $fee->user_id;
                             $newFee->class_id = $fee->class_id;
                             $newFee->course_id = $fee->course_id;
                             $newFee->fee_type = $feeType;
                             $newFee->due_date = date("Y-m-d", strtotime("+1 month", strtotime($fee->due_date)));
-                            $newFee->payment_month = date("F", strtotime("+1 month", strtotime($fee->due_date)));
+                            // $newFee->due_date = $next_due_date;
+                            $newFee->payment_month = date("F");
                             $newFee->amount = $amount;
                             $newFee->save();
                         }
@@ -181,7 +264,7 @@ class RazorpayController extends Controller
                             $other_payment_details->fees_type = 'monthly_fees';
 
                             $previous_payment = OtherPaymentDetails::where('user_id', Auth::user()->id)->where('class_id', $request->class_id)->orderBy('id', 'desc')->first();
-                            //Next date for payment 
+                            //Next date for payment
                             $next_due_date = date('Y-m-d', strtotime("+1 months", strtotime($previous_payment->next_due_date)));
 
                             $other_payment_details->payment_month = $previous_payment->next_due_date;

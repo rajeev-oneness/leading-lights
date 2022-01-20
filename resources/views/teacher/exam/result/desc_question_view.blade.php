@@ -13,21 +13,21 @@
                     </div>
                 </div>
             </div>
-            <div class="row m-0 dashboard-content-header">
-                <div class="col-md-6">
-                    <ul class="breadcrumb p-0">
-                        <li><a href="{{ route('teacher.studentExamSubmission') }}">Exam List</a></li>
-                        <li class="text-info"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#">Answer Sheet</a></li>
-                    </ul>
-                </div>
-            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item active"><a href="{{ route('teacher.studentExamSubmission') }}">Exam List</a></li>
+                  <li class="breadcrumb-item " aria-current="page">Answer Sheet</li>
+                </ol>
+            </nav>
             <div class="card mb-3">
+                <div class="card-header qtitle justify-content-center">
+                    Leading Lights
+                </div>
                 <div class="card-body">
                     {{-- <a href="{{ route('teacher.exam.index') }}" class="btn btn-primary btn-lg"><i class="fa fa-arrow-left"></i> Back</a> --}}
                     <div class="card-header-title mb-4">Answer Sheet</div>
                     <form action="{{ route('teacher.studentSubmittedAnswer', [$exam_id, $user_id]) }}" method="POST"
-                        name="exam">
+                        name="exam" id="examForm">
                         @csrf
                         @foreach ($exam_details as $i => $exam)
                             <input type="hidden" name="question_id{{ $i + 1 }}" value="{{ $exam->question_id }}">
@@ -39,6 +39,7 @@
                                         class="img-fluid rounded  mx-auto w-100 mb-3">
                                 </div>
                             @endif
+                            <p class="font-weight-bold">Marks: {{ $exam->marks }}</p>
                             <div>
                                 @if ($exam->answer)
                                     <label for=""><strong>Answers</strong></label>
@@ -49,46 +50,80 @@
                                         $right_answer = App\Models\Question::find($exam->question_id)->answer;
                                     @endphp
                                     <p>{{ $right_answer }}</p>
-                                        
+
                                     @endif
                                 @else
                                     <p>No Answer</p>
                                 @endif
 
                             </div>
+                            @if ($exam_type == 2 || ($exam_type == 3 && $exam->question_type == 2))
+                                <p class="font-weight-bold">
+                                    Teacher marks: <span>{{ $exam->answer_marks }}</span>
+                                </p>
+                            @endif
+
                             @if (!$exam_result)
-                            
+
                             @if ($exam->answer)
-                                @if ($exam->question_type == 2 || $exam->question_type == null)              
-                                <div class="mb-3">
-                                    <p><strong>Is it correct answer?</strong></p>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="answer{{ $i + 1 }}"
-                                            id="flexRadioDefault1" value="1">
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                            Yes
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="answer{{ $i + 1 }}"
-                                            id="flexRadioDefault2" value="0">
-                                        <label class="form-check-label" for="flexRadioDefault2">
-                                            No
-                                        </label>
-                                    </div>
+                                @if ($exam->question_type == 2 || $exam->question_type == null)
+                            <div class="row">
+                                <div class="col-md-4">
+                                   <div class="form-group">
+                                       <label for="given_answer">Answer marks</label>
+                                       @if ($exam->marks == "2")
+                                            <select name="answer{{ $i + 1 }}" id="" class="form-control">
+                                                <option value="0">0</option>
+                                                <option value="0.5">0.5</option>
+                                                <option value="1">1</option>
+                                                <option value="1.5">1.5</option>
+                                                <option value="2">2</option>
+                                            </select>
+                                       @endif
+                                       @if ($exam->marks == "3")
+                                            <select name="answer{{ $i + 1 }}" id="" class="form-control">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                       @endif
+                                       @if ($exam->marks == "4")
+                                            <select name="answer{{ $i + 1 }}" id="" class="form-control">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                            </select>
+                                       @endif
+                                       @if ($exam->marks == "5")
+                                            <select name="answer{{ $i + 1 }}" id="" class="form-control">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                            </select>
+                                       @endif
+                                   </div>
                                 </div>
+                            </div>
                                 @endif
                             @endif
                             @endif
                             @if ($exam_type == 3)
                             <input type="hidden" name="question_type[]" value="{{ $exam->question_type }}">
+                            @elseif ($exam_type == 2)
+                            <input type="hidden" name="question_type[]" value="">
                             @endif
                             <hr>
                         @endforeach
                         <input type="hidden" name="index" value="{{ $i + 1 }}">
                         <input type="hidden" name="exam_id" value="{{ $exam_id }}">
                         @if (!$exam_result)
-                        <input type="submit" value="Submit" class="btn btn-primary btn-lg">
+                        <input type="submit" value="Save" class="btn btn-primary btn-lg" id="btn_submit">
                         @endif
                     </form>
                 </div>
@@ -98,4 +133,43 @@
     </div>
     </div>
     </div>
+    <script>
+        $('#btn_submit').on('click',function(){
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "To submit the marks into this exam!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, SUBMIT it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    document.getElementById('examForm').submit();
+                    setTimeout(() => {
+                        window.location.href = "{{ route('teacher.exam.index') }}";
+                    }, 2000);
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'You can continue to review this exam :)',
+                        'error'
+                    )
+                }
+            })
+        });
+    </script>
 @endsection

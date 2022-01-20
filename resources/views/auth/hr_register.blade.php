@@ -190,8 +190,11 @@
             let qualification = $('#qualification').val();
             if (qualification === 'Others') {
                 $('#other_qualification').prop("disabled", false);
+                $('#other_qualification').css('cursor', 'context-menu');
             } else {
+                $('#other_qualification').val('');
                 $('#other_qualification').prop('disabled', true);
+                $('#other_qualification').css('cursor', 'no-drop');
             }
         })
 
@@ -386,6 +389,9 @@
                 return false;
             } else {
                 document.getElementById("registrationForm").submit();
+                $('#btn_submit').text('Loading...');
+                document.getElementById("btn_submit").disabled = true;
+                document.getElementById("btn_submit").style.cursor = 'no-drop';
             }
         });
     </script>

@@ -42,13 +42,12 @@ class CourseController extends Controller
     {
         $this->validate($request,[
             'title' => 'required|string|max:255',
-            'description' => 'required',
-            'start_date' => 'date | required',
-            'end_date' => 'date | required',
-            'teacher_id' => 'required',
-            'duration' => 'required|min:1',
+            'description' => 'required|string|max:255',
+            'course_content' => 'required',
+            'start_date' => 'required | date',
+            'sessions' => 'required| max:50',
             'fees' => 'required',
-            'image' => 'mimes:png,jpg'
+            'image' => 'required| mimes:png,jpg'
         ]);
 
         if($request->hasFile('image')){
@@ -61,10 +60,9 @@ class CourseController extends Controller
         $course = new Course();
         $course->title = $request->title;
         $course->description = $request->description;
+        $course->course_content = $request->course_content;
         $course->start_date = $request->start_date;
-        $course->end_date = $request->end_date;
-        $course->teacher_id = $request->teacher_id;
-        $course->duration = $request->duration;
+        $course->sessions = $request->sessions;
         $course->fees = $request->fees;
         $course->image = $imageName;
         $course->save();
@@ -96,8 +94,7 @@ class CourseController extends Controller
     {
         $data = array();
         $data['course_details'] = Course::find($id);
-        $data['teachers'] = User::where('role_id',3)->where('status',1)->latest()->get();
-        return view('admin.course.edit')->with($data); 
+        return view('admin.course.edit')->with($data);
     }
 
     /**
@@ -112,10 +109,9 @@ class CourseController extends Controller
         $this->validate($request,[
             'title' => 'required|string|max:255',
             'description' => 'required',
+            'course_content' => 'required',
             'start_date' => 'date | required',
-            'end_date' => 'date | required',
-            'teacher_id' => 'required',
-            'duration' => 'required|min:1',
+            'sessions' => 'required| max:50',
             'fees' => 'required',
             'image' => 'mimes:png,jpg'
         ]);
@@ -123,25 +119,24 @@ class CourseController extends Controller
         $course = Course::find($id);
         if($request->hasFile('image')){
             $image = $request->file('image');
-            if ($course->image) {
-                $image_name = explode('/', $course->image)[2];
-                if(File::exists('upload/course/'.$image_name)) {
-                    File::delete('upload/course/'.$image_name);
-                }
-                
-            }
+            // if ($course->image) {
+            //     $image_name = explode('/', $course->image)[2];
+            //     if(File::exists('upload/course/'.$image_name)) {
+            //         File::delete('upload/course/'.$image_name);
+            //     }
+
+            // }
             $imageName = imageUpload($image,'course');
         }else{
             $imageName = $course->image;
         }
 
-        
+
         $course->title = $request->title;
         $course->description = $request->description;
+        $course->course_content = $request->course_content;
         $course->start_date = $request->start_date;
-        $course->end_date = $request->end_date;
-        $course->teacher_id = $request->teacher_id;
-        $course->duration = $request->duration;
+        $course->sessions = $request->sessions;
         $course->fees = $request->fees;
         $course->image = $imageName;
         $course->save();

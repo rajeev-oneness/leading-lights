@@ -7,6 +7,7 @@ use App\Models\ArrangeExam;
 use App\Models\Exam;
 use App\Models\Question;
 use App\Models\Result;
+use App\Models\TempExam;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,8 +40,11 @@ class ExamController extends Controller
             // dd($request->all());
             // dd($request->index);
             $current_user_id = Auth::user()->id;
+
             $yes_ans = 0;
             $no_ans = 0;
+            $skip_ans = 0;
+
             $total_marks = 0;
             $data = $request->all();
             $exam_details = ArrangeExam::find($request->exam_id);
@@ -53,36 +57,62 @@ class ExamController extends Controller
                     $question = Question::where('id', $data['question_id' . $i])->first();
 
                     // For MCQ Question
-                    // Also for mixed MCQ Question
                     // It's calculate right and wrong answer
                     if ($exam_details->exam_type == 1) {
-                        if ($question->answer === $data['answer' . $i]) {
-                            $yes_ans++;
-                        } else {
+
+                        /* It's check if the ansher is automatically submitted or not
+                        1 means user submitted and 0 means automatically submitted */
+                        if ($request->is_user_submitted == "1") {
+                            if ($question->answer === $data['answer' . $i]) {
+                                $yes_ans++;
+                            }
+                            elseif ($data['answer' . $i] === null) {
+                                $skip_ans++;
+                            }
+                            else {
+                                $no_ans++;
+                            }
+                        }else{
                             $no_ans++;
                         }
-                    } 
+
+                    }
 
                     // For mixed MCQ Question
                     // It's calculate right and wrong answer
                     if ($exam_details->exam_type == 3) {
-                        // echo $data['question_type'][1];
-                        // echo $data['question_type'][($i-1)];
                         // if ($data['question_type'][$i] == 1) {
+                        if ($request->is_user_submitted == "1") {
                             if ($question->answer === $data['answer' . $i]) {
                                 $yes_ans++;
-                            } else {
+                            }
+                            elseif ($data['answer' . $i] === null) {
+                                $skip_ans++;
+                            }
+                            else {
                                 $no_ans++;
                             }
+                        }else{
+                            $no_ans++;
+                        }
                         // }
-                    } 
-                    
+                    }
+
                     // It's determine if the user is answer an question or not
-                    if ($data['answer' . $i]) {
-                        $exam->is_ans = "Yes";
-                    } else{
+                    if ($request->is_user_submitted == "1") {
+                        if ($data['answer' . $i]) {
+                            $exam->is_ans = "Yes";
+                        }
+                        elseif ($data['answer' . $i] === null) {
+                            $exam->is_ans = "Skipped";
+                        }
+                        else{
+                            $exam->is_ans = "No";
+                        }
+                    }else{
                         $exam->is_ans = "No";
                     }
+
                     $exam->user_id = $current_user_id;
                     $exam->question_id =  $question->id;
                     $exam->answer = $data['answer' . $i];
@@ -90,14 +120,18 @@ class ExamController extends Controller
                 }
             }
 
-            // Calculation of total marks for MCQ 
+            // Calculation of total marks for MCQ
             if ($exam_details->exam_type == 1 || $exam_details->exam_type == 3) {
-                if ($yes_ans > 0) {
-                    $total_marks = $yes_ans;
-                }
-                if ($no_ans > 0 && $exam_details->negative_marks == 1) {
-                    $negative_marks = ($no_ans * 0.25);
-                    $total_marks = ($total_marks - $negative_marks);
+                if ($request->is_user_submitted == "1") {
+                    if ($yes_ans > 0) {
+                        $total_marks = $yes_ans;
+                    }
+                    if ($no_ans > 0 && $exam_details->negative_marks == 1) {
+                        $negative_marks = ($no_ans * 0.25);
+                        $total_marks = ($total_marks - $negative_marks);
+                    }
+                }else{
+                    $total_marks = 0;
                 }
             }
 
@@ -108,15 +142,50 @@ class ExamController extends Controller
             if ($exam_details->exam_type == 1) {
                 $result->yes_ans = $yes_ans;
                 $result->no_ans = $no_ans;
+                $result->skipped_ans = $skip_ans;
                 $result->total_marks = $total_marks;
             }
             if ($exam_details->exam_type == 3) {
                 $result->yes_ans = $yes_ans;
                 $result->no_ans = $no_ans;
+                $result->skipped_ans = $skip_ans;
                 $result->temp_marks = $total_marks;
+            }
+            if ($request->is_user_submitted == "1") {
+                $result->is_auto_submitted = 1;
+            }else{
+                $result->is_auto_submitted = 0;
             }
             $result->save();
             return redirect()->route('user.exam.index')->with('Success', 'Thank you :)');
+        }
+    }
+
+    /*
+        For descriptive type question student can save answer
+        The answer store in  "temp_exam" table for tempory purpose
+    */
+    public function answer_save(Request $request)
+    {
+        if ($request->ajax()) {
+            $current_user_id = Auth::user()->id;
+            $question_id = $request->question_id;
+            $answer = $request->answer;
+
+            $already_answerd = TempExam::where('user_id',$current_user_id)->where('question_id',$question_id)->first();
+
+            if (!$already_answerd) {
+                $temp_exam = new TempExam();
+                $temp_exam->user_id = $current_user_id;
+                $temp_exam->question_id = $question_id;
+                $temp_exam->answer = $answer;
+                $temp_exam->save();
+            }else{
+                $already_answerd->answer = $answer;
+                $already_answerd->save();
+            }
+
+            return response()->json('success');
         }
     }
 }

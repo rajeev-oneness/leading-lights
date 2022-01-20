@@ -48,9 +48,16 @@
                                         id="activeAccount">Approve</a>
                                 @endif
                             @else
-                                <a href="{{ route('admin.students.approve', $student->id) }}"
-                                    class="btn btn-danger pull-right" onclick="activeAccount({{ $student->id }})"
-                                    id="activeAccount" data-toggl="tooltip">Deactivate</a>
+                                @if ($student->deactivated == 0)
+                                    <a href="{{ route('admin.students.deactivate', $student->id) }}"
+                                        class="btn btn-danger pull-right" onclick="deactivateAccount({{ $student->id }})"
+                                        id="deactivateAccount" data-toggle="tooltip">Deactivate</a>
+                                @elseif ($student->deactivated == 1)
+                                    <a href="{{ route('admin.students.activate', $student->id) }}"
+                                        class="btn btn-info pull-right" onclick="activate_account({{ $student->id }})"
+                                        id="activateAccount">Activate</a>
+                                @endif
+
                                 <a href="#" class="btn btn-info pull-right ml-2" id="RejectedAccount"
                                     style="display: none;">Rejected</a>
                             @endif
@@ -59,8 +66,8 @@
                 </div>
                 <div class="tabs-animation">
                     <div class="bg-edit p-4">
-                        @if ($student->status == 1)
-                            <h5 class="">This account is verified <i
+                        @if ($student->status == 1 && $student->deactivated == 0)
+                            <h5 class="">This account is verified<i
                                     class="text-success fa fa-check-circle"></i></h5>
                         @elseif ($student->status == 0 && $student->rejected == 0)
                             <h5 class="">This account is not verified <i
@@ -68,6 +75,13 @@
                         @elseif ($student->status == 0 && $student->rejected == 1)
                             <h5 class="">This account is rejected <i
                                     class="text-danger fa fa-times-circle"></i></h5>
+                        @elseif ($student->status == 1 && $student->deactivated == 1)
+                            <h5 class="">This account is deactivated <i
+                                    class="text-danger fa fa-times-circle"></i></h5>
+                        @endif
+
+                        @if ($student->status == 0 && $student->rejected == 1 && $student->is_rejected_document_uploaded == 1)
+                            <h6 class="">Document has been uploaded, please verify that!</h6>
                         @endif
                         <div class="row">
                             <div class="col-lg-3">
@@ -130,15 +144,20 @@
                                         {{-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> --}}
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row mb-2">
                                     <div class="col-md-7">
                                         <label>Class :</label>
                                     </div>
                                     <div class="col-md-5">
                                         <?php
-                                        $class_details = App\Models\Classes::find($student->class);
+                                        if ($student->class) {
+                                            $class_details = App\Models\Classes::findOrFail($student->class);
+                                            echo $class_details->name;
+                                        }else{
+                                            echo "N/A";
+                                        }
+
                                         ?>
-                                        <p>{{ $class_details->name ? $class_details->name : 'N/A' }}</p>
                                     </div>
                                     <div class="col-md-2">
                                         <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> -->
@@ -150,23 +169,30 @@
                                     </div>
                                     <div class="col-md-5">
                                         <?php
-                                        
+
                                         $special_course_ids = explode(',', $student->special_course_ids);
                                         foreach ($special_course_ids as $course_id) {
                                             $course_details[] = App\Models\SpecialCourse::find($course_id);
                                         }
                                         ?>
                                         @if ($student->special_course_ids !== null)
-                                            <div class="student-list border-info">
-                                            <ol>
-                                                @foreach ($course_details as $course)
-                                                    <li>{{ $course->title }}</li>
-                                                @endforeach
-                                            </ol>
-                                            </div>
+                                            @foreach ($course_details as $course)
+                                                <span class="badge badge-primary mb-2">{{ $course->title }}</span>
+                                            @endforeach
                                         @else
                                             N/A
                                         @endif
+                                    </div>
+                                    <div class="col-md-2">
+                                        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> -->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <label>Flash Course :</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <span class="{{ $student->flash_course ? 'badge badge-primary mb-2' : ''}}">{{ $student->flash_course ? $student->flash_course->title : 'N/A'}}</span>
                                     </div>
                                     <div class="col-md-2">
                                         <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> -->
@@ -234,9 +260,32 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <script>
-                function activeAccount(student_id, status) {
+    <script>
+
+        // For approve an account
+        function activeAccount(student_id, status) {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, APPROVE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
                     event.preventDefault();
                     let url = $("#activeAccount").attr('href');
                     let data = {
@@ -259,10 +308,157 @@
                             }
                         }
                     })
-
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain same :)',
+                        'error'
+                    )
                 }
+            })
 
-                function rejectAccount(student_id) {
+
+        }
+
+        // For deactivate an account
+        function deactivateAccount(student_id, status) {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, DEACTIVATE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    let url = $("#deactivateAccount").attr('href');
+                    let data = {
+                        student_id: student_id,
+                        status: status
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "PUT",
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#deactivateAccount").text('Loading...')
+                        },
+                        success: function(response) {
+                            if (response.data === 'inactivated') {
+                                location.reload();
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    })
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain ACTIVE :)',
+                        'error'
+                    )
+                }
+            })
+
+        }
+
+        // For activate an account
+        function activate_account(student_id, status) {
+            event.preventDefault();
+
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, ACTIVATE it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    let url = $("#activateAccount").attr('href');
+                    let data = {
+                        student_id: student_id,
+                        status: status
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "PUT",
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#activateAccount").text('Loading...')
+                        },
+                        success: function(response) {
+                            if (response.data === 'inactivated') {
+                                location.reload();
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    })
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain DEACTIVATE :)',
+                        'error'
+                    )
+                }
+            })
+
+        }
+
+        // For reject an account
+        function rejectAccount(student_id) {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, REJECT it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
                     event.preventDefault();
                     let url = $("#rejectAccount").attr('href');
                     let data = {
@@ -282,7 +478,19 @@
                             }
                         }
                     })
-
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain same :)',
+                        'error'
+                    )
                 }
-            </script>
-        @endsection
+            })
+
+
+        }
+    </script>
+@endsection

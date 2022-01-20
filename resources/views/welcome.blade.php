@@ -16,8 +16,8 @@
                                 <div class="col-lg-5 col-12 order-md-1 order-2">
                                     <div class="banner-text">
                                         <div class="">
-                                            <img src="
-                                                    {{ asset('frontend/images/light.png') }}" class="img-fluid">
+                                            {{-- <img src="
+                                                    {{ asset('frontend/images/light.png') }}" class="img-fluid"> --}}
                                             <p class="head">QUALITY <span class="bold">EARLY
                                                     EDUCATION</span> IS NOT
                                                 A LUXURY, BUT A <span class="color">NECESSITY</span> <span
@@ -32,7 +32,7 @@
                                 <div class="col-md-5 col-12 order-md-2 order-1">
                                     <div class="banner-imgs">
 
-                                        <!--  <img src="images/banner1.png" class="img-fluid"> -->
+                                         {{-- <img src="{{ asset('frontend/images/banner1.png') }}" class="img-fluid">  --}}
 
                                     </div>
                                 </div>
@@ -70,7 +70,7 @@
                                          <img src="images/1.png" class="img-fluid mx-auto pos-ab">
                                          <img src="images/2.png" class="img-fluid mx-auto pos-ab">
                                          <img src="images/3.png" class="img-fluid mx-auto pos-ab">
-                                        
+
                                    </div>   -->
                                 </div>
                             </div>
@@ -109,10 +109,6 @@
             <a href=""><i class="fa fa-phone"></i></a>
         </div>
     </div>
-
-
-
-
     <!-- features part end -->
     <section id="about">
         <div class="container">
@@ -147,20 +143,33 @@
                     </div>
                 </div>
             </div>
+            @if ($notices->count() > 0)
             <div class="row">
                 <div class="col-sm-12">
                     <div id="testimonials-list" class="owl-carousel">
+                        @foreach ($notices as $key => $notice)
                         <div class="item">
                             <div class="shadow-effect">
-                                <div class="testimonial-name">Leading Lights!!!!!!!! Now at NAYABAD</div>
-                                <img class="imgPlaceholder img-fluid" src="{{ asset('frontend/images/t1.png') }}" alt="">
-                                <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum
-                                    auctor, nisi elit consequat</p>
+                                <div class="testimonial-name">{{ $notice->title }}</div>
+                                <img class="imgPlaceholder img-fluid"
+                                    src="
+                                    @if ($key == 0)
+                                        {{ asset('frontend/images/t1.png') }}
+                                    @elseif ($key == 1)
+                                        {{ asset('frontend/images/t2.png') }}
+                                    @elseif ($key == 2)
+                                        {{ asset('frontend/images/t3.png') }}
+                                    @else
+                                        {{ asset('frontend/images/t3.png') }}
+                                    @endif
+                                    " alt="" >
+                                {!! $notice->desc !!}
                             </div>
 
                         </div>
+                        @endforeach
 
-                        <div class="item">
+                        {{-- <div class="item">
                             <div class="shadow-effect">
                                 <div class="testimonial-name">Leading Lights!!!!!!!! Now at NAYABAD</div>
                                 <img class="imgPlaceholder img-fluid" src="{{ asset('frontend/images/t2.png') }}" alt="">
@@ -178,17 +187,20 @@
                                 <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum
                                     auctor, nisi elit consequat</p>
                             </div>
-                        </div>
+                        </div> --}}
 
 
                     </div>
                 </div>
             </div>
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-lg-12 text-center mt-5">
                     <a href="#" class="btn btn-add">View All</a>
                 </div>
-            </div>
+            </div> --}}
+            @else
+                 <h4 class="text-center">No news available</h4>
+            @endif
         </div>
     </section>
 
@@ -201,23 +213,25 @@
                     </div>
                 </div>
             </div>
+            @if ($special_courses->count() > 0)
             <div class="row">
                 <div class="col-lg-12">
                     <div class="owl-carousel owl-theme test-boxes">
-                        <div class="item">
-                            <div class="features-box">
-                                <div class="">
-                                    <img src="
-                                            {{ asset('frontend/images/course1.jpg') }}" class="img-fluid mx-auto">
-                                </div>
-                                <div class="features-text">
-                                    <h6>Drawing</h6>
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum.Ipsum is simply dummy text of the printing.</p>
+                        @foreach ($special_courses as $course)
+                            <div class="item">
+                                <div class="features-box">
+                                    <div class="">
+                                        <img src="
+                                                {{ asset($course->image) }}" class="img-fluid mx-auto">
+                                    </div>
+                                    <div class="features-text">
+                                        <h6>{{ $course->title }}</h6>
+                                        <p>{{ $course->description }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="item">
+                        @endforeach
+                        {{-- <div class="item">
                             <div class="features-box">
                                 <div class="">
                                     <img src="
@@ -255,17 +269,67 @@
                                         Ipsum.Ipsum is simply dummy text of the printing.</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-5">
-                    <a href="#" class="btn btn-add">View All</a>
+                    <a href="{{ route('available_courses') }}" class="btn btn-add">View All</a>
                 </div>
             </div>
+            @else
+                <p class="text-warning">No new courses available</p>
+            @endif
+
         </div>
     </section>
+
+    <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
+                        <h2>Flash Courses</h2>
+                    </div>
+                </div>
+            </div>
+            @if ($flash_courses->count() > 0)
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row m-0">
+                        @foreach ($flash_courses as $course)
+                            <div class="col-12 col-lg-4 mb-3 pl-1 pr-1">
+                                <a href="">
+                                    <div class="item">
+                                        <div class="features-box">
+                                            <div class="">
+                                                <img src="
+                                                        {{ asset($course->image) }}" class="img-fluid mx-auto">
+                                            </div>
+                                            <div class="features-text">
+                                                <h6>{{ $course->title }}</h6>
+                                                <p>{{ $course->description }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center mt-5">
+                    <a href="{{ route('flash_courses') }}" class="btn btn-add">View All</a>
+                </div>
+            </div>
+            @else
+                <p class="text-warning">No flash courses available</p>
+            @endif
+        </div>
+    </section>
+
     <!-- consulting part end -->
     <section id="gallery">
         <div class="container">
@@ -276,8 +340,70 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-6">
+            <div class="row m-0 student_gallery">
+                @if ($student_photos->count() > 0)
+                    
+                @foreach ($student_photos as $photo)
+                    <div class="col-12 col-lg-3 p-1">
+                        <div class="card item">
+                            <a href="{{ asset($photo->image) }}" data-lightbox="photos">
+                                <img src="{{ asset($photo->image) }}" class="card-img-top img-fluid">
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+                {{-- <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g2.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g2.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g3.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g3.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g4.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g4.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g5.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g5.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g2.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g2.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g1.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g1.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 p-1">
+                    <div class="card item">
+                        <a href="{{ asset('frontend/images/g4.jpg') }}" data-lightbox="photos">
+                            <img src="{{ asset('frontend/images/g4.jpg') }}" class="card-img-top img-fluid">
+                        </a>
+                    </div>
+                </div> --}}
+
+                <!--<div class="col-lg-6 d-none">
                     <ul class="gallery">
                         <li class="first"><img src="{{ asset('frontend/images/g1.jpg') }}"
                                 class="img-fluid mx-auto w-100"></li>
@@ -285,23 +411,61 @@
                         <li><img src="{{ asset('frontend/images/g3.jpg') }}" class="img-fluid mx-auto w-100"></li>
                     </ul>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6 d-none">
                     <ul class="gallery">
                         <li><img src="{{ asset('frontend/images/g4.jpg') }}" class="img-fluid mx-auto w-100"></li>
                         <li><img src="{{ asset('frontend/images/g5.jpg') }}" class="img-fluid mx-auto w-100"></li>
                         <li class="first"><img src="{{ asset('frontend/images/g6.jpg') }}"
                                 class="img-fluid mx-auto w-100"></li>
                     </ul>
+                </div>-->
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center mt-5">
+                    <a href="{{ route('student-galary') }}" class="btn btn-add">View All</a>
+                </div>
+            </div>
+            @else
+            <h4 class="text-center">No photos available</h4>
+       @endif
+        </div>
+    </section>
+    {{-- <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
+                        <h2>Student Galary</h2>
+                    </div>
+                </div>
+            </div>
+            @if ($student_photos->count() > 0)
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="owl-carousel owl-theme test-boxes">
+                        @foreach ($student_photos as $photo)
+                            <div class="item">
+                                <div class="features-box">
+                                    <div class="">
+                                        <img src="
+                                                {{ asset($photo->image) }}" class="img-fluid mx-auto">
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-5">
-                    <a href="#" class="btn btn-add">View All</a>
+                    <a href="{{ route('student-galary') }}" class="btn btn-add">View All</a>
                 </div>
             </div>
+            @else
+                <p class="text-warning">No photos available</p>
+            @endif
         </div>
-    </section>
-
+    </section> --}}
 
     <!-- partner end -->
 
@@ -313,72 +477,39 @@
                 <div class="col-lg-12">
                     <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
                         <h2>Testimonials</h2>
-                        <h4>Lorem Ipsum. Proin gravida</h4>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="owl-carousel owl-theme testi-boxes">
+                        @if ($testimonials->count() > 0)
+                        @foreach ($testimonials as $testimonial)
                         <div class="item">
                             <div class="media p-3 align-items-center img">
                                 <!-- <div class="quote">
                                              <img src="images/quote.png" class="img-fluid">
                                         </div> -->
-                                <img src="{{ asset('frontend/images/img-1.jpg') }}" alt="John Doe"
+                                @php
+                                    if ($testimonial->user->image) {
+                                        $profile_image_path = $testimonial->user->image;
+                                    } else {
+                                        $profile_image_path = 'frontend/images/img-1.jpg';
+                                    }
+
+                                @endphp
+                                <img src="{{ $profile_image_path }}" alt="John Doe"
                                     class="img-fluid">
                                 <div class="media-body">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                        unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                        It has survived not only five centuries, but also the leap into electronic
-                                        typesetting.</p>
-                                    <h4>Johanathon Doe</h4>
+                                    {!! $testimonial->content !!}
+                                    <h4>{{ $testimonial->user->first_name }} {{ $testimonial->user->last_name }}</h4>
                                 </div>
                             </div>
                         </div>
-                        <div class="item">
-                            <div class="media  p-3 align-items-center img">
-                                <img src="{{ asset('frontend/images/img-1.jpg') }}" alt="John Doe"
-                                    class="img-fluid">
-                                <div class="media-body">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                        unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                        It has survived not only five centuries, but also the leap into electronic
-                                        typesetting.</p>
-                                    <h4>Johanathon Doe</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="media  p-3 align-items-center img">
-                                <img src="{{ asset('frontend/images/img-1.jpg') }}" alt="John Doe"
-                                    class="img-fluid">
-                                <div class="media-body">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                        unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                        It has survived not only five centuries, but also the leap into electronic
-                                        typesetting.</p>
-                                    <h4>Johanathon Doe</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="media  p-3 align-items-center img">
-                                <img src="{{ asset('frontend/images/img-1.jpg') }}" alt="John Doe"
-                                    class="img-fluid">
-                                <div class="media-body">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                        unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                        It has survived not only five centuries, but also the leap into electronic
-                                        typesetting.</p>
-                                    <h4>Johanathon Doe</h4>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
+                        @else
+                        <h4 class="text-center">No testimonial available</h4>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -394,10 +525,12 @@
                     </div>
                 </div>
             </div>
+            @if ($events->count() > 0)
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="owl-carousel owl-theme events-boxes">
+                    <div class="row m-0">
                         @foreach ($events as $event)
+                        <div class="col-12 col-lg-4 mb-3 pl-1 pr-1">
                             <div class="item">
                                 <div class="features-box">
                                     <div class="">
@@ -421,6 +554,7 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
                         @endforeach
                         {{-- <div class="item">
                             <div class="features-box">
@@ -466,9 +600,12 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-5">
-                    <a href="#" class="btn btn-add">View All</a>
+                    <a href="{{ route('available_events') }}" class="btn btn-add">View All</a>
                 </div>
             </div>
+            @else
+                <h4 class="text-center">No events available</h4>
+            @endif
         </div>
         <div class='ripple-background'>
             <div class='circle xxlarge shade1'></div>
@@ -478,7 +615,140 @@
             <div class='circle small shade5'></div>
         </div>
     </section>
+
     <section id="vlog">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
+                        <h2>Recent Vlog</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-0">
+                @if ($vlogs->count() > 1)
+                    @foreach ($vlogs as $vlog)
+                    <div class="col-12 col-lg-4 mb-3 mb-lg-0">
+                        <div class="card border-0 shadow-sm">
+                            <a href="{{ route('vlogDetails',$vlog->id) }}">
+                                @php
+                                        $file_path = $vlog->file_path;
+                                        $file_extension= explode('.',$file_path)[1];
+                                @endphp
+                                @if ($file_extension === 'jpg' || $file_extension === 'jpeg' || $file_extension === 'png')
+                                <div class="bl_img">
+                                    <img src="{{ asset($file_path) }}" alt="" class="img-fluid mx-auto">
+                                </div>
+                                @else
+                                <div class="bl_img">
+                                    <video class="img-fluid mx-auto" controls>
+                                        <source src="{{ asset($file_path) }}" type="video/{{ $file_extension }}">
+                                    Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                @endif
+                                {{-- <div class="bl_img">
+                                    <img src="{{ asset('frontend/images/blog1.jpg') }}" class="img-fluid mx-auto">
+
+                                </div> --}}
+                                <div class="card-body">
+                                    <div class="date-sec">
+                                        <i class="far fa-calendar-alt"></i>{{ date('M',strtotime($vlog->created_at)) }} <span>{{ date('d',strtotime($vlog->created_at)) }}</span>, {{ date('Y',strtotime($vlog->created_at)) }}
+                                        {{-- <h5><i class="far fa-user"></i>By Admin</h5> --}}
+                                    </div>
+                                    <h2>{{ \Illuminate\Support\Str::limit($vlog->title,50) }}</h2>
+                                    {!! \Illuminate\Support\Str::limit($vlog->description,350) !!}
+                                    <span class="text-right">Read More <i class="fas fa-arrow-right ml-1"></i></span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    @endforeach
+               
+                
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center mt-5">
+                    <a href="{{ route('vlog') }}" class="btn btn-add">View All</a>
+                </div>
+            </div>
+            @else
+            <h4 class="text-center"> No Vlog Available</h4>
+       @endif
+        </div>
+    </section>
+    <section id="vlog">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="sub-heading text-center wow fadeInDown" data-wow-duration="2s">
+                        <h2>Recent Video</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-0">
+                @if ($videos->count() > 0)
+                    @foreach ($videos as $video)
+                        <div class="col-12 col-lg-4 mb-3 mb-lg-0">
+                            <div class="card border-0 shadow-sm">
+                                <a href="{{ route('video_details',$video->id) }}">
+                                    @php
+                                            $file_path = $video->video;
+                                            $file_extension= explode('.',$file_path)[1];
+                                    @endphp
+                                    @if ($file_extension === 'jpg' || $file_extension === 'jpeg' || $file_extension === 'png')
+                                    <div class="bl_img">
+                                        <img src="{{ asset($file_path) }}" alt="" class="img-fluid mx-auto">
+                                    </div>
+                                    @else
+                                    <div class="bl_img">
+                                        <video class="img-fluid mx-auto" controls>
+                                            <source src="{{ asset($file_path) }}" type="video/{{ $file_extension }}">
+                                        Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                    @endif
+                                    {{-- <div class="bl_img">
+                                        <img src="{{ asset('frontend/images/blog1.jpg') }}" class="img-fluid mx-auto">
+
+                                    </div> --}}
+                                    <div class="card-body">
+                                        <div class="date-sec">
+                                            <i class="far fa-calendar-alt"></i>{{ date('M',strtotime($video->created_at)) }} <span>{{ date('d',strtotime($video->created_at)) }}</span>, {{ date('Y',strtotime($video->created_at)) }}
+                                            {{-- <h5><i class="far fa-user"></i>By Admin</h5> --}}
+                                        </div>
+                                        <h2>{{ \Illuminate\Support\Str::limit($video->title,50) }}</h2>
+                                        {!! \Illuminate\Support\Str::limit($video->description,350) !!}
+                                        <span class="text-right">Read More <i class="fas fa-arrow-right ml-1"></i></span>
+                                    </div>
+                                    @if ($video->video_type == 0)
+                                        <div class="price_tag free_bg">
+                                            Free
+                                        </div>
+                                    @else
+                                        <div class="price_tag paid_bg">
+                                            Paid
+                                        </div>
+                                    @endif
+                                    
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+               
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center mt-5">
+                    <a href="{{ route('video') }}" class="btn btn-add">View All</a>
+                </div>
+            </div>
+            @else
+            <h4 class="text-center">No video available</h4>
+       @endif
+        </div>
+    </section>
+
+    <!--<section id="vlog" class="d-none">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -539,11 +809,11 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 text-center mt-5">
-                    <a href="#" class="btn btn-add">View All</a>
+                    <a href="{{ route('vlog') }}" class="btn btn-add">View All</a>
                 </div>
             </div>
         </div>
-    </section>
+    </section>-->
 
     <!-- testimonial end -->
 

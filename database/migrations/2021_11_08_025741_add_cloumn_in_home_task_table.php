@@ -30,8 +30,8 @@ class AddCloumnInHomeTaskTable extends Migration
     public function down()
     {
         Schema::table('home_task', function (Blueprint $table) {
-           $table->integer('class')->after('user_id');
-           $table->integer('group_id')->after('user_id');
+            $table->dropColumn('class');
+            $table->dropColumn('group_id');
         });
     }
 }

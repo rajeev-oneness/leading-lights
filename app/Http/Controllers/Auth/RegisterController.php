@@ -20,7 +20,11 @@ use Illuminate\Support\Facades\Validator;
 // use App\Http\Controllers\Admin\Notification;
 use App\Http\Controllers\Admin\Notification;
 use App\Models\Certificate, App\Models\Fee;
+use App\Models\CheckClassOrCourceRegistration;
+use App\Models\Course;
 use App\Models\OtherPaymentDetails;
+use App\Models\Video;
+use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Notification as FacadesNotification;
 
@@ -58,8 +62,9 @@ class RegisterController extends Controller
 
     public function showRegistrationForm()
     {
-        $classes = Classes::orderBy('name')->get();
-        return view('auth.register', compact('classes'));
+        $classes = Classes::latest()->get();
+        $special_courses = SpecialCourse::where('class_id',null)->latest()->get();
+        return view('auth.register', compact('classes','special_courses'));
     }
     /**
      * Get a validator for an incoming registration request.
@@ -75,7 +80,7 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'dob' => ['required', 'date'],
             'gender' => ['required'],
-            'class' => ['required'],
+            // 'class' => ['required'],
             'image' => 'required| mimes:png,jpg,jpeg',
             'mobile' => ['required'],
             'certificate' => ['required', 'mimes:pdf']
@@ -84,6 +89,7 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
+        // dd($request->all());
         $this->validator($request->all())->validate();
         event(new Registered($user = $this->create($request->all())));
         return redirect()->route('login')->with('success', 'Your registration is successful, waiting for admin approval');
@@ -130,7 +136,7 @@ class RegisterController extends Controller
             $user->dob = $data['dob'];
             $user->class = $data['class'];
             $user->gender = $data['gender'];
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
             $user->image = $imageName;
             $user->special_course_ids = $special_course_ids;
             $user->country_code = $data['country_code'];
@@ -141,45 +147,87 @@ class RegisterController extends Controller
 
             // Fee generate
             $feedata = [];
-            if (!empty($data['special_course_ids']) && count($data['special_course_ids']) > 0) {
-                foreach ($data['special_course_ids'] as $key => $course) {
-                    $s_course = SpecialCourse::where('id', $course)->first();
-                    if ($s_course) {
+            if($user->class > 0){
+                if (!empty($data['special_course_ids']) && count($data['special_course_ids']) > 0){
+                    foreach ($data['special_course_ids'] as $key => $course) {
+                        $s_course = SpecialCourse::where('id', $course)->first();
+                        $course_start_date = $s_course->start_date;
+                        if ($s_course) {
+                            $next_date = date('Y-m-01',strtotime($course_start_date));
+                            $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                            $feedata[] = [
+                                'user_id' => $user->id,
+                                'class_id' => 0,
+                                'course_id' => $s_course->id,
+                                'fee_type' => 'course_fee',
+                                'due_date' => $next_due_date,
+                                'payment_month' => date("F",strtotime($course_start_date)),
+                                'amount' => $s_course->monthly_fees,
+                            ];
+                        }
+                    }
+                }
+                if (empty($data['special_course_ids'])){
+                    $check_class = Classes::where('id', $user->class)->first();
+                    if ($check_class) {
+                        $next_date = date('Y-m-d',strtotime('first day of +2 month'));
+                        $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
                         $feedata[] = [
                             'user_id' => $user->id,
-                            'class_id' => 0,
-                            'course_id' => $s_course->id,
-                            'fee_type' => 'course_fee',
-                            'due_date' => date('Y-m-d', strtotime('+1 day')),
-                            'payment_month' => date('F', strtotime('+1 day')),
-                            'amount' => $s_course->monthly_fees,
+                            'class_id' => $check_class->id,
+                            'course_id' => 0,
+                            'fee_type' => 'admission_fee',
+                            'due_date' => $next_due_date,
+                            'payment_month' => date('F',strtotime($next_due_date)),
+                            'amount' => $check_class->monthly_fees + $check_class->admission_fees,
                         ];
                     }
                 }
             }
-            if ($user->class > 0) {
-                $check_class = Classes::where('id', $user->class)->first();
-                if ($check_class) {
-                    $feedata[] = [
-                        'user_id' => $user->id,
-                        'class_id' => $check_class->id,
-                        'course_id' => 0,
-                        'fee_type' => 'admission_fee',
-                        'due_date' => date('Y-m-d', strtotime('+1 day')),
-                        'payment_month' => date('F', strtotime('+1 day')),
-                        'amount' => $check_class->monthly_fees + $check_class->admission_fees,
-                    ];
+            if ($user->class == 0) {
+                if (!empty($data['special_course_ids']) && count($data['special_course_ids']) > 0) {
+                    foreach ($data['special_course_ids'] as $key => $course) {
+                        $s_course = SpecialCourse::where('id', $course)->first();
+                        $course_start_date = $s_course->start_date;
+                        if ($s_course) {
+                            $next_date = date('Y-m-01',strtotime($course_start_date));
+                            $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                            $feedata[] = [
+                                'user_id' => $user->id,
+                                'class_id' => 0,
+                                'course_id' => $s_course->id,
+                                'fee_type' => 'course_fee',
+                                'due_date' => $next_due_date,
+                                'payment_month' => date("F",strtotime($course_start_date)),
+                                'amount' => $s_course->monthly_fees,
+                            ];
+                        }
+                    }
                 }
+
             }
+
             if (count($feedata) > 0) {
                 DB::table('fees')->insert($feedata);
             }
-            //Store certificate 
+            //Store certificate
             $certificate_image =  imageUpload($data['certificate'], 'student_certificate');
             $certificate = new Certificate();
             $certificate->user_id = $user->id;
             $certificate->image = $certificate_image;
             $certificate->save();
+
+            // $admin_details = User::select('email')->where('role_id', 1)->first();
+            // $admin_email = $admin_details['email'];
+            $admin_email = "abcd12300@yopmail.com";
+            $email_data = array(
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'email' => $data['email'],
+                'id_no' => $id_no,
+                'user_type' => 'student'
+            );
+            // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
             DB::commit();
             return $user;
         } catch (Exception $e) {
@@ -253,7 +301,7 @@ class RegisterController extends Controller
             $user->doj = $request->doj;
             $user->gender = $request->gender;
             $user->id_no = $id_no;
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
             $user->image = $imageName;
             $user->mobile = $request->mobile;
             $user->country_code = $request->country_code;
@@ -265,15 +313,16 @@ class RegisterController extends Controller
             // dd($noti);
 
 
-            //Store certificate 
+            //Store certificate
             $file_name =  imageUpload($request->certificate, 'teacher_certificate');
             $certificate = new Certificate();
             $certificate->image = $file_name;
             $certificate->user_id = $user->id;
             $certificate->save();
 
-            $admin_details = User::select('email')->where('role_id', 1)->first();
-            $admin_email = $admin_details['email'];
+            // $admin_details = User::select('email')->where('role_id', 1)->first();
+            // $admin_email = $admin_details['email'];
+            $admin_email = "abcd12300@yopmail.com";
             $email_data = array(
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -342,7 +391,7 @@ class RegisterController extends Controller
             $user->doj = $request->doj;
             $user->gender = $request->gender;
             $user->id_no = $id_no;
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
             $user->image = $imageName;
             $user->mobile = $request->mobile;
             $admin_details = User::select('email')->where('role_id', 1)->first();
@@ -353,7 +402,7 @@ class RegisterController extends Controller
             $user_id = $user->id;
             createNotification($user_id, 0, 0, 'user_registration');
 
-            //Store certificate 
+            //Store certificate
             $file_name =  imageUpload($request->certificate, 'hr_certificate');
             $certificate = new Certificate();
             $certificate->image = $file_name;
@@ -361,8 +410,9 @@ class RegisterController extends Controller
             $certificate->save();
 
 
-            $admin_details = User::select('email')->where('role_id', 1)->first();
-            $admin_email = $admin_details['email'];
+            // $admin_details = User::select('email')->where('role_id', 1)->first();
+            // $admin_email = $admin_details['email'];
+            $admin_email = "abcd12300@yopmail.com";
             $email_data = array(
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -370,9 +420,205 @@ class RegisterController extends Controller
                 'id_no' => $id_no,
                 'user_type' => 'hr'
             );
-            // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+            FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
 
             return redirect()->route('hr_login')->with('success', 'Your registration is successful, waiting for admin approval');
+        }
+    }
+
+    // Flash Course Wise registration
+    public function student_flash_course_register(Request $request,$id)
+    {
+        if ($request->method() == 'GET') {
+            $data = array();
+            $data['course_id'] = $id;
+            $data['flash_courses'] = Course::latest()->get();
+            return view('auth.flash_course_register')->with($data);
+        } else if ($request->method() == 'POST') {
+            // dd($request->all());
+            $this->validate($request, [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'dob' => ['required', 'date'],
+                'gender' => ['required'],
+                'image' => 'required| mimes:png,jpg,jpeg',
+                'mobile' => ['required'],
+                'certificate' => ['required', 'mimes:pdf']
+            ]);
+            DB::beginTransaction();
+        try {
+            $student_count = User::where('role_id', 4)->count();
+            $num_padded = sprintf("%05d", ($student_count + 1));
+            $id_no = 'LLST' . $num_padded;
+
+            $image = $request['image'];
+            $imageName = imageUpload($image, 'profile_image');
+
+            // Store student details
+            $user = new User();
+            $user->first_name = $request['first_name'];
+            $user->last_name = $request['last_name'];
+            $user->email = $request['email'];
+            $user->mobile = $request['mobile'];
+            $user->id_no =  $id_no;
+            $user->dob = $request['dob'];
+            $user->gender = $request['gender'];
+            $user->password = Hash::make($id_no);
+            $user->image = $imageName;
+            $user->flash_course_id = $request['class'];
+            $user->registration_type = 3;
+            $user->country_code = $request['country_code'];
+            $user->save();
+
+            $user_id = $user->id;
+            createNotification($user_id, 0, 0, 'student_registration');
+
+            // Fee generate
+            $feedata = [];
+            if($user->flash_course_id > 0){
+                $s_course = Course::where('id', $request['class'])->first();
+                $course_start_date = $s_course->start_date;
+                if ($s_course) {
+                    $next_date = date('Y-m-01',strtotime($course_start_date));
+                    $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                    $feedata[] = [
+                        'user_id' => $user->id,
+                        'class_id' => 0,
+                        'course_id' => $s_course->id,
+                        'fee_type' => 'course_fee',
+                        'due_date' => $next_due_date,
+                        'payment_month' => date("F",strtotime($course_start_date)),
+                        'amount' => $s_course->fees,
+                    ];
+                }
+            }
+
+            if (count($feedata) > 0) {
+                DB::table('fees')->insert($feedata);
+            }
+
+            //Store certificate
+            $certificate_image =  imageUpload($request['certificate'], 'student_certificate');
+            $certificate = new Certificate();
+            $certificate->user_id = $user->id;
+            $certificate->image = $certificate_image;
+            $certificate->save();
+
+            // $admin_details = User::select('email')->where('role_id', 1)->first();
+            // $admin_email = $admin_details['email'];
+            $admin_email = "abcd12300@yopmail.com";
+            $email_data = array(
+                'first_name' => $request['first_name'],
+                'last_name' => $request['last_name'],
+                'email' => $request['email'],
+                'id_no' => $id_no,
+                'user_type' => 'student'
+            );
+            // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+            DB::commit();
+            return redirect()->route('login')->with('success', 'Your registration is successful, waiting for admin approval');
+        } catch (Exception $e) {
+            DB::rollback();
+            return 0;
+        }
+        }
+    }
+
+    // Flash Course Wise registration
+    public function video_subscription(Request $request,$id)
+    {
+        if ($request->method() == 'GET') {
+            $data = array();
+            $data['video_id'] = $id;
+            $data['videos'] = Video::where('video_type',1)->latest()->get();
+            return view('auth.video_subscription')->with($data);
+        } else if ($request->method() == 'POST') {
+            // dd($request->all());
+            $this->validate($request, [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'dob' => ['required', 'date'],
+                'gender' => ['required'],
+                'image' => 'required| mimes:png,jpg,jpeg',
+                'mobile' => ['required'],
+                'certificate' => ['required', 'mimes:pdf']
+            ]);
+            DB::beginTransaction();
+        try {
+            $student_count = User::where('role_id', 4)->count();
+            $num_padded = sprintf("%05d", ($student_count + 1));
+            $id_no = 'LLST' . $num_padded;
+
+            $image = $request['image'];
+            $imageName = imageUpload($image, 'profile_image');
+
+            // Store student details
+            $user = new User();
+            $user->first_name = $request['first_name'];
+            $user->last_name = $request['last_name'];
+            $user->email = $request['email'];
+            $user->mobile = $request['mobile'];
+            $user->id_no =  $id_no;
+            $user->dob = $request['dob'];
+            $user->gender = $request['gender'];
+            $user->password = Hash::make($id_no);
+            $user->image = $imageName;
+            $user->video_id = $request['class'];
+            $user->registration_type = 4;
+            $user->country_code = $request['country_code'];
+            $user->status = 1;
+            $user->rejected = 0;
+            $user->save();
+
+            $user_id = $user->id;
+            createNotification($user_id, 0, 0, 'student_registration');
+
+            // Fee generate
+            $feedata = [];
+            if($user->video_id > 0){
+                $video_details= Video::where('id', $request['class'])->first();
+                if ($video_details) {
+                    $feedata[] = [
+                        'user_id' => $user->id,
+                        'class_id' => 0,
+                        'course_id' => $video_details->id,
+                        'fee_type' => 'course_fee',
+                        'payment_month' => date("F",strtotime(date('Y-m-d'))),
+                        'amount' => $video_details->amount,
+                    ];
+                }
+            }
+
+            if (count($feedata) > 0) {
+                DB::table('fees')->insert($feedata);
+            }
+
+            //Store certificate
+            $certificate_image =  imageUpload($request['certificate'], 'student_certificate');
+            $certificate = new Certificate();
+            $certificate->user_id = $user->id;
+            $certificate->image = $certificate_image;
+            $certificate->save();
+
+            // $admin_details = User::select('email')->where('role_id', 1)->first();
+            // $admin_email = $admin_details['email'];
+            $admin_email = "abcd12300@yopmail.com";
+            $email_data = array(
+                'first_name' => $request['first_name'],
+                'last_name' => $request['last_name'],
+                'email' => $request['email'],
+                'id_no' => $id_no,
+                'user_type' => 'student'
+            );
+            // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+            DB::commit();
+            return redirect()->route('login')->with('success', 'Your registration is successful, now you can login');
+        } catch (Exception $e) {
+            DB::rollback();
+            return 0;
+        }
         }
     }
 }

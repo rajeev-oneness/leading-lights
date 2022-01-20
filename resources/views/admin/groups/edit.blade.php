@@ -54,52 +54,35 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="form-group edit-box">
-                                {{-- <label for="class_id">Class</label> --}}
-                                <label for="review">Class<span class="text-danger">*</span></label>
-                                <select class="form-control" name="class_id" id="class_id">
-                                    <option value="">Select Class</option>
-                                    @foreach ($classes as $class)
-                                        <option value="{{ $class->id }}" @if ($class->id === $group->class_id)
-                                            selected
-                                    @endif>{{ $class->name }}</option>
-                                    @endforeach
-                                </select>
-                                @if ($errors->has('class_id'))
-                                    <span style="color: red;">{{ $errors->first('class_id') }}</span>
-                                @endif
-                            </div>
-                        </div>
-
-
-                        <div class="col-lg-6">
-                            <div class="form-group edit-box">
-                                {{-- <label for="name">Students Name</label> --}}
                                 <label for="review">Students Name<span class="text-danger">*</span></label>
                                 <?php
                                 //get the old values from form
                                 $old = old('student_ids');
-                                
+
                                 //get data from database table field
                                 $ids = explode(',', $group->student_ids);
-                                
                                 //stay the values after form submission
                                 if ($old) {
                                     $ids = $old;
                                 }
                                 ?>
-                                {{-- <select id="choices-multiple-remove-button" name="student_ids[]" multiple>
+                                <select id="choices-multiple-remove-button" name="student_ids[]" multiple>
+
                                     @foreach ($students as $student)
-                                        <option value="{{ $student->user_id }}"  echo in_array($student->user_id, $ids) ? 'selected' : ''; >
-                                            {{ $student->first_name }}
-                                            {{ $student->last_name }} - {{ $student->id_no }}</option>
+                                    @php
+                                        $paymentStatus = checkPaymentStatus($student->id);
+                                    @endphp
+                                    @if($paymentStatus == 1)
+                                        <option value="{{ $student->id }}" @php
+                                            echo in_array($student->id, $ids) ? 'selected' : '';
+                                        @endphp>
+                                            {{ $student->first_name }} {{ $student->last_name }} -
+                                            {{ $student->id_no }}
+                                        </option>
+                                    @endif
                                     @endforeach
-                                </select> --}}
-
-                                <select class="student_ids form-control" name="student_ids[]" multiple="multiple"
-                                    id="student_ids">
-
                                 </select>
                                 @if ($errors->has('student_ids'))
                                     <span style="color: red;">{{ $errors->first('student_ids') }}</span>
@@ -132,11 +115,11 @@
             getStudentsByClass(class_id)
         });
 
-        @if($group->class_id > 0)
-            getStudentsByClass('{{$group->class_id}}','{{$group->student_ids}}');
+        @if ($group->class_id > 0)
+            getStudentsByClass('{{ $group->class_id }}','{{ $group->student_ids }}');
         @endif
 
-        function getStudentsByClass(classId,studentId = ''){
+        function getStudentsByClass(classId, studentId = '') {
             $.ajax({
                 url: "{{ route('admin.getStudentsByClass') }}",
                 data: {
@@ -153,15 +136,17 @@
                         $("#student_ids").html('');
                         var option = '';
                         let array = [];
-                        if(studentId != ''){
+                        if (studentId != '') {
                             array = studentId.split(',');
                         }
+                        console.log(response.result);
                         $.each(response.result, function(i) {
                             option += '<option value="' + response.result[i].id + '"';
-                            if(data = $.inArray( response.result[i].id.toString(), array ) !== -1){
+                            if (data = $.inArray(response.result[i].id.toString(), array) !== -1) {
                                 option += ' selected';
                             }
-                            option += '>' + response.result[i].first_name + " " + response.result[i].last_name + '</option>';
+                            option += '>' + response.result[i].first_name + " " + response.result[i]
+                                .last_name + " - " + response.result[i].id_no + '</option>';
                         });
 
                         $("#student_ids").append(option);

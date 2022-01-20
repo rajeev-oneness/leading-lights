@@ -16,12 +16,15 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
+use App\Models\ArrangeExam;
 use App\Models\Certificate;
 use App\Models\Classes;
 use App\Models\Event;
 use App\Models\OtherPaymentDetails;
 use App\Models\Payment;
 use App\Models\SpecialCourse;
+use App\Models\Testimonial;
+use App\Models\VLOG;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -42,8 +45,11 @@ class UserController extends Controller
         // dd($data['special_classes']);
         $data['student'] = User::where('id', $current_user_id)->first();
         $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
-        $data['certificates'] = DB::table('certificate')->where('user_id', $current_user_id)->first();
-        $data['announcements'] = Announcement::where('class_id', Auth::user()->class)->get();
+        $data['certificates'] = Certificate::where('user_id', $current_user_id)->first();
+        $data['announcements'] = Announcement::where('class_id', Auth::user()->class)
+                                ->orWhere('class_id','all')
+                                ->latest()
+                                ->get();
         return view('student.profile')->with($data);
     }
 
@@ -95,7 +101,7 @@ class UserController extends Controller
         if (Hash::check($request->old_password, $hashedPassword)) { //To check db stored pass & provided pass
             if (!Hash::check($request->password, $hashedPassword)) {
                 $user = User::findOrFail(Auth::id());
-                $user->password = Hash::make($request->password); //hash a password  
+                $user->password = Hash::make($request->password); //hash a password
 
                 $postdata = array(
                     'password'   => bcrypt($request->input('password')),
@@ -127,7 +133,7 @@ class UserController extends Controller
             [
                 'old_password' => ['required', function ($attribute, $value, $fail) {
                     if (!Hash::check($value, Auth::user()->password)) {
-                        $fail('Old Password doesdn\'t match');
+                        $fail('Old Password doesn\'t match');
                     }
                 }],
                 'password' => 'required|min:6',
@@ -160,7 +166,10 @@ class UserController extends Controller
                 ->get(['arrange_classes.id', 'name as title', 'date', 'start_time as description'])->toArray();
             return response()->json(array_merge($classes, $special_classes));
         }
-        $events = Event::where('class_id', Auth::user()->class)->get();
+        $events = Event::where('class_id', Auth::user()->class)
+                        ->orWhere('class_id',null)
+                        ->latest()
+                        ->get();
         $announcements = Announcement::where('class_id', Auth::user()->class)->get();
         return view('student.dairy', compact('events', 'announcements'));
     }
@@ -172,13 +181,22 @@ class UserController extends Controller
         return view('student.home_work')->with($data);
     }
 
-    public function payment(Request $request)
+    public function payment(Request $req)
+    {
+        $data = (object)[];
+        $user = Auth::user();
+        $data->due_payment = \App\Models\Fee::where('user_id', $user->id)->where('transaction_id', 0)->latest('id')->get();
+        $data->success_payment = \App\Models\Fee::where('user_id', $user->id)->where('transaction_id', '>', 0)->get();
+        return view('student.payments', compact('data'));
+    }
+
+    public function paymentold(Request $request)
     {
         $current_user_id = Auth::user()->id;
         $previous_payment = Payment::where('user_id', $current_user_id)->orderBy('id', 'desc')->first();
 
         if (!empty($previous_payment)) {
-            //Next date for payment 
+            //Next date for payment
             $next_due_date = $previous_payment->next_due_date;
             $today_date = date('Y-m-d');
 
@@ -352,38 +370,132 @@ class UserController extends Controller
         return $pdf->download($id_no . '.pdf');
     }
 
+    // public function attendance(Request $request)
+    // {
+    //     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    //         $checked_attendance = Attendance::where('user_id', Auth::user()->id)->latest()->get();
+    //         return view('student.attendance', compact('checked_attendance'));
+    //     }
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //         if (isset($_POST['attendance'])) {
+    //             $this->validate($request, [
+    //                 'date' => 'required',
+    //                 // 'end_date' => 'required'
+    //             ]);
+
+    //             $date = $request->date;
+    //             // $end_date = $request->end_date;
+    //             $checked_attendance = Attendance::where('user_id', Auth::user()->id)
+    //                 ->whereDate('date', '=', $date)->get();
+    //             // dd($checked_attendance);
+    //             if ($checked_attendance->count() > 0) {
+    //                 return view('student.attendance', compact('checked_attendance'));
+    //             } else {
+    //                 $attendance = [];
+    //                 $attendance['date'] = $date;
+    //                 $attendance['first_login_time'] = 'N/A';
+    //                 $attendance['last_login_time'] = 'N/A';
+    //                 return view('student.attendance')->with($attendance);
+    //             }
+    //         } else {
+    //             $attendance = Attendance::find($request->attendance_id);
+    //             $attendance->comment = $request->comment;
+    //             $attendance->save();
+    //             return response()->json('success');
+    //         }
+    //     }
+    // }
+
     public function attendance(Request $request)
     {
+        if ($request->ajax()) {
+            $attendance = Attendance::whereDate('date', $request->date)
+                ->where('user_id', Auth::user()->id)
+                ->latest()
+                ->get();
+            return response()->json($attendance);
+        }
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $checked_attendance = Attendance::where('user_id', Auth::user()->id)->latest()->get();
-            return view('student.attendance', compact('checked_attendance'));
+            $attendance = Attendance::where('user_id', Auth::user()->id)
+                ->where('date', date('Y-m-d'))->first();
+            if (empty($attendance)) {
+                $attendance_status = 0;
+            } else {
+                $attendance_status = 1;
+            }
+            $specific_attendance = array(
+                "date" => date('Y-m-d'),
+                "attendance_status" => $attendance_status
+            );
+            return view('student.attendance', compact('specific_attendance'));
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['attendance'])) {
-                $this->validate($request, [
-                    'date' => 'required',
-                    // 'end_date' => 'required'
-                ]);
+            if (isset($_POST['submit_btn'])) {
 
-                $date = $request->date;
-                // $end_date = $request->end_date;
-                $checked_attendance = Attendance::where('user_id', Auth::user()->id)
-                    ->whereDate('date', '=', $date)->get();
-                // dd($checked_attendance);
-                if ($checked_attendance->count() > 0) {
-                    return view('student.attendance', compact('checked_attendance'));
+                if ($_POST['submit_btn'] === 'attendance') {
+                    $this->validate($request, [
+                        'date' => 'required|'
+                    ]);
+                    $date = $request->date;
+                    $attendance = Attendance::where('user_id', Auth::user()->id)
+                    ->where('date', $date)->first();
+                    if (empty($attendance)) {
+                        $attendance_status = 0;
+                    } else {
+                        $attendance_status = 1;
+                    }
+                    $data['specific_attendance'] = array(
+                        "date" => $date,
+                        "attendance_status" => $attendance_status
+                    );
                 } else {
-                    $attendance = [];
-                    $attendance['date'] = $date;
-                    $attendance['first_login_time'] = 'N/A';
-                    $attendance['last_login_time'] = 'N/A';
-                    return view('student.attendance')->with($attendance);
+                    $this->validate($request, [
+                        'start_date' => 'required|date',
+                        'end_date' => 'required|date'
+                    ]);
+                    if ($request->start_date > $request->end_date) {
+                        return redirect()->back()->with('error', 'Please select valid range');
+                    }
+                    $from = date($request->start_date);
+                    $to = date($request->end_date);
+                    $data['start_date'] = $request->start_date;
+                    $data['end_date'] = $request->end_date;
+
+                    for ($i = $from; $i <= $to ; $i++) {
+                       $attendance = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
+                       if (empty($attendance)) {
+                           $absent_date[] = array(
+                               "date" => $i,
+                               "attendance_status" => 0
+                           );
+                       }else{
+                           $present_date[] = array(
+                            "date" => $i,
+                            "attendance_status" => 1
+                        );
+                       }
+                    }
+                    if (empty($absent_date)) {
+                        $absent_date = [];
+
+                    }
+                    if (empty($present_date)) {
+                        $present_date = [];
+                    }
+                    $attendance = array_merge($absent_date,$present_date);
+                    $data['checked_attendance'] = $attendance;
                 }
-            } else {
-                $attendance = Attendance::find($request->attendance_id);
-                $attendance->comment = $request->comment;
-                $attendance->save();
-                return response()->json('success');
+                if (isset($data['specific_attendance'])) {
+                    if ($data['specific_attendance']) {
+                        return view('student.attendance')->with($data);
+                    } else {
+                        $absent_date =  $date;
+                        return view('student.attendance', compact('absent_date'));
+                    }
+                        // return view('student.attendance')->with($data);
+                } elseif (isset($data['checked_attendance'])) {
+                        return view('student.attendance')->with($data);
+                }
             }
         }
     }
@@ -438,11 +550,24 @@ class UserController extends Controller
     public function availableCourses(Request $request)
     {
         $user = $request->user();
-        $courses = SpecialCourse::where('class_id', $user->class);
-        if ($user->special_course_ids != '') {
-            $user_courses = explode(',', $user->special_course_ids);
-            $courses = $courses->whereNotIn('id', $user_courses);
+        if ($user->class) {
+            $courses = SpecialCourse::where('class_id', $user->class);
+            if ($user->special_course_ids != '') {
+                $user_courses = explode(',', $user->special_course_ids);
+                $courses = $courses->whereNotIn('id', $user_courses);
+            }
         }
+        elseif ($user->flash_course_id) {
+            $user_courses = explode(',', $user->special_course_ids);
+            $courses = SpecialCourse::whereNotIn('id', $user_courses)->where('class_id','=',null);
+        }
+        else{
+            if ($user->special_course_ids != '') {
+                $user_courses = explode(',', $user->special_course_ids);
+                $courses = SpecialCourse::whereNotIn('id', $user_courses)->where('class_id','=',null);
+            }
+        }
+
         $courses = $courses->latest()->get();
         return view('student.new_course', compact('courses'));
     }
@@ -459,22 +584,44 @@ class UserController extends Controller
         $user = $request->user();
         foreach ($selectedCourses as $course_id) {
             $course = SpecialCourse::find($course_id);
+            $course_start_date = $course->start_date;
             if ($course) {
+                $next_date = date('Y-m-01',strtotime($course_start_date));
+                $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
                 $newFee = new \App\Models\Fee;
                 $newFee->user_id = $user->id;
                 $newFee->class_id = 0;
                 $newFee->course_id = $course->id;
                 $newFee->fee_type = 'course_fee';
-                $newFee->due_date = date("Y-m-d", strtotime("+1 day"));
-                $newFee->payment_month = date("F", strtotime("+1 day"));
+                $newFee->due_date = $next_due_date;
+                $newFee->payment_month = date("F",strtotime($course_start_date));
                 $newFee->amount = $course->monthly_fees;
                 $newFee->save();
 
-                $user_id =  Auth::user()->id;
-                createNotification($user_id, 0, 0, 'join_course_student');
+                // Notification
+                createNotification($user->id, 0, 0, 'join_course_student');
             }
         }
         return redirect(route('user.payment'));
         // return view('student.course_checkout',compact('all_courses','total_amount'));
+    }
+
+    public function testimonial(Request $request)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $testimonials = Testimonial::latest()->get();
+            return view('student.testimonial',compact('testimonials'));
+        }else{
+            $this->validate($request,[
+                'content' => 'required'
+            ]);
+
+            $testimonial = new Testimonial();
+            $testimonial->content = $request->content;
+            $testimonial->user_id = Auth::user()->id;
+            $testimonial->save();
+
+            return redirect()->back()->with('success','Testimonial successfully updated');
+        }
     }
 }

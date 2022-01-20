@@ -7,4 +7,4 @@
 <!-- Chat Section END -->
 
 @yield('content')
-@extends('student.layouts.footer')
+@include('student.layouts.footer')

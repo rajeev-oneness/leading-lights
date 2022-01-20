@@ -11,8 +11,7 @@
                     <ul class="breadcrumb p-0">
                         <li><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#" class="active">All Course List</a></li>
-
+                        <li><a href="#" class="active">Special Courses List</a></li>
                     </ul>
                 </div>
                 @include('admin.layouts.navbar')
@@ -48,7 +47,6 @@
                                 <th>Class</th>
                                 <th>Course Title</th>
                                 <th>Start Date</th>
-                                <th>End Date</th>
                                 <th>Fees(&#x20B9;)</th>
                                 <th style="width:100px">Action</th>
                             </tr>
@@ -57,25 +55,24 @@
                             @foreach ($courses as $key => $course)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $course->class_name }}</td>
+                                    <td>{{ $course->class_id ? $course->class_details->name : 'N/A'  }}</td>
                                     <td>{{ $course->title }}</td>
                                     <td>{{ $course->start_date }}</td>
-                                    <td>{{ $course->end_date }}</td>
-                                    <td>{{ $course->monthly_fees }}</td>
+                                    <td>&#x20B9;{{ $course->monthly_fees }}</td>
                                     <td>
                                         {{-- <a href="{{ route('admin.courses.show', $course->id) }}"><i
                                                 class="far fa-eye"></i></a> --}}
                                         {{-- <a href="{{ route('admin.monthly_payment_check') }}"><i class="fa fa-envelope" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Send email for renewal"></i></a> --}}
-                                        
-                                        <a href="{{ route('admin.special-courses.edit', $course->course_id) }}" class="ml-2"><i
+
+                                        <a href="{{ route('admin.special-courses.edit', $course->id) }}" class="ml-2"><i
                                                 class="far fa-edit"></i></a>
-                                                
-                                        <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
-                                            data-target="#exampleModal" onclick="sendEmailForm({{ $course->course_id }})"><i class="fa fa-envelope" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Send email for renewal"></i></a>
-                                        <form id="send_email_form_{{ $course->course_id }}"
-                                            action="{{ route('admin.monthly_payment_check', $course->course_id) }}" method="POST">
+
+                                        {{-- <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
+                                            data-target="#exampleModal" onclick="sendEmailForm({{ $course->id }})"><i class="fa fa-envelope" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Send email for renewal"></i></a>
+                                        <form id="send_email_form_{{ $course->id }}"
+                                            action="{{ route('admin.monthly_payment_check', $course->id) }}" method="POST">
                                             @csrf
-                                        </form>
+                                        </form> --}}
                                         {{-- <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
                                             data-target="#exampleModal" onclick="deleteForm({{ $course->id }})"><i
                                                 class="far fa-trash-alt text-danger"></i></a>

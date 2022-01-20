@@ -1,7 +1,7 @@
-@extends('layouts.header')
-@extends('layouts.navbar')
+@include('layouts.header')
+@include('layouts.navbar')
 
 @yield('content')
 
-@extends('layouts.footer')
-@extends('layouts.script')
+@include('layouts.footer')
+@include('layouts.script')

@@ -39,6 +39,7 @@
 						<th>Serial No</th>
 						<th>Title</th>
 						<th>Video Type</th>
+                        <th>Amount</th>
 						<th style="width:100px" class="text-center">Status</th>
 						<th style="width:100px">Action</th>
 					</tr>
@@ -49,15 +50,18 @@
 							<td>{{ $key + 1 }}</td>
 							<td>{{ $video->title }}</td>
 							<td>
-								@if ($video->status == 1)
+								@if ($video->video_type == 1)
 								<span class="badge badge-warning">Paid</span>
 								@else
 								<span class="badge badge-success">Free</span>
 								@endif
 							</td>
+                            <td>
+                                 {{ $video->amount ?  'Rs. '.$video->amount : 'N/A'}}
+                            </td>
 							<td class="text-center">
 								@if ($video->status == 1)
-								<span class="badge badge-success">Active</span>
+								<span class="badge badge-success">Published</span>
 								@else
 								<span class="badge badge-warning">Inactive</span>
 								@endif
@@ -72,7 +76,7 @@
 								</form></td>
 							</td>
 						</tr>
-					@endforeach 
+					@endforeach
 				</tbody>
 			</table>
 		</div>
@@ -118,7 +122,7 @@
 		}
 
 		setTimeout(function(){
-  			$(".alert-success").hide();        
+  			$(".alert-success").hide();
 		}, 5000);
-	</script>	
+	</script>
  @endsection

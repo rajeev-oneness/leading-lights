@@ -66,7 +66,7 @@
                             <div class="carousel-inner">
                                 @foreach ($events as $key => $event)
                                 <div class="carousel-item {{$key == 0 ? 'active' : '' }}">
-                                    
+
                                     <div class="items align-items-center">
                                         <div class="pdf-box">
                                             <img src="{{ asset($event->image) }}"
@@ -95,7 +95,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                   
+
                                 </div>
                                 @endforeach
                             </div>

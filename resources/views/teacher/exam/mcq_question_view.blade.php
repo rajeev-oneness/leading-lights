@@ -13,19 +13,18 @@
                     </div>
                 </div>
             </div>
-            <div class="row m-0 dashboard-content-header">
-                <div class="col-md-6">
-                    <ul class="breadcrumb p-0">
-                        <li><a href="{{ route('teacher.exam.index') }}">Exam List</a></li>
-                        <li class="text-info"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#">Exam details</a></li>
-                    </ul>
-                </div>
-            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active"><a href="{{ route('teacher.exam.index') }}">Exam List</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Exam details</li>
+                </ol>
+            </nav>
             <div class="card mb-3">
+                <div class="card-header qtitle justify-content-center">
+                    Leading Lights
+                </div>
                 <div class="card-body">
                     {{-- <a href="{{ route('teacher.exam.index') }}" class="btn btn-primary btn-lg"><i class="fa fa-arrow-left"></i> Back</a> --}}
-                    <div class="card-header-title mb-4">Exam details</div>
                     @foreach ($questions as $i => $question)
                         <h5>{{ $i + 1 }}. {{ $question->question }}</h5>
                         @if ($question->image)
@@ -40,18 +39,18 @@
                                     <div class="form-check">
                                         <input type="radio" class="form-check-input" name="ans{{ $i + 1 }}"
                                             value="{{ $option->option }}" id="" @if ($option->option === $question->answer)
-                                        checked
-                            @endif>
-                            {{ $option->option }}
+                                            checked @endif>
+                                        {{ $option->option }}
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ol>
+                        <p class="font-weight-bold">Marks: <span>{{ $question->marks }}</span></p>
+                         <hr>
+                    @endforeach
                 </div>
-                </li>
-                @endforeach
-                </ol>
-
-                @endforeach
             </div>
         </div>
-    </div>
     @include('teacher.layouts.static_footer')
     </div>
     </div>

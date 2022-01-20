@@ -38,22 +38,24 @@
                             <tr>
                                 <th>Serial No</th>
                                 <th>Group Name</th>
-                                <th>Class</th>
+                                {{-- <th>Class</th> --}}
                                 <th>Assigned Teacher</th>
                                 <th style="width:100px">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                                @foreach ($groups as $i => $group)
+                            @foreach ($groups as $i => $group)
                                 <tr>
                                     <td>{{ $i + 1 }}</td>
                                     <td>{{ $group->name }}</td>
-                                    <td>
-                                        <?php $class = App\Models\Classes::where('id',$group->class_id)->first();?>
+                                    {{-- <td>
+                                        <?php
+                                        // $class = App\Models\Classes::where('id',$group->class_id)->first();
+                                        ?>
                                         {{ $class->name }}
-                                    </td>
+                                    </td> --}}
                                     <td>
-                                        <?php $user = App\Models\User::where('id',$group->teacher_id)->first();?>
+                                        <?php $user = App\Models\User::where('id', $group->teacher_id)->first(); ?>
                                         {{ $user->first_name }} {{ $user->last_name }}
                                     </td>
                                     <td>
@@ -71,7 +73,7 @@
                                         </form> --}}
                                     </td>
                                 </tr>
-                                @endforeach
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

@@ -39,17 +39,25 @@ class VlogController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'title' => 'required',
-            'video_url' => 'required',
-            'video_content' => 'required'
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'image' => 'required|mimes:png,jpg,jpeg,mp4,mov,ogg,qt,3gpp,webm'
+        ],[
+            'image.required' => 'Please upload an image or a video'
         ]);
 
+        if($request->hasFile('image')){
+            $image = $request->file('image');
+            $imageName = imageUpload($image,'vlog');
+        }else{
+            $imageName = null;
+        }
         $vlog = new VLOG();
         $vlog->title = $request->title;
-        $vlog->video_url = $request->video_url;
-        $vlog->video_content = $request->video_content;
+        $vlog->description = $request->description;
+        $vlog->file_path = $imageName;
         $vlog->user_id = Auth::user()->id;
-        $vlog->status = 1;
+        $vlog->facebook_link = $request->facebook_link;
         $vlog->save();
         return redirect()->route('admin.vlog.index')->with('success','Vlog created successfully');
     }
@@ -62,7 +70,8 @@ class VlogController extends Controller
      */
     public function show($id)
     {
-        //
+        $vlog_details = VLOG::find($id);
+        return view('admin.vlog.view',compact('vlog_details'));
     }
 
     /**
@@ -87,19 +96,25 @@ class VlogController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request,[
-            'title' => 'required',
-            'video_url' => 'required',
-            'video_content' => 'required'
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'image' => 'nullable|mimes:png,jpg,jpeg,mp4,mov,ogg,qt,3gpp,webm'
         ]);
-
         $vlog = VLOG::find($id);
+        if($request->hasFile('image')){
+            $image = $request->file('image');
+            $imageName = imageUpload($image,'vlog');
+        }else{
+            $imageName = $vlog->file_path;
+        }
+
         $vlog->title = $request->title;
-        $vlog->video_url = $request->video_url;
-        $vlog->video_content = $request->video_content;
+        $vlog->description = $request->description;
+        $vlog->file_path = $imageName;
         $vlog->user_id = Auth::user()->id;
-        $vlog->status = 1;
+        $vlog->facebook_link = $request->facebook_link;
         $vlog->save();
-        return redirect()->route('admin.vlog.index')->with('success','Vlog updated successfully');
+        return redirect()->route('admin.vlog.index')->with('success','Vlog details updated');
     }
 
     /**

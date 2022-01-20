@@ -16,7 +16,8 @@ class CreateSpecialCoursesTable extends Migration
         Schema::create('special_courses', function (Blueprint $table) {
             $table->id();
             $table->string('title')->unique();
-            $table->integer('class_id');
+            $table->string('description');
+            $table->string('image');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->integer('monthly_fees');
