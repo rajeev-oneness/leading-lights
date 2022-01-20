@@ -36,9 +36,9 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
                         <div class="form-group edit-box">
-                            <label for="video">Video<span class="text-danger">*</span></label>
+                            <label for="video">Thumbnail Video<span class="text-danger">*</span></label>
                             <input type="file" name="video" class="form-control" id="video"
                                 value="{{ $video->video }}">
                             @if($errors->has('video'))
@@ -46,7 +46,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
                         <div class="form-group edit-box">
                             <label for="name">Video type</label>
                             <select class="form-control" name="video_type">
@@ -55,7 +55,17 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
+                        <div class="form-group edit-box">
+                            <label for="video">Paid Video<span class="text-danger paid_video">*</span></label>
+                            <input type="file" name="paid_video" class="form-control" id="paid_video"
+                                value="{{ $video->paid_video }}">
+                            @if($errors->has('paid_video'))
+                                <span style="color: red;">{{ $errors->first('paid_video') }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
                         <div class="form-group edit-box">
                             <label for="name">Amount<span class="text-danger amount"></span></label>
                             <input type="number" name="amount" id="amount" min="0" class="form-control" value="{{ $video->amount }}" disabled>
@@ -95,9 +105,13 @@
         if ($('#video_type').val() == "0") {
             $('#amount').prop('disabled', true);
             $('.amount').text('');
+            $('#paid_video').prop('disabled', true);
+             $('.paid-video').text('');
         } else {
             $('#amount').prop('disabled', false);
             $('.amount').text('*');
+            $('#paid_video').prop('disabled', false);
+            $('.paid-video').text('*');
         }
     } );
     CKEDITOR.replace('description');
@@ -106,9 +120,13 @@
         if ($('#video_type').val() == "0") {
             $('#amount').prop('disabled', true);
             $('.amount').text('');
+            $('#paid_video').prop('disabled', true);
+            $('.paid-video').text('');
         } else {
             $('#amount').prop('disabled', false);
             $('.amount').text('*');
+            $('#paid_video').prop('disabled', false);
+            $('.paid-video').text('*');
         }
     });
 

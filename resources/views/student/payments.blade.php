@@ -229,7 +229,13 @@
                                                     </span>
                                                 </button>
                                                 @if (Auth::user()->registration_type == 4)
-                                                    
+                                                    @php
+                                                        $sub_video = Auth::user()->video_id;
+                                                        $video_details = App\Models\Video::find($sub_video);
+                                                        $file_path = $video_details->paid_video;
+                                                        $file_extension= explode('.',$file_path)[1];
+                                                    @endphp
+                                                    <a class="mb-2 mr-2 btn-pill btn btn-info btn-lg" href="{{ asset($file_path) }}" download><i class="fa fa-download mr-2"></i>Download Video</a>
                                                 @else  
                                                     <a class="mb-2 mr-2 btn-pill btn btn-info btn-lg" href="{{ route('user.payment_receipt', $successPayment->id) }}"><i class="fa fa-download mr-2"></i>Download Receipt</a>
                                                 @endif
