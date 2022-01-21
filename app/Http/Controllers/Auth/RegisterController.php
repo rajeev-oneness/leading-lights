@@ -541,9 +541,9 @@ class RegisterController extends Controller
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'dob' => ['required', 'date'],
                 'gender' => ['required'],
-                'image' => 'required| mimes:png,jpg,jpeg',
+                // 'image' => 'required| mimes:png,jpg,jpeg',
                 'mobile' => ['required'],
-                'certificate' => ['required', 'mimes:pdf']
+                // 'certificate' => ['required', 'mimes:pdf']
             ]);
             DB::beginTransaction();
         try {
@@ -552,7 +552,7 @@ class RegisterController extends Controller
             $id_no = 'LLST' . $num_padded;
 
             $image = $request['image'];
-            $imageName = imageUpload($image, 'profile_image');
+            // $imageName = imageUpload($image, 'profile_image');
 
             // Store student details
             $user = new User();
@@ -564,7 +564,7 @@ class RegisterController extends Controller
             $user->dob = $request['dob'];
             $user->gender = $request['gender'];
             $user->password = Hash::make($id_no);
-            $user->image = $imageName;
+            // $user->image = $imageName;
             $user->video_id = $request['class'];
             $user->registration_type = 4;
             $user->country_code = $request['country_code'];
@@ -583,9 +583,10 @@ class RegisterController extends Controller
                     $feedata[] = [
                         'user_id' => $user->id,
                         'class_id' => 0,
-                        'course_id' => $video_details->id,
-                        'fee_type' => 'course_fee',
-                        'payment_month' => date("F",strtotime(date('Y-m-d'))),
+                        'course_id' => 0,
+                        'paid_video_id' => $video_details->id,
+                        'fee_type' => 'paid_video_fee',
+                        'payment_month' => date("F"),
                         'amount' => $video_details->amount,
                     ];
                 }
@@ -596,11 +597,11 @@ class RegisterController extends Controller
             }
 
             //Store certificate
-            $certificate_image =  imageUpload($request['certificate'], 'student_certificate');
-            $certificate = new Certificate();
-            $certificate->user_id = $user->id;
-            $certificate->image = $certificate_image;
-            $certificate->save();
+            // $certificate_image =  imageUpload($request['certificate'], 'student_certificate');
+            // $certificate = new Certificate();
+            // $certificate->user_id = $user->id;
+            // $certificate->image = $certificate_image;
+            // $certificate->save();
 
             // $admin_details = User::select('email')->where('role_id', 1)->first();
             // $admin_email = $admin_details['email'];

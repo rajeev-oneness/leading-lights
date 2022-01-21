@@ -123,25 +123,27 @@
 
 
                                                     }
-                                                    else {
-
-                                                    if ($duePayment->class_id > 0 && $duePayment->course_id > 0) {
-                                                        $extraDate = extraDateFineCalculation($duePayment->class_id,$duePayment->course_id,$duePayment->due_date,Auth::user()->id);
-                                                    }
-                                                    if ($duePayment->class_id == 0 && $duePayment->course_id > 0) {
-                                                        $extraDate = extraDateFineCalculation(0,$duePayment->course_id,$duePayment->due_date,Auth::user()->id);
-                                                    }
-                                                    if ($duePayment->class_id > 0 && $duePayment->course_id == 0) {
-                                                        $extraDate = extraDateFineCalculation($duePayment->class_id,0,$duePayment->due_date,Auth::user()->id);
-                                                    }
-
-                                                    if ($extraDate > 0) {
-                                                        $fine = $extraDate * 10;
-                                                        $amount = $duePayment->amount + $fine;
-                                                    }else{
+                                                    elseif (Auth::user()->registration_type == 4) {
                                                         $amount = $duePayment->amount;
                                                     }
-                                                }
+                                                    else {
+                                                            if ($duePayment->class_id > 0 && $duePayment->course_id > 0) {
+                                                                $extraDate = extraDateFineCalculation($duePayment->class_id,$duePayment->course_id,$duePayment->due_date,Auth::user()->id);
+                                                            }
+                                                            if ($duePayment->class_id == 0 && $duePayment->course_id > 0) {
+                                                                $extraDate = extraDateFineCalculation(0,$duePayment->course_id,$duePayment->due_date,Auth::user()->id);
+                                                            }
+                                                            if ($duePayment->class_id > 0 && $duePayment->course_id == 0) {
+                                                                $extraDate = extraDateFineCalculation($duePayment->class_id,0,$duePayment->due_date,Auth::user()->id);
+                                                            }
+
+                                                            if ($extraDate > 0) {
+                                                                $fine = $extraDate * 10;
+                                                                $amount = $duePayment->amount + $fine;
+                                                            }else{
+                                                                $amount = $duePayment->amount;
+                                                            }
+                                                    }
                                                 @endphp
                                                 <span>&#x20B9;{{ $amount }}
                                                     @if (isset($fine))
@@ -181,7 +183,12 @@
                                 <thead>
                                     <tr>
                                         <th>Order Id</th>
-                                        <th>Fees Type</th>
+                                        @if (Auth::user()->registration_type == 4)
+                                            <th>Fees For</th>
+                                        @else
+                                            <th>Fees Type</th>
+                                        @endif
+                                        <th>Payment Date</th>
                                         <th>Total Cost(&#x20B9;)</th>
                                         <th>Action</th>
                                     </tr>
@@ -189,7 +196,7 @@
                                 <tbody>
                                     @foreach($data->success_payment as $successIndex => $successPayment)
                                         <tr>
-                                            <td>{{$successPayment->id}}</td>
+                                            <td>{{$successPayment->id}} {{ $successPayment->paid_video_id }}</td>
                                             <td>
                                                 @php
                                                     $feeType = 'Admission Fees';
@@ -202,7 +209,7 @@
                                                 @endphp
                                                 <span>
                                                     @if (Auth::user()->registration_type == 4)
-                                                        One Time Payment
+                                                        <span class="text-success font-weight-bold"> {{ getNameOfPaidVideo($successPayment) }}</span>
                                                     @endif
                                                     @if(Auth::user()->registration_type != 4)
                                                       
@@ -221,6 +228,7 @@
                                                     @endif
                                                 </span>   
                                             </td>
+                                            <td>{{ date('d-F-y',strtotime($successPayment->updated_at)) }}</td>
                                             <td>&#x20B9;{{$successPayment->amount}}</td>
                                             <td>
                                                 <button class="mb-2 mr-2 btn-pill btn btn-dark btn-lg">Paid Successfully
@@ -230,8 +238,7 @@
                                                 </button>
                                                 @if (Auth::user()->registration_type == 4)
                                                     @php
-                                                        $sub_video = Auth::user()->video_id;
-                                                        $video_details = App\Models\Video::find($sub_video);
+                                                        $video_details = App\Models\Video::find($successPayment->paid_video_id);
                                                         $file_path = $video_details->paid_video;
                                                         $file_extension= explode('.',$file_path)[1];
                                                     @endphp

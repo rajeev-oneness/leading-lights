@@ -133,38 +133,38 @@ function createNotification($user, $class = 0, $group = 0, $type)
 			$route = 'user.dairy';
 			break;
 		case 'user_registration':
-			$title = 'Registration successfull';
+			$title = 'Registration successful';
 			$message = 'Please check & update your profile as needed';
 			$route = 'hr.profile';
 			break;
 		case 'update_hr_address':
-			$title = 'Address update successfull';
+			$title = 'Address update successful';
 			$message = 'Please check & update your profile as needed';
 			$route = 'hr.profile';
 			break;
 		case 'update_hr_bio':
-			$title = 'Bio update successfull';
+			$title = 'Bio update successful';
 			$message = 'Please check & update your profile as needed';
 			$route = 'hr.profile';
 			break;
 		case 'announcement_create':
-			$title = 'Announcement Create successfull';
+			$title = 'Announcement Create successful';
 			$message = 'Please check & update announcement as needed';
 			$route = 'hr.announcement';
 			break;
 		case 'hr_change_password':
-			$title = 'Password change successfull';
+			$title = 'Password change successful';
 			$message = 'Please check & update your profile as needed';
 			$route = 'hr.profile';
 			break;
 		case 'teacher_registration':
-			$title = 'Registration successfull';
+			$title = 'Registration successful';
 			$message = 'Please check & update your profile as needed';
 			$route = 'teacher.profile';
 			break;
 
 		case 'update_teacher_profile':
-			$title = 'Profile update successfull';
+			$title = 'Profile update successful';
 			$message = 'Please check & update your profile as needed';
 			$route = 'teacher.profile';
 			break;
@@ -179,38 +179,43 @@ function createNotification($user, $class = 0, $group = 0, $type)
 			$route = 'user.homework';
 			break;
 		case 'teacher_change_password':
-			$title = 'Password change successfull';
+			$title = 'Password change successful';
 			$message = 'Please check & update your profile as needed';
 			$route = 'teacher.profile';
 			break;
 		case 'student_registration':
-			$title = 'Registration successfull';
+			$title = 'Registration successful';
 			$message = 'Please check & update your profile as needed';
 			$route = 'user.profile';
 			break;
 		case 'update_student_bio':
-			$title = 'Bio update successfull';
+			$title = 'Bio update successful';
 			$message = 'Please check & update your profile as needed';
 			$route = 'user.profile';
 			break;
 		case 'student_change_password':
-			$title = 'Password change successfull';
+			$title = 'Password change successful';
 			$message = 'Please check & update your profile as needed';
 			$route = 'user.profile';
 			break;
 		case 'upload_student_hometask':
-			$title = 'Home task upload successfull';
+			$title = 'Home task upload successful';
 			$message = 'Please check & update your profile as needed';
 			$route = 'user.homework';
 			break;
 		case 'join_course_student':
-			$title = 'Join new course successfull';
+			$title = 'Join new course successful';
 			$message = 'Please check & update your profile as needed';
 			$route = 'user.profile';
 			break;
 		case 'payment_student':
-			$title = 'Payment successfull';
+			$title = 'Payment successful';
 			$message = 'Please check & update your profile as needed';
+			$route = 'user.profile';
+			break;
+		case 'paid_video_subscription':
+			$title = 'Video added successfully';
+			$message = 'Congratulation,Now you can download this video';
 			$route = 'user.profile';
 			break;
 	}
@@ -291,6 +296,17 @@ function getNameofCourse($fee_details)
 	$response = '';
     if ($fee_details->course_id > 0) {
 		$course = \App\Models\SpecialCourse::where('id', $fee_details->course_id)->first();
+		if ($course) {
+			$response = $course->title;
+		}
+	}
+	return $response;
+}
+function getNameOfPaidVideo($fee_details)
+{
+	$response = '';
+    if ($fee_details->paid_video_id > 0) {
+		$course = \App\Models\Video::where('id', $fee_details->paid_video_id)->first();
 		if ($course) {
 			$response = $course->title;
 		}

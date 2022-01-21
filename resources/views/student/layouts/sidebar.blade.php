@@ -86,6 +86,7 @@
                         <i class="metismenu-icon fa fa-book"></i>Join New Course
                     </a>
                 </li>
+                
                 @endif
                 @endif
                 <li class="{{ Request::is('user/payment') ? 'mm-active' : '' }}">
@@ -96,6 +97,11 @@
                 
                 @if (Auth::user()->status == 1)
                     @if (Auth::user()->registration_type == 4 && $checkPaymentStatus == 1)
+                        <li class="{{ Request::is('user/video*') ? 'mm-active' : '' }}">
+                            <a href="{{ route('user.available_video') }}">
+                                <i class="metismenu-icon fa fa-video"></i>Join New Video
+                            </a>
+                        </li>
                         <li class="{{ Request::is('user/testimonial') ? 'mm-active' : '' }}">
                             <a href="{{ route('user.testimonial') }}">
                                 <i class="metismenu-icon fa fa-cog"></i>Testimonial
