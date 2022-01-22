@@ -14,7 +14,7 @@
                         </div>
                         <div class="col-lg-7 form-div wow fadeInRight">
                             <div class="heading">
-                                <h1>Pay Now :)</h1>
+                                <h1>Video Subscription :)</h1>
                             </div>
                             <form class="cd-form" method="POST" action="{{ route('video_subscription',$video_id) }}"
                                 enctype="multipart/form-data" id="registrationForm">

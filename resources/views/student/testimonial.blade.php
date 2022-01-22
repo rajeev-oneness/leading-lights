@@ -65,19 +65,19 @@
                                 <div class="font-weight-bold p-1">
                                     Added Date: {{ date('d-M-Y',strtotime($testimonial->created_at)) }}
                                     <br>
-                                    Status :
+                                    {{-- Status :
                                     @if ($testimonial->status == 0)
                                         Pending
                                     @elseif ($testimonial->status == 1)
                                         Approved
                                     @elseif ($testimonial->status == 2)
                                         Rejected
-                                    @endif
+                                    @endif --}}
                                 </div>
                                 <hr>
                             @endforeach
                         @else
-                            <h4>No data found</h4>
+                            <h5 class="text-danger">No data found</h5>
                         @endif
                       </div>
                 </div>

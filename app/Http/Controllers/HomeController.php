@@ -25,6 +25,7 @@ class HomeController extends Controller
     public function index()
     {
         $redirectTo = 'user/profile';
+        $paymentStatus = checkPaymentStatus(Auth::user()->id);
         switch (Auth::user()->role_id) {
             case 1:
                 $redirectTo = 'admin/dashboard';
@@ -36,8 +37,13 @@ class HomeController extends Controller
                 $redirectTo = 'teacher/profile';
                 break;
             case 4:
-                $redirectTo = 'user/profile';
-                break;
+                if (Auth::user()->registration_type == 4 && $paymentStatus == 0) {
+                    $redirectTo = 'user/payment';
+                    break;
+                }else{
+                    $redirectTo = 'user/profile';
+                    break;
+                }
             case 5:
                 $redirectTo = 'admin/dashboard';
                 break;

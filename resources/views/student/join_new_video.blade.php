@@ -20,7 +20,8 @@
                         <div class="card-header-title mb-4">
                             Available Video
                         </div>
-                        @if($videos)
+                        <hr>
+                        @if($videos->count() > 0)
                             <form action="{{ route('user.add_video') }}" method="post">
                                 @csrf
                                 <div class="row course_item m-0">
@@ -55,11 +56,9 @@
                                     id="submit_btn">
                             </form>
                         @else
-                            <div class="col-md-3">
-                                <div class="align-items-center">
-                                    <span class="text-bold text-center text-capitalize">Currently No Courses
-                                        Available</span>
-                                </div>
+                            <div class="card-header-title mb-4">
+                                <h5 class="text-bold text-danger">Currently no paid video
+                                    available</h5>
                             </div>
                         @endif
                     </div>

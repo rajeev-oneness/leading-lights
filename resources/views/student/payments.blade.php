@@ -184,7 +184,7 @@
                                     <tr>
                                         <th>Order Id</th>
                                         @if (Auth::user()->registration_type == 4)
-                                            <th>Fees For</th>
+                                            <th>Video Title</th>
                                         @else
                                             <th>Fees Type</th>
                                         @endif
@@ -196,7 +196,7 @@
                                 <tbody>
                                     @foreach($data->success_payment as $successIndex => $successPayment)
                                         <tr>
-                                            <td>{{$successPayment->id}} {{ $successPayment->paid_video_id }}</td>
+                                            <td>{{$successPayment->id}}</td>
                                             <td>
                                                 @php
                                                     $feeType = 'Admission Fees';
@@ -209,7 +209,9 @@
                                                 @endphp
                                                 <span>
                                                     @if (Auth::user()->registration_type == 4)
-                                                        <span class="text-success font-weight-bold"> {{ getNameOfPaidVideo($successPayment) }}</span>
+                                                        <span  data-toggle="tooltip" data-placement="top" title="{{ getNameOfPaidVideo($successPayment) }}">
+                                                         <span class="text-success font-weight-bold">  {{ Str::limit(getNameOfPaidVideo($successPayment),50) }} </span>
+                                                        </span>
                                                     @endif
                                                     @if(Auth::user()->registration_type != 4)
                                                       

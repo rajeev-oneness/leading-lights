@@ -135,7 +135,7 @@ class RazorpayController extends Controller
                             $newFee->course_id = $fee->course_id;
                             $newFee->fee_type = $feeType;
                             $newFee->due_date = date("Y-m-d", strtotime("+1 month", strtotime($fee->due_date)));
-                            // $newFee->due_date = $next_due_date;
+                            $newFee->due_date = $next_due_date;
                             $newFee->payment_month = date("F");
                             $newFee->amount = $amount;
                             $newFee->save();
