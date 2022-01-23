@@ -121,10 +121,10 @@
         swalWithBootstrapButtons.fire({
             title: 'Are you sure?',
             text: "To save question into this exam!",
-            icon: 'warning',
+            iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
             showCancelButton: true,
-            confirmButtonText: 'Yes, SUBMIT it!',
-            cancelButtonText: 'No, cancel!',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel!',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
@@ -189,10 +189,6 @@
                 } else {
                     $('.desc-question-form').submit();
                 }
-                setTimeout(() => {
-                    window.location.href =
-                        "{{ route('teacher.exam.index') }}";
-                }, 2000);
             } else if (
                 /* Read more about handling dismissals below */
                 result.dismiss === Swal.DismissReason.cancel
@@ -409,10 +405,10 @@
         swalWithBootstrapButtons.fire({
             title: 'Are you sure?',
             text: "To save question into this exam!",
-            icon: 'warning',
+            iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
             showCancelButton: true,
-            confirmButtonText: 'Yes, SUBMIT it!',
-            cancelButtonText: 'No, cancel!',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel!',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
@@ -547,10 +543,6 @@
                 } else {
                     $('.question-form').submit();
                 }
-                setTimeout(() => {
-                    window.location.href =
-                        "{{ route('teacher.exam.index') }}";
-                }, 2000);
             } else if (
                 /* Read more about handling dismissals below */
                 result.dismiss === Swal.DismissReason.cancel
@@ -954,10 +946,10 @@
         swalWithBootstrapButtons.fire({
             title: 'Are you sure?',
             text: "To save question into this exam!",
-            icon: 'warning',
+            iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
             showCancelButton: true,
-            confirmButtonText: 'Yes, SUBMIT it!',
-            cancelButtonText: 'No, cancel!',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel!',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1096,10 +1088,6 @@
                 } else {
                     $('.mixed-question-form').submit();
                 }
-                setTimeout(() => {
-                    window.location.href =
-                    "{{ route('teacher.exam.index') }}";
-                }, 2000);
             } else if (
                 /* Read more about handling dismissals below */
                 result.dismiss === Swal.DismissReason.cancel
