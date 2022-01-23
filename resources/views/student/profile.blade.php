@@ -30,7 +30,7 @@
                                     <label>DOB :</label>
                                 </div>
                                 <div class="col-md-6 col-7">
-                                    <p id="dob">{{ Auth::user()->dob ? Auth::user()->dob : 'N/A' }}</p>
+                                    <p id="dob">{{ Auth::user()->dob ? date('d-F-Y',strtotime( Auth::user()->dob)) : 'N/A' }}</p>
                                 </div>
                                 <div class="col-md-2">
                                 </div>

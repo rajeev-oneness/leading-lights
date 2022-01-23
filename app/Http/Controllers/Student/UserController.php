@@ -609,7 +609,7 @@ class UserController extends Controller
     public function testimonial(Request $request)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $testimonials = Testimonial::latest()->get();
+            $testimonials = Testimonial::where('user_id',Auth::user()->id)->latest()->get();
             return view('student.testimonial',compact('testimonials'));
         }else{
             $this->validate($request,[
