@@ -136,7 +136,7 @@ class RegisterController extends Controller
             $user->dob = $data['dob'];
             $user->class = $data['class'];
             $user->gender = $data['gender'];
-            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
+            $user->password = Hash::make($id_no);
             $user->image = $imageName;
             $user->special_course_ids = $special_course_ids;
             $user->country_code = $data['country_code'];
@@ -301,7 +301,7 @@ class RegisterController extends Controller
             $user->doj = $request->doj;
             $user->gender = $request->gender;
             $user->id_no = $id_no;
-            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
+            $user->password = Hash::make($id_no);
             $user->image = $imageName;
             $user->mobile = $request->mobile;
             $user->country_code = $request->country_code;
@@ -391,7 +391,7 @@ class RegisterController extends Controller
             $user->doj = $request->doj;
             $user->gender = $request->gender;
             $user->id_no = $id_no;
-            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
+            $user->password = Hash::make($id_no);
             $user->image = $imageName;
             $user->mobile = $request->mobile;
             $admin_details = User::select('email')->where('role_id', 1)->first();
@@ -480,15 +480,16 @@ class RegisterController extends Controller
                 $s_course = Course::where('id', $request['class'])->first();
                 $course_start_date = $s_course->start_date;
                 if ($s_course) {
-                    $next_date = date('Y-m-01',strtotime($course_start_date));
-                    $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                    // $next_date = date('Y-m-01',strtotime($course_start_date));
+                    // $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
                     $feedata[] = [
                         'user_id' => $user->id,
                         'class_id' => 0,
-                        'course_id' => $s_course->id,
-                        'fee_type' => 'course_fee',
-                        'due_date' => $next_due_date,
-                        'payment_month' => date("F",strtotime($course_start_date)),
+                        'course_id' => 0,
+                        'flash_course_id' => $s_course->id,
+                        'fee_type' => 'flash_course_fee',
+                        // 'due_date' => $next_due_date,
+                        'payment_month' => date("F"),
                         'amount' => $s_course->fees,
                     ];
                 }

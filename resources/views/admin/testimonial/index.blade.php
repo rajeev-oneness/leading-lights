@@ -97,10 +97,10 @@
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
-                icon: 'warning',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {

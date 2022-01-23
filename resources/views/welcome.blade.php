@@ -120,7 +120,7 @@
                         </div>
                         <p>the software is compatible to PC, Android and iOS so our services are accessible to one and all.
                         </p>
-                        <a href="#" class="btn btn-add">Join Now</a>
+                        {{-- <a href="#" class="btn btn-add">Join Now</a> --}}
                     </div>
 
                 </div>
