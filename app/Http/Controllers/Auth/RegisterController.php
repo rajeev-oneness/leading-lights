@@ -19,11 +19,13 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 // use App\Http\Controllers\Admin\Notification;
 use App\Http\Controllers\Admin\Notification;
+use Illuminate\Support\Facades\Notification as systemNotification;
 use App\Models\Certificate, App\Models\Fee;
 use App\Models\CheckClassOrCourceRegistration;
 use App\Models\Course;
 use App\Models\OtherPaymentDetails;
 use App\Models\Video;
+use App\Notifications\WelcomeMailForPaidUsers;
 use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Notification as FacadesNotification;
@@ -526,7 +528,7 @@ class RegisterController extends Controller
         }
     }
 
-    // Flash Course Wise registration
+    // Paid video subscription
     public function video_subscription(Request $request,$id)
     {
         if ($request->method() == 'GET') {
@@ -574,6 +576,8 @@ class RegisterController extends Controller
             $user->save();
 
             $user_id = $user->id;
+
+            systemNotification::route('mail', $user->email)->notify(new WelcomeMailForPaidUsers($user));
             createNotification($user_id, 0, 0, 'student_registration');
 
             // Fee generate
@@ -618,6 +622,7 @@ class RegisterController extends Controller
             DB::commit();
             return redirect()->route('login')->with('success', 'Your registration is successful, now you can login');
         } catch (Exception $e) {
+            dd($e);
             DB::rollback();
             return 0;
         }
