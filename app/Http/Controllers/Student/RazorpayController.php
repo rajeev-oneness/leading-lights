@@ -7,6 +7,7 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Models\SpecialCourse;
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\Fee;
 use App\Models\OtherPaymentDetails;
 use App\Models\User, DB;
@@ -69,7 +70,24 @@ class RazorpayController extends Controller
                         if (Auth::user()->registration_type == 3) {
                             $paymentCount = Fee::where('user_id',Auth::user()->id)->count();
 
-                            if ($paymentCount > 1) {
+                            if ($paymentCount > 1 && $fee->flash_course_id > 0) {
+                                $course = Course::where('id', $fee->flash_course_id)->first();
+
+                                $user_details = User::find($fee->user_id);
+                                if ($user_details->flash_course_id	 == '') {
+                                    $user_details->flash_course_id	 = $course->id;
+                                    $user_details->save();
+                                }
+                                else{
+                                    $all_available_courses_ids = explode(',', $user->flash_course_id);
+                                    if (!in_array($course->id, $all_available_courses_ids)) {
+                                        $user_details->flash_course_id	 = $user_details->flash_course_id	 . ','. $course->id;
+                                        $user_details->save();
+                                    }
+                                }
+                            }
+
+                            if ($paymentCount > 1 && $fee->flash_course_id == 0) {
                                 $course = SpecialCourse::where('id', $fee->course_id)->first();
 
                                 $user_details = User::find($fee->user_id);

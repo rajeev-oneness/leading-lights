@@ -26,6 +26,14 @@
                                         @if (Auth::user()->registration_type != 3 && Auth::user()->registration_type != 4)
                                             <th>Next Due Date</th>
                                         @endif
+                                        @if (Auth::user()->registration_type == 3)
+                                            @php
+                                                $paymentStatus = checkPaymentStatus(Auth::user()->id);
+                                            @endphp
+                                            @if ($paymentStatus == 1)
+                                                <th>Next Due Date</th>
+                                            @endif
+                                        @endif
                                         <th>Total Cost(&#x20B9;)</th>
                                         <th>Action</th>
                                     </tr>
@@ -36,7 +44,6 @@
                                         $user_id = $duePayment->user_id;
                                         $class_id = $duePayment->class_id;
                                         $course_id = $duePayment->course_id;
-                                        $flash_course_id = $duePayment->flash_course_id;
 
                                     @endphp
                                         <tr>
@@ -48,7 +55,6 @@
                                                         case 'admission_fee' : $feeType = 'Admission Fees with 1 month class fee';break;
                                                         case 'course_fee' : $feeType = 'Course Fee';break;
                                                         case 'class_fee' : $feeType = 'Class Fee';break;
-                                                        case 'flash_course_fee' : $feeType = 'Flash Course Fee';break;
                                                     }
                                                     // echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
                                                 @endphp
@@ -61,12 +67,7 @@
                                                                     $paymentStatus = checkPaymentStatus(Auth::user()->id);
                                                                 @endphp
                                                                 @if ($paymentStatus == 1)
-                                                                    @if ($flash_course_id > 0)
-                                                                         {{ getNameofFlashCourse($duePayment) }}
-                                                                    @endif
-                                                                    @if ($course_id > 0)
-                                                                        {{ getNameofClassOrCourse($duePayment) }}
-                                                                    @endif
+                                                                    {{ getNameofClassOrCourse($duePayment) }}
                                                                 @else
                                                                     {{ getNameofFlashCourse($duePayment) }}
                                                                 @endif
@@ -90,7 +91,7 @@
                                                 @endif
                                             </td>
                                             @endif
-                                            {{-- @if (Auth::user()->registration_type == 3)
+                                            @if (Auth::user()->registration_type == 3)
                                                 @php
                                                     $paymentStatus = checkPaymentStatus(Auth::user()->id);
                                                 @endphp
@@ -101,9 +102,10 @@
                                                         @endif
                                                     </td>
                                                 @endif
-                                            @endif --}}
+                                            @endif
                                             <td>
                                                 @php
+                                                dd('die');
                                                     if (Auth::user()->registration_type == 3) {
 
                                                         $paymentStatus = checkPaymentStatus(Auth::user()->id);
@@ -126,7 +128,7 @@
                                                         $amount = $duePayment->amount;
                                                     }
                                                     else {
-                                                            if ($duePayment->class_id > 0 && $duePayment->course_id > 0) {
+                                                            if ($duePayment->class_id > 0 && $duePayment->course_id > 0) {l
                                                                 $extraDate = extraDateFineCalculation($duePayment->class_id,$duePayment->course_id,$duePayment->due_date,Auth::user()->id);
                                                             }
                                                             if ($duePayment->class_id == 0 && $duePayment->course_id > 0) {
@@ -203,14 +205,8 @@
                                                         case 'admission_fee' : $feeType = 'Admission Fees with 1 month class fee';break;
                                                         case 'course_fee' : $feeType = 'Course Fee';break;
                                                         case 'class_fee' : $feeType = 'Class Fee';break;
-                                                        case 'flash_course_fee' : $feeType = 'Flash Course Fee';break;
                                                     }
                                                     // echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
-
-                                                    $user_id = $duePayment->user_id;
-                                                    $class_id = $successPayment->class_id;
-                                                    $course_id = $successPayment->course_id;
-                                                    $flash_course_id = $successPayment->flash_course_id;
                                                 @endphp
                                                 <span>
                                                     @if (Auth::user()->registration_type == 4)
@@ -219,12 +215,13 @@
                                                         </span>
                                                     @endif
                                                     @if(Auth::user()->registration_type != 4)
+                                                      
                                                         {{ $feeType }} 
                                                         <span class="badge badge-info">
                                                             @if (Auth::user()->registration_type == 3)
-                                                                @if ($flash_course_id >  0)
+                                                                @if ($successIndex == 0)
                                                                     {{ getNameofFlashCourse($successPayment) }}
-                                                                @elseif($course_id > 0)
+                                                                @else
                                                                     {{ getNameofClassOrCourse($successPayment) }}
                                                                 @endif
                                                             @else

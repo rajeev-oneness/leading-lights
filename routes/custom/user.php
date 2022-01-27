@@ -39,4 +39,8 @@ Route::group(['middleware' => ['payment.confirm']], function () {
         // Video Management
         Route::get('video/available-video',[VideoController::class,'index'])->name('available_video');
         Route::post('video/add-video',[VideoController::class,'store'])->name('add_video');
+
+        // Flash Course Management
+        Route::get('flash-courses/available_courses', [CourseController::class, 'availableFlashCourses'])->name('available_flash_courses');
+        Route::post('flash-courses/add-courses', [CourseController::class, 'addFlashCourses'])->name('add_flash_courses');
 });
