@@ -123,10 +123,10 @@ class RegisterController extends Controller
             );
             if (isset($data['special_course_ids'])) {
                 $special_course_ids = implode(',', $data['special_course_ids']);
-                $admission_type = 1;
+                $admission_type = 2;
             } else {
                 $special_course_ids = null;
-                $admission_type = 2;
+                $admission_type = 1;
             }
 
             $user = new User();
@@ -142,6 +142,7 @@ class RegisterController extends Controller
             $user->image = $imageName;
             $user->special_course_ids = $special_course_ids;
             $user->country_code = $data['country_code'];
+            $user->registration_type = $admission_type;
             $user->save();
 
             $user_id = $user->id;

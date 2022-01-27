@@ -321,7 +321,7 @@ function extraDateFineCalculation($class_id,$course_id,$due_date,$user_id){
                         ->where('class_id',$class_id)
                         ->first();
     if (!empty($previous_payment)) {
-		if (Auth::user()->registration_type != 3 && Auth::user()->registration_type != 4) {
+		if (Auth::user()->registration_type != 2 && Auth::user()->registration_type != 3 && Auth::user()->registration_type != 4) {
 			//Next date for payment
 			$next_due_date = $due_date;
 			$today_date = date('Y-m-d');

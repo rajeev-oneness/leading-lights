@@ -125,6 +125,11 @@
                                                     elseif (Auth::user()->registration_type == 4) {
                                                         $amount = $duePayment->amount;
                                                     }
+                                                    elseif (Auth::user()->registration_type == 1) {
+                                                        if ($duePayment->course_id > 0) {
+                                                            $amount = $duePayment->amount;
+                                                        }
+                                                    }
                                                     else {
                                                             if ($duePayment->class_id > 0 && $duePayment->course_id > 0) {
                                                                 $extraDate = extraDateFineCalculation($duePayment->class_id,$duePayment->course_id,$duePayment->due_date,Auth::user()->id);
