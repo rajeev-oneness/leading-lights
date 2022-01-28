@@ -322,18 +322,24 @@ function extraDateFineCalculation($class_id,$course_id,$due_date,$user_id){
                         ->first();
     if (!empty($previous_payment)) {
 		if (Auth::user()->registration_type != 2 && Auth::user()->registration_type != 3 && Auth::user()->registration_type != 4) {
-			//Next date for payment
-			$next_due_date = $due_date;
-			$today_date = date('Y-m-d');
+			if (Auth::user()->registration_type == 1) {
+				if ($course_id > 0) {
+					return 0;
+				}else{
+					//Next date for payment
+					$next_due_date = $due_date;
+					$today_date = date('Y-m-d');
 
-			if ($today_date > $next_due_date) {
-				$date1=date_create($next_due_date);
-				$date2=date_create($today_date);
-				$diff=date_diff($date1,$date2);
-				$extra_date = $diff->format("%a");
-				return $extra_date;
-			}else{
-				return 0;
+					if ($today_date > $next_due_date) {
+						$date1=date_create($next_due_date);
+						$date2=date_create($today_date);
+						$diff=date_diff($date1,$date2);
+						$extra_date = $diff->format("%a");
+						return $extra_date;
+					}else{
+						return 0;
+					}
+				}
 			}
 		}else{
 			return 0;
