@@ -384,20 +384,20 @@ class ExamController extends Controller
                 $after_explode_class = explode('-', $class);
 
                 if ($after_explode_class[1] === 'class') {
-                    $submitted_exams_detail = SubmitExam::where('user_id', Auth::user()->id)
-                        ->where('arrange_exams.class', $after_explode_class[0])
-                        ->where('arrange_exams.subject', $request->subject)
-                        ->join('arrange_exams', 'submit_exams.exam_id', '=', 'arrange_exams.id')
-                        ->orderBy('submit_exams.created_at', 'DESC')
-                        ->get();
+                    $submitted_exams_detail =  ArrangeExam::
+                                                where('arrange_exams.class',$after_explode_class[0])
+                                            ->where('arrange_exams.subject', $request->subject)
+                                            ->join('results','results.exam_id','=','arrange_exams.id')
+                                            ->orderBy('results.created_at', 'DESC')
+                                            ->get();
                 }
                 if ($after_explode_class[1] === 'group') {
-                    $submitted_exams_detail = SubmitExam::where('user_id', Auth::user()->id)
-                        ->where('arrange_exams.group_id', $after_explode_class[0])
-                        ->where('arrange_exams.subject', $request->subject)
-                        ->join('arrange_exams', 'submit_exams.exam_id', '=', 'arrange_exams.id')
-                        ->orderBy('submit_exams.created_at', 'DESC')
-                        ->get();
+                    $submitted_exams_detail =  ArrangeExam::
+                                            where('arrange_exams.class',$after_explode_class[0])
+                                        ->where('arrange_exams.subject', $request->subject)
+                                        ->join('results','results.exam_id','=','arrange_exams.id')
+                                        ->orderBy('results.created_at', 'DESC')
+                                        ->get();
                 }
             }
         }

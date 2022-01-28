@@ -27,4 +27,9 @@ class ArrangeExam extends Model
     {
         return $this->belongsTo(Classes::class,'class');
     }
+
+    public function user_details()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
