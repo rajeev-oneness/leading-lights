@@ -120,7 +120,7 @@
                         </div>
                         <p>the software is compatible to PC, Android and iOS so our services are accessible to one and all.
                         </p>
-                        <a href="#" class="btn btn-add">Join Now</a>
+                        {{-- <a href="#" class="btn btn-add">Join Now</a> --}}
                     </div>
 
                 </div>
@@ -300,7 +300,7 @@
                     <div class="row m-0">
                         @foreach ($flash_courses as $course)
                             <div class="col-12 col-lg-4 mb-3 pl-1 pr-1">
-                                <a href="">
+                                <a href="{{ route('flash_course_details',$course->id) }}">
                                     <div class="item">
                                         <div class="features-box">
                                             <div class="">

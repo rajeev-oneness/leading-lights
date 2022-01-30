@@ -19,11 +19,13 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 // use App\Http\Controllers\Admin\Notification;
 use App\Http\Controllers\Admin\Notification;
+use Illuminate\Support\Facades\Notification as systemNotification;
 use App\Models\Certificate, App\Models\Fee;
 use App\Models\CheckClassOrCourceRegistration;
 use App\Models\Course;
 use App\Models\OtherPaymentDetails;
 use App\Models\Video;
+use App\Notifications\WelcomeMailForPaidUsers;
 use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Notification as FacadesNotification;
@@ -121,10 +123,10 @@ class RegisterController extends Controller
             );
             if (isset($data['special_course_ids'])) {
                 $special_course_ids = implode(',', $data['special_course_ids']);
-                $admission_type = 1;
+                $admission_type = 2;
             } else {
                 $special_course_ids = null;
-                $admission_type = 2;
+                $admission_type = 1;
             }
 
             $user = new User();
@@ -136,10 +138,11 @@ class RegisterController extends Controller
             $user->dob = $data['dob'];
             $user->class = $data['class'];
             $user->gender = $data['gender'];
-            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
+            $user->password = Hash::make($id_no);
             $user->image = $imageName;
             $user->special_course_ids = $special_course_ids;
             $user->country_code = $data['country_code'];
+            $user->registration_type = $admission_type;
             $user->save();
 
             $user_id = $user->id;
@@ -301,7 +304,7 @@ class RegisterController extends Controller
             $user->doj = $request->doj;
             $user->gender = $request->gender;
             $user->id_no = $id_no;
-            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
+            $user->password = Hash::make($id_no);
             $user->image = $imageName;
             $user->mobile = $request->mobile;
             $user->country_code = $request->country_code;
@@ -391,7 +394,7 @@ class RegisterController extends Controller
             $user->doj = $request->doj;
             $user->gender = $request->gender;
             $user->id_no = $id_no;
-            $user->password = Hash::make($id_no.date('Y-m-d H:i:s'));
+            $user->password = Hash::make($id_no);
             $user->image = $imageName;
             $user->mobile = $request->mobile;
             $admin_details = User::select('email')->where('role_id', 1)->first();
@@ -480,15 +483,16 @@ class RegisterController extends Controller
                 $s_course = Course::where('id', $request['class'])->first();
                 $course_start_date = $s_course->start_date;
                 if ($s_course) {
-                    $next_date = date('Y-m-01',strtotime($course_start_date));
-                    $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                    // $next_date = date('Y-m-01',strtotime($course_start_date));
+                    // $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
                     $feedata[] = [
                         'user_id' => $user->id,
                         'class_id' => 0,
-                        'course_id' => $s_course->id,
-                        'fee_type' => 'course_fee',
-                        'due_date' => $next_due_date,
-                        'payment_month' => date("F",strtotime($course_start_date)),
+                        'course_id' => 0,
+                        'flash_course_id' => $s_course->id,
+                        'fee_type' => 'flash_course_fee',
+                        // 'due_date' => $next_due_date,
+                        'payment_month' => date("F"),
                         'amount' => $s_course->fees,
                     ];
                 }
@@ -525,7 +529,7 @@ class RegisterController extends Controller
         }
     }
 
-    // Flash Course Wise registration
+    // Paid video subscription
     public function video_subscription(Request $request,$id)
     {
         if ($request->method() == 'GET') {
@@ -541,9 +545,9 @@ class RegisterController extends Controller
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'dob' => ['required', 'date'],
                 'gender' => ['required'],
-                'image' => 'required| mimes:png,jpg,jpeg',
+                // 'image' => 'required| mimes:png,jpg,jpeg',
                 'mobile' => ['required'],
-                'certificate' => ['required', 'mimes:pdf']
+                // 'certificate' => ['required', 'mimes:pdf']
             ]);
             DB::beginTransaction();
         try {
@@ -552,7 +556,7 @@ class RegisterController extends Controller
             $id_no = 'LLST' . $num_padded;
 
             $image = $request['image'];
-            $imageName = imageUpload($image, 'profile_image');
+            // $imageName = imageUpload($image, 'profile_image');
 
             // Store student details
             $user = new User();
@@ -564,7 +568,7 @@ class RegisterController extends Controller
             $user->dob = $request['dob'];
             $user->gender = $request['gender'];
             $user->password = Hash::make($id_no);
-            $user->image = $imageName;
+            // $user->image = $imageName;
             $user->video_id = $request['class'];
             $user->registration_type = 4;
             $user->country_code = $request['country_code'];
@@ -573,6 +577,8 @@ class RegisterController extends Controller
             $user->save();
 
             $user_id = $user->id;
+
+            systemNotification::route('mail', $user->email)->notify(new WelcomeMailForPaidUsers($user));
             createNotification($user_id, 0, 0, 'student_registration');
 
             // Fee generate
@@ -583,9 +589,10 @@ class RegisterController extends Controller
                     $feedata[] = [
                         'user_id' => $user->id,
                         'class_id' => 0,
-                        'course_id' => $video_details->id,
-                        'fee_type' => 'course_fee',
-                        'payment_month' => date("F",strtotime(date('Y-m-d'))),
+                        'course_id' => 0,
+                        'paid_video_id' => $video_details->id,
+                        'fee_type' => 'paid_video_fee',
+                        'payment_month' => date("F"),
                         'amount' => $video_details->amount,
                     ];
                 }
@@ -596,11 +603,11 @@ class RegisterController extends Controller
             }
 
             //Store certificate
-            $certificate_image =  imageUpload($request['certificate'], 'student_certificate');
-            $certificate = new Certificate();
-            $certificate->user_id = $user->id;
-            $certificate->image = $certificate_image;
-            $certificate->save();
+            // $certificate_image =  imageUpload($request['certificate'], 'student_certificate');
+            // $certificate = new Certificate();
+            // $certificate->user_id = $user->id;
+            // $certificate->image = $certificate_image;
+            // $certificate->save();
 
             // $admin_details = User::select('email')->where('role_id', 1)->first();
             // $admin_email = $admin_details['email'];
@@ -616,6 +623,7 @@ class RegisterController extends Controller
             DB::commit();
             return redirect()->route('login')->with('success', 'Your registration is successful, now you can login');
         } catch (Exception $e) {
+            dd($e);
             DB::rollback();
             return 0;
         }

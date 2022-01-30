@@ -65,7 +65,7 @@ class WelcomeMail extends Notification
                     ->line('You can now access leading light web portal.')
                     ->line('Your login credential is: ')
                     ->line('User id : '.$this->user['email'])
-                    ->line('Password : '.$this->user['id_no'].$this->user['created_at'])
+                    ->line('Password : '.$this->user['id_no'])
                     ->action('Login', $url)
                     ->line('Thank you for using our application!');
     }

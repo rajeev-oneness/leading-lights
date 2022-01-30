@@ -35,4 +35,12 @@ Route::group(['middleware' => ['payment.confirm']], function () {
         Route::get('courses/available_courses', [UserController::class, 'availableCourses'])->name('available_courses');
         Route::post('courses/add-courses', [UserController::class, 'addCourses'])->name('add_courses');
         Route::post('courses/checkout', [UserController::class, 'checkoutCourses'])->name('checkout_courses');
+
+        // Video Management
+        Route::get('video/available-video',[VideoController::class,'index'])->name('available_video');
+        Route::post('video/add-video',[VideoController::class,'store'])->name('add_video');
+
+        // Flash Course Management
+        Route::get('flash-courses/available_courses', [CourseController::class, 'availableFlashCourses'])->name('available_flash_courses');
+        Route::post('flash-courses/add-courses', [CourseController::class, 'addFlashCourses'])->name('add_flash_courses');
 });

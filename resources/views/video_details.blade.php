@@ -41,7 +41,6 @@
                         <div class="fea_list">
                             <p>
                                 {!! $videoDetails->description !!}
-                                <!--{{ $videoDetails->description }}-->
                             </p>
                         </div>
                         @if ($videoDetails->video_type == 1)

@@ -245,6 +245,16 @@
         new WOW().init();
     });
 </script>
+<script type="text/javascript">
+    var vsid = "kc22528471f10a6";
+    (function() { 
+    var vsjs = document.createElement('script'); vsjs.type = 'text/javascript'; vsjs.async = true; vsjs.setAttribute('defer', 'defer');
+     vsjs.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.leadchatbot.com/vsa/chat.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(vsjs, s);
+    })();
+   </script>
+   
+   
 </body>
 
 </html>

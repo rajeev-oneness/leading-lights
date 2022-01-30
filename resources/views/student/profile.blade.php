@@ -30,7 +30,7 @@
                                     <label>DOB :</label>
                                 </div>
                                 <div class="col-md-6 col-7">
-                                    <p id="dob">{{ Auth::user()->dob ? Auth::user()->dob : 'N/A' }}</p>
+                                    <p id="dob">{{ Auth::user()->dob ? date('d-F-Y',strtotime( Auth::user()->dob)) : 'N/A' }}</p>
                                 </div>
                                 <div class="col-md-2">
                                 </div>
@@ -53,6 +53,7 @@
                                 <div class="col-md-2">
                                 </div>
                             </div>
+                            @if (Auth::user()->registration_type != 4)
                             <div class="row">
                                 <div class="col-md-4 col-5">
                                     <label>Class :</label>
@@ -96,6 +97,7 @@
                                     <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> -->
                                 </div>
                             </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-4 col-5">
                                     <label>Student Id :</label>

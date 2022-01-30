@@ -1,3 +1,21 @@
+.swal2-icon-content img{
+  width: 110px;
+}
+.swal2-popup{
+  width: 22em !important;;
+}
+.swal2-popup .swal2-title{
+  font-size: 1.2em;
+}
+.swal2-html-container{
+  font-size: 14px;
+}
+.swal2-icon-show{
+  margin-top: 0 !important;
+}
+.swal2-icon .swal2-error .swal2-icon-show{
+  display: none !important;
+}
 .course-box h4{
     font-size: 18px;
     font-weight: 600;

@@ -86,6 +86,14 @@
                         <i class="metismenu-icon fa fa-book"></i>Join New Course
                     </a>
                 </li>
+                @if (Auth::user()->registration_type == 3)
+                <li class="{{ Request::is('user/flash-courses*') ? 'mm-active' : '' }}">
+                    <a href="{{ route('user.available_flash_courses') }}">
+                        <i class="metismenu-icon fa fa-book"></i>Join New Flash Course
+                    </a>
+                </li>
+                @endif
+                
                 @endif
                 @endif
                 <li class="{{ Request::is('user/payment') ? 'mm-active' : '' }}">
@@ -96,9 +104,14 @@
                 
                 @if (Auth::user()->status == 1)
                     @if (Auth::user()->registration_type == 4 && $checkPaymentStatus == 1)
+                        <li class="{{ Request::is('user/video*') ? 'mm-active' : '' }}">
+                            <a href="{{ route('user.available_video') }}">
+                                <i class="metismenu-icon fa fa-video"></i>More Videos
+                            </a>
+                        </li>
                         <li class="{{ Request::is('user/testimonial') ? 'mm-active' : '' }}">
                             <a href="{{ route('user.testimonial') }}">
-                                <i class="metismenu-icon fa fa-cog"></i>Testimonial
+                                <i class="metismenu-icon fa fa-quote-left"></i>Testimonial
                             </a>
                         </li>
                         <li class="{{ Request::is('user/change-password') ? 'mm-active' : '' }}">
@@ -110,7 +123,7 @@
                     @if(Auth::user()->registration_type != 4)
                         <li class="{{ Request::is('user/testimonial') ? 'mm-active' : '' }}">
                             <a href="{{ route('user.testimonial') }}">
-                                <i class="metismenu-icon fa fa-cog"></i>Testimonial
+                                <i class="metismenu-icon fa fa-quote-left"></i>Testimonial
                             </a>
                         </li>
                         <li class="{{ Request::is('user/change-password') ? 'mm-active' : '' }}">

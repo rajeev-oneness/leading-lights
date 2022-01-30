@@ -31,5 +31,6 @@ Route::post('announcement/store', [HRController::class, 'announcementUpload'])->
 // ------------------------Student Galary--------------------------
 Route::any('student-galary', [HRController::class, 'studentGalary'])->name('student_galary');
 
-// -----------------------Notice----------------------------
-Route::any('download_report', [HRController::class, 'downloadReport'])->name('download_report');
+// -----------------------Report----------------------------
+Route::any('student-report', [ReportController::class, 'index'])->name('student_report');
+Route::any('student-report/details', [ReportController::class, 'report_details'])->name('report_details');

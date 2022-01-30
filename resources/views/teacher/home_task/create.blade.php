@@ -182,10 +182,10 @@
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
                 text: "To upload this home task!",
-                icon: 'warning',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, SUBMIT it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {

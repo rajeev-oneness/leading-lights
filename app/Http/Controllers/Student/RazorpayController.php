@@ -7,6 +7,7 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Models\SpecialCourse;
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\Fee;
 use App\Models\OtherPaymentDetails;
 use App\Models\User, DB;
@@ -50,11 +51,18 @@ class RazorpayController extends Controller
                                 $course = \App\Models\SpecialCourse::where('id', $fee->course_id)->first();
 
                                 $user_details = User::find($fee->user_id);
-                                $all_available_courses_ids = explode(',', $user->special_course_ids);
-                                if (!in_array($course->id, $all_available_courses_ids)) {
-                                    $user_details->special_course_ids = $user_details->special_course_ids . ','. $course->id;
+                                if ($user_details->special_course_ids == '') {
+                                    $user_details->special_course_ids = $course->id;
                                     $user_details->save();
                                 }
+                                else{
+                                    $all_available_courses_ids = explode(',', $user->special_course_ids);
+                                    if (!in_array($course->id, $all_available_courses_ids)) {
+                                        $user_details->special_course_ids = $user_details->special_course_ids . ','. $course->id;
+                                        $user_details->save();
+                                    }
+                                }
+                                
 
                                 $next_date = date('Y-m-d',strtotime($course->start_date.'first day of +1 month'));
                                 $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
@@ -69,7 +77,24 @@ class RazorpayController extends Controller
                         if (Auth::user()->registration_type == 3) {
                             $paymentCount = Fee::where('user_id',Auth::user()->id)->count();
 
-                            if ($paymentCount > 1) {
+                            if ($paymentCount > 1 && $fee->flash_course_id > 0) {
+                                $course = Course::where('id', $fee->flash_course_id)->first();
+
+                                $user_details = User::find($fee->user_id);
+                                if ($user_details->flash_course_id	 == '') {
+                                    $user_details->flash_course_id	 = $course->id;
+                                    $user_details->save();
+                                }
+                                else{
+                                    $all_available_courses_ids = explode(',', $user->flash_course_id);
+                                    if (!in_array($course->id, $all_available_courses_ids)) {
+                                        $user_details->flash_course_id	 = $user_details->flash_course_id	 . ','. $course->id;
+                                        $user_details->save();
+                                    }
+                                }
+                            }
+
+                            if ($paymentCount > 1 && $fee->flash_course_id == 0) {
                                 $course = SpecialCourse::where('id', $fee->course_id)->first();
 
                                 $user_details = User::find($fee->user_id);
@@ -99,10 +124,11 @@ class RazorpayController extends Controller
                             $paymentCount = Fee::where('user_id',Auth::user()->id)->count();
 
                             if ($paymentCount > 1) {
-                                $course = Video::where('id', $fee->course_id)->first();
+                                $video = Video::where('id', $fee->paid_video_id)->first();
+                                // dd($video);
 
                                 $user_details = User::find($fee->user_id);
-                                $user_details->video_id = $course->id;
+                                $user_details->video_id = $user_details->video_id .','. $video->id;
                                 $user_details->save();
                                 // if ($user_details->special_course_ids == '') {
                                 //     $user_details->special_course_ids = $course->id;
@@ -118,10 +144,10 @@ class RazorpayController extends Controller
 
                                 // $next_date = date('Y-m-d',strtotime($course->start_date.'first day of +1 month'));
                                 // $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
-                                if ($course) {
-                                    $feeType = 'course_fee';
-                                    $amount = $course->amount;
-                                    $newFee = true;
+                                if ($video) {
+                                    $feeType = 'paid_video_fee';
+                                    $amount = $video->amount;
+                                    $newFee = false;
                                 }
                             }
 
@@ -134,7 +160,7 @@ class RazorpayController extends Controller
                             $newFee->course_id = $fee->course_id;
                             $newFee->fee_type = $feeType;
                             $newFee->due_date = date("Y-m-d", strtotime("+1 month", strtotime($fee->due_date)));
-                            // $newFee->due_date = $next_due_date;
+                            $newFee->due_date = $next_due_date;
                             $newFee->payment_month = date("F");
                             $newFee->amount = $amount;
                             $newFee->save();

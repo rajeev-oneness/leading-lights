@@ -221,10 +221,10 @@
                 text: `Your time is over,
                 please submit your answer sheet.
                 Otherwise your answer won't be reflect`,
-                icon: 'warning',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, SUBMIT it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -286,10 +286,10 @@
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
                 text: "To save your answer!",
-                icon: 'warning',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, SAVE it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -336,19 +336,16 @@
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
                 text: "To submit your answer sheet!",
-                icon: 'warning',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, SUBMIT it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
                     event.preventDefault();
                     document.getElementById('is_user_submitted').value = "1";
                     document.getElementById('examForm').submit();
-                    setTimeout(() => {
-                        window.location.href = "{{ route('user.exam.index') }}";
-                    }, 4000);
                 } else if (
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel

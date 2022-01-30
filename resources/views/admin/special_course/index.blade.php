@@ -108,10 +108,10 @@
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure to send an email to all the users?',
                 text: "You won't be able to revert this!",
-                icon: 'warning',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, send it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {

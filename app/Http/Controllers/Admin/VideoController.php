@@ -128,10 +128,13 @@ class VideoController extends Controller
         // Paid Video
         if($request->hasFile('paid_video')){
             $image = $request->file('paid_video');
-            $video_name = explode('/', $video->paid_video)[2];
-            if(File::exists('upload/video/'.$video_name)) {
-                File::delete('upload/video/'.$video_name);
+            if ($video->paid_video) {
+                $video_name = explode('/', $video->paid_video)[2];
+                if(File::exists('upload/video/'.$video_name)) {
+                    File::delete('upload/video/'.$video_name);
+                }
             }
+           
             $paidVideoName = imageUpload($image,'video');
         }else{
             $paidVideoName = $video->paid_video;

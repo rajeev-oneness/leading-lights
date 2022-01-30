@@ -14,7 +14,7 @@
                         </div>
                         <div class="col-lg-7 form-div wow fadeInRight">
                             <div class="heading">
-                                <h1>Admission Now :)</h1>
+                                <h1>Video Subscription :)</h1>
                             </div>
                             <form class="cd-form" method="POST" action="{{ route('video_subscription',$video_id) }}"
                                 enctype="multipart/form-data" id="registrationForm">
@@ -129,7 +129,7 @@
                                     </div>
 
                                 </div>
-                                <div class="form-row">
+                                {{-- <div class="form-row">
                                     <div class="form-group col-sm-6">
                                         <label for="image"><b>Upload Profile Picture</b> <span
                                                 class="text-danger">*</span></label>
@@ -153,7 +153,7 @@
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="form-row mt-2">
                                     <div class="form-group col-sm-12">
                                         <button class="btn btn-login mt-2 float-right" type="submit"
@@ -191,9 +191,9 @@
                 gender = $('[name="gender"]').val(),
                 dob = $('[name="dob"]').val(),
                 class_id = $('[name="class"]').val(),
-                class_wise = $('#class_wise').val(),
-                image = $('[name="image"]').val(),
-                certificate = $('[name="certificate"]').val();
+                class_wise = $('#class_wise').val();
+                // image = $('[name="image"]').val(),
+                // certificate = $('[name="certificate"]').val();
             if (!first_name) {
                 $('[name="first_name"]').next('.error').fadeIn(100);
                 errorFlagOne = 1;
@@ -256,33 +256,33 @@
                     errorFlagOne = 1;
             }
 
-            if (!image) {
-                $('#img_err').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('#img_err').fadeOut(100);
-            }
+            // if (!image) {
+            //     $('#img_err').fadeIn(100);
+            //     errorFlagOne = 1;
+            // } else {
+            //     $('#img_err').fadeOut(100);
+            // }
 
-            var allowedImageExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-            if (!allowedImageExtensions.exec(image) && image != '') {
-                $('#img_err').html(
-                    'Please upload file having jpg,jpeg and png extensions').fadeIn(100);
-                errorFlagOne = 1;
-            }
+            // var allowedImageExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+            // if (!allowedImageExtensions.exec(image) && image != '') {
+            //     $('#img_err').html(
+            //         'Please upload file having jpg,jpeg and png extensions').fadeIn(100);
+            //     errorFlagOne = 1;
+            // }
 
-            if (!certificate) {
-                $('#doc_err').fadeIn(100);
-                errorFlagOne = 1;
-            } else {
-                $('#doc_err').fadeOut(100);
-            }
+            // if (!certificate) {
+            //     $('#doc_err').fadeIn(100);
+            //     errorFlagOne = 1;
+            // } else {
+            //     $('#doc_err').fadeOut(100);
+            // }
 
-            var allowedExtensions = /(\.pdf)$/i;
-            if (!allowedExtensions.exec(certificate) && certificate != '') {
-                $('#doc_err').html(
-                    'Please upload file having pdf extensions').fadeIn(100);
-                errorFlagOne = 1;
-            }
+            // var allowedExtensions = /(\.pdf)$/i;
+            // if (!allowedExtensions.exec(certificate) && certificate != '') {
+            //     $('#doc_err').html(
+            //         'Please upload file having pdf extensions').fadeIn(100);
+            //     errorFlagOne = 1;
+            // }
 
             if (errorFlagOne == 1) {
                 return false;
