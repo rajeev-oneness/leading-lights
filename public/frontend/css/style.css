@@ -361,7 +361,7 @@ li.nav-item a:hover {
     text-align: center;
     line-height: 56px;
     font-size: 38px;
-    padding: 12px;
+    /* padding: 12px; */
     color: #fff;
     -webkit-box-shadow: 0px -1px 5px 9px rgba(0, 0, 0, 0.38);
     box-shadow: 0px -1px 5px 9px rgba(0, 0, 0, 0.38);
