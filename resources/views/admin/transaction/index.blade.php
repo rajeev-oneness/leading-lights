@@ -34,11 +34,11 @@
                                 <th>Serial No</th>
                                 <th>Name</th>
                                 <th>Student Id</th>
-                                <th>Invoice No</th>
+                                <th>Transaction Id</th>
                                 <th>Payment method</th>
                                 <th>Amount</th>
                                 <th class="text-center">Status</th>
-                                <th style="width:100px">Action</th>
+                                {{-- <th style="width:100px">Action</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -50,17 +50,17 @@
                                     @endphp
                                     <td>{{ $user_details->first_name . ' ' . $user_details->last_name }}</td>
                                     <td>{{ $user_details->id_no }}</td>
-                                    <td>{{ $payment->invoice_no }}</td>
-                                    <td>{{ $payment->payment_method }}</td>
+                                    <td>{{ $payment->transaction_details->transactionId }}</td>
+                                    <td>{{ $payment->transaction_details->method }}</td>
                                     <td>{{ $payment->amount }}</td>
                                     <td>
-                                        @if ($payment->status == 1)
-                                            <span class="badge badge-success">Approved</span>
+                                        @if ($payment->transaction_details->status == 'captured')
+                                            <span class="badge badge-success">Success</span>
                                         @else
                                             <span class="badge badge-warning">Pending</span>
                                         @endif
                                     </td>
-									<td>
+									{{-- <td>
 										<a href="javascript:void(0);" class="ml-2" data-toggle="modal"
                                             data-target="#exampleModal" onclick="deleteForm({{ $payment->id }})"><i
                                                 class="far fa-trash-alt text-danger"></i></a>
@@ -69,7 +69,7 @@
                                             @csrf
                                             @method('DELETE')
                                         </form>
-									</td>
+									</td> --}}
                                 </tr>
                             @endforeach
                         </tbody>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Fee;
 use App\Models\OtherPaymentDetails;
 use App\Models\Payment;
 use App\Models\Transaction;
@@ -17,7 +18,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $all_payments = Payment::latest()->get();
+        $all_payments = Fee::where('transaction_id','>',0)->latest()->get();
         return view('admin.transaction.index',compact('all_payments'));
     }
 
