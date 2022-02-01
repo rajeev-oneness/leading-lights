@@ -11,7 +11,14 @@ class CourseController extends Controller
     public function availableFlashCourses(Request $request)
     {
         $user = $request->user();
-        $courses = Course::latest()->get();
+        if ($user->flash_course_id) {
+            if ($user->flash_course_id != '') {
+                $user_courses = explode(',', $user->flash_course_id);
+                $courses = Course::whereNotIn('id', $user_courses)->latest()->get();
+            }
+        }else{
+            $courses = Course::latest()->get();
+        }
         return view('student.new_flash_course', compact('courses'));
     }
 
