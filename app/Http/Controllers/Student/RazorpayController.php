@@ -62,7 +62,7 @@ class RazorpayController extends Controller
                                         $user_details->save();
                                     }
                                 }
-                                
+
 
                                 $next_date = date('Y-m-d',strtotime($course->start_date.'first day of +1 month'));
                                 $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
@@ -159,8 +159,12 @@ class RazorpayController extends Controller
                             $newFee->class_id = $fee->class_id;
                             $newFee->course_id = $fee->course_id;
                             $newFee->fee_type = $feeType;
-                            $newFee->due_date = date("Y-m-d", strtotime("+1 month", strtotime($fee->due_date)));
-                            $newFee->due_date = $next_due_date;
+                            if ($fee->fee_type == 'class_fee' || $fee->fee_type == 'course_fee') {
+                                $newFee->due_date = date("Y-m-d", strtotime("+1 month", strtotime($fee->due_date)));
+                            }
+                            if ($fee->fee_type == 'admission_fee') {
+                                $newFee->due_date = $next_due_date;
+                            }
                             $newFee->payment_month = date("F");
                             $newFee->amount = $amount;
                             $newFee->save();
