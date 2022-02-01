@@ -87,7 +87,7 @@
                 class="{{ Request::is('admin/exams*') ? 'active' : '' }}">
                 <a href="{{ route('admin.exams.index') }}"><i class="fas fa-chalkboard"></i>Manage
                     Exams</a></li>
-            <li><a href="#"><i class="fa fa-file" aria-hidden="true"></i>Report Generation</a></li>
+            {{-- <li><a href="{{ route('admin.report.index') }}"><i class="fa fa-file" aria-hidden="true"></i>Report Generation</a></li> --}}
             <li
                 class="{{ Request::is('admin/notice*') ? 'active' : '' }}">
                 <a href="{{ route('admin.notice.index') }}"><i class="fa fa-newspaper-o"></i></i>News
@@ -130,25 +130,14 @@
             </li>
             <li><a href="#"><i class="fas fa-user-graduate" aria-hidden="true"></i>PTM Schedule Management</a></li>
             <li>
-                {{-- <a href="{{ route('admin.logout') }}"
-                onclick="event.preventDefault();
-                document.getElementById('logout-form').submit();">
-                <i class="fas fa-sign-out-alt"></i> {{ __('Logout') }}
+                <a href="{{ route('logout') }}" onclick="event.preventDefault();
+                                    document.getElementById('logout-form').submit();">
+                    <i class="fa fa-sign-out-alt" aria-hidden="true"></i>{{ __('Logout') }}
                 </a>
-
-                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
-                    class="d-none">
-                    @csrf
-                </form> --}}
-                <a class="btn-pill btn-shadow btn-shine btn btn-focus" href="{{ route('logout') }}"
-                    onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
-                    {{ __('Logout') }}
-                </a>
-
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
+            </li>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
             </li>
         </ul>
     </nav>
