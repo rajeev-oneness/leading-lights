@@ -80,7 +80,7 @@
                                                     @if (Auth::user()->registration_type == 4)
                                                             One Time Payment
                                                     @endif
-                                                    
+
                                             </span>
                                             </td>
                                             @if (Auth::user()->registration_type != 3 && Auth::user()->registration_type != 4)
@@ -212,7 +212,7 @@
                                                     }
                                                     // echo $feeType. ' ('.getNameofClassOrCourse($duePayment).')';
 
-                                                    $user_id = $duePayment->user_id;
+                                                    $user_id = $successPayment->user_id;
                                                     $class_id = $successPayment->class_id;
                                                     $course_id = $successPayment->course_id;
                                                     $flash_course_id = $successPayment->flash_course_id;
@@ -224,7 +224,7 @@
                                                         </span>
                                                     @endif
                                                     @if(Auth::user()->registration_type != 4)
-                                                        {{ $feeType }} 
+                                                        {{ $feeType }}
                                                         <span class="badge badge-info">
                                                             @if (Auth::user()->registration_type == 3)
                                                                 @if ($flash_course_id >  0)
@@ -237,7 +237,7 @@
                                                             @endif
                                                         </span>
                                                     @endif
-                                                </span>   
+                                                </span>
                                             </td>
                                             <td>{{ date('d-F-y',strtotime($successPayment->updated_at)) }}</td>
                                             <td>&#x20B9;{{$successPayment->amount}}</td>
@@ -254,7 +254,7 @@
                                                         $file_extension= explode('.',$file_path)[1];
                                                     @endphp
                                                     <a class="mb-2 mr-2 btn-pill btn btn-info btn-lg" href="{{ asset($file_path) }}" download><i class="fa fa-download mr-2"></i>Download Video</a>
-                                                @else  
+                                                @else
                                                     <a class="mb-2 mr-2 btn-pill btn btn-info btn-lg" href="{{ route('user.payment_receipt', $successPayment->id) }}"><i class="fa fa-download mr-2"></i>Download Receipt</a>
                                                 @endif
                                             </td>

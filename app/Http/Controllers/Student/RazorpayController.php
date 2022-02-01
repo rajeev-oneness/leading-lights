@@ -92,6 +92,7 @@ class RazorpayController extends Controller
                                         $user_details->save();
                                     }
                                 }
+                                $newFee = false;
                             }
 
                             if ($paymentCount > 1 && $fee->flash_course_id == 0) {
