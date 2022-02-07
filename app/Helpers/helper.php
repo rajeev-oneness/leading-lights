@@ -231,6 +231,8 @@ function createNotification($user, $class = 0, $group = 0, $type)
 				'title' => $title,
 				'message' => $message,
 				'route' => $route,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
 			];
 		}
 	} elseif ($group > 0) {
@@ -244,6 +246,8 @@ function createNotification($user, $class = 0, $group = 0, $type)
 				'title' => $title,
 				'message' => $message,
 				'route' => $route,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
 			];
 		}
 	} else {
@@ -255,6 +259,8 @@ function createNotification($user, $class = 0, $group = 0, $type)
 			'title' => $title,
 			'message' => $message,
 			'route' => $route,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
 		];
 	}
 	if (count($notification) > 0) {
