@@ -242,7 +242,7 @@
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
-                icon: 'warning',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, APPROVE it!',
                 cancelButtonText: 'No, cancel!',
@@ -300,7 +300,7 @@
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
-                icon: 'warning',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, DEACTIVATE it!',
                 cancelButtonText: 'No, cancel!',
@@ -358,7 +358,7 @@
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
-                icon: 'warning',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, ACTIVATE it!',
                 cancelButtonText: 'No, cancel!',
@@ -415,7 +415,7 @@
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
-                icon: 'warning',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
                 cancelButtonText: 'No, cancel!',

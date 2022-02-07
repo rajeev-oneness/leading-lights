@@ -179,7 +179,15 @@
                                                             class=" {{ $noti->read_flag == 0 ? 'unread' : 'read' }}"
                                                             onclick="readNotification('{{ $noti->id }}', '{{ $noti->route ? route($noti->route) : '' }}')">
                                                             <p>{{ $noti->title }}
-                                                                {{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}
+                                                                @php
+                                                                if($noti->created_at == '')
+                                                                    $noti_date = date('Y-m-d H:i:s');
+                                                                else
+                                                                    $noti_date = $noti->created_at;
+                                                                @endphp
+                                                                <span class="font-weight-bold">{{ date('d-M-y',strtotime($noti_date)) }}, {{ date('h:i A',strtotime($noti_date)) }}</span>
+                                                                <!--{{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}-->
+                                                                <!--<span class="font-weight-bold">{{ date('d-M-y',strtotime($noti->created_at)) }}, {{ date('h:i A',strtotime(getAsiaTime24($noti->created_at))) }}</span>-->
                                                             </p>
                                                         </a>
 
@@ -349,8 +357,7 @@
                                                             <div class="widget-heading">
                                                                 {{ Auth::user()->first_name }}
                                                                 {{ Auth::user()->last_name }}</div>
-                                                            <div class="widget-subheading opacity-8">A short
-                                                                profile description</div>
+                                                            <div class="widget-subheading opacity-8">{{ Auth::user()->email }}</div>
                                                         </div>
                                                         <div class="widget-content-right mr-2">
 
