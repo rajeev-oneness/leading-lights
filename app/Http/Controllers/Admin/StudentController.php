@@ -54,8 +54,9 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $unique_id = $this->getCode();
-        $id_no = 'LLST' . $unique_id;
+        $student_count = User::where('role_id', 4)->count();
+        $num_padded = sprintf("%05d", ($student_count + 1));
+        $id_no = 'LLST' . $num_padded;
         $this->validate($request, [
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
@@ -68,7 +69,7 @@ class StudentController extends Controller
         $student->first_name = $request->first_name;
         $student->last_name = $request->last_name;
         $student->email = $request->email;
-        $student->password = Hash::make($id_no.date('Y-m-d H:i:s'));
+        $student->password = Hash::make($id_no);
         $student->id_no = $id_no;
         $student->class = $request->class;
         $student->role_id = 4;
@@ -76,6 +77,31 @@ class StudentController extends Controller
 
         //Send notification
         // Notification::route('mail', $request->email)->notify(new WelcomeMail($student));
+
+        // Fee generate
+        $feedata = [];
+        if($student->class > 0){
+            if (empty($data['special_course_ids'])){
+                $check_class = Classes::where('id', $student->class)->first();
+                if ($check_class) {
+                    $next_date = date('Y-m-d',strtotime('first day of +2 month'));
+                    $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                    $feedata[] = [
+                        'user_id' => $student->id,
+                        'class_id' => $check_class->id,
+                        'course_id' => 0,
+                        'fee_type' => 'admission_fee',
+                        'due_date' => $next_due_date,
+                        'payment_month' => date('F',strtotime($next_due_date)),
+                        'amount' => $check_class->monthly_fees + $check_class->admission_fees,
+                    ];
+                }
+            }
+        }
+
+        if (count($feedata) > 0) {
+            DB::table('fees')->insert($feedata);
+        }
 
         return redirect()->route('admin.students.index')->with('success', 'Student added');
     }

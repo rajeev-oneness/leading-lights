@@ -48,6 +48,10 @@
                                         id="activeAccount">Approve</a>
                                 @endif
                             @else
+                                <a href="{{ route('login') }}"
+                                class="btn btn-primary pull-right ml-2" onclick="studentLogin('{{ $student->email }}')"
+                                id="studentLogin" data-toggle="tooltip"><i class="fa fa-sign-out-alt"></i> Student Login</a>
+
                                 @if ($student->deactivated == 0)
                                     <a href="{{ route('admin.students.deactivate', $student->id) }}"
                                         class="btn btn-danger pull-right" onclick="deactivateAccount({{ $student->id }})"
@@ -479,6 +483,64 @@
                         success: function(response) {
                             if (response.data === 'rejected') {
                                 location.reload();
+                            }
+                        }
+                    })
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'This account status remain same :)',
+                        'error'
+                    )
+                }
+            })
+
+
+        }
+
+
+        // For student login
+        function studentLogin(email) {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You want to login this student profile!",
+                // icon: 'warning',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    let url = $("#studentLogin").attr('href');
+                    let data = {
+                        _token: "{{ csrf_token() }}",
+                        email: email
+                    };
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        data: data,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#studentLogin").text('Loading...')
+                        },
+                        success: function(response) {
+                            if (response.data === 'rejected') {
+                                // location.reload();
                             }
                         }
                     })
