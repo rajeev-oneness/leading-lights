@@ -72,4 +72,7 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     // Other functions for  testimonial
     Route::put('approve-testimonial', [TestimonialController::class, 'approveTestimonial'])->name('testimonial.approve');
     Route::put('reject-testimonial', [TestimonialController::class, 'rejectTestimonial'])->name('testimonial.reject');
+
+    // Student Registration filter page
+    Route::any('student-registration-filter', [StudentController::class, 'studentRegistrationFilter'])->name('students.registration.filter');
 });

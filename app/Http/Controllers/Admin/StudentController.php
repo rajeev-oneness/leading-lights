@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use App\Models\Certificate;
 use App\Models\SpecialCourse;
+use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
@@ -54,16 +55,29 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $student_count = User::where('role_id', 4)->count();
-        $num_padded = sprintf("%05d", ($student_count + 1));
-        $id_no = 'LLST' . $num_padded;
-        $this->validate($request, [
+        $validator = $request->validate([
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
             'email' => 'required|email | unique:users',
             'class' => 'required',
-        ]);
-
+        ]);        
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required |string| max:255',
+            'last_name' => 'required |string| max:255',
+            'email' => 'required|email | unique:users',
+            'class' => 'required',                   
+           ]
+       );
+       $validationError = $validator->errors();
+       if($validator->fails()){
+           return redirect()->route('admin.students.registration.filter')
+               ->withErrors($validationError)
+               ->withInput($request->all());
+       }
+        $student_count = User::where('role_id', 4)->count();
+        $num_padded = sprintf("%05d", ($student_count + 1));
+        $id_no = 'LLST' . $num_padded;
+            
         // $password = Str::random(10);
         $student = new User;
         $student->first_name = $request->first_name;
@@ -254,5 +268,16 @@ class StudentController extends Controller
             Notification::route('mail', $user->email)->notify(new AccountActivationMail($user));
             return response()->json(['success' => true,'data' => 'inactivated']);
         }
+    }
+    /**
+     * Registration Filter
+     */
+    public function studentRegistrationFilter(Request $request){
+        // dd($request->all());
+        //For regular class users
+        // if ($request->registration_type === 'regular_class') {
+            $classes = Classes::latest()->get();
+            return view('admin.student.create', compact('classes'));
+        // }
     }
 }

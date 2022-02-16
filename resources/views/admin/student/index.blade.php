@@ -20,7 +20,10 @@
             <div class="dashboard-body-content">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5>Student</h5>
-                    <a href="{{ route('admin.students.create') }}" class="actionbutton btn btn-sm">ADD STUDENT</a>
+                    {{-- <a href="{{ route('admin.students.create') }}" class="actionbutton btn btn-sm">ADD STUDENT</a> --}}
+                    <button type="button" class="actionbutton btn btn-sm" data-toggle="modal" data-target="#exampleModal">
+                        ADD STUDENT
+                      </button>
                 </div>
                 <hr>
                 @if (session('success'))
@@ -144,6 +147,7 @@
             </div>
         </div>
     </div>
+    @include('admin.student.modal.filter')
     <script>
         $(document).ready(function() {
             $('#student_table').DataTable();

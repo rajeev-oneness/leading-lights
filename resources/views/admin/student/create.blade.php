@@ -21,9 +21,10 @@
 		<div class="dashboard-body-content">
 			<h5>Add student</h5>
 			<hr>
-			<form action="{{ route('admin.students.store') }}" method="POST" enctype="multipart/form-data">
+			<form action="{{ route('admin.students.store') }}" method="POST">
 				@csrf
 				<h5 class="text-blue">Basic Information</h5>
+				<input type="hidden" name="registration_type" id="" value="regular_class">
 				<div class="row m-0 pt-3">
 					<div class="col-lg-6">
 						<div class="form-group edit-box">
