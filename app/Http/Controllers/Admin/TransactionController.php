@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classes;
 use App\Models\Fee;
+use App\Models\Group;
 use App\Models\OtherPaymentDetails;
 use App\Models\Payment;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -18,7 +21,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $all_payments = Fee::where('transaction_id','>',0)->latest()->get();
+        $all_payments = Fee::where('transaction_id','>',0)->latest('id')->get();
         return view('admin.transaction.index',compact('all_payments'));
     }
 
@@ -29,7 +32,11 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        //
+        $data = array();
+        $data['groups'] = Group::latest()->get();
+        $data['classes'] = Classes::latest()->get();
+        $data['users'] = User::where('role_id', 4)->latest()->get();
+        return view('admin.transaction.create')->with($data);
     }
 
     /**
@@ -40,7 +47,7 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -88,5 +95,20 @@ class TransactionController extends Controller
         Payment::find($id)->delete();
         OtherPaymentDetails::where('payment_id',$id)->delete();
         return redirect()->back()->with('success','Payment history is deleted');
+    }
+
+    /**
+     * Payment Due For A Specific Student
+     */
+
+    public function paymentDueForSpecificStudent(Request $request){
+        $this->validate($request,[
+            'student_id' => 'required'
+        ]);
+        $data = (object)[];
+        $data->user_id = $request->student_id;
+        $data->user_details = User::find($request->student_id);
+        $data->due_payment = Fee::where('user_id', $data->user_id)->where('transaction_id', 0)->latest('id')->get();
+        return view('admin.transaction.payment',compact('data'));
     }
 }

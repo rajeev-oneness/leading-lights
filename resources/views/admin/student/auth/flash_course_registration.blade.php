@@ -21,7 +21,7 @@
 		<div class="dashboard-body-content">
 			<h5>Add student</h5>
 			<hr>
-			<form action="{{ route('admin.students.registration.regular.class') }}" method="POST">
+			<form action="{{ route('admin.students.registration.flash.course') }}" method="POST">
 				@csrf
 				<h5 class="text-blue">Basic Information</h5>
 				<div class="row m-0 pt-3">
@@ -54,14 +54,12 @@
 					</div>
 					<div class="col-lg-6">
 						<div class="form-group edit-box">
-							<label for="class">Class<span class="text-danger">*</span></label>
-							<select name="class" id="class" class="form-control">
-								<option value="">Please select class</option>
-								@foreach ($classes as $class)
-                                            <option value="{{ $class->id }}" @if (old('class') == $class->id)
-                                                selected
-                                            @endif>{{ $class->name }}</option>
-                                @endforeach
+							<label for="class">Flash Course<span class="text-danger">*</span></label>
+							<select name="class" class="form-control" id="class_wise">
+								<option value="" selected>Select Flash Course</option>
+								@foreach ($flash_courses as $course)
+									<option value="{{ $course->id }}">{{ \Illuminate\Support\Str::limit($course->title,50) }}</option>
+								@endforeach
 							</select>
 							@if ($errors->has('class'))
 							<span style="color: red;">{{ $errors->first('class') }}</span>

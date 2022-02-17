@@ -73,9 +73,19 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::put('approve-testimonial', [TestimonialController::class, 'approveTestimonial'])->name('testimonial.approve');
     Route::put('reject-testimonial', [TestimonialController::class, 'rejectTestimonial'])->name('testimonial.reject');
 
-    // Student Registration filter page
+    // Student Registration
     Route::any('student-registration-filter', [StudentController::class, 'studentRegistrationFilter'])->name('students.registration.filter');
 
-    Route::any('student-registration/regular-class',[StudentController::class, 'studentRegistrationForRegularClass'])->name('students.registration.regular');
+    Route::any('student-registration/regular-class',[StudentController::class, 'studentRegistrationForRegularClass'])->name('students.registration.regular.class');
     Route::any('student-registration/special-course',[StudentController::class, 'studentRegistrationForSpecialCourse'])->name('students.registration.special.course');
+
+    Route::any('student-registration/flash-course',[StudentController::class, 'studentRegistrationForFlashCourse'])->name('students.registration.flash.course');
+
+    Route::any('student-registration/paid-video',[StudentController::class, 'studentRegistrationForPaidVideo'])->name('students.registration.paid.video');
+
+    //Payment for a particular student
+    Route::post('transaction/due-payment',[TransactionController::class, 'paymentDueForSpecificStudent'])->name('students.transaction.paymentDue');
+    //razorpay
+    Route::get('razorpaypayment/{feeId}/{userId}', [RazorpayController::class, 'payment'])->name('razorpaypayment');
+
 });

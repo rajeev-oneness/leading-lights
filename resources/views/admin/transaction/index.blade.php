@@ -19,6 +19,11 @@
             </div>
             <hr>
             <div class="dashboard-body-content">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5>Transaction</h5>
+                   <a href="{{ route('admin.transaction.create') }}" class="actionbutton btn btn-sm">ADD TRANSACTION</a>
+                </div>
+                <hr>
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}

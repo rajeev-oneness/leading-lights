@@ -13,7 +13,7 @@
                 @csrf --}}
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="registration_type" id="regular_class" value="regular_class"
-                onclick="window.location='{{ route('admin.students.registration.regular') }}';">
+                onclick="window.location='{{ route('admin.students.registration.regular.class') }}';">
                 <label class="form-check-label" for="regular_class">
                   Regular Class
                 </label>
@@ -26,13 +26,13 @@
                 </label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="registration_type" id="flash_course" value="flash_course">
+                <input class="form-check-input" type="radio" name="registration_type" id="flash_course" value="flash_course" onclick="window.location='{{ route('admin.students.registration.flash.course') }}';">
                 <label class="form-check-label" for="flash_course">
                   Flash Course
                 </label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="registration_type" id="paid_video" value="paid_video">
+                <input class="form-check-input" type="radio" name="registration_type" id="paid_video" value="paid_video" onclick="window.location='{{ route('admin.students.registration.paid.video') }}';">
                 <label class="form-check-label" for="paid_video">
                   Paid Video
                 </label>
