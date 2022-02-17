@@ -9,16 +9,18 @@
           </button>
         </div>
         <div class="modal-body">
-            <form action="{{ route('admin.students.registration.filter') }}" method="POST">
-                @csrf
+            {{-- <form action="{{ route('admin.students.registration.filter') }}" method="POST">
+                @csrf --}}
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="registration_type" id="regular_class" value="regular_class" checked>
+                <input class="form-check-input" type="radio" name="registration_type" id="regular_class" value="regular_class"
+                onclick="window.location='{{ route('admin.students.registration.regular') }}';">
                 <label class="form-check-label" for="regular_class">
                   Regular Class
                 </label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="registration_type" id="special_course" value="special_course">
+                <input class="form-check-input" type="radio" name="registration_type" id="special_course" value="special_course"
+                onclick="window.location='{{ route('admin.students.registration.special.course') }}';">
                 <label class="form-check-label" for="special_course">
                   Special Course
                 </label>
@@ -37,11 +39,11 @@
               </div>
             
         </div>
-        <div class="modal-footer">
+        {{-- <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary">Save changes</button>
         </div>
-    </form>
+    </form> --}}
       </div>
     </div>
   </div>

@@ -55,25 +55,12 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $request->validate([
+        $this->validate($request,[
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
             'email' => 'required|email | unique:users',
             'class' => 'required',
         ]);        
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required |string| max:255',
-            'last_name' => 'required |string| max:255',
-            'email' => 'required|email | unique:users',
-            'class' => 'required',                   
-           ]
-       );
-       $validationError = $validator->errors();
-       if($validator->fails()){
-           return redirect()->route('admin.students.registration.filter')
-               ->withErrors($validationError)
-               ->withInput($request->all());
-       }
         $student_count = User::where('role_id', 4)->count();
         $num_padded = sprintf("%05d", ($student_count + 1));
         $id_no = 'LLST' . $num_padded;
@@ -280,4 +267,82 @@ class StudentController extends Controller
             return view('admin.student.create', compact('classes'));
         // }
     }
+
+    /**
+     * Registration For Regular Class Student
+     */
+
+    public function studentRegistrationForRegularClass(Request $request){
+        if ($request->method() == 'GET') {
+           $data = array();
+           $data['classes'] = Classes::latest()->get();;
+           return view('admin.student.auth.regular_class_registration')->with($data);
+        } else if ($request->method() == 'POST') {
+            $this->validate($request,[
+                'first_name' => 'required |string| max:255',
+                'last_name' => 'required |string| max:255',
+                'email' => 'required|email | unique:users',
+                'class' => 'required',
+            ]);
+     
+            $student_count = User::where('role_id', 4)->count();
+            $num_padded = sprintf("%05d", ($student_count + 1));
+            $id_no = 'LLST' . $num_padded;
+                
+            // $password = Str::random(10);
+            $student = new User;
+            $student->first_name = $request->first_name;
+            $student->last_name = $request->last_name;
+            $student->email = $request->email;
+            $student->password = Hash::make($id_no);
+            $student->id_no = $id_no;
+            $student->class = $request->class;
+            $student->role_id = 4;
+            $student->save();
+    
+            //Send notification
+            // Notification::route('mail', $request->email)->notify(new WelcomeMail($student));
+    
+            // Fee generate
+            $feedata = [];
+            if($student->class > 0){
+                if (empty($data['special_course_ids'])){
+                    $check_class = Classes::where('id', $student->class)->first();
+                    if ($check_class) {
+                        $next_date = date('Y-m-d',strtotime('first day of +2 month'));
+                        $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                        $feedata[] = [
+                            'user_id' => $student->id,
+                            'class_id' => $check_class->id,
+                            'course_id' => 0,
+                            'fee_type' => 'admission_fee',
+                            'due_date' => $next_due_date,
+                            'payment_month' => date('F',strtotime($next_due_date)),
+                            'amount' => $check_class->monthly_fees + $check_class->admission_fees,
+                        ];
+                    }
+                }
+            }
+    
+            if (count($feedata) > 0) {
+                DB::table('fees')->insert($feedata);
+            }
+    
+            return redirect()->route('admin.students.index')->with('success', 'Student added');   
+        }
+
+    }
+
+    /**
+     * Registration For Special Course Student
+     */
+
+     public function studentRegistrationForSpecialCourse(Request $request){
+         if ($request->method() == 'GET') {
+            $data = array();
+            $data['classes'] = Classes::latest()->get();
+            $data['special_courses'] = SpecialCourse::where('class_id',null)->latest()->get();
+            return view('admin.student.auth.special_course_registration')->with($data);
+         }
+     }
 }

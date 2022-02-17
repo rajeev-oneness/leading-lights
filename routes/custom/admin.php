@@ -75,4 +75,7 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
 
     // Student Registration filter page
     Route::any('student-registration-filter', [StudentController::class, 'studentRegistrationFilter'])->name('students.registration.filter');
+
+    Route::any('student-registration/regular-class',[StudentController::class, 'studentRegistrationForRegularClass'])->name('students.registration.regular');
+    Route::any('student-registration/special-course',[StudentController::class, 'studentRegistrationForSpecialCourse'])->name('students.registration.special.course');
 });
