@@ -28,7 +28,7 @@
 							<div class="row m-0 pt-3">
 								<div class="col-lg-6">
 									<div class="form-group edit-box">
-										<label for="first_name">First Name</label>
+										<label for="first_name">First Name<span class="text-danger">*</span></label>
 										<input type="text" name="first_name" class="form-control" id="first_name" value="{{ $student->first_name }}">
 										@if ($errors->has('first_name'))
 											<span style="color: red;">{{ $errors->first('first_name') }}</span>
@@ -37,7 +37,7 @@
 								</div>
 								<div class="col-lg-6">
 									<div class="form-group edit-box">
-										<label for="last_name">Last Name</label>
+										<label for="last_name">Last Name<span class="text-danger">*</span></label>
 										<input type="text" name="last_name" class="form-control" id="last_name" value="{{ $student->last_name }}">
 										@if ($errors->has('last_name'))
 											<span style="color: red;">{{ $errors->first('last_name') }}</span>
@@ -46,7 +46,7 @@
 								</div>
 								<div class="col-lg-6">
 									<div class="form-group edit-box">
-									<label for="email">Email Address</label>
+									<label for="email">Email Address<span class="text-danger">*</span></label>
 									<input type="text" id="email" class="form-control" name="email" value="{{ $student->email }}" readonly>
 									@if ($errors->has('email'))
 											<span style="color: red;">{{ $errors->first('email') }}</span>
@@ -54,8 +54,8 @@
 								</div>
 								</div>
 								<div class="col-lg-6 form-group edit-box">
-									<label for="mobile">Mobile No</label>
-									<input type="number" id="mobile" class="form-control" value="{{ $student->mobile }}" name="mobile">
+									<label for="mobile">Mobile No<span class="text-danger">*</span></label>
+									<input type="number" id="mobile" class="form-control" value="{{ old('mobile') ?? $student->mobile }}" name="mobile">
 									@if ($errors->has('mobile'))
 										<span style="color: red;">{{ $errors->first('mobile') }}</span>
 									@endif
@@ -63,9 +63,9 @@
 							</div>
 							<div class="row m-0">
 								<div class="col-lg-6 form-group edit-box">
-									<label for="image">Date Of Birth</label>
-									<input type="date" class="form-control" id="exampleInputEmail1" placeholder="Enter date of birth" name="dob"
-									value="{{ $student->dob }}">
+									<label for="image">Date Of Birth<span class="text-danger">*</span></label>
+									<input type="text" class="form-control datepicker" id="exampleInputEmail1" placeholder="Enter date of birth" name="dob"
+									value="{{ $student->dob }}" autocomplete="off">
 									@if ($errors->has('dob'))
 									   <span style="color: red;">{{ $errors->first('dob') }}</span>
 									@endif
@@ -81,7 +81,7 @@
 								</div> --}}
 								<div class="col-lg-6">
 									<div class="form-group edit-box">
-										<label for="gender">Gender</label>
+										<label for="gender">Gender<span class="text-danger">*</span></label>
 										<select class="custom-select" id="gender" name="gender">
 										  <option disabled value="">Choose...</option>
 										  <option value="Male" @if($student->gender == 'male') selected @endif>Male</option>
@@ -93,22 +93,44 @@
 										@endif
 									  </div>
 								</div>
-								<div class="col-lg-6">
-									<div class="form-group edit-box">
-										<label for="class_wise_combo">Class</label>
-										<select name="class" id="class_wise_combo" class="form-control">
-											<option value="">Please select class</option>
-											@foreach ($classes as $class)
-												<option value="{{ $class->id }}" @if ($student->class === $class->id)
-													selected
-												@endif>{{ $class->name }}</option>
-											@endforeach
-										</select>
-										@if ($errors->has('class'))
-										<span style="color: red;">{{ $errors->first('class') }}</span>
-										@endif
+								@if ($student->registration_type == 1 || $student->registration_type == 2)
+								@if ($student->registration_type == 1)
+									<div class="col-lg-6">
+										<div class="form-group edit-box">
+											<label for="class_wise_combo">Class</label>
+											<select name="class" id="class_wise_combo" class="form-control">
+												<option value="">Please select class</option>
+												@foreach ($classes as $class)
+													<option value="{{ $class->id }}" @if ($student->class === $class->id)
+														selected
+													@endif>{{ $class->name }}</option>
+												@endforeach
+											</select>
+											@if ($errors->has('class'))
+											<span style="color: red;">{{ $errors->first('class') }}</span>
+											@endif
+										</div>
 									</div>
-								</div>
+								@elseif($student->registration_type == 2)
+									@if ($student->class)
+										<div class="col-lg-6">
+											<div class="form-group edit-box">
+												<label for="class_wise_combo">Class</label>
+												<select name="class" id="class_wise_combo" class="form-control">
+													<option value="">Please select class</option>
+													@foreach ($classes as $class)
+														<option value="{{ $class->id }}" @if ($student->class === $class->id)
+															selected
+														@endif>{{ $class->name }}</option>
+													@endforeach
+												</select>
+												@if ($errors->has('class'))
+												<span style="color: red;">{{ $errors->first('class') }}</span>
+												@endif
+											</div>
+										</div>
+									@endif
+								@endif
                                 <div class="col-lg-6">
                                     <?php
                                         //get the old values from form
@@ -125,8 +147,11 @@
 										<label for="class">Course</label>
 										<select class="special_course_ids form-control" name="special_course_ids[]"
                                             multiple="multiple" id="special_course_ids">
+											@php
+												$check_course_subscription = checkSpecialCourseSubscription($student->id);
+											@endphp
                                             <option value="">Select Courses</option>
-                                            @foreach ($special_courses as $course)
+                                            @foreach ($check_course_subscription as $course)
                                                 <option value="{{ $course->id }}"
                                                     @php
                                                         echo in_array($course->id, $ids) ? 'selected' : '';
@@ -138,9 +163,13 @@
 										@endif
 									</div>
 								</div>
+								@endif
 								<div class="col-lg-6 form-group edit-box">
 									<label for="exampleInputEmail1">Upload picture</label>
 									<input type="file" class="form-control" id="image" name="image">
+									@if ($student->image)
+										<img src="{{ asset($student->image) }}" alt="" height="50" width="50">
+									@endif
 									@if ($errors->has('image'))
 									   <span style="color: red;">{{ $errors->first('image') }}</span>
 									@endif
@@ -157,7 +186,7 @@
 									</select>
 								</div>
 							</div> --}}
-							<h5 class="text-blue">Address</h5>
+							<h5 class="text-blue">Other Information</h5>
 							<div class="row m-0 pt-3">
 								<div class="col-lg-6">
 									<div class="form-group edit-box">
@@ -173,12 +202,19 @@
 				</div>
 				</div>
 			</div>
+			<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
 <script>
     $(document).ready(function() {
         $('.special_course_ids').select2();
         var validated = false;
         $('.error').hide();
 
+    });
+	$('.datepicker').datepicker({
+		format: 'yyyy-mm-dd',
+		endDate: new Date(),
+		// daysOfWeekDisabled: [0]
     });
     $('#class_wise_combo').on('change', function() {
             let class_id = $('#class_wise_combo').val();

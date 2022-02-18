@@ -76,8 +76,19 @@
                                     </td>
                                     <td>{{ $exam->result_date }}</td>
                                     <td>
-                                        {{-- <a href="{{ route('admin.exams.show', $exam->id) }}"><i
-                                                class="far fa-eye"></i></a> --}}
+                                        @if ($exam->exam_type == 1)
+                                            <a href="{{ route('admin.viewMCQQuestion', $exam->id) }}"><i
+                                                class="fa fa-eye mr-2" data-toggle="tooltip" data-placement="top"
+                                                title="View Questions" data-toggle="modal" data-target="#examModal"></i></a>
+                                        @elseif ($exam->exam_type == 2)
+                                            <a href="{{ route('admin.viewDescQuestion', $exam->id) }}"><i
+                                                    class="fa fa-eye mr-2" data-toggle="tooltip" data-placement="top"
+                                                    title="View Questions" data-toggle="modal" data-target="#examModal"></i></a>
+                                        @else
+                                            <a href="{{ route('admin.viewMixedQuestion', $exam->id) }}"><i
+                                                    class="fa fa-eye mr-2" data-toggle="tooltip" data-placement="top"
+                                                    title="View Questions" data-toggle="modal" data-target="#examModal"></i></a>
+                                        @endif
                                         {{-- <a href="{{ route('admin.classes.edit', $class->id) }}" class="ml-2"><i
                                                 class="far fa-edit"></i></a> --}}
                                         <a href="javascript:void(0);" class="ml-2" data-toggle="modal"

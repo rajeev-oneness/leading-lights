@@ -151,16 +151,19 @@ class StudentController extends Controller
         $this->validate($request, [
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
-            'mobile' => 'max:10',
-            'dob' => 'nullable',
+            'mobile' => 'required|max:10',
+            'dob' => 'required|date|nullable',
             'address' => 'max:255',
             'image' => 'mimes:png,jpg'
+        ],[
+            'mobile.max' => 'Please enter 10 digit mobile no',
+            'dob.required' => 'Date of birth field is required'
         ]);
         $student = User::find($id);
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            if ($student->image !== 'default.png') {
+            if ($student->image !== 'default.png' && $student->image != '') {
                 $image_name = explode('/', $student->image)[2];
                 if (File::exists('upload/profile_image/' . $image_name)) {
                     File::delete('upload/profile_image/' . $image_name);
@@ -170,11 +173,14 @@ class StudentController extends Controller
         } else {
             $imageName = $student->image;
         }
+        
 
         $special_course_ids = $request->special_course_ids;
         // $group->class_id = $request->class_id;
         if ($special_course_ids) {
             $s_course_ids= implode(',', $special_course_ids);
+        }else{
+            $s_course_ids = null;
         }
 
         $student->first_name = $request->first_name;

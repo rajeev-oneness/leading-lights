@@ -53,7 +53,11 @@ class ExamController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = array();
+        $exam_details = ArrangeExam::find($id);
+        $data['exam'] = $exam_details;
+        $data['questions'] = Question::where('exam_id', $exam_details->id)->get();
+        return view('admin.exams.view')->with($data);
     }
 
     /**
@@ -106,4 +110,23 @@ class ExamController extends Controller
         }
         return redirect()->back()->with('success','Exam deleted');
     }
+
+    // View descriptive type question
+    public function viewDescQuestion(Request $request,$id){
+        $questions = Question::where('exam_id',$id)->get();
+        return view('admin.exams.desc_question_view',compact('questions'));
+    }
+
+    // View MCQ type question
+    public function viewMCQQuestion(Request $request,$id){
+        $questions = Question::where('exam_id',$id)->get();
+        return view('admin.exams.mcq_question_view',compact('questions'));
+    }
+
+    // View Mixed type question
+    public function viewMixedQuestion(Request $request,$id){
+        $questions = Question::where('exam_id',$id)->get();
+        return view('admin.exams.mixed_question_view',compact('questions'));
+    }
+    
 }

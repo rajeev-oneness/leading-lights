@@ -88,4 +88,10 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     //razorpay
     Route::get('razorpaypayment/{feeId}/{userId}', [RazorpayController::class, 'payment'])->name('razorpaypayment');
 
+
+    // Exam
+    Route::get('exam/view-desc-question/{id}',[ExamController::class,'viewDescQuestion'])->name('viewDescQuestion');
+    Route::get('exam/view-mcq-question/{id}',[ExamController::class,'viewMCQQuestion'])->name('viewMCQQuestion');
+    Route::get('exam/view-mixed-question/{id}',[ExamController::class,'viewMixedQuestion'])->name('viewMixedQuestion');
+
 });

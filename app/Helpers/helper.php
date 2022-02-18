@@ -3,6 +3,8 @@
 use App\Models\Course;
 use App\Models\Fee;
 use App\Models\Payment;
+use App\Models\SpecialCourse;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -369,3 +371,25 @@ function checkPaymentStatus($student_id)
         }
     }
 }
+
+
+/**
+ * Check specific user special course registered or not
+ */
+
+ function checkSpecialCourseSubscription($student_id){
+	$user_details = User::find($student_id);
+	$subscribe_special_course_id = $user_details->special_course_ids;
+	if ($user_details->registration_type == 1) {
+		$special_courses = SpecialCourse::where('class_id',$user_details->class)->latest()->get();
+		return $special_courses;
+	}
+	else if($user_details->registration_type == 2) {
+		if ($user_details->class) {
+			$special_courses = SpecialCourse::where('class_id',$user_details->class)->latest()->get();
+		} else {
+			$special_courses = SpecialCourse::where('class_id', null)->latest()->get();
+		}
+		return $special_courses;
+	}
+ }

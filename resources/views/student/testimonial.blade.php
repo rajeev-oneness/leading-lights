@@ -36,7 +36,7 @@
                       @csrf
                       <div class="card-body">
                         <div class="form-group">
-                          <label class="control-label">Testimonial Content<span class="text-danger">*</span> </label>
+                          <label class="control-label">Testimonial Content (Word limit 250)<span class="text-danger">*</span> </label>
                           <textarea name="content" id="content" cols="5" rows="5" class="form-control"></textarea>
                           {{-- <input type="text" class="form-control" name="content" id="content" value="{{ old('content') }}"  required /> --}}
                           @if ($errors->has('content'))

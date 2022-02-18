@@ -164,14 +164,19 @@ class UserController extends Controller
             // dd($classes);
             $special_classes = ArrangeClass::where('group_id', Auth::user()->group_ids)->where('group_id', '!=', null)->join('subjects', 'subjects.id', '=', 'arrange_classes.group_id')
                 ->get(['arrange_classes.id', 'name as title', 'date', 'start_time as description'])->toArray();
-            return response()->json(array_merge($classes, $special_classes));
+            $events = Event::where('class_id', Auth::user()->class)
+                ->orWhere('class_id',null)
+                ->latest()
+                ->get(['id', 'title', 'start_date as start', 'end_date as end','start_time as description'])->toArray();
+            return response()->json(array_merge($classes, $special_classes,  $events));
         }
-        $events = Event::where('class_id', Auth::user()->class)
+        $data = array();
+        $data['events'] = Event::where('class_id', Auth::user()->class)
                         ->orWhere('class_id',null)
                         ->latest()
                         ->get();
-        $announcements = Announcement::where('class_id', Auth::user()->class)->get();
-        return view('student.dairy', compact('events', 'announcements'));
+        $data['announcements'] = Announcement::where('class_id', Auth::user()->class)->get();
+        return view('student.dairy')->with($data);
     }
 
     public function homework(Request $request)
@@ -613,7 +618,7 @@ class UserController extends Controller
             return view('student.testimonial',compact('testimonials'));
         }else{
             $this->validate($request,[
-                'content' => 'required'
+                'content' => 'required|max:250'
             ]);
 
             $testimonial = new Testimonial();

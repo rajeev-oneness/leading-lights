@@ -185,9 +185,9 @@
                                                                 else
                                                                     $noti_date = $noti->created_at;
                                                                 @endphp
-                                                                <span class="font-weight-bold">{{ date('d-M-y',strtotime($noti_date)) }}, {{ date('h:i A',strtotime($noti_date)) }}</span>
+                                                                {{-- <span class="font-weight-bold">{{ date('d-M-y',strtotime($noti_date)) }}, {{ date('h:i A',strtotime($noti_date)) }}</span> --}}
                                                                 <!--{{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}-->
-                                                                <!--<span class="font-weight-bold">{{ date('d-M-y',strtotime($noti->created_at)) }}, {{ date('h:i A',strtotime(getAsiaTime24($noti->created_at))) }}</span>-->
+                                                                <span class="font-weight-bold">{{ date('d-M-y',strtotime($noti->created_at)) }}, {{ date('h:i A',strtotime(getAsiaTime24($noti->created_at))) }}</span>
                                                             </p>
                                                         </a>
 
