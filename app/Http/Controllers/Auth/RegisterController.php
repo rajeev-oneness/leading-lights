@@ -22,9 +22,11 @@ use App\Http\Controllers\Admin\Notification;
 use Illuminate\Support\Facades\Notification as systemNotification;
 use App\Models\Certificate, App\Models\Fee;
 use App\Models\CheckClassOrCourceRegistration;
+use App\Models\Country;
 use App\Models\Course;
 use App\Models\OtherPaymentDetails;
 use App\Models\Video;
+use App\Notifications\RegistrationSuccessMail;
 use App\Notifications\WelcomeMailForPaidUsers;
 use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -66,7 +68,10 @@ class RegisterController extends Controller
     {
         $classes = Classes::latest()->get();
         $special_courses = SpecialCourse::where('class_id',null)->latest()->get();
-        return view('auth.register', compact('classes','special_courses'));
+        $phonecodes = Country::Where('phonecode', '!=', '')
+        ->select('phonecode')
+        ->get();
+        return view('auth.register', compact('classes','special_courses','phonecodes'));
     }
     /**
      * Get a validator for an incoming registration request.
@@ -83,8 +88,8 @@ class RegisterController extends Controller
             'dob' => ['required', 'date'],
             'gender' => ['required'],
             // 'class' => ['required'],
-            'image' => 'required| mimes:png,jpg,jpeg',
-            'mobile' => ['required'],
+            'image' => ['required', 'mimes:png,jpg,jpeg'],
+            'mobile' => ['required','unique:users'],
             'certificate' => ['required', 'mimes:pdf']
         ]);
     }
@@ -138,7 +143,7 @@ class RegisterController extends Controller
             $user->dob = $data['dob'];
             $user->class = $data['class'];
             $user->gender = $data['gender'];
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make('Welcome'.date('Y'));
             $user->image = $imageName;
             $user->special_course_ids = $special_course_ids;
             $user->country_code = $data['country_code'];
@@ -231,6 +236,10 @@ class RegisterController extends Controller
                 'user_type' => 'student'
             );
             // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+            /**
+             * Notification sent to inform the registered users
+             */
+            systemNotification::route('mail', $user->email)->notify(new RegistrationSuccessMail($user));
             DB::commit();
             return $user;
         } catch (Exception $e) {
@@ -304,7 +313,7 @@ class RegisterController extends Controller
             $user->doj = $request->doj;
             $user->gender = $request->gender;
             $user->id_no = $id_no;
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make('Welcome'.date('Y'));
             $user->image = $imageName;
             $user->mobile = $request->mobile;
             $user->country_code = $request->country_code;
@@ -334,6 +343,11 @@ class RegisterController extends Controller
                 'user_type' => 'teacher'
             );
             FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+
+            /**
+             * Notification sent to inform the registered users
+             */
+            systemNotification::route('mail', $user->email)->notify(new RegistrationSuccessMail($user));
 
             return redirect()->route('teacher_login')->with('success', 'Your registration is successful, waiting for admin approval');
         }
@@ -394,7 +408,7 @@ class RegisterController extends Controller
             $user->doj = $request->doj;
             $user->gender = $request->gender;
             $user->id_no = $id_no;
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make('Welcome'.date('Y'));
             $user->image = $imageName;
             $user->mobile = $request->mobile;
             $admin_details = User::select('email')->where('role_id', 1)->first();
@@ -424,6 +438,11 @@ class RegisterController extends Controller
                 'user_type' => 'hr'
             );
             FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+
+            /**
+             * Notification sent to inform the registered users
+             */
+            systemNotification::route('mail', $user->email)->notify(new RegistrationSuccessMail($user));
 
             return redirect()->route('hr_login')->with('success', 'Your registration is successful, waiting for admin approval');
         }
@@ -467,7 +486,7 @@ class RegisterController extends Controller
             $user->id_no =  $id_no;
             $user->dob = $request['dob'];
             $user->gender = $request['gender'];
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make('Welcome'.date('Y'));
             $user->image = $imageName;
             $user->flash_course_id = $request['class'];
             $user->registration_type = 3;
@@ -520,6 +539,11 @@ class RegisterController extends Controller
                 'user_type' => 'student'
             );
             // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+
+            /**
+             * Notification sent to inform the registered users
+             */
+            systemNotification::route('mail', $user->email)->notify(new RegistrationSuccessMail($user));
             DB::commit();
             return redirect()->route('login')->with('success', 'Your registration is successful, waiting for admin approval');
         } catch (Exception $e) {
@@ -567,7 +591,7 @@ class RegisterController extends Controller
             $user->id_no =  $id_no;
             $user->dob = $request['dob'];
             $user->gender = $request['gender'];
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make('Welcome'.date('Y'));
             // $user->image = $imageName;
             $user->video_id = $request['class'];
             $user->registration_type = 4;
@@ -620,6 +644,11 @@ class RegisterController extends Controller
                 'user_type' => 'student'
             );
             // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
+
+            /**
+             * Notification sent to inform the registered users
+             */
+            systemNotification::route('mail', $user->email)->notify(new RegistrationSuccessMail($user));
             DB::commit();
             return redirect()->route('login')->with('success', 'Your registration is successful, now you can login');
         } catch (Exception $e) {

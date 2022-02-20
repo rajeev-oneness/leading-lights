@@ -1987,6 +1987,16 @@ hr.new5 {
     left: 6px;
     font-size: 12px;
 }
+.mobile-success{
+    position: absolute;
+    left: 6px;
+    font-size: 12px;
+}
+.mobile-err{
+    position: absolute;
+    left: 6px;
+    font-size: 12px;
+}
 
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {

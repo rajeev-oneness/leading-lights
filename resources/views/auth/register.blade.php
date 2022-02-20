@@ -21,9 +21,11 @@
                                 @csrf
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
-                                        <label for="first_name"><b>First Name</b><span class="text-danger">*</span> </label>
+                                        <label for="first_name"><b>First Name</b><span class="text-danger">*</span>
+                                        </label>
                                         <input class="form-control" id="first_name" name="first_name" type="text"
-                                            placeholder="" value="{{ old('first_name') }}">
+                                            placeholder="" value="{{ old('first_name') }}" 
+                                            onkeydown="return alphaOnly(event);">
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                         @error('first_name')
                                             <span class="text-danger">{{ $message }}</span>
@@ -34,7 +36,7 @@
                                     <div class="form-group col-sm-6">
                                         <label for="last_name"><b>Last Name</b><span class="text-danger">*</span></label>
                                         <input class="form-control" id="last_name" name="last_name" type="text"
-                                            placeholder="" value="{{ old('last_name') }}">
+                                            placeholder="" value="{{ old('last_name') }}" onkeydown="return alphaOnly(event);">
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                         @error('last_name')
                                             <span class="text-danger">{{ $message }}</span>
@@ -44,7 +46,8 @@
 
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
-                                        <label for="email"><b>Email address</b> <span class="text-danger">*</span></label>
+                                        <label for="email"><b>Email address</b> <span
+                                                class="text-danger">*</span></label>
                                         <input class=" form-control" type="email" name="email" id="email"
                                             value="{{ old('email') }}">
                                         <div class="error" style="color : red;">Please Fill This field.</div>
@@ -55,12 +58,10 @@
                                         <span class="text-success email-success"></span>
                                     </div>
                                     <div class="form-group col-sm-6">
-                                        <label for="mobile"><b>Phone Number</b> <span class="text-danger">*</span></label>
+                                        <label for="mobile"><b>Phone Number</b> <span
+                                                class="text-danger">*</span></label>
                                         <div class="row m-0 ">
                                             <div class="responsive-error col-6 col-lg-4 pl-0 pr-1">
-                                                <?php $phonecodes = \App\Models\Country::Where('phonecode', '!=', '')
-                                                    ->select('phonecode')
-                                                    ->get(); ?>
                                                 <select class="form-control p-1" required name="country_code"
                                                     id="country_code">
                                                     <?php if($phonecodes){?>
@@ -82,10 +83,12 @@
                                             </div>
                                             <div class="responsive-error col-6 col-lg-8 p-0">
                                                 <input class=" form-control pl-2" type="number" name="mobile" id="mobile"
-                                                    value="{{ old('mobile') }}" onkeyup="mobileValidation()">
+                                                    value="{{ old('mobile') }}">
                                                 <div class="error" style="color : red;">Please Fill This field.
                                                 </div>
                                                 <span style="color: red;" id="digit_error"></span>
+                                                <span class="text-danger mobile-err"></span>
+                                                <span class="text-success mobile-success"></span>
                                                 @error('mobile')
                                                     <span class="text-danger" id="mobile_err">{{ $message }}</span>
                                                 @enderror
@@ -99,15 +102,17 @@
                                         <label for="gender"><b>Gender</b> <span class="text-danger">*</span></label>
                                         <select name="gender" id="gender" class="form-control">
                                             <option value="">Please Select</option>
-                                            <option value="Male" @if (old('gender') == 'Male')  selected @endif>Male</option>
-                                            <option value="Female" value="Female" @if (old('gender') == 'Female')  selected @endif>Female</option>
+                                            <option value="Male" @if (old('gender') == 'Male') selected @endif>Male
+                                            </option>
+                                            <option value="Female" value="Female"
+                                                @if (old('gender') == 'Female') selected @endif>Female</option>
                                         </select>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label for=""><b>Date Of Birth</b> <span class="text-danger">*</span></label>
                                         <input class="form-control datepicker" type="text" name="dob"
-                                            value="{{ old('dob') }}">
+                                            value="{{ old('dob') }}" autocomplete="off">
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                         @error('dob')
                                             <span class="text-danger">{{ $message }}</span>
@@ -115,14 +120,15 @@
                                     </div>
                                 </div>
                                 <div class="form-row wh_class" id="first_block">
-                                    <small class="col-12 p-0 mb-2"><b>Which Class You are Applying For</b><span class="text-danger">*</span></small>
+                                    <small class="col-12 p-0 mb-2"><b>Which Class You are Applying For</b><span
+                                            class="text-danger">*</span></small>
                                     <div class="form-group col-sm-12">
                                         <select name="class" class="form-control" id="class_wise">
                                             <option value="" selected>Select Class</option>
                                             @foreach ($classes as $class)
-                                                <option value="{{ $class->id }}" @if (old('class') == $class->name)
-                                                    selected
-                                            @endif>{{ $class->name }}</option>
+                                                <option value="{{ $class->id }}"
+                                                    @if (old('class') == $class->name) selected @endif>{{ $class->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
@@ -130,15 +136,16 @@
 
                                 </div>
                                 <div class="form-row wh_class" id="second_block">
-                                    <small class="col-12 p-0 mb-2"><b>Which Course You are Applying For</b> <span class="text-danger">*</span></small>
+                                    <small class="col-12 p-0 mb-2"><b>Which Course You are Applying For</b> <span
+                                            class="text-danger">*</span></small>
                                     <div class="form-group col-sm-12">
                                         <!--<label for="">Class<span class="text-danger">*</span></label>-->
                                         <select name="class" class="form-control" id="class_wise_combo">
                                             <option value="">Select Class</option>
                                             @foreach ($classes as $class)
-                                                <option value="{{ $class->id }}" @if (old('class') == $class->name)
-                                                    selected
-                                            @endif>{{ $class->name }}</option>
+                                                <option value="{{ $class->id }}"
+                                                    @if (old('class') == $class->name) selected @endif>{{ $class->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
@@ -157,7 +164,8 @@
                                                 <option value="{{ $course->id }}">{{ $course->title }}</option>
                                             @endforeach
                                         </select>
-                                        <div class="error" style="color : red;" id="special_course_id_err">Please Fill This field.</div>
+                                        <div class="error" style="color : red;" id="special_course_id_err">Please
+                                            Fill This field.</div>
                                     </div>
 
                                 </div>
@@ -166,9 +174,10 @@
                                         <label for="image"><b>Upload Profile Picture</b> <span
                                                 class="text-danger">*</span></label>
                                         <input type="file" class="form-control upload_btn" name="image"
-                                            value="{{ old('image') }}">
-                                            <small><b>(png, jpg, jpeg only)</b></small>
-                                        <div class="error" style="color : red;" id="img_err">Please Fill This field.</div>
+                                            value="{{ old('image') }}" onchange="profilePictureValidation()">
+                                        <small><b>(png, jpg, jpeg only)</b></small>
+                                        <div class="error" style="color : red;" id="img_err">Please Fill This
+                                            field.</div>
                                         @error('image')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -178,9 +187,10 @@
                                         <label for="certificate"><b>Upload Documents</b><span
                                                 class="text-danger">*</span></label>
                                         <input type="file" class="form-control upload_btn" name="certificate"
-                                            value="{{ old('certificate') }}">
-                                            <small><b>(pdf only)</b></small>
-                                        <div class="error" style="color : red;" id="doc_err">Please Fill This field.</div>
+                                            value="{{ old('certificate') }}" onchange="certificateValidation()">
+                                        <small><b>(pdf only)</b></small>
+                                        <div class="error" style="color : red;" id="doc_err">Please Fill This
+                                            field.</div>
                                         @error('certificate')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -290,12 +300,10 @@
                 if (class_wise_combo) {
                     $('#class_wise').next('.error').fadeOut(100);
 
-                }
-                else if (special_course_ids.length > 0) {
+                } else if (special_course_ids.length > 0) {
                     $('#class_wise_combo').next('.error').fadeOut(100);
                     $('#class_wise').next('.error').fadeOut(100);
-                }
-                else{
+                } else {
                     $('#class_wise').next('.error').fadeIn(100);
                     errorFlagOne = 1;
                 }
@@ -308,12 +316,10 @@
             } else {
                 if (class_wise) {
                     $('#class_wise_combo').next('.error').fadeOut(100);
-                }
-                else if (special_course_ids.length > 0) {
+                } else if (special_course_ids.length > 0) {
                     $('#class_wise_combo').next('.error').fadeOut(100);
                     $('#class_wise').next('.error').fadeOut(100);
-                }
-                else{
+                } else {
                     $('#class_wise_combo').next('.error').fadeIn(100);
                     errorFlagOne = 1;
                 }
@@ -359,6 +365,9 @@
                 return false;
             } else {
                 $("#registrationForm").submit();
+                $('#btn_submit').text('Loading...');
+                document.getElementById("btn_submit").disabled = true;
+                document.getElementById("btn_submit").style.cursor = 'no-drop';
             }
         });
 
@@ -370,10 +379,12 @@
                 $('#mobile_err').html('');
                 document.getElementById("btn_submit").disabled = true;
                 document.getElementById("btn_submit").style.cursor = 'no-drop';
+                return false;
             } else {
                 $('#digit_error').html('');
                 document.getElementById("btn_submit").disabled = false;
                 document.getElementById("btn_submit").style.cursor = 'pointer';
+                return true;
             }
         }
 
@@ -467,29 +478,130 @@
             // daysOfWeekDisabled: [0]
         });
 
-        $('#class_wise').on('change',function() {
+        $('#class_wise').on('change', function() {
             if ($('#class_wise').val() != "") {
                 $('#class_wise_combo').prop('disabled', true);
                 $('#special_course_ids').prop('disabled', true);
                 $('#first_block').addClass("actv_bg");
                 $('#second_block').removeClass("actv_bg");
-            }else{
+            } else {
                 $('#class_wise_combo').prop('disabled', false);
                 $('#special_course_ids').prop('disabled', false);
                 $('#first_block').removeClass("actv_bg");
                 $('#second_block').removeClass("actv_bg");
             }
         })
-        $('#class_wise_combo').on('change',function() {
+        $('#class_wise_combo').on('change', function() {
             if ($('#class_wise_combo').val() != "") {
                 $('#class_wise').prop('disabled', true);
                 $('#first_block').removeClass("actv_bg");
                 $('#second_block').addClass("actv_bg");
-            }else{
+            } else {
                 $('#class_wise').prop('disabled', false);
                 $('#first_block').removeClass("actv_bg");
                 $('#second_block').removeClass("actv_bg");
             }
         })
+
+        /*
+            Profile picture validation
+        */
+        function profilePictureValidation() {
+            var image = $('[name="image"]').val();
+
+            var allowedImageExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+            if (!allowedImageExtensions.exec(image) && image != '') {
+                $('#img_err').html(
+                    'Please upload file having jpg,jpeg and png extensions').fadeIn(100);
+                document.getElementById("btn_submit").disabled = true;
+                document.getElementById("btn_submit").style.cursor = 'no-drop';
+            } else {
+                $('#img_err').html('');
+                document.getElementById("btn_submit").disabled = false;
+                document.getElementById("btn_submit").style.cursor = 'pointer';
+            }
+        }
+        /*
+            Certificate validation
+        */
+        function certificateValidation() {
+            var certificate = $('[name="certificate"]').val();
+
+            var allowedExtensions = /(\.pdf)$/i;
+            if (!allowedExtensions.exec(certificate) && certificate != '') {
+                $('#doc_err').html(
+                    'Please upload file having pdf extensions').fadeIn(100);
+                document.getElementById("btn_submit").disabled = true;
+                document.getElementById("btn_submit").style.cursor = 'no-drop';
+            } else {
+                $('#doc_err').html('');
+                document.getElementById("btn_submit").disabled = false;
+                document.getElementById("btn_submit").style.cursor = 'pointer';
+            }
+        }
+
+        /*
+             Mobile AAvailability
+        */
+        $('#mobile').on('keyup', function() {
+            let mobile = $('#mobile').val();
+            console.log(mobile);
+            $('input[name="mobile"]').next('.error').html('');
+            if (mobile) {
+                if (mobile.length > 10) {
+                    $('.mobile-success').html('');
+                    $('.mobile-err').html('Please enter 10 digit number');
+                    $('#mobile').focus();
+                    document.getElementById("btn_submit").disabled = true;
+                    document.getElementById("btn_submit").style.cursor = 'no-drop';
+                }
+                else if(mobile.length < 10){
+                    $('.mobile-success').html('');
+                    $('.mobile-err').html('Please enter 10 digit number');
+                    $('#mobile').focus();
+                    document.getElementById("btn_submit").disabled = true;
+                    document.getElementById("btn_submit").style.cursor = 'no-drop';
+                }
+                 else if(mobile.length == 10) {
+                    $.ajax({
+                        url: "{{ route('checkMobileNoExistence') }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            mobile: mobile
+                        },
+                        dataType: 'json',
+                        type: 'post',
+                        beforeSend: function() {
+                            $(".mobile-success").html('Loading....');
+                        },
+                        success: function(response) {
+                            if (response.msg == 'success') {
+                                $('.mobile-err').html('');
+                                $('.mobile-success').html('Available');
+                                document.getElementById("btn_submit").disabled = false;
+                                document.getElementById("btn_submit").style.cursor = 'pointer';
+
+                            } else {
+                                $(".mobile-success").html('');
+                                $(".mobile-err").html('Already exist!!');
+                                document.getElementById("btn_submit").disabled = true;
+                                document.getElementById("btn_submit").style.cursor = 'no-drop';
+                            }
+                        }
+                    });
+                }
+            } else {
+                $(".email-success").html('');
+                $(".email-err").html('');
+                document.getElementById("btn_submit").disabled = false;
+                document.getElementById("btn_submit").style.cursor = 'pointer';
+            }
+        });
+
+        function alphaOnly(event) {
+            var key = event.keyCode;
+            return ((key >= 65 && key <= 90) || key == 8);
+        };
+
     </script>
 @endsection

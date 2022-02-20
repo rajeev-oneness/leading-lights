@@ -151,4 +151,22 @@ class CommonController extends Controller
         ));
 
     }
+
+    /**
+     * Check mobile no existence
+     */
+    public function checkMobileNoExistence(Request $request){
+        $mobile = $request->mobile;
+        $already_existence = User::where('mobile',$mobile)->first();
+        if ($already_existence) {
+            $message = 'error';
+        }else{
+            $message = 'success';
+        }
+        return response()->json(array(
+            'msg' 	    => $message
+        ));
+
+    }
+
 }

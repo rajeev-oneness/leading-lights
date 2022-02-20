@@ -7,10 +7,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WelcomeMail extends Notification
+class RegistrationSuccessMail extends Notification
 {
     use Queueable;
     public $user;
+
     /**
      * Create a new notification instance.
      *
@@ -40,34 +41,10 @@ class WelcomeMail extends Notification
      */
     public function toMail($notifiable)
     {
-        $user_type = $this->user['role_id'];
-        $password = 'Welcome'.date('Y',strtotime($this->user['created_at']));
-        switch ($user_type) {
-            case 1:
-                $url = route('admin_login');
-                break;
-            case 2:
-                $url = route('hr_login');
-                break;
-            case 3:
-                $url = route('teacher_login');
-                break;
-            case 4:
-                $url = route('login');
-                break;
-            case 5:
-                $url = route('super_admin_login');
-                break;
-        }
         return (new MailMessage)
                     ->greeting('Hello '.$this->user['first_name'].' '.$this->user['last_name'])
-                    ->subject('Approved your account :)')
-                    ->line('Your account has been APPROVED')
-                    ->line('You can now access leading light web portal.')
-                    ->line('Your login credential is: ')
-                    ->line('User id : '.$this->user['email'])
-                    ->line('Password : '.$password)
-                    ->action('Login', $url)
+                    ->subject('Application submitted successfully :)')
+                    ->line('Congratulations! Your application is submitted successfully. waiting for Admin approval')
                     ->line('Thank you for using our application!');
     }
 

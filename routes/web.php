@@ -42,6 +42,7 @@ Route::post('get-fees-by-class', [CommonController::class, 'getFeesByClass'])->n
 Route::post('get-course-by-class', [CommonController::class, 'getCourseByClass'])->name('getCourseByClass');
 Route::post('get-student-by-class', [CommonController::class, 'getStudentByClass'])->name('getStudentByClass');
 Route::post('email-availability', [CommonController::class, 'checkEmailExistence'])->name('checkEmailExistence');
+Route::post('mobile-availability', [CommonController::class, 'checkMobileNoExistence'])->name('checkMobileNoExistence');
 
 // Notification
 Route::post('/read', [NotificationController::class, 'notificationRead'])->name('notification.read');
