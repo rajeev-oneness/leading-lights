@@ -240,6 +240,9 @@
                 certificate = $('[name="certificate"]').val();
             if (!first_name) {
                 $('[name="first_name"]').next('.error').fadeIn(100);
+                setTimeout(() => {
+                    $('[name="first_name"]').next('.error').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('[name="first_name"]').next('.error').fadeOut(100);
@@ -247,6 +250,9 @@
 
             if (!last_name) {
                 $('[name="last_name"]').next('.error').fadeIn(100);
+                setTimeout(() => {
+                    $('[name="last_name"]').next('.error').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('[name="last_name"]').next('.error').fadeOut(100);
@@ -254,6 +260,9 @@
 
             if (!email) {
                 $('input[name="email"]').next('.error').html('Please Fill This field.').fadeIn(100);
+                setTimeout(() => {
+                    $('[name="email"]').next('.error').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('input[name="email"]').next('.error').fadeOut(100);
@@ -261,6 +270,9 @@
 
             if (!mobile) {
                 $('[name="mobile"]').next('.error').fadeIn(100);
+                setTimeout(() => {
+                    $('[name="mobile"]').next('.error').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('[name="mobile"]').next('.error').fadeOut(100);
@@ -282,18 +294,27 @@
 
             if (!gender) {
                 $('[name="gender"]').next('.error').fadeIn(100);
+                setTimeout(() => {
+                    $('[name="gender"]').next('.error').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('[name="gender"]').next('.error').fadeOut(100);
             }
             if (!dob) {
                 $('[name="dob"]').next('.error').fadeIn(100);
+                setTimeout(() => {
+                    $('[name="dob"]').next('.error').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('[name="dob"]').next('.error').fadeOut(100);
             }
             if (class_wise) {
                 $('#class_wise_combo').next('.error').fadeOut(100);
+                setTimeout(() => {
+                    $('#class_wise_combo').next('.error').fadeOut(100);
+                }, 5000);
                 $('#class_wise').next('.error').fadeOut(100);
 
             } else {
@@ -305,6 +326,9 @@
                     $('#class_wise').next('.error').fadeOut(100);
                 } else {
                     $('#class_wise').next('.error').fadeIn(100);
+                    setTimeout(() => {
+                        $('#class_wise').next('.error').fadeOut(100);
+                    }, 5000);
                     errorFlagOne = 1;
                 }
 
@@ -321,12 +345,18 @@
                     $('#class_wise').next('.error').fadeOut(100);
                 } else {
                     $('#class_wise_combo').next('.error').fadeIn(100);
+                    setTimeout(() => {
+                        $('#class_wise_combo').next('.error').fadeOut(100);
+                    }, 5000);
                     errorFlagOne = 1;
                 }
 
             }
             if (class_wise_combo && special_course_ids.length == 0) {
                 $('#special_course_id_err').fadeIn(100);
+                setTimeout(() => {
+                    $('#special_course_id_err').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('#special_course_id_err').fadeOut(100);
@@ -335,6 +365,9 @@
 
             if (!image) {
                 $('#img_err').fadeIn(100);
+                setTimeout(() => {
+                    $('#img_err').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('#img_err').fadeOut(100);
@@ -349,6 +382,9 @@
 
             if (!certificate) {
                 $('#doc_err').fadeIn(100);
+                setTimeout(() => {
+                    $('#doc_err').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('#doc_err').fadeOut(100);

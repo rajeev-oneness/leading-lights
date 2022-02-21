@@ -261,8 +261,9 @@ class RegisterController extends Controller
     public function teacher_register(Request $request)
     {
         if ($request->method() == 'GET') {
+            $phonecodes = Country::Where('phonecode', '!=', '') ->select('phonecode')->get();
             $qualifications = Qualification::orderBy('name')->get();
-            return view('auth.teacher_register', compact('qualifications'));
+            return view('auth.teacher_register', compact('qualifications','phonecodes'));
         } else if ($request->method() == 'POST') {
             $this->validate($request, [
                 'first_name' => ['required', 'string', 'max:255'],
@@ -270,8 +271,8 @@ class RegisterController extends Controller
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'doj' => ['required', 'date'],
                 'gender' => ['required'],
-                'image' => 'required| mimes:png,jpg',
-                'mobile' => ['required'],
+                'image' => ['required','mimes:png,jpg'],
+                'mobile' => ['required','unique:users'],
                 'qualification' => ['required']
             ]);
 
@@ -366,8 +367,8 @@ class RegisterController extends Controller
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'doj' => ['required', 'date'],
                 'gender' => ['required'],
-                'image' => 'required| mimes:png,jpg',
-                'mobile' => ['required'],
+                'image' => ['required','mimes:png,jpg'],
+                'mobile' => ['required','unique:users'],
                 'qualification' => ['required']
             ]);
 
@@ -464,8 +465,8 @@ class RegisterController extends Controller
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'dob' => ['required', 'date'],
                 'gender' => ['required'],
-                'image' => 'required| mimes:png,jpg,jpeg',
-                'mobile' => ['required'],
+                'image' => ['required', 'mimes:png,jpg,jpeg'],
+                'mobile' => ['required','unique:users'],
                 'certificate' => ['required', 'mimes:pdf']
             ]);
             DB::beginTransaction();
@@ -570,7 +571,7 @@ class RegisterController extends Controller
                 'dob' => ['required', 'date'],
                 'gender' => ['required'],
                 // 'image' => 'required| mimes:png,jpg,jpeg',
-                'mobile' => ['required'],
+                'mobile' => ['required','unique:users'],
                 // 'certificate' => ['required', 'mimes:pdf']
             ]);
             DB::beginTransaction();
@@ -602,6 +603,13 @@ class RegisterController extends Controller
 
             $user_id = $user->id;
 
+            /**
+             * Notification sent to inform the registered users
+             */
+            systemNotification::route('mail', $user->email)->notify(new RegistrationSuccessMail($user));
+            /**
+             * Notification sent to inform about credential
+             */
             systemNotification::route('mail', $user->email)->notify(new WelcomeMailForPaidUsers($user));
             createNotification($user_id, 0, 0, 'student_registration');
 
@@ -645,10 +653,6 @@ class RegisterController extends Controller
             );
             // FacadesNotification::route('mail', $admin_email)->notify(new NewUserInfo($email_data));
 
-            /**
-             * Notification sent to inform the registered users
-             */
-            systemNotification::route('mail', $user->email)->notify(new RegistrationSuccessMail($user));
             DB::commit();
             return redirect()->route('login')->with('success', 'Your registration is successful, now you can login');
         } catch (Exception $e) {

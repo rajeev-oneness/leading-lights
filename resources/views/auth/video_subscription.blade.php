@@ -23,7 +23,7 @@
                                     <div class="form-group col-sm-6">
                                         <label for="first_name"><b>First Name</b><span class="text-danger">*</span> </label>
                                         <input class="form-control" id="first_name" name="first_name" type="text"
-                                            placeholder="" value="{{ old('first_name') }}">
+                                            placeholder="" value="{{ old('first_name') }}" onkeydown="return alphaOnly(event);">
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                         @error('first_name')
                                             <span class="text-danger">{{ $message }}</span>
@@ -34,7 +34,7 @@
                                     <div class="form-group col-sm-6">
                                         <label for="last_name"><b>Last Name</b><span class="text-danger">*</span></label>
                                         <input class="form-control" id="last_name" name="last_name" type="text"
-                                            placeholder="" value="{{ old('last_name') }}">
+                                            placeholder="" value="{{ old('last_name') }}" onkeydown="return alphaOnly(event);">
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                         @error('last_name')
                                             <span class="text-danger">{{ $message }}</span>
@@ -82,10 +82,12 @@
                                             </div>
                                             <div class="responsive-error col-6 col-lg-8 p-0">
                                                 <input class=" form-control pl-2" type="number" name="mobile" id="mobile"
-                                                    value="{{ old('mobile') }}" onkeyup="mobileValidation()">
+                                                    value="{{ old('mobile') }}">
                                                 <div class="error" style="color : red;">Please Fill This field.
                                                 </div>
                                                 <span style="color: red;" id="digit_error"></span>
+                                                <span class="text-danger mobile-err"></span>
+                                                <span class="text-success mobile-success"></span>
                                                 @error('mobile')
                                                     <span class="text-danger" id="mobile_err">{{ $message }}</span>
                                                 @enderror
@@ -196,6 +198,9 @@
                 // certificate = $('[name="certificate"]').val();
             if (!first_name) {
                 $('[name="first_name"]').next('.error').fadeIn(100);
+                setTimeout(() => {
+                    $('[name="first_name"]').next('.error').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('[name="first_name"]').next('.error').fadeOut(100);
@@ -203,6 +208,9 @@
 
             if (!last_name) {
                 $('[name="last_name"]').next('.error').fadeIn(100);
+                setTimeout(() => {
+                    $('[name="last_name"]').next('.error').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('[name="last_name"]').next('.error').fadeOut(100);
@@ -210,6 +218,9 @@
 
             if (!email) {
                 $('input[name="email"]').next('.error').html('Please Fill This field.').fadeIn(100);
+                setTimeout(() => {
+                    $('input[name="email"]').next('.error').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('input[name="email"]').next('.error').fadeOut(100);
@@ -217,6 +228,9 @@
 
             if (!mobile) {
                 $('[name="mobile"]').next('.error').fadeIn(100);
+                setTimeout(() => {
+                    $('[name="mobile"]').next('.error').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('[name="mobile"]').next('.error').fadeOut(100);
@@ -238,12 +252,18 @@
 
             if (!gender) {
                 $('[name="gender"]').next('.error').fadeIn(100);
+                setTimeout(() => {
+                    $('[name="gender"]').next('.error').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('[name="gender"]').next('.error').fadeOut(100);
             }
             if (!dob) {
                 $('[name="dob"]').next('.error').fadeIn(100);
+                setTimeout(() => {
+                    $('[name="dob"]').next('.error').fadeOut(100);
+                }, 5000);
                 errorFlagOne = 1;
             } else {
                 $('[name="dob"]').next('.error').fadeOut(100);
@@ -288,6 +308,9 @@
                 return false;
             } else {
                 $("#registrationForm").submit();
+                $('#btn_submit').text('Loading...');
+                document.getElementById("btn_submit").disabled = true;
+                document.getElementById("btn_submit").style.cursor = 'no-drop';
             }
         });
 
@@ -420,5 +443,101 @@
                 $('#second_block').removeClass("actv_bg");
             }
         })
+
+                /*
+                Profile picture validation
+            */
+            function profilePictureValidation() {
+            var image = $('[name="image"]').val();
+
+            var allowedImageExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+            if (!allowedImageExtensions.exec(image) && image != '') {
+                $('#img_err').html('Please upload file having jpg,jpeg and png extensions').fadeIn(100);
+                document.getElementById("btn_submit").disabled = true;
+                document.getElementById("btn_submit").style.cursor = 'no-drop';
+            } else {
+                $('#img_err').html('');
+                document.getElementById("btn_submit").disabled = false;
+                document.getElementById("btn_submit").style.cursor = 'pointer';
+            }
+        }
+        /*
+            Certificate validation
+        */
+        function certificateValidation() {
+            var certificate = $('[name="certificate"]').val();
+
+            var allowedExtensions = /(\.pdf)$/i;
+            if (!allowedExtensions.exec(certificate) && certificate != '') {
+                $('#doc_err').html('Please upload file having pdf extensions').fadeIn(100);
+                document.getElementById("btn_submit").disabled = true;
+                document.getElementById("btn_submit").style.cursor = 'no-drop';
+            } else {
+                $('#doc_err').html('');
+                document.getElementById("btn_submit").disabled = false;
+                document.getElementById("btn_submit").style.cursor = 'pointer';
+            }
+        }
+
+        /*
+            Mobile AAvailability
+        */
+        $('#mobile').on('keyup', function() {
+            let mobile = $('#mobile').val();
+            console.log(mobile);
+            $('input[name="mobile"]').next('.error').html('');
+            if (mobile) {
+                if (mobile.length > 10) {
+                    $('.mobile-success').html('');
+                    $('.mobile-err').html('Please enter 10 digit number');
+                    $('#mobile').focus();
+                    document.getElementById("btn_submit").disabled = true;
+                    document.getElementById("btn_submit").style.cursor = 'no-drop';
+                } else if (mobile.length < 10) {
+                    $('.mobile-success').html('');
+                    $('.mobile-err').html('Please enter 10 digit number');
+                    $('#mobile').focus();
+                    document.getElementById("btn_submit").disabled = true;
+                    document.getElementById("btn_submit").style.cursor = 'no-drop';
+                } else if (mobile.length == 10) {
+                    $.ajax({
+                        url: "{{ route('checkMobileNoExistence') }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            mobile: mobile
+                        },
+                        dataType: 'json',
+                        type: 'post',
+                        beforeSend: function() {
+                            $(".mobile-success").html('Loading....');
+                        },
+                        success: function(response) {
+                            if (response.msg == 'success') {
+                                $('.mobile-err').html('');
+                                $('.mobile-success').html('Available');
+                                document.getElementById("btn_submit").disabled = false;
+                                document.getElementById("btn_submit").style.cursor = 'pointer';
+
+                            } else {
+                                $(".mobile-success").html('');
+                                $(".mobile-err").html('Already exist!!');
+                                document.getElementById("btn_submit").disabled = true;
+                                document.getElementById("btn_submit").style.cursor = 'no-drop';
+                            }
+                        }
+                    });
+                }
+            } else {
+                $(".email-success").html('');
+                $(".email-err").html('');
+                document.getElementById("btn_submit").disabled = false;
+                document.getElementById("btn_submit").style.cursor = 'pointer';
+            }
+        });
+
+        function alphaOnly(event) {
+            var key = event.keyCode;
+            return ((key >= 65 && key <= 90) || key == 8);
+        };
     </script>
 @endsection
