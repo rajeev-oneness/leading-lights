@@ -86,6 +86,7 @@ a {
     align-items: center;
 }
 
+
 .chiller_cb input {
     display: none;
 }
@@ -2132,7 +2133,7 @@ table.dataTable.no-footer {
 }
 
 @media (max-width: 860px) {
-	.card-header-title {
+  .card-header-title {
         font-size: 16px !important;
     }
     .app-main__inner h5{
@@ -2189,4 +2190,81 @@ table.dataTable.no-footer {
     .header-btn-lg::before {
         background: inherit;
     }
+}
+.datepicker-dropdown{
+   padding:10px; 
+}
+.datepicker-days table{
+    width:100%;
+}
+.datepicker-days .datepicker-switch {
+    width: 145px;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 0;
+    color: #006578;
+}
+.datepicker-days td, .datepicker-days th {
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: none;
+    font-size: 13px;
+    padding: 5px;
+}
+.datepicker-days table tr td.day:hover, .datepicker-days table tr td.day.focused {
+    background: #2656b2 !important;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 400;
+    border-radius: 5px;
+}
+.datepicker-days table tr td.disabled:hover {
+
+    background: #efefef !important;
+    color: #999;
+    cursor: default;
+     border-radius: 5px;
+}
+.datepicker-days table tr .active{
+    background: #2656b2 !important;
+    color: #fff;
+    cursor: default;
+     border-radius: 5px;
+}
+
+.swal2-icon-content img{
+    width: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    height: 100px;
+    padding: 10px;
+}
+.swal2-icon{
+    border-color:#363637 !important;
+    margin-bottom: 10px !important;
+}
+.swal2-icon.swal2-error {
+    border-color: #f27474 !important;
+}
+.swal2-popup{
+    width: 250px !important;
+    background: rgb(50, 50, 50, 0.95) !important;
+}
+.swal2-popup .swal2-title{
+  font-size: 1.2em;
+  color: #a5a5a5;
+}
+.swal2-html-container{
+  font-size: 14px;
+  color: #a5a5a5;
+}
+.swal2-icon-show{
+  margin-top: 0 !important;
+}
+.swal2-icon .swal2-error .swal2-icon-show{
+  display: none !important;
 }

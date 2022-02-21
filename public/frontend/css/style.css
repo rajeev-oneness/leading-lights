@@ -2292,3 +2292,10 @@ input[type=number]::-webkit-outer-spin-button {
 .paid_bg{
     background:#ff4c07;
 }
+
+.owl-prev i, .owl-next i{
+    font-size: 19px;
+    position: relative;
+    top: -4px;
+    color: #014496;
+}

@@ -2007,16 +2007,30 @@ table.dataTable.no-footer {
     height:100%;
 }
 .swal2-icon-content img{
-  width: 110px;
+    width: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    height: 100px;
+    padding: 10px;
+}
+.swal2-icon{
+    border-color:#363637 !important;
+    margin-bottom: 10px !important;
+}
+.swal2-icon.swal2-error {
+    border-color: #f27474 !important;
 }
 .swal2-popup{
-  width: 22em !important;;
+    width: 250px !important;
+    background: rgb(50, 50, 50, 0.95) !important;
 }
 .swal2-popup .swal2-title{
   font-size: 1.2em;
+  color: #a5a5a5;
 }
 .swal2-html-container{
   font-size: 14px;
+  color: #a5a5a5;
 }
 .swal2-icon-show{
   margin-top: 0 !important;
