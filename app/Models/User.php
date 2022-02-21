@@ -91,5 +91,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(ArrangeExam::class);
     }
+    public  function qualification()
+    {
+        return $this->belongsTo(Qualification::class);
+    }
+    public  function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
     
 }

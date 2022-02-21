@@ -9,4 +9,8 @@ class Qualification extends Model
 {
     use HasFactory;
     protected $table='qualifications';
+    public function users()
+    {
+        $this->hasMany(User::class);
+    }
 }

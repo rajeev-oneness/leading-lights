@@ -87,7 +87,7 @@
                                     <label>Academic Qualification:</label>
                                 </div>
                                 <div class="col-lg-6 col-sm-7 col-7">
-                                    <p id="qualification">{{ $teacher->qualification ? $teacher->qualification : 'N/A' }}
+                                    <p id="qualification">{{ $teacher->qualification_id ? $teacher->qualification->name : 'N/A' }}
                                     </p>
                                 </div>
                                 <div class="col-lg-2 col-sm-2">
@@ -103,8 +103,43 @@
                                     <div class="card-header-title font-size-lg text-capitalize mb-4">
                                         Expertise in Subject Area
                                     </div>
-                                    <p><span id="special_subject">Math / Physice / Chemistry</span><span
-                                            class="ml-3"></span></p>
+                                    {{-- <select class="subject form-control" name="subject[]"
+                                            multiple="multiple" id="subject">
+                                            @foreach ($subjects as $subject)
+                                                <option value="{{ $subject->id }}">{{ $subject->name }}</option>
+                                            @endforeach
+                                    </select> --}}
+                                    <p><span id="subject">
+                                        {{-- {{ $teacher->special_subject ? $teacher->special_subject : 'N/A' }} --}}
+                                        @if ( $teacher->special_subject)
+                                            @php
+                                                //get data from database table field
+                                                $special_subjects = explode(',', $teacher->special_subject);
+                                                foreach ($special_subjects as $key => $special_subject) {
+                                                    $subject_name = App\Models\Subject::find($special_subject)->name;
+                                                    echo $subject_name;
+                                                    echo ',';
+                                                }
+                                            @endphp
+                                        @else
+                                            {{ 'N/A' }}
+                                        @endif
+                                    </span>
+                                        <span class="text-danger" id="subject_err_msg"></span>
+                                    @if ($teacher->status == 1)
+                                    <span class="bio_edit">
+                                        <img src="https://img.icons8.com/ios-glyphs/30/000000/save--v1.png"
+                                            style="display: none;float: right;" id="save_subject" onclick="saveSubject()" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-edit" onclick="changeSubject()" id="edit_subject">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7">
+                                            </path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z">
+                                            </path>
+                                        </svg></span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -340,93 +375,6 @@
                                                     </div>
                                                 </li>
                                             @endforeach
-                                            {{-- <li class="list-group-item">
-
-                                                <div class="widget-content p-0">
-                                                    <div class="d-sm-flex align-items-center not">
-                                                        <div class="">
-                                                            <img src="
-                                                                {{ asset('frontend/assets/images/alart.png') }}"
-                                                                class="img-fluid">
-
-                                                        </div>
-                                                        <div class="ml-3">
-                                                            <div class="widget-subheading"><i>Proin gravida
-                                                                    nibh vel velit auctor aliquet. sollicitudin,
-                                                                    lorem quis bibendum auctor, nisi elit
-                                                                    consequat</i></div>
-
-                                                            <div class="d-sm-flex align-items-center">
-
-                                                                <div class="widget-subheading">
-
-                                                                    Today<br><span class="text">7:30
-                                                                        pm</span>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="list-group-item">
-
-                                                <div class="widget-content p-0">
-                                                    <div class="d-sm-flex align-items-center not">
-                                                        <div class="">
-                                                            <img src="
-                                                                {{ asset('frontend/assets/images/alart.png') }}"
-                                                                class="img-fluid">
-
-                                                        </div>
-                                                        <div class="ml-3">
-                                                            <div class="widget-subheading"><i>Proin gravida
-                                                                    nibh vel velit auctor aliquet. sollicitudin,
-                                                                    lorem quis bibendum auctor, nisi elit
-                                                                    consequat</i></div>
-
-                                                            <div class="d-sm-flex align-items-center">
-
-                                                                <div class="widget-subheading">
-
-                                                                    Today<br><span class="text">7:30
-                                                                        pm</span>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="list-group-item">
-
-                                                <div class="widget-content p-0">
-                                                    <div class="d-sm-flex align-items-center not">
-                                                        <div class="">
-                                                            <img src="
-                                                                {{ asset('frontend/assets/images/alart.png') }}"
-                                                                class="img-fluid">
-
-                                                        </div>
-                                                        <div class="ml-3">
-                                                            <div class="widget-subheading"><i>Proin gravida
-                                                                    nibh vel velit auctor aliquet. sollicitudin,
-                                                                    lorem quis bibendum auctor, nisi elit
-                                                                    consequat</i></div>
-
-                                                            <div class="d-sm-flex align-items-center">
-
-                                                                <div class="widget-subheading">
-
-                                                                    Today<br><span class="text">7:30
-                                                                        pm</span>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li> --}}
                                         </ul>
                                     </div>
                                     <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
@@ -541,6 +489,26 @@
             document.getElementById('edit_bio').style = "display : none";
             document.getElementById('save_bio').style.cssText = "display : block;float:right";
         }
+        
+        function changeSubject() {
+            <?php
+            $ids = explode(',', $teacher->special_subject);
+            ?>
+            document.getElementById('subject').innerHTML =
+                // `<textarea class="form-control" row="10" cols="30" name="bio_edit" id="bio_edit">{{ $teacher->about_us }}</textarea>`;
+                `<select class="subject form-control" name="subject[]"
+                    multiple="multiple" id="subject_edit">
+                    @foreach ($subjects as $subject)
+                        <option value="{{ $subject->id }}"  @php
+                                            echo in_array($subject->id, $ids) ? 'selected' : '';
+                                        @endphp>{{ $subject->name }}</option>
+                    @endforeach
+                </select>`;
+                $('.subject').select2();
+            document.getElementById('edit_subject').style = "display : none";
+            document.getElementById('save_subject').style.cssText = "display : block;float:right";
+        }
+        
 
         function saveBio() {
             var bio = document.getElementById("bio_edit").value;
@@ -556,6 +524,29 @@
                     data: {
                         _token: "{{ csrf_token() }}",
                         bio: bio
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function(response) {
+                        location.reload();
+                    }
+                });
+            }
+
+        }
+        function saveSubject() {
+            var subject = $("#subject_edit").val();
+            console.log(subject);
+            if (subject == '') {
+                document.getElementById('subject_err_msg').innerText = 'This field can\'t be blank';
+                return false;
+            } else {
+                document.getElementById('subject_err_msg').innerText = '';
+                $.ajax({
+                    url: "{{ route('teacher.updateProfile') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        subject: subject
                     },
                     dataType: 'json',
                     type: 'post',

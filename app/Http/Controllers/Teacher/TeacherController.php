@@ -41,7 +41,7 @@ class TeacherController extends Controller
         $data['classes'] = ArrangeClass::where('user_id', Auth::user()->id)
             ->join('subjects', 'subjects.id', '=', 'arrange_classes.class')
             ->whereDate('date', '=', date('Y-m-d'))->orderBy('arrange_classes.created_at', 'desc')->get();
-
+        $data['subjects'] = Subject::latest()->get();
         $data['teacher'] = User::where('id', $current_user_id)->first();
         $data['certificates'] = Certificate::where('user_id', $current_user_id)->get();
         return view('teacher.profile')->with($data);
@@ -55,6 +55,9 @@ class TeacherController extends Controller
         }
         if ($request->address) {
             $teacher->address = $request->address;
+        }
+        if ($request->subject) {
+            $teacher->special_subject = implode(',', $request->subject);
         }
         if ($request->bio) {
             $this->validate($request, [
