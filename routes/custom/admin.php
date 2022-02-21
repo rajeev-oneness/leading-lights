@@ -76,12 +76,12 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     // Student Registration
     Route::any('student-registration-filter', [StudentController::class, 'studentRegistrationFilter'])->name('students.registration.filter');
 
-    Route::any('student-registration/regular-class',[StudentController::class, 'studentRegistrationForRegularClass'])->name('students.registration.regular.class');
-    Route::any('student-registration/special-course',[StudentController::class, 'studentRegistrationForSpecialCourse'])->name('students.registration.special.course');
+    Route::any('students/registration/regular-class',[StudentController::class, 'studentRegistrationForRegularClass'])->name('students.registration.regular.class');
+    Route::any('students/registration/special-course',[StudentController::class, 'studentRegistrationForSpecialCourse'])->name('students.registration.special.course');
 
-    Route::any('student-registration/flash-course',[StudentController::class, 'studentRegistrationForFlashCourse'])->name('students.registration.flash.course');
+    Route::any('students/registration/flash-course',[StudentController::class, 'studentRegistrationForFlashCourse'])->name('students.registration.flash.course');
 
-    Route::any('student-registration/paid-video',[StudentController::class, 'studentRegistrationForPaidVideo'])->name('students.registration.paid.video');
+    Route::any('students/registration/paid-video',[StudentController::class, 'studentRegistrationForPaidVideo'])->name('students.registration.paid.video');
 
     //Payment for a particular student
     Route::post('transaction/due-payment',[TransactionController::class, 'paymentDueForSpecificStudent'])->name('students.transaction.paymentDue');
