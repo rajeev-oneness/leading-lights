@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use App\Models\Certificate;
 use App\Models\Course;
+use App\Models\Fee;
 use App\Models\SpecialCourse;
 use App\Models\Video;
 use App\Notifications\WelcomeMailForPaidUsers;
@@ -148,6 +149,7 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $this->validate($request, [
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
@@ -183,6 +185,33 @@ class StudentController extends Controller
             $s_course_ids = null;
         }
 
+        // Upgrade Class
+        if ($request->class) {
+            if ($request->class != $student->class) {
+                // Check previous payment for the class
+                Fee::where('user_id',$student->id)->where('class_id',$student->class)->where('transaction_id',0)->get()->last()->delete();
+                // Fee generate
+                $feedata = [];
+                $check_class = Classes::where('id', $request->class)->first();
+                if ($check_class) {
+                    $next_date = date('Y-m-d',strtotime('first day of +2 month'));
+                    $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                    $feedata[] = [
+                        'user_id' => $student->id,
+                        'class_id' => $check_class->id,
+                        'course_id' => 0,
+                        'fee_type' => 'admission_fee',
+                        'due_date' => $next_due_date,
+                        'payment_month' => date('F',strtotime($next_due_date)),
+                        'amount' => $check_class->monthly_fees + $check_class->admission_fees,
+                    ];
+                }
+                if (count($feedata) > 0) {
+                    DB::table('fees')->insert($feedata);
+                }
+            }
+            
+        } 
         $student->first_name = $request->first_name;
         $student->last_name = $request->last_name;
         $student->gender = $request->gender;
@@ -303,7 +332,7 @@ class StudentController extends Controller
             $student->first_name = $request->first_name;
             $student->last_name = $request->last_name;
             $student->email = $request->email;
-            $student->password = Hash::make($id_no);
+            $student->password = Hash::make('Welcome'.date('Y'));
             $student->id_no = $id_no;
             $student->class = $request->class;
             $student->role_id = 4;
@@ -383,7 +412,7 @@ class StudentController extends Controller
             $user->email = $request['email'];
             $user->id_no =  $id_no;
             $user->class = $request['class'];
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make('Welcome'.date('Y'));
             $user->special_course_ids = $special_course_ids;
             $user->registration_type = $admission_type;
             $user->save();
@@ -452,7 +481,7 @@ class StudentController extends Controller
             $user->first_name = $request['first_name'];
             $user->last_name = $request['last_name'];
             $user->email = $request['email'];
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make('Welcome'.date('Y'));
             $user->flash_course_id = $request['class'];
             $user->registration_type = 3;
             $user->id_no =  $id_no;
@@ -517,7 +546,7 @@ class StudentController extends Controller
             $user->first_name = $request['first_name'];
             $user->last_name = $request['last_name'];
             $user->email = $request['email'];
-            $user->password = Hash::make($id_no);
+            $user->password = Hash::make('Welcome'.date('Y'));
             $user->video_id = $request['class'];
             $user->registration_type = 4;
             $user->id_no =  $id_no;

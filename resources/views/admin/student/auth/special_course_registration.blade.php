@@ -28,7 +28,7 @@
 					<div class="col-lg-6">
 						<div class="form-group edit-box">
 							<label for="first_name">First Name<span class="text-danger">*</span></label>
-							<input type="text" name="first_name" class="form-control" id="first_name" value="{{ old('first_name') }}">
+							<input type="text" name="first_name" class="form-control" id="first_name" value="{{ old('first_name') }}" onkeydown="return alphaOnly(event);">
 							@if ($errors->has('first_name'))
 							<span style="color: red;">{{ $errors->first('first_name') }}</span>
 							@endif
@@ -38,7 +38,7 @@
 					<div class="col-lg-6">
 						<div class="form-group edit-box">
 							<label for="last_name">Last Name<span class="text-danger">*</span></label>
-							<input type="text" name="last_name" class="form-control" id="last_name" value="{{ old('last_name') }}">
+							<input type="text" name="last_name" class="form-control" id="last_name" value="{{ old('last_name') }}" onkeydown="return alphaOnly(event);">
 							@if ($errors->has('last_name'))
 							<span style="color: red;">{{ $errors->first('last_name') }}</span>
 							@endif
@@ -207,6 +207,8 @@
 				$(".email-success").html('');
 				$(".email-err").html('');
 				$('.email-err').html('Invalid Email Address!').fadeIn(100);
+				document.getElementById("btn_submit").disabled = true;
+                document.getElementById("btn_submit").style.cursor = 'no-drop';
 			} else {
 				$.ajax({
 					url: "{{ route('checkEmailExistence') }}",
@@ -294,5 +296,10 @@
 			$('#second_block').removeClass("actv_bg");
 		}
     })
+
+	function alphaOnly(event) {
+            var key = event.keyCode;
+            return ((key >= 65 && key <= 90) || key == 8);
+        };
 </script>
 @endsection

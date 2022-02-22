@@ -29,7 +29,7 @@
 								<div class="col-lg-6">
 									<div class="form-group edit-box">
 										<label for="first_name">First Name<span class="text-danger">*</span></label>
-										<input type="text" name="first_name" class="form-control" id="first_name" value="{{ $student->first_name }}">
+										<input type="text" name="first_name" class="form-control" id="first_name" value="{{ $student->first_name }}" onkeydown="return alphaOnly(event);">
 										@if ($errors->has('first_name'))
 											<span style="color: red;">{{ $errors->first('first_name') }}</span>
 										@endif
@@ -38,7 +38,7 @@
 								<div class="col-lg-6">
 									<div class="form-group edit-box">
 										<label for="last_name">Last Name<span class="text-danger">*</span></label>
-										<input type="text" name="last_name" class="form-control" id="last_name" value="{{ $student->last_name }}">
+										<input type="text" name="last_name" class="form-control" id="last_name" value="{{ $student->last_name }}" onkeydown="return alphaOnly(event);">
 										@if ($errors->has('last_name'))
 											<span style="color: red;">{{ $errors->first('last_name') }}</span>
 										@endif
@@ -55,10 +55,17 @@
 								</div>
 								<div class="col-lg-6 form-group edit-box">
 									<label for="mobile">Mobile No<span class="text-danger">*</span></label>
-									<input type="number" id="mobile" class="form-control" value="{{ old('mobile') ?? $student->mobile }}" name="mobile">
+									<input type="number" id="mobile" class="form-control"  value="{{ old('mobile') ?? $student->mobile }}" name="mobile" @if ($student->mobile == '')
+										onkeyup="mobileValidation()"
+									@endif>
 									@if ($errors->has('mobile'))
-										<span style="color: red;">{{ $errors->first('mobile') }}</span>
+										<span style="color: red;" id="mobile_err">{{ $errors->first('mobile') }}</span>
 									@endif
+									<div class="error" style="color : red;">Please Fill This field.
+									</div>
+									<span style="color: red;" id="digit_error"></span>
+									<span class="text-danger mobile-err"></span>
+									<span class="text-success mobile-success"></span>
 								</div>
 							</div>
 							<div class="row m-0">
@@ -196,7 +203,7 @@
 								</div>
 							</div>
 							<div class="form-group d-flex justify-content-end">
-								<button type="submit" class="actionbutton">SAVE</button>
+								<button type="submit" class="actionbutton" id="btn_submit">SAVE</button>
 							</div>
 						</form>
 				</div>
@@ -245,5 +252,68 @@
                 }
             });
         });
+		function alphaOnly(event) {
+            var key = event.keyCode;
+            return ((key >= 65 && key <= 90) || key == 8);
+        };
+		/*
+             Mobile AAvailability
+        */
+        // $('#mobile').on('keyup', function() {
+        function mobileValidation() {
+			$('#mobile_err').html('');
+            let mobile = $('#mobile').val();
+            console.log(mobile);
+            $('input[name="mobile"]').next('.error').html('');
+            if (mobile) {
+                if (mobile.length > 10) {
+                    $('.mobile-success').html('');
+                    $('.mobile-err').html('Please enter 10 digit number');
+                    $('#mobile').focus();
+                    document.getElementById("btn_submit").disabled = true;
+                    document.getElementById("btn_submit").style.cursor = 'no-drop';
+                }
+                else if(mobile.length < 10){
+                    $('.mobile-success').html('');
+                    $('.mobile-err').html('Please enter 10 digit number');
+                    $('#mobile').focus();
+                    document.getElementById("btn_submit").disabled = true;
+                    document.getElementById("btn_submit").style.cursor = 'no-drop';
+                }
+                 else if(mobile.length == 10) {
+                    $.ajax({
+                        url: "{{ route('checkMobileNoExistence') }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            mobile: mobile
+                        },
+                        dataType: 'json',
+                        type: 'post',
+                        beforeSend: function() {
+                            $(".mobile-success").html('Loading....');
+                        },
+                        success: function(response) {
+                            if (response.msg == 'success') {
+                                $('.mobile-err').html('');
+                                $('.mobile-success').html('Available');
+                                document.getElementById("btn_submit").disabled = false;
+                                document.getElementById("btn_submit").style.cursor = 'pointer';
+
+                            } else {
+                                $(".mobile-success").html('');
+                                $(".mobile-err").html('Already exist!!');
+                                document.getElementById("btn_submit").disabled = true;
+                                document.getElementById("btn_submit").style.cursor = 'no-drop';
+                            }
+                        }
+                    });
+                }
+            } else {
+                $(".email-success").html('');
+                $(".email-err").html('');
+                document.getElementById("btn_submit").disabled = false;
+                document.getElementById("btn_submit").style.cursor = 'pointer';
+            }
+        };
 </script>
 @endsection

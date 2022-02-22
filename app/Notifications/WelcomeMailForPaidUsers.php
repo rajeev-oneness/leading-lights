@@ -42,6 +42,7 @@ class WelcomeMailForPaidUsers extends Notification
     public function toMail($notifiable)
     {
         $url = route('login');
+        $password = 'Welcome'.date('Y',strtotime($this->user['created_at']));
         return (new MailMessage)
                         ->greeting('Hello '.$this->user['first_name'].' '.$this->user['last_name'])
                         ->subject('Approved your account :)')
@@ -49,7 +50,7 @@ class WelcomeMailForPaidUsers extends Notification
                         ->line('You can now access leading light web portal.')
                         ->line('Your login credential is: ')
                         ->line('User id : '.$this->user['email'])
-                        ->line('Password : '.$this->user['id_no'])
+                        ->line('Password : '.$password)
                         ->action('Login', $url)
                         ->line('Thank you for using our application!');
     }
