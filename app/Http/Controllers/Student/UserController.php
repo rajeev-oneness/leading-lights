@@ -549,10 +549,8 @@ class UserController extends Controller
                 $courses = $courses->whereNotIn('id', $user_courses);
             }
         }else{
-            // dd($user->special_course_ids);
             if ($user->special_course_ids != '') {
                 $user_courses = explode(',', $user->special_course_ids);
-                // dd($user_courses);
                 $courses = SpecialCourse::whereNotIn('id', $user_courses)->where('class_id','=',null);
             }
         }
@@ -587,8 +585,13 @@ class UserController extends Controller
                 $newFee->amount = $course->monthly_fees;
                 $newFee->save();
 
-                $user_id =  Auth::user()->id;
-                createNotification($user_id, 0, 0, 'join_course_student');
+                // Save special course id in "users" table
+                $user_details = User::find($user->id);
+                $user_details->special_course_ids = $course->id;
+                $user_details->save();
+
+                // Notification
+                createNotification($user->id, 0, 0, 'join_course_student');
             }
         }
         return redirect(route('user.payment'));

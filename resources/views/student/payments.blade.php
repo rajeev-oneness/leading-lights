@@ -45,14 +45,38 @@
                                                 <span>{{ $feeType }} <span class="badge badge-info">{{ getNameofClassOrCourse($duePayment) }}</span></span>
                                             </td>
                                             <td>{{date('M d, Y',strtotime($duePayment->due_date))}}</td>
-                                            <td>{{$duePayment->amount}}</td>
                                             <td>
-                                                <form action="{!! route('payment.capture') !!}" method="POST" >
+                                                @php
+                                                    if ($duePayment->class_id > 0 && $duePayment->course_id > 0) {
+                                                        $extraDate = extraDateFineCalculation($duePayment->class_id,$duePayment->course_id,$duePayment->due_date,Auth::user()->id);
+                                                    }
+                                                    if ($duePayment->class_id == 0 && $duePayment->course_id > 0) {
+                                                        $extraDate = extraDateFineCalculation(0,$duePayment->course_id,$duePayment->due_date,Auth::user()->id);
+                                                    }
+                                                    if ($duePayment->class_id > 0 && $duePayment->course_id == 0) {
+                                                        $extraDate = extraDateFineCalculation($duePayment->class_id,0,$duePayment->due_date,Auth::user()->id);
+                                                    }
+
+                                                    if ($extraDate > 0) {
+                                                        $fine = $extraDate * 10;
+                                                        $amount = $duePayment->amount + $fine;
+                                                    }else{
+                                                        $amount = $duePayment->amount;
+                                                    }
+                                                @endphp
+                                                <span>{{ $amount }}
+                                                    @if (isset($fine))
+                                                        <span data-toggle="tooltip" data-placement="top" title="Fine" class="badge badge-warning">+{{ $fine }}</span>
+                                                    @endif
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <form action="{!! route('payment.capture') !!}" method="POST" id="payment_form">
                                                     @csrf
                                                     <input type="hidden" name="redirectURL" value="{{route('user.razorpaypayment',$duePayment->id)}}">
                                                     <script src="https://checkout.razorpay.com/v1/checkout.js"
                                                             data-key="{{ env('RAZORPAY_KEY') }}"
-                                                            data-amount="{{($duePayment->amount) * 100}}"
+                                                            data-amount="{{($amount) * 100}}"
                                                             data-name="Leading Lights"
                                                             data-description=""
                                                             data-image="{{ asset('img/logo.jpg') }}"
@@ -133,6 +157,40 @@
                 order : [],
             });
         });
-        $('.razorpay-payment-button').addClass('mb-2 mr-2 btn-pill btn btn-primary btn-lg')
+        $('.razorpay-payment-button').addClass('mb-2 mr-2 btn-pill btn btn-primary btn-lg');
+        $('.razorpay-payment-button').on('click',function() {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "To make payment!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, SURE!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    document.getElementById('payment_form').submit();
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'Your payment is declined :)',
+                        'error'
+                    )
+                }
+            })
+        })
     </script>
 @endsection

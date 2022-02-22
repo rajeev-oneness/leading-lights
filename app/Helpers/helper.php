@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Payment;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 function randomGenerator()
 {
 	return uniqid() . '' . date('ymdhis') . '' . uniqid();
@@ -267,4 +271,27 @@ function getNameofClassOrCourse($feeStructure)
 		}
 	}
 	return $response;
+}
+
+function extraDateFineCalculation($class_id,$course_id,$due_date,$user_id){
+    $previous_payment = DB::table('fees')
+                        ->where('user_id',$user_id)
+                        ->where('course_id',$course_id)
+                        ->where('class_id',$class_id)
+                        ->first();
+    if (!empty($previous_payment)) {
+        //Next date for payment
+        $next_due_date = $due_date;
+        $today_date = date('Y-m-d');
+
+        if ($today_date > $next_due_date) {
+            $date1=date_create($next_due_date);
+            $date2=date_create($today_date);
+            $diff=date_diff($date1,$date2);
+            $extra_date = $diff->format("%a");
+            return $extra_date;
+        }else{
+            return 0;
+        }
+    }
 }
