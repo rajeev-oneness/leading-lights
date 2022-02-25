@@ -47,28 +47,37 @@ class HRController extends Controller
      */
     public function store(Request $request)
     {
-        $unique_id = $this->getCode();
-        $id_no = 'LLHR'.$unique_id;
         $this->validate($request,[
             'first_name' => 'required | string| max:255',
             'last_name' => 'required | string| max:255',
             'email' => 'required|email | unique:users',
             'doj' => 'required|date',
+        ],[
+            'doj.required' => 'The Date Of Joining field is required'
         ]);
 
-        $teacher = new User;
-        $teacher->first_name = $request->first_name;
-        $teacher->last_name = $request->last_name;
-        $teacher->email = $request->email;
-        $teacher->password = Hash::make($id_no);
-        $teacher->doj = $request->doj;
-        $teacher->role_id = 2;
-        $teacher->id_no = $id_no;
-        $teacher->save();
+        $hr_count = User::where('role_id', 2)->count();
+        $num_padded = sprintf("%05d", ($hr_count + 1));
+        $id_no = 'LLHR' . $num_padded;
+
+        $hr = new User;
+        $hr->first_name = $request->first_name;
+        $hr->last_name = $request->last_name;
+        $hr->email = $request->email;
+        $hr->password = Hash::make($id_no);
+        $hr->doj = $request->doj;
+        $hr->role_id = 2;
+        $hr->id_no = $id_no;
+        $hr->status = 1;
+        $hr->rejected = 0;
+        $hr->save();
+
+        $user_id = $hr->id;
+        createNotification($user_id, 0, 0, 'student_registration');
 
         //Send notification
 
-        // Notification::route('mail', $request->email)->notify(new WelcomeMail($teacher,$request->password));
+        Notification::route('mail', $request->email)->notify(new WelcomeMail($hr,$request->password));
         return redirect()->route('admin.hr.index')->with('success','HR added');
     }
 
@@ -110,10 +119,12 @@ class HRController extends Controller
         $this->validate($request,[
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
-            'mobile' => 'max:10',
-            'doj' => 'required',
+            'mobile' => 'required |max:10',
+            'doj' => 'required |required',
             'address' => 'max:255',
             'image' => 'image |mimes:png,jpg',
+        ],[
+            'doj.required' => 'The Date Of Joining field is required'
         ]);
         $hr = User::find($id);
 

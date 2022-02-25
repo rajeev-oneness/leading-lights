@@ -46,28 +46,37 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
-        $unique_id = $this->getCode();
-        $id_no = 'LLT'.$unique_id;
         $this->validate($request,[
             'first_name' => 'required | string| max:255',
             'last_name' => 'required | string| max:255',
             'email' => 'required|email | unique:users',
             'doj' => 'required',
+        ],[
+            'doj.required' => 'The Date Of Joining field is required'
         ]);
+
+        $teacher_count = User::where('role_id', 3)->count();
+        $num_padded = sprintf("%05d", ($teacher_count + 1));
+        $id_no = 'LLTR' . $num_padded;
 
         $teacher = new User;
         $teacher->first_name = $request->first_name;
         $teacher->last_name = $request->last_name;
         $teacher->email = $request->email;
-        $teacher->password = Hash::make($id_no);
+        $teacher->password = Hash::make('Welcome'.date('Y'));
         $teacher->doj = $request->doj;
         $teacher->role_id = 3;
         $teacher->id_no = $id_no;
+
+        $teacher->status = 1;
+        $teacher->rejected = 0;
         $teacher->save();
 
+        $user_id = $teacher->id;
+        createNotification($user_id, 0, 0, 'student_registration');
         //Send notification
 
-        // Notification::route('mail', $request->email)->notify(new WelcomeMail($teacher,$request->password));
+        Notification::route('mail', $request->email)->notify(new WelcomeMail($teacher,$request->password));
         return redirect()->route('admin.teachers.index')->with('success','Teacher added');
     }
 
@@ -108,10 +117,12 @@ class TeacherController extends Controller
         $this->validate($request,[
             'first_name' => 'required |string| max:255',
             'last_name' => 'required |string| max:255',
-            'mobile' => 'max:10',
-            'doj' => 'required',
+            'mobile' => 'required |max:10',
+            'doj' => 'required |required',
             'address' => 'max:255',
             'image' => 'image |mimes:png,jpg',
+        ],[
+            'doj.required' => 'The Date Of Joining field is required'
         ]);
         $teacher = User::find($id);
 
