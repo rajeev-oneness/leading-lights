@@ -20,9 +20,9 @@
             <hr>
             <div class="dashboard-body-content">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5>Banner</h5>
-                    <a href="{{ route('admin.notification.create') }}" class="actionbutton btn btn-sm">ADD
-                        NOTIFICATION</a>
+                    <h5>NOTIFICATION</h5>
+                    {{-- <a href="{{ route('admin.notification.create') }}" class="actionbutton btn btn-sm">ADD
+                        NOTIFICATION</a> --}}
                 </div>
                 <hr>
                 @if (session('success'))
@@ -40,7 +40,7 @@
                                 <th>Serial No</th>
                                 <th>Title</th>
                                 <th>Date</th>
-                                <th>Time</th>
+                                <th>Send To</th>
                                 <th style="width:100px">Action</th>
                             </tr>
                         </thead>
@@ -48,14 +48,20 @@
                             @foreach ($notifications as $key => $notification)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ Str::limit($notification->title, 15) }}</td>
-                                    <td>{{ $notification->date }}</td>
-                                    <td>{{ $notification->time }}</td>
+                                    <td>{{ Str::limit($notification->title, 50) }}</td>
+                                    <td>{{ $notification->created_at ? date('d-M-y',strtotime($notification->created_at)) : 'N/A'}}</td>
+                                    
+                                    <td>
+                                        @php
+                                        $user_details = App\Models\User::find($notification->user_id);
+                                        echo $user_details->first_name.' '.$user_details->last_name;
+                                    @endphp
+                                    </td>
                                     <td>
                                         <a href="{{ route('admin.notification.show', $notification->id) }}"><i
                                                 class="far fa-eye"></i></a>
-                                        <a href="{{ route('admin.notification.edit', $notification->id) }}"
-                                            class="ml-2"><i class="far fa-edit"></i></a>
+                                        {{-- <a href="{{ route('admin.notification.edit', $notification->id) }}"
+                                            class="ml-2"><i class="far fa-edit"></i></a> --}}
                                         <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
                                             data-target="#exampleModal" onclick="deleteForm({{ $notification->id }})"><i
                                                 class="far fa-trash-alt text-danger"></i></a>
@@ -92,10 +98,10 @@
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
-                icon: 'warning',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel',
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {

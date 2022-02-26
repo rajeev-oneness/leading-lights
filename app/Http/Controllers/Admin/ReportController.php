@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\HR;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ArrangeExam;
@@ -9,20 +9,18 @@ use App\Models\Group;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class ReportController extends Controller
 {
     public function index()
     {
+        $data = array();
         $data['groups'] = Group::latest()->get();
         $data['subjects'] = Subject::latest()->get();
         $data['classes'] = Classes::latest()->get();
         $data['users'] = User::where('role_id', 4)->latest()->get();
-        return view('hr.report.index')->with($data);
+        return view('admin.report.index')->with($data);
     }
-
     public function report_details(Request $request)
     {
         $data = array();
@@ -128,6 +126,6 @@ class ReportController extends Controller
                 }
             }
         }
-        return view('hr.report.report')->with($data);
+        return view('admin.report.view')->with($data);
     }
 }

@@ -280,8 +280,7 @@
                                                         <div class="widget-content-right mr-2">
 
                                                             <a class="btn-pill btn-shadow btn-shine btn btn-focus"
-                                                                href="{{ route('logout') }}" onclick="event.preventDefault();
-                       document.getElementById('logout-form').submit();">
+                                                                href="#" onclick="logOut()">
                                                                 {{ __('Logout') }}
                                                             </a>
 
@@ -360,4 +359,38 @@
                 }
             });
         }
+        function logOut() {
+        event.preventDefault();
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You want to logout!",
+            iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                event.preventDefault();
+                document.getElementById('logout-form').submit();
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                // swalWithBootstrapButtons.fire(
+                //     'Cancelled',
+                //     'Your data  is safe :)',
+                //     'error'
+                // )
+            }
+        })
+    }
     </script>

@@ -46,6 +46,9 @@
 
     <script type="text/javascript" charset="utf8" src="{{ asset('frontend/js/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('admin/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+    {{-- Sweetalert --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <style>
         table.dataTable thead .sorting:after,
         table.dataTable thead .sorting_asc:after,

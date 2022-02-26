@@ -94,4 +94,9 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::get('exam/view-mcq-question/{id}',[ExamController::class,'viewMCQQuestion'])->name('viewMCQQuestion');
     Route::get('exam/view-mixed-question/{id}',[ExamController::class,'viewMixedQuestion'])->name('viewMixedQuestion');
 
+    // Report Management
+    Route::get('report',[ReportController::class,'index'])->name('report.index');
+    Route::any('report/details', [ReportController::class, 'report_details'])->name('report_details');
+    Route::get('download-report/{exam_id}', [ReportController::class, 'downLoadReport'])->name('downLoadReport');
+
 });

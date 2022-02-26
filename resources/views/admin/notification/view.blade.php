@@ -12,7 +12,7 @@
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
                         <li><a href="{{ route('admin.notification.index') }}">All Notification List</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#" class="active">View class</a></li>
+                        <li><a href="#" class="active">View NOTIFICATION</a></li>
                     </ul>
                 </div>
                 @include('admin.layouts.navbar')
@@ -31,13 +31,13 @@
                     <div class="col-lg-3">
                         <div class="form-group">
                             <label for="date">Date</label>
-                            <input type="text" id="date" value="{{ $notification_details->date }}" readonly>
+                            <input type="text" id="date" value="{{ $notification_details->created_at ? date('d-M-y',strtotime($notification_details->created_at)) : 'N/A'}}" readonly>
                         </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="form-group">
                             <label for="time">Time</label>
-                            <input type="text" id="time" value="{{ $notification_details->time }}" readonly>
+                            <input type="text" id="time" value="{{ $notification_details->created_at ? getAsiaTime24($notification_details->created_at) : 'N/A'}}" readonly>
                         </div>
                     </div>
 
