@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
     <div id="myCarousel" class="carousel slide carousel-fade d-none" data-ride="carousel">
         <div class="container">
             <ol class="carousel-indicators carousel-indicators-numbers">
@@ -32,7 +32,7 @@
                                 <div class="col-md-5 col-12 order-md-2 order-1">
                                     <div class="banner-imgs">
 
-                                         {{-- <img src="{{ asset('frontend/images/banner1.png') }}" class="img-fluid">  --}}
+                                        {{-- <img src="{{ asset('frontend/images/banner1.png') }}" class="img-fluid"> --}}
 
                                     </div>
                                 </div>
@@ -48,7 +48,8 @@
                                     <div class="banner-text">
                                         <div class="">
                                             <img src="
-                                                    {{ asset('frontend/images/light.png') }}" class="img-fluid">
+                                                            {{ asset('frontend/images/light.png') }}"
+                                                class="img-fluid">
                                             <p class="head">QUALITY <span class="bold">EARLY
                                                     EDUCATION</span> IS NOT
                                                 A LUXURY, BUT A <span class="color">NECESSITY</span> <span
@@ -67,11 +68,11 @@
                                         <!-- <div class="ripple" style="animation-delay: 0s"></div> -->
                                     </div>
                                     <!-- <div class="banner-img">
-                                         <img src="images/1.png" class="img-fluid mx-auto pos-ab">
-                                         <img src="images/2.png" class="img-fluid mx-auto pos-ab">
-                                         <img src="images/3.png" class="img-fluid mx-auto pos-ab">
+                                                 <img src="images/1.png" class="img-fluid mx-auto pos-ab">
+                                                 <img src="images/2.png" class="img-fluid mx-auto pos-ab">
+                                                 <img src="images/3.png" class="img-fluid mx-auto pos-ab">
 
-                                   </div>   -->
+                                           </div>   -->
                                 </div>
                             </div>
                         </div>
@@ -119,18 +120,25 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                @foreach ($student_photos as $photo)
-                    <div class="col-12 col-lg-3 p-1">
-                        <div class="card item">
-                            <a href="{{ asset($photo->image) }}" data-lightbox="photos">
-                                <img src="{{ asset($photo->image) }}" class="card-img-top img-fluid">
-                            </a>
+            @if ($student_photos->count() > 0)
+                <div class="row student_gallery">
+                    @foreach ($student_photos as $photo)
+                        <div class="col-12 col-lg-3 p-1">
+                            <div class="card item">
+                                <a href="{{ asset($photo->image) }}" data-lightbox="photos">
+                                    <img src="{{ asset($photo->image) }}" class="card-img-top img-fluid">
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
                 </div>
-            </div>
+                <div class="row justify-content-end mt-2">
+                    {{ $student_photos->links() }}
+                </div>
+            @else
+                <h5 class="text-center">No photos available</h5>
+            @endif
+        </div>
         </div>
     </section>
 @endsection

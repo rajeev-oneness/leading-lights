@@ -1,4 +1,7 @@
 @extends('hr.layouts.master')
+@section('title')
+    Galary
+@endsection
 @section('content')
     <style>
         .popover,
@@ -95,11 +98,11 @@
                         </div>
                     </div>
                     @if ($photos->count() > 0)
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="row m-0">
+                    {{-- <div class="row">
+                        <div class="col-lg-12"> --}}
+                            <div class="row m-0 student_gallery">
                                 @foreach ($photos as $photo)
-                                    <div class="col-12 col-lg-4 mb-3 pl-1 pr-1">
+                                    {{-- <div class="col-12 col-lg-4 mb-3 pl-1 pr-1">
                                         <a>
                                             <div class="item card border-0 cou_list">
                                                 <div class="features-box">
@@ -110,10 +113,20 @@
                                                 </div>
                                             </div>
                                         </a>
+                                    </div> --}}
+                                    <div class="col-12 col-lg-3 p-1">
+                                        <div class="card item">
+                                            <a href="{{ asset($photo->image) }}" data-lightbox="photos">
+                                                <img src="{{ asset($photo->image) }}" class="card-img-top img-fluid">
+                                            </a>
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
-                        </div>
+                        {{-- </div>
+                    </div> --}}
+                    <div class="row justify-content-end mt-2">
+                        {{ $photos->links() }}
                     </div>
                     @else
                         <h5 class="text-center">No photos available</h5>
@@ -123,6 +136,9 @@
         </div>
         @include('hr.layouts.static_footer')
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
     <script>
         $(document).ready(function() {
             var validated = false;

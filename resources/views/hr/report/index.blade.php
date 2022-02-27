@@ -1,4 +1,7 @@
 @extends('hr.layouts.master')
+@section('title')
+    Student Report
+@endsection
 @section('content')
     <div class="app-main__outer">
         <div class="app-main__inner">
@@ -38,7 +41,8 @@
                                                         {{ $group->name }}</option>
                                                 @endforeach
                                                 @foreach ($classes as $class)
-                                                    <option value="{{ $class->id . '-class' }}" @if (old('class') == $class->id) selected @endif>
+                                                    <option value="{{ $class->id . '-class' }}"
+                                                        @if (old('class') == $class->id) selected @endif>
                                                         {{ $class->name }}</option>
                                                 @endforeach
                                             </select>
@@ -50,7 +54,8 @@
                                             <select class="form-control" id="subject" name="subject">
                                                 <option value="" selected>Subject</option>
                                                 @foreach ($subjects as $subject)
-                                                    <option value="{{ $subject->id }}" @if (old('subject') == $subject->id) selected @endif>
+                                                    <option value="{{ $subject->id }}"
+                                                        @if (old('subject') == $subject->id) selected @endif>
                                                         {{ $subject->name }}</option>
                                                 @endforeach
                                             </select>
@@ -79,20 +84,6 @@
                 </div>
             </div>
         </div>
-        <div class="app-wrapper-footer">
-            <div class="app-footer">
-                <div class="app-footer__inner">
-                    <div class="app-footer-right">
-                        <ul class="header-megamenu nav">
-                            <li class="nav-item">
-                                <a class="nav-link">
-                                    Copyright &copy; 2021 | All Right Reserved
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('hr.layouts.static_footer')
     </div>
 @endsection

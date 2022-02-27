@@ -1,4 +1,7 @@
 @extends('hr.layouts.master')
+@section('title')
+	Profile
+@endsection
 @section('content')
     <div class="app-main">
         <div class="app-sidebar sidebar-shadow">
@@ -406,21 +409,7 @@
 
                 </div>
             </div>
-            <div class="app-wrapper-footer mt-5">
-                <div class="app-footer">
-                    <div class="app-footer__inner">
-                        <div class="app-footer-right">
-                            <ul class="header-megamenu nav">
-                                <li class="nav-item">
-                                    <a class="nav-link">
-                                        Copyright &copy; 2021 | All Right Reserved
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @include('hr.layouts.static_footer')
         </div>
     </div>
     </div>

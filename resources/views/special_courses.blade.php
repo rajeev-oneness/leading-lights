@@ -143,6 +143,9 @@
                     </div>
                 </div>
             </div>
+            <div class="row justify-content-end mr-2">
+                {{ $courses->links() }}
+            </div>
         </div>
     </section>
 @endsection

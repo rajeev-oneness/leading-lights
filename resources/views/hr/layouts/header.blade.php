@@ -187,7 +187,7 @@
                                                             class=" {{ $noti->read_flag == 0 ? 'unread' : 'read' }}"
                                                             onclick="readNotification('{{ $noti->id }}', '{{ $noti->route ? route($noti->route) : '' }}')">
                                                             <p>{{ $noti->title }}
-                                                                {{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}
+                                                               <span class="font-weight-bold">{{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}</span>
                                                             </p>
                                                         </a>
 

@@ -1,4 +1,7 @@
 @extends('hr.layouts.master')
+@section('title')
+	Event
+@endsection
 @section('content')
     <style>
         .popover,

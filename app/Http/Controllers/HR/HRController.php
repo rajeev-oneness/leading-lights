@@ -580,7 +580,7 @@ class HRController extends Controller
     public function studentGalary(Request $request)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET'){
-            $photos = StudentGalary::where('user_id',Auth::user()->id)->latest()->get();;
+            $photos = StudentGalary::where('user_id',Auth::user()->id)->paginate(8);
             return view('hr.student_galary',compact('photos'));
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){

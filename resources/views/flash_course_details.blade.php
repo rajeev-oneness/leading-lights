@@ -21,13 +21,14 @@
                     </div>
                     <h5><b>This course includes</b></h5>
                     <div class="includ_text">
-                        <ul>
+                        {{-- <ul>
                             <li><i class="far fa-arrow-alt-circle-right mr-2"></i>Pencil Sketch</li>
                             <li><i class="far fa-arrow-alt-circle-right mr-2"></i>Color Pencil Sketch</li>
                             <li><i class="far fa-arrow-alt-circle-right mr-2"></i>Use of water Color</li>
                             <li><i class="far fa-arrow-alt-circle-right mr-2"></i>Concepts of light and shadow</li>
                             <li><i class="far fa-arrow-alt-circle-right mr-2"></i>Concept of Perspective</li>
-                        </ul>
+                        </ul> --}}
+                        {!! $course_details->course_content !!}
                     </div>
 
                 </div>

@@ -54,7 +54,7 @@
     </div>
     <hr class="new5">
     <div class="copyright-text text-center">
-        <p>Copyright © 2021 | Design & Developed By <span><a href="http://onenesstechs.com/"></a>
+        <p>Copyright © {{ date('Y') }} | Design & Developed By <span><a href="http://onenesstechs.com/"></a>
                 onenesstechs.com</span></span></p>
     </div>
 </div>

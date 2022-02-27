@@ -1,4 +1,7 @@
 @extends('hr.layouts.master')
+@section('title')
+    Student Report
+@endsection
 @section('content')
     <div class="app-main__outer">
         <div class="app-main__inner">
@@ -25,7 +28,7 @@
                         <tr>
                             <th>Sl. No</th>
                             <th>Student Id</th>
-                            <th>Teacher Name</th>
+                            {{-- <th>Teacher Name</th> --}}
                             <th>Class</th>
                             <th>Subject</th>
                             <th>Exam Category</th>
@@ -98,21 +101,7 @@
                 </table>
             </div>
         </div>
-        <div class="app-wrapper-footer">
-            <div class="app-footer">
-                <div class="app-footer__inner">
-                    <div class="app-footer-right">
-                        <ul class="header-megamenu nav">
-                            <li class="nav-item">
-                                <a class="nav-link">
-                                    Copyright &copy; 2021 | All Right Reserved
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('hr.layouts.static_footer')
     </div>
     <script>
         $(document).ready(function() {

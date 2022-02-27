@@ -152,6 +152,9 @@
                             </div>
                         @endforeach
                     </div>
+                    <div class="row justify-content-end">
+                        {{ $events->link() }}
+                    </div>
                 </div>
             </div>
         </div>

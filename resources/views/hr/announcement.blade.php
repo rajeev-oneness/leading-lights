@@ -1,4 +1,7 @@
 @extends('hr.layouts.master')
+@section('title')
+	Announcement
+@endsection
 @section('content')
     <div class="app-main__outer">
         <div class="app-main__inner">

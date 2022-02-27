@@ -53,7 +53,7 @@ class CommonController extends Controller
 
     public function availableCourses()
     {
-        $data['courses'] = SpecialCourse::where('class_id',null)->latest()->get();
+        $data['courses'] = SpecialCourse::where('class_id',null)->latest()->paginate(9);
         return view('special_courses')->with($data);
     }
     public function flashCourses()
@@ -63,17 +63,17 @@ class CommonController extends Controller
     }
     public function studentGalary()
     {
-        $data['student_photos'] = StudentGalary::latest()->get();
+        $data['student_photos'] = StudentGalary::latest()->paginate(8);
         return view('student_galary')->with($data);
     }
     public function availableEvents()
     {
-        $data['events'] = Event::latest()->get();
+        $data['events'] = Event::latest()->paginate(9);
         return view('events')->with($data);
     }
     public function vlog()
     {
-        $data['vlogs'] = VLOG::latest()->get();
+        $data['vlogs'] = VLOG::latest()->paginate(6);
         return view('vlog')->with($data);
     }
     public function vlogDetails($id)
@@ -88,7 +88,7 @@ class CommonController extends Controller
     }
     public function video()
     {
-        $data['videos'] = Video::latest()->get();
+        $data['videos'] = Video::latest()->paginate(9);
         return view('video')->with($data);
     }
     public function videoDetails(Request $request,$id)
