@@ -58,7 +58,7 @@
                 </div>
                 @endforeach
                 <div class="row justify-content-end">
-                    {{ $videos->link() }}
+                    {{ $videos->links() }}
                 </div>
             </div>
         </div>

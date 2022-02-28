@@ -1,0 +1,2 @@
+[28-Jan-2022 07:48:42 UTC] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home2/dev91jga/public_html/dev/leadingLight/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 352
+[10-Feb-2022 11:24:43 UTC] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home2/dev91jga/public_html/dev/leadingLight/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 824

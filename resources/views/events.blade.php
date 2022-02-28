@@ -153,7 +153,7 @@
                         @endforeach
                     </div>
                     <div class="row justify-content-end">
-                        {{ $events->link() }}
+                        {{ $events->links() }}
                     </div>
                 </div>
             </div>
