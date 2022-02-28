@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   </head>
   <body>
-    <h2 class="text-center">Leading Lights</h2>
     <div class="brand-logo text-center pt-5">
         <img src="{{ public_path('img/logo.jpg') }}">
     </div>
@@ -33,7 +32,7 @@
                     $subject_details = App\Models\Subject::find($result->subject);
                 @endphp
                 <td>{{ $subject_details->name }}</td>
-                <td>{{ $result->marks }}</td>   
+                <td>{{ $result->total_marks }}</td>   
                 <td>{{ $result->full_marks }}</td>
             </tr>
         @endforeach
