@@ -184,6 +184,55 @@ class StudentController extends Controller
         }else{
             $s_course_ids = null;
         }
+        
+        // Upgrade Course
+
+        $subscribed_course = $student->special_course_ids;
+        $explode_subscribed_course = explode(',',$subscribed_course);
+        if ($special_course_ids) {
+            $feedata = [];
+            foreach ($special_course_ids as $key => $course) {
+                if (!$subscribed_course) {
+                    $s_course = SpecialCourse::where('id', $course)->first();
+                    $course_start_date = $s_course->start_date;
+                    if ($s_course) {
+                        $next_date = date('Y-m-01',strtotime($course_start_date));
+                        $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                        $feedata[] = [
+                            'user_id' => $student->id,
+                            'class_id' => 0,
+                            'course_id' => $s_course->id,
+                            'fee_type' => 'course_fee',
+                            'due_date' => $next_due_date,
+                            'payment_month' => date("F",strtotime($course_start_date)),
+                            'amount' => $s_course->monthly_fees,
+                        ];
+                    }
+                }
+                if ($subscribed_course) {
+                   if (!in_array($course,$explode_subscribed_course)) {
+                        $s_course = SpecialCourse::where('id', $course)->first();
+                        $course_start_date = $s_course->start_date;
+                        if ($s_course) {
+                            $next_date = date('Y-m-01',strtotime($course_start_date));
+                            $next_due_date = date('Y-m-d', strtotime($next_date. ' + 4 days'));
+                            $feedata[] = [
+                                'user_id' => $student->id,
+                                'class_id' => 0,
+                                'course_id' => $s_course->id,
+                                'fee_type' => 'course_fee',
+                                'due_date' => $next_due_date,
+                                'payment_month' => date("F",strtotime($course_start_date)),
+                                'amount' => $s_course->monthly_fees,
+                            ];
+                        }
+                   }
+                }
+            }
+            if (count($feedata) > 0) {
+                DB::table('fees')->insert($feedata);
+            }  
+        }
 
         // Upgrade Class
         if ($request->class) {
