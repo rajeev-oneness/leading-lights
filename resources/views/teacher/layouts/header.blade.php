@@ -189,7 +189,7 @@
                                                             class=" {{ $noti->read_flag == 0 ? 'unread' : 'read' }}"
                                                             onclick="readNotification('{{ $noti->id }}', '{{ $noti->route ? route($noti->route) : '' }}')">
                                                             <p>{{ $noti->title }}
-                                                                {{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}
+                                                                <span class="font-weight-bold">{{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}</span>
                                                             </p>
                                                         </a>
 
@@ -274,8 +274,7 @@
                                                             <div class="widget-heading">
                                                                 {{ Auth::user()->first_name }}
                                                                 {{ Auth::user()->last_name }}</div>
-                                                            <div class="widget-subheading opacity-8">A short
-                                                                profile description</div>
+                                                            <div class="widget-subheading opacity-8">{{ Auth::user()->email }}</div>
                                                         </div>
                                                         <div class="widget-content-right mr-2">
 
@@ -294,7 +293,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="scroll-area-xs" style="height: 150px;">
+                                    <div class="scroll-area-xs" style="height: auto;">
                                         <div class="scrollbar-container ps">
                                             <ul class="nav flex-column">
                                                 <li class="nav-item-header nav-item">Activity</li>

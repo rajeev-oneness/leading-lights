@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\ArrangeExam;
 use App\Models\Classes;
 use App\Models\Group;
+use App\Models\Result;
 use App\Models\Subject;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ReportController extends Controller
 {
@@ -40,26 +43,27 @@ class ReportController extends Controller
                     'student_id' => 'required',
                     'class_name' => 'required'
                 ], $messages = [
-                    'student_id.required' => 'The student field is required.',
-                    'class_name.required' => 'The class field is required.',
+                    'student_id.required' => 'This field is required.',
+                    'class_name.required' => 'This field is required.',
                 ])->validate();
 
                 $student_id = $request->student_id;
-                $data['user_details'] = User::where('id_no', $student_id)->first();
-                $data['all_result'] = SubmitExam::where('id_no', $student_id)
-                    ->where('marks', '!=', '')
-                    ->join('arrange_exams', 'arrange_exams.id', '=', 'submit_exams.exam_id')
+                $data['user_details'] = User::where('id', $student_id)->first();
+                $data['all_result'] = Result::where('results.user_id', $student_id)
+                    ->where('total_marks', '!=', '')
+                    ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
                     ->get();
-                $data['total_marks'] = SubmitExam::where('id_no', $student_id)
-                    ->where('marks', '!=', '')
-                    ->join('arrange_exams', 'arrange_exams.id', '=', 'submit_exams.exam_id')
-                    ->sum('marks');
-                $data['total_full_marks'] = SubmitExam::where('id_no', $student_id)
-                    ->where('marks', '!=', '')
-                    ->join('arrange_exams', 'arrange_exams.id', '=', 'submit_exams.exam_id')
+                $data['total_marks'] = Result::where('results.user_id', $student_id)
+                    ->where('total_marks', '!=', '')
+                    ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
+                    ->sum('total_marks');
+                $data['total_full_marks'] = Result::where('results.user_id', $student_id)
+                    ->where('full_marks', '!=', '')
+                    ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
                     ->sum('full_marks');
+                // dd($data);
                 $pdf = PDF::loadView('student.report', $data);
-                return $pdf->download($student_id . '.pdf');
+                return $pdf->download($data['user_details']['id_no'] . '.pdf');
             }
             if (isset($_POST['class_wise_result'])) {
                 Validator::make($request->all(), [
@@ -76,21 +80,20 @@ class ReportController extends Controller
                     $data['class'] = $after_explode_class[0];
                     $class_details = Classes::where('id', $after_explode_class[0])->first('name');
 
-                    $data['all_result'] = SubmitExam::where('arrange_exams.user_id', Auth::user()->id)
-                        ->where('arrange_exams.class', $after_explode_class[0])
-                        ->where('marks', '!=', '')
-                        ->join('arrange_exams', 'arrange_exams.id', '=', 'submit_exams.exam_id')
-                        // ->join('users','users.id_no','=','submit_exams.roll_no')
+                    $data['all_result'] = Result::where('arrange_exams.class', $after_explode_class[0])
+                        ->selectRaw('DISTINCT results.user_id')
+                        ->where('total_marks', '!=', '')
+                        ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
                         ->get();
                 }
                 if ($after_explode_class[1] === 'group') {
                     $data['class'] = $after_explode_class[0];
                     $class_details = Group::where('id', $after_explode_class[0])->first('name');
 
-                    $data['all_result'] = SubmitExam::where('arrange_exams.user_id', Auth::user()->id)
+                    $data['all_result'] = Result::where('arrange_exams.user_id', $after_explode_class[0])
                         ->where('arrange_exams.group_id', $after_explode_class[0])
                         ->where('marks', '!=', '')
-                        ->join('arrange_exams', 'arrange_exams.id', '=', 'submit_exams.exam_id')
+                        ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
                         // ->join('users','users.id_no','=','submit_exams.roll_no')
                         ->get();
                 }

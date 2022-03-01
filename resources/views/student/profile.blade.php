@@ -331,11 +331,7 @@
                                                                         src="{{ asset('frontend/assets/images/calander.png') }}"
                                                                         class="img-fluid mx-auto"></div>
                                                                 <div class="widget-subheading ml-3">
-                                                                    {{ date('M d, Y', strtotime($announcement->start_date)) }}
-                                                                    @if ($announcement->end_date)
-                                                                        -
-                                                                        {{ date('M d, Y', strtotime($announcement->end_date)) }}
-                                                                    @endif
+                                                                    {{ date('M d, Y', strtotime($announcement->date)) }}
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -49,7 +49,7 @@
                                                         </td>
                                                         <td>{{  $attendance_details->id_no }}</td>
                                                         <td>{{  $attendance_details->doj ? $attendance_details->doj : 'N/A' }}</td>
-                                                        <td>{{  $attendance_details->qualification ? $attendance_details->qualification : 'N/A'}}</td>
+                                                        <td>{{  $attendance_details->qualification ? $attendance_details->qualification->name : 'N/A'}}</td>
                                                         <td><a href="{{ route('hr.show.teacher.attendance', ['id' => $attendance_details->id]) }}"><i class="fa fa-eye text-info" data-toggle="tooltip" data-placement="top" title="View attendance"></i></a>
                                                         </td>
                                                     </tr>

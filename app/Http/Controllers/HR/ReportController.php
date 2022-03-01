@@ -42,10 +42,10 @@ class ReportController extends Controller
 
                 Validator::make($request->all(), [
                     'student_id' => 'required',
-                    'class' => 'required'
+                    'class_name' => 'required'
                 ], $messages = [
                     'student_id.required' => 'This field is required.',
-                    'class.required' => 'This field is required.',
+                    'class_name.required' => 'This field is required.',
                 ])->validate();
 
                 $student_id = $request->student_id;
@@ -83,10 +83,8 @@ class ReportController extends Controller
 
                     $data['all_result'] = Result::where('arrange_exams.class', $after_explode_class[0])
                         ->selectRaw('DISTINCT results.user_id')
-                        // ->select('results.exam_id')
                         ->where('total_marks', '!=', '')
                         ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
-                        // ->join('users','users.id_no','=','submit_exams.roll_no')
                         ->get();
                 }
                 if ($after_explode_class[1] === 'group') {

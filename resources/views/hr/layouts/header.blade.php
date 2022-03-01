@@ -188,6 +188,7 @@
                                                             onclick="readNotification('{{ $noti->id }}', '{{ $noti->route ? route($noti->route) : '' }}')">
                                                             <p>{{ $noti->title }}
                                                                <span class="font-weight-bold">{{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}</span>
+                                                               {{-- <span class="font-weight-bold">{{ date('d-M-y',strtotime($noti->created_at)) }}, {{ date('h:i A',strtotime(getAsiaTime24($noti->created_at))) }}</span> --}}
                                                             </p>
                                                         </a>
 
@@ -270,8 +271,7 @@
                                                             <div class="widget-heading">
                                                                 {{ Auth::user()->first_name }}
                                                                 {{ Auth::user()->last_name }}</div>
-                                                            <div class="widget-subheading opacity-8">A short
-                                                                profile description</div>
+                                                            <div class="widget-subheading opacity-8">{{ Auth::user()->email }}</div>
                                                         </div>
                                                         <div class="widget-content-right mr-2">
 

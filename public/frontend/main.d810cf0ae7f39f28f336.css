@@ -2268,3 +2268,13 @@ table.dataTable.no-footer {
 .swal2-icon .swal2-error .swal2-icon-show{
   display: none !important;
 }
+.select2-container .select2-selection--single {
+  height: 45px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: 44px !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  top: 10px !important;
+}

@@ -18,6 +18,9 @@
             </div>
             <div class="row">
                 <div class="card mb-3 col-lg-6">
+                    <div class="card-title p-3">
+                        Results
+                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-12">
@@ -34,12 +37,13 @@
                                     @csrf
                                     <div class="d-sm-flex align-items-top justify-content-between">
                                         <div class="responsive-error">
+                                            <label for="">Select Class<span class="text-danger">*</span></label>
                                             <select name="class" id="class" class="form-control" onclick="test()">
-                                                <option value="">Select Class/Groups</option>
-                                                @foreach ($groups as $group)
+                                                <option value="">Select Class</option>
+                                                {{-- @foreach ($groups as $group)
                                                     <option value="{{ $group->id . '-group' }}" class="text-info">
                                                         {{ $group->name }}</option>
-                                                @endforeach
+                                                @endforeach --}}
                                                 @foreach ($classes as $class)
                                                     <option value="{{ $class->id . '-class' }}"
                                                         @if (old('class') == $class->id) selected @endif>
@@ -51,6 +55,7 @@
                                             @endif
                                         </div>
                                         <div class="responsive-error">
+                                            <label for="">Select Subject<span class="text-danger">*</span></label>
                                             <select class="form-control" id="subject" name="subject">
                                                 <option value="" selected>Subject</option>
                                                 @foreach ($subjects as $subject)
@@ -83,8 +88,8 @@
                     </div>
                 </div>
                 <div class="card mb-3 col-lg-6">
-                    <div class="card-title">
-                        Individual Result
+                    <div class="card-title p-3">
+                        Individual Report
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -103,7 +108,7 @@
                                     <div class="d-sm-flex align-items-top justify-content-between">
                                         <div class="responsive-error">
                                             <label for="name">Select Class<span class="text-danger">*</span></label>
-                                            <select name="class" id="class_wise_combo" class="form-control">
+                                            <select name="class_name" id="class_wise_combo" class="form-control">
                                                 <option value="">Select Class</option>
                                                 {{-- @foreach ($groups as $group)
 												<option value="{{ $group->id . '-group' }}" class="text-info">
@@ -143,8 +148,8 @@
                     </div>
                 </div>
                 <div class="card mb-3 col-lg-6">
-                    <div class="card-title">
-                        Class Wise Result
+                    <div class="card-title p-3">
+                        Class Wise Report
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -195,7 +200,7 @@
     </div>
     <script>
         $(document).ready(function() {
-            $('#student_id').select2();
+            // $('#student_id').select2();
             var validated = false;
             $('.error').hide();
         });
