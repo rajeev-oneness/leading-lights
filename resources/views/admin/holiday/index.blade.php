@@ -11,7 +11,7 @@
                     <ul class="breadcrumb p-0">
                         <li><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="text-white"><i class="fa fa-chevron-right"></i></li>
-                        <li><a href="#" class="active">All class List</a></li>
+                        <li><a href="#" class="active">All Holiday List</a></li>
 
                     </ul>
                 </div>
@@ -20,7 +20,7 @@
             <hr>
             <div class="dashboard-body-content">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5>Banner</h5>
+                    <h5>Holiday</h5>
                     <a href="{{ route('admin.holidays.create') }}" class="actionbutton btn btn-sm">ADD HOLIDAYS</a>
                 </div>
                 <hr>

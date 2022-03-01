@@ -74,8 +74,8 @@
                     <div class="row m-0">
                         <div class="col-lg-6 form-group edit-box">
                             <label for="exampleInputEmail1">Date Of Joining<span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" id="exampleInputEmail1"
-                                placeholder="Enter date of birth" name="doj" value="{{ $hr_details->doj }}" min="{{ date('Y-m-d', strtotime('+1 day')) }}" onkeypress="return false;">
+                            <input type="text" class="form-control datepicker" id="exampleInputEmail1"
+                                placeholder="Enter date of birth" name="doj" value="{{ $hr_details->doj }}">
                             @if ($errors->has('doj'))
                                 <span style="color: red;">{{ $errors->first('doj') }}</span>
                             @endif
@@ -142,7 +142,16 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
     <script>
+        $('.datepicker').datepicker({
+            format: 'dd-M-yyyy',
+            endDate: '+1d',
+            autoclose: true,
+            clearBtn: true,
+            // daysOfWeekDisabled: [0]
+        });
         function alphaOnly(event) {
             var key = event.keyCode;
             return ((key >= 65 && key <= 90) || key == 8);

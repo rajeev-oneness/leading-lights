@@ -325,8 +325,8 @@
                         <div class="widget-content-left header-user-info">
                             <div class="widget-heading"> {{ Auth::user()->first_name }}
                                 {{ Auth::user()->last_name }}</div>
-                            <div class="widget-subheading"> Member Seance:
-                                {{ Auth::user()->created_at ? date('Y', strtotime(Auth::user()->created_at)) : 'N/A' }}
+                            <div class="widget-subheading"> Member Since:
+                                {{ Auth::user()->created_at ? date('M,Y', strtotime(Auth::user()->created_at)) : 'N/A' }}
                             </div>
                         </div>
                         <div class="widget-content-left ml-3">
@@ -397,12 +397,12 @@
                                                 @endif
                                                 @if (Auth::user()->registration_type != 4)
                                                     <li class="nav-item">
-                                                        <a href="{{ route('hr.profile') }}"
+                                                        <a href="{{ route('user.profile') }}"
                                                             class="nav-link">Profile
                                                         </a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a href="{{ route('hr.changePassword') }}"
+                                                        <a href="{{ route('user.changePassword') }}"
                                                             class="nav-link">Change
                                                             Password</a>
                                                     </li>

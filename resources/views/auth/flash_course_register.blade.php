@@ -190,7 +190,11 @@
             $('.special_course_ids').select2();
             var validated = false;
             $('.error').hide();
+            setTimeout(function() {
+                $("#first_name").focus();
+            }, 100);
         });
+
 
         $('#btn_submit').on('click', function(e) {
             e.preventDefault();
@@ -433,9 +437,11 @@
                 }
             });
         });
-        $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
-            endDate: new Date(),
+       	$('.datepicker').datepicker({
+            format: 'dd-M-yyyy',
+            endDate: '-60d',
+            autoclose: true,
+            clearBtn: true,
             // daysOfWeekDisabled: [0]
         });
 
@@ -557,7 +563,7 @@
 
         function alphaOnly(event) {
             var key = event.keyCode;
-            return ((key >= 65 && key <= 90) || key == 8);
+            return ((key >= 65 && key <= 90) || key == 8 || key == 9);
         };
     </script>
 @endsection

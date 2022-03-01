@@ -24,8 +24,8 @@
                                         <label for="first_name"><b>First Name</b><span class="text-danger">*</span>
                                         </label>
                                         <input class="form-control" id="first_name" name="first_name" type="text"
-                                            placeholder="" value="{{ old('first_name') }}" 
-                                            onkeydown="return alphaOnly(event);">
+                                            placeholder="" value="{{ old('first_name') }}"
+                                            onkeydown="return alphaOnly(event);" autofocus>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                         @error('first_name')
                                             <span class="text-danger">{{ $message }}</span>
@@ -36,7 +36,8 @@
                                     <div class="form-group col-sm-6">
                                         <label for="last_name"><b>Last Name</b><span class="text-danger">*</span></label>
                                         <input class="form-control" id="last_name" name="last_name" type="text"
-                                            placeholder="" value="{{ old('last_name') }}" onkeydown="return alphaOnly(event);">
+                                            placeholder="" value="{{ old('last_name') }}"
+                                            onkeydown="return alphaOnly(event);">
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                         @error('last_name')
                                             <span class="text-danger">{{ $message }}</span>
@@ -49,7 +50,7 @@
                                         <label for="email"><b>Email address</b> <span
                                                 class="text-danger">*</span></label>
                                         <input class=" form-control" type="email" name="email" id="email"
-                                            value="{{ old('email') }}">
+                                            value="{{ old('email') }}" autofocus>
                                         <div class="error" style="color : red;">Please Fill This field.</div>
                                         @error('email')
                                             <span class="text-danger">{{ $message }}</span>
@@ -219,6 +220,9 @@
             $('.special_course_ids').select2();
             var validated = false;
             $('.error').hide();
+            setTimeout(function() {
+                $("#first_name").focus();
+            }, 100);
         });
 
         $('#btn_submit').on('click', function(e) {
@@ -508,9 +512,13 @@
                 }
             });
         });
+        var dateObj = new Date();
+
         $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
-            endDate: new Date(),
+            format: 'dd-M-yyyy',
+            endDate: '-60d',
+            autoclose: true,
+            clearBtn: true,
             // daysOfWeekDisabled: [0]
         });
 
@@ -590,15 +598,13 @@
                     $('#mobile').focus();
                     document.getElementById("btn_submit").disabled = true;
                     document.getElementById("btn_submit").style.cursor = 'no-drop';
-                }
-                else if(mobile.length < 10){
+                } else if (mobile.length < 10) {
                     $('.mobile-success').html('');
                     $('.mobile-err').html('Please enter 10 digit number');
                     $('#mobile').focus();
                     document.getElementById("btn_submit").disabled = true;
                     document.getElementById("btn_submit").style.cursor = 'no-drop';
-                }
-                 else if(mobile.length == 10) {
+                } else if (mobile.length == 10) {
                     $.ajax({
                         url: "{{ route('checkMobileNoExistence') }}",
                         data: {
@@ -636,8 +642,8 @@
 
         function alphaOnly(event) {
             var key = event.keyCode;
-            return ((key >= 65 && key <= 90) || key == 8);
+            console.log(key);
+            return ((key >= 65 && key <= 90) || key == 8 || key == 9);
         };
-
     </script>
 @endsection

@@ -54,7 +54,9 @@
                                     <td>
                                         @php
                                         $user_details = App\Models\User::find($notification->user_id);
-                                        echo $user_details->first_name.' '.$user_details->last_name;
+                                        if ($user_details) {
+                                            echo $user_details->first_name.' '.$user_details->last_name;
+                                        }
                                     @endphp
                                     </td>
                                     <td>

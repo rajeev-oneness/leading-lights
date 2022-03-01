@@ -194,6 +194,9 @@
             $('#other_qualification').prop('disabled', true);
             var validated = false;
             $('.error').hide();
+            setTimeout(function() {
+                $("#first_name").focus();
+            }, 100);
         });
         $('#qualification').on('change', function(e) {
             let qualification = $('#qualification').val();
@@ -276,9 +279,11 @@
             }
         }
         $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
-            startDate: '+1 day',
-            daysOfWeekDisabled: [0]
+            format: 'dd-M-yyyy',
+            startDate: '+1d',
+            autoclose: true,
+            clearBtn: true,
+            // daysOfWeekDisabled: [0]
         });
 
         $('#btn_submit').on('click', function(e) {
@@ -527,7 +532,7 @@
 
         function alphaOnly(event) {
             var key = event.keyCode;
-            return ((key >= 65 && key <= 90) || key == 8);
+            return ((key >= 65 && key <= 90) || key == 8 || key == 9);
         };
     </script>
 @endsection

@@ -120,7 +120,22 @@ class StudentController extends Controller
     public function show($id)
     {
         $data['student'] = User::find($id);
-        $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
+                /**
+         * Age Calculation
+         */
+        $check_student_age_in_year =  Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y');
+        if ($check_student_age_in_year == 0 || $check_student_age_in_year == 1) {
+            $student_age_in_year = $check_student_age_in_year.' '.'year';
+        }else{
+            $student_age_in_year = $check_student_age_in_year.' '.'years';
+        }
+        $check_student_age_month =  Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%m');
+        if ($check_student_age_month == 0 || $check_student_age_month == 1) {
+            $student_age_in_month = $check_student_age_month.' '.'month';
+        }else{
+            $student_age_in_month = $check_student_age_month.' '.'months';
+        }
+        $data['student_age'] = $student_age_in_year.' '.$student_age_in_month;
         $data['certificates'] = Certificate::where('user_id', $id)->get();
         return view('admin.student.view')->with($data);
     }

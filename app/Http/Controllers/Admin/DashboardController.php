@@ -10,6 +10,7 @@ use App\Models\Classes;
 use App\Models\Course;
 use App\Models\Event;
 use App\Models\Group;
+use App\Models\Holiday;
 use App\Models\notice;
 use App\Models\SpecialCourse;
 use App\Models\Subject;
@@ -37,6 +38,7 @@ class DashboardController extends Controller
       $data['group_count'] = Group::count();
       $data['subject_count'] = Subject::count();
       $data['news_count'] = notice::count();
+      $data['holiday_count'] = Holiday::count();
       $data['this_week_exam_count'] = ArrangeExam::whereBetween('date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
       $data['this_week_arrange_class_count'] = ArrangeClass::whereBetween('date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
       $data['this_week_no_of_events'] = Event::whereBetween('start_date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();

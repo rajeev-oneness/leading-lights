@@ -20,6 +20,7 @@ use App\Models\ArrangeExam;
 use App\Models\Certificate;
 use App\Models\Classes;
 use App\Models\Event;
+use App\Models\Holiday;
 use App\Models\OtherPaymentDetails;
 use App\Models\Payment;
 use App\Models\SpecialCourse;
@@ -44,12 +45,28 @@ class UserController extends Controller
             ->whereDate('date', '=', date('Y-m-d'))->orderBy('arrange_classes.created_at', 'desc')->get();
         // dd($data['special_classes']);
         $data['student'] = User::where('id', $current_user_id)->first();
-        $data['student_age'] = Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y years');
+        /**
+         * Age Calculation
+         */
+        $check_student_age_in_year =  Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%y');
+        if ($check_student_age_in_year == 0 || $check_student_age_in_year == 1) {
+            $student_age_in_year = $check_student_age_in_year.' '.'year';
+        }else{
+            $student_age_in_year = $check_student_age_in_year.' '.'years';
+        }
+        $check_student_age_month =  Carbon::parse($data['student']->dob)->diff(Carbon::now())->format('%m');
+        if ($check_student_age_month == 0 || $check_student_age_month == 1) {
+            $student_age_in_month = $check_student_age_month.' '.'month';
+        }else{
+            $student_age_in_month = $check_student_age_month.' '.'months';
+        }
+        $data['student_age'] = $student_age_in_year.' '.$student_age_in_month;
         $data['certificates'] = Certificate::where('user_id', $current_user_id)->first();
         $data['announcements'] = Announcement::where('class_id', Auth::user()->class)
                                 ->orWhere('class_id','all')
                                 ->latest()
                                 ->get();
+                                
         return view('student.profile')->with($data);
     }
 
@@ -168,7 +185,9 @@ class UserController extends Controller
                 ->orWhere('class_id',null)
                 ->latest()
                 ->get(['id', 'title', 'start_date as start', 'end_date as end','start_time as description'])->toArray();
-            return response()->json(array_merge($classes, $special_classes,  $events));
+            $holidays = Holiday::latest()
+                ->get(['id', 'name as title', 'date as start'])->toArray();
+            return response()->json(array_merge($classes, $special_classes,  $events, $holidays));
         }
         $data = array();
         $data['events'] = Event::where('class_id', Auth::user()->class)

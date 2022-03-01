@@ -2022,11 +2022,11 @@ table.dataTable.no-footer {
 }
 .swal2-popup{
     width: 250px !important;
-    background: rgb(50, 50, 50, 0.95) !important;
+    background: rgb(105,105,105) !important;
 }
 .swal2-popup .swal2-title{
   font-size: 1.2em;
-  color: #a5a5a5;
+  color: #a5a5a5 !important;
 }
 .swal2-html-container{
   font-size: 14px;

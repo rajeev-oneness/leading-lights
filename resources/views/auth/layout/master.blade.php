@@ -1,3 +1,3 @@
-@extends('auth.layout.header')
+@include('auth.layout.header')
 @yield('content')
-@extends('auth.layout.footer')
+@include('auth.layout.footer')

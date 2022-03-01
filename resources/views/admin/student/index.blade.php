@@ -19,11 +19,12 @@
             <hr>
             <div class="dashboard-body-content">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5>Student</h5>
+                    <h5>Student (<small>Total: {{ $students->count() }}</small>)</h5>
+                    
                     {{-- <a href="{{ route('admin.students.create') }}" class="actionbutton btn btn-sm">ADD STUDENT</a> --}}
                     <button type="button" class="actionbutton btn btn-sm" data-toggle="modal" data-target="#exampleModal">
                         ADD STUDENT
-                      </button>
+                    </button>
                 </div>
                 <hr>
                 @if (session('success'))
@@ -38,14 +39,14 @@
                     <table class="table table-sm table-hover" id="student_table">
                         <thead>
                             <tr>
-                                <th>Serial No</th>
-                                <th>Student Id</th>
-                                <th>Class</th>
-                                <th>Special Course</th>
-                                <th>Flash Course</th>
+                                <th>Sl. No</th>
+                                <th>Students Id</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
+                                <th>Class</th>
+                                <th>Spl. Course</th>
+                                <th>Fl. Course</th>
                                 <th style="width:100px" class="text-center">Status</th>
                                 <th style="width:100px">Action</th>
                             </tr>
@@ -55,53 +56,6 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $student->id_no }}</td>
-                                    <?php
-                                    if (str_contains($student->special_course_ids, ',')) {
-                                        $special_course_ids = explode(',', $student->special_course_ids);
-                                        foreach ($special_course_ids as $course_id) {
-                                            $course_details[] = App\Models\SpecialCourse::find($course_id);
-                                        }
-                                    } else {
-                                        $special_course_ids = $student->special_course_ids;
-                                        $course_detail = App\Models\SpecialCourse::find($special_course_ids);
-                                    }
-
-                                    $class_details = App\Models\Classes::find($student->class);
-                                    ?>
-                                    <td>
-                                        @if ($class_details)
-                                            <span class="text-success">{{ $class_details->name ? $class_details->name : '' }}</span>
-                                        @else
-                                            <span class="text-danger">N/A</span>
-                                        @endif
-
-                                    <td>
-                                        <span class="text-info">
-                                            @if ($student->special_course_ids !== null)
-
-                                                @if (str_contains($student->special_course_ids, ','))
-                                                    {{-- <div class="student-list"> --}}
-                                                        {{-- <ol> --}}
-                                                            @foreach ($course_details as $course)
-                                                                <span class="badge badge-primary">{{ $course['title'] }}</span class="badge badge-primary">
-                                                            @endforeach
-                                                        {{-- </ol> --}}
-                                                    {{-- </div> --}}
-                                                @else
-                                                    {{ $course_detail['title'] }}
-                                                @endif
-                                            @else
-                                                <span class="text-danger">N/A</span>
-                                            @endif
-
-                                        </span>
-
-
-                                    </td>
-                                    <td>
-                                        {{ $student->flash_course ? \Illuminate\Support\Str::limit($student->flash_course->title,15) : 'N/A'}}
-                                    </td>
-                                    {{-- <td>{{ $course_details->title ? $course_details->title : 'N/A' }}</td> --}}
                                     <td>{{ $student->first_name }} {{ $student->last_name }}</td>
                                     <td>{{ $student->email }}</td>
                                     <td>
@@ -112,6 +66,37 @@
                                         @endif
 
                                     </td>
+                                    <?php
+                                    $class_details = App\Models\Classes::find($student->class);
+                                    ?>
+                                    <td>
+                                        @if ($class_details)
+                                            <span
+                                                class="text-success">{{ $class_details->name ? $class_details->name : '' }}</span>
+                                        @else
+                                            <span class="text-danger">N</span>
+                                        @endif
+
+                                    <td>
+                                        <span class="text-info">
+                                            @if ($student->special_course_ids !== null)
+                                                <span class="text-success">Y</span>
+                                            @else
+                                                <span class="text-danger">N</span>
+                                            @endif
+
+                                        </span>
+
+
+                                    </td>
+                                    <td>
+                                        @if ($student->flash_course)
+                                            <span class="text-success">Y</span>
+                                        @else
+                                            <span class="text-danger">N</span>
+                                        @endif
+                                    </td>
+                                    {{-- <td>{{ $course_details->title ? $course_details->title : 'N/A' }}</td> --}}
                                     <td class="text-center">
                                         @if ($student->status == 1 && $student->deactivated == 0)
                                             <span class="badge badge-success">Approved</span>

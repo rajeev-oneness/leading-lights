@@ -136,7 +136,9 @@
                 events: "{{ route('user.dairy') }}",
 
                 eventRender: function(event, element) {
-                    element.find('.fc-title').append("<br/>" + event.description);
+                    if (event.description) {
+                        element.find('.fc-title').append("<br/>" + event.description);
+                    }
                 },
                 // eventMouseover: function(calEvent, jsEvent) {
                 //     var tooltip =

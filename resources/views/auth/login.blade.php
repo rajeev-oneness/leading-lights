@@ -100,4 +100,11 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            setTimeout(function() {
+                $("#signin-email").focus();
+            }, 100);
+        });
+    </script>
 @endsection

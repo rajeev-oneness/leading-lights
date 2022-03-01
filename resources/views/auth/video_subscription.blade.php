@@ -179,6 +179,9 @@
             $('.special_course_ids').select2();
             var validated = false;
             $('.error').hide();
+            setTimeout(function() {
+                $("#first_name").focus();
+            }, 100);
         });
 
         $('#btn_submit').on('click', function(e) {

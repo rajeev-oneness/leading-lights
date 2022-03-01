@@ -168,6 +168,20 @@
                 </div>
                 <div class="col-12 col-md-3 mb-3">
                     <div class="card shadow-sm border-0">
+                        <a href="{{ route('admin.holidays.index') }}">
+                            <div class="card-body gpcVCf">
+                                <div class="icon-sec w-50">
+                                    <i class="fas fa-snowman"></i>
+                                </div>
+                                <div class="text-sec">
+                                    <h3>{{ $holiday_count }} <span> No of Holidays</span></h3>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3 mb-3">
+                    <div class="card shadow-sm border-0">
                         <a href="{{ route('admin.subjects.index') }}">
                             <div class="card-body gpcVCf">
                                 <div class="icon-sec w-50">

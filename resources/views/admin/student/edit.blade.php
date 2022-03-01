@@ -219,10 +219,12 @@
 
     });
 	$('.datepicker').datepicker({
-		format: 'yyyy-mm-dd',
-		endDate: new Date(),
-		// daysOfWeekDisabled: [0]
-    });
+            format: 'dd-M-yyyy',
+            endDate: '-60d',
+            autoclose: true,
+            clearBtn: true,
+            // daysOfWeekDisabled: [0]
+        });
     $('#class_wise_combo').on('change', function() {
             let class_id = $('#class_wise_combo').val();
             $.ajax({
