@@ -2251,16 +2251,16 @@ table.dataTable.no-footer {
     border-color: #f27474 !important;
 }
 .swal2-popup{
-    width: 250px !important;
-    background: rgb(105,105,105) !important;
+  width: 250px !important;
+  background-color: #eaeaea !important;
 }
 .swal2-popup .swal2-title{
-  font-size: 1.2em;
-  color: #a5a5a5 !important;
+font-size: 1.2em !important;
+color: #000000 !important;
 }
 .swal2-html-container{
-  font-size: 14px;
-  color: #a5a5a5;
+font-size: 14px;
+color: #000000;
 }
 .swal2-icon-show{
   margin-top: 0 !important;
