@@ -50,8 +50,13 @@
                                 <tr class="text-center">
                                     <td>{{ $key + 1 }}</td>
                                     <td>@php
-                                        $class = App\Models\Classes::where('id',$event->class_id)->first();
-                                        echo $class->name;
+                                        if ($event->class_id) {
+                                            $class = App\Models\Classes::where('id',$event->class_id)->first();
+                                            echo $class->name;
+                                        }else{
+                                            echo "All students";
+                                        }
+                                        
                                      @endphp</td>
                                     <td>{{ \Illuminate\Support\Str::limit($event->title, 15) }}</td>
                                     <td>{{ $event->start_date }} <span class="text-success">

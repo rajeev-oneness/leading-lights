@@ -1,6 +1,11 @@
 @extends('admin.layouts.master')
 
 @section('content')
+<style>
+    .icon-sec i{
+        color: inherit !important;
+    }
+</style>
 <div class="dashboard-body" id="content">
     <div class="dashboard-content">
         <div class="row m-0 dashboard-content-header">
@@ -100,7 +105,7 @@
                     <div class="card shadow-sm border-0">
                         <a href="{{ route('admin.classes.index') }}">
                             <div class="card-body gpcVCf">
-                                <div class="icon-sec w-50">
+                                <div class="icon-sec w-25">
                                     <i class="fas fa-chalkboard-teacher"></i>
                                 </div>
                                 <div class="text-sec">
@@ -114,7 +119,7 @@
                     <div class="card shadow-sm border-0">
                         <a href="{{ route('admin.courses.index') }}">
                             <div class="card-body gpcVCf">
-                                <div class="icon-sec w-50">
+                                <div class="icon-sec w-25">
                                     <i class="fas fa-book-reader"></i>
                                 </div>
                                 <div class="text-sec">
@@ -128,7 +133,7 @@
                     <div class="card shadow-sm border-0">
                         <a href="{{ route('admin.groups.index') }}">
                             <div class="card-body gpcVCf">
-                                <div class="icon-sec w-50">
+                                <div class="icon-sec w-25">
                                     <i class="fas fa-users"></i>
                                 </div>
                                 <div class="text-sec">
@@ -142,7 +147,7 @@
                     <div class="card shadow-sm border-0">
                         <a href="{{ route('admin.testimonial.index') }}">
                             <div class="card-body gpcVCf">
-                                <div class="icon-sec w-50">
+                                <div class="icon-sec w-25">
                                     <i class="fas fa-newspaper-o"></i>
                                 </div>
                                 <div class="text-sec">
@@ -156,8 +161,8 @@
                     <div class="card shadow-sm border-0">
                         <a href="{{ route('admin.notice.index') }}">
                             <div class="card-body gpcVCf">
-                                <div class="icon-sec w-50">
-                                    <i class="fas fa-newspaper-o"></i>
+                                <div class="icon-sec w-25">
+                                    <i class="fas fa-newspaper-o font-weight-bold"></i>
                                 </div>
                                 <div class="text-sec">
                                     <h3>{{ $news_count }} <span> No of News</span></h3>
@@ -170,7 +175,7 @@
                     <div class="card shadow-sm border-0">
                         <a href="{{ route('admin.holidays.index') }}">
                             <div class="card-body gpcVCf">
-                                <div class="icon-sec w-50">
+                                <div class="icon-sec w-25">
                                     <i class="fas fa-snowman"></i>
                                 </div>
                                 <div class="text-sec">
@@ -184,7 +189,7 @@
                     <div class="card shadow-sm border-0">
                         <a href="{{ route('admin.subjects.index') }}">
                             <div class="card-body gpcVCf">
-                                <div class="icon-sec w-50">
+                                <div class="icon-sec w-25">
                                     <i class="fas fa-book-open"></i>
                                 </div>
                                 <div class="text-sec">
@@ -198,7 +203,7 @@
                     <div class="card shadow-sm border-0">
                         <a href="{{ route('admin.exams.index') }}">
                             <div class="card-body gpcVCf">
-                                <div class="icon-sec w-50">
+                                <div class="icon-sec w-25">
                                     <i class="fas fa-chalkboard"></i>
                                 </div>
                                 <div class="text-sec">
@@ -212,7 +217,7 @@
                     <div class="card shadow-sm border-0">
                         <a href="{{ route('admin.arrange_classes') }}">
                             <div class="card-body gpcVCf">
-                                <div class="icon-sec w-50">
+                                <div class="icon-sec w-25">
                                     <i class="fas fa-chalkboard"></i>
                                 </div>
                                 <div class="text-sec">
@@ -226,7 +231,7 @@
                     <div class="card shadow-sm border-0">
                         <a href="{{ route('admin.events.index') }}">
                             <div class="card-body gpcVCf">
-                                <div class="icon-sec w-50">
+                                <div class="icon-sec w-25">
                                     <i class="fas fa-calendar"></i>
                                 </div>
                                 <div class="text-sec">
@@ -240,7 +245,7 @@
                     <div class="card shadow-sm border-0">
                         <a href="{{ route('admin.announcement.index') }}">
                             <div class="card-body gpcVCf">
-                                <div class="icon-sec w-50">
+                                <div class="icon-sec w-25">
                                     <i class="fas fa-calendar"></i>
                                 </div>
                                 <div class="text-sec">

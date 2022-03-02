@@ -49,8 +49,12 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>@php
-                                        $class = App\Models\Classes::where('id',$announcement->class_id)->first();
-                                        echo $class->name;
+                                        if ($announcement->class_id != 'all') {
+                                            $class = App\Models\Classes::where('id',$announcement->class_id)->first();
+                                            echo $class->name;
+                                        }else{
+                                            echo "All students";
+                                        }
                                      @endphp</td>
                                     <td>{{ $announcement->title }}</td>
                                     <td>{{ $announcement->date }}</td>
