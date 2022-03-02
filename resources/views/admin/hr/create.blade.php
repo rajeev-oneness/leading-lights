@@ -61,8 +61,8 @@
                         <div class="col-lg-6">
                             <div class="form-group edit-box">
                                 <label for="doj">Date of joining<span class="text-danger">*</span></label>
-                                <input type="date" id="doj" class="form-control" name="doj" value="{{ old('doj') }}"
-                                    min="{{ date('Y-m-d', strtotime('+1 days')) }}" onkeypress="return false;">
+                                <input type="text" id="doj" class="form-control datepicker" name="doj" value="{{ old('doj') }}"
+                                    min="{{ date('Y-m-d', strtotime('+1 days')) }}" onkeypress="return false;" autocomplete="off">
                                 @if ($errors->has('doj'))
                                     <span style="color: red;">{{ $errors->first('doj') }}</span>
                                 @endif
@@ -76,6 +76,8 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
     <script>
         $('#btn_submit').on('click', function(e) {
             e.preventDefault();
@@ -143,7 +145,14 @@
 
         function alphaOnly(event) {
             var key = event.keyCode;
-            return ((key >= 65 && key <= 90) || key == 8);
+            return ((key >= 65 && key <= 90) || key == 8 || key == 9);
         };
+        $('.datepicker').datepicker({
+            format: 'dd-M-yyyy',
+            startDate: '+1d',
+            autoclose: true,
+            clearBtn: true,
+            // daysOfWeekDisabled: [0]
+        });
     </script>
 @endsection

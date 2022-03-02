@@ -148,7 +148,7 @@
     <script>
         	$('.datepicker').datepicker({
             format: 'dd-M-yyyy',
-            endDate: '+1d',
+            startDate: '+1d',
             autoclose: true,
             clearBtn: true,
             // daysOfWeekDisabled: [0]
