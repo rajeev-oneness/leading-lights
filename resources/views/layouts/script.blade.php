@@ -84,7 +84,7 @@
         $(".owl-next").html('<i class="fa fa-angle-double-right"></i>');
 
     });
-</script>-->
+</script>
 <script type="text/javascript">
     $(document).ready(function() {
         var owl = $('.case-boxes');

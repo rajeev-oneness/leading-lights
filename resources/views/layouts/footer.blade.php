@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div id="footer">
     <div class="f-logo">
         <img src="{{ asset('frontend/images/f-logo.png') }}" class="img-fluid mx-auto d-block">
