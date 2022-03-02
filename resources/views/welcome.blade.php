@@ -498,8 +498,10 @@
                                     }
 
                                 @endphp
-                                <img src="{{ $profile_image_path }}" alt="John Doe"
+                                <div class="col-lg-3">
+                                    <img src="{{ $profile_image_path }}" alt="John Doe"
                                     class="img-fluid">
+                                </div>
                                 <div class="media-body">
                                     {!! $testimonial->content !!}
                                     <h4>{{ $testimonial->user->first_name }} {{ $testimonial->user->last_name }}</h4>
