@@ -114,11 +114,11 @@
                                 <i class="metismenu-icon fa fa-quote-left"></i>Testimonial
                             </a>
                         </li>
-                        {{-- <li class="{{ Request::is('user/change-password') ? 'mm-active' : '' }}">
-                            <a href="{{ route('user.changePassword') }}">
+                        <li class="{{ Request::is('user/change-password') ? 'mm-active' : '' }}">
+                            <a href="#">
                                 <i class="metismenu-icon fa fa-cog"></i>Settings
                             </a>
-                        </li> --}}
+                        </li>
                     @endif
                     @if(Auth::user()->registration_type != 4)
                         <li class="{{ Request::is('user/testimonial') ? 'mm-active' : '' }}">
@@ -126,11 +126,11 @@
                                 <i class="metismenu-icon fa fa-quote-left"></i>Testimonial
                             </a>
                         </li>
-                        {{-- <li class="{{ Request::is('user/change-password') ? 'mm-active' : '' }}">
-                            <a href="{{ route('user.changePassword') }}">
+                        <li class="{{ Request::is('user/change-password') ? 'mm-active' : '' }}">
+                            <a href="#">
                                 <i class="metismenu-icon fa fa-cog"></i>Settings
                             </a>
-                        </li> --}}
+                        </li>
                     @endif
                 @endif
 
