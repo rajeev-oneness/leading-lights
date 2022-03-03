@@ -271,6 +271,72 @@ function createNotification($user, $class = 0, $group = 0, $type)
 	return $notification;
 }
 
+function createNotificationForExam($user, $class = 0, $group = 0, $type,$examTime = '',$examDate = '',$teacherId){
+	$title = '';
+	$message = '';
+	$route = '';
+	$teacherDetails = User::find($teacherId);
+	switch ($type) {
+		case 'exam_scheduled':
+			$title = 'Exam  scheduled by '.$teacherDetails->first_name.' '.$teacherDetails->last_name;
+			$message = 'Exam scheduled by '.$teacherDetails->first_name.' '.$teacherDetails->last_name.'.Please check that' ;
+			$route = 'admin.exams.index';
+			break;
+		case 'exam_scheduled_for_students':
+			$title = 'Exam  scheduled by '.$teacherDetails->first_name.' '.$teacherDetails->last_name;
+			$message = 'Exam scheduled by '.$teacherDetails->first_name.' '.$teacherDetails->last_name.' at '.$examTime .' in '.$examDate;
+			$route = 'students.exam.index';
+			break;
+	}
+	$notification = [];
+	if ($class > 0) {
+		$users = App\Models\User::where('class', $class)->get();
+		foreach ($users as $user) {
+			$notification[] = [
+				'user_id' => $user->id,
+				'class_id' => $user->class,
+				'group_id' => $group,
+				'type' => $type,
+				'title' => $title,
+				'message' => $message,
+				'route' => $route,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+			];
+		}
+	} elseif ($group > 0) {
+		$users = App\Models\User::where('group_ids', $group)->get();
+		foreach ($users as $user) {
+			$notification[] = [
+				'user_id' => $user->id,
+				'class_id' => $class,
+				'group_id' => $user->group_ids,
+				'type' => $type,
+				'title' => $title,
+				'message' => $message,
+				'route' => $route,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+			];
+		}
+	} else {
+		$notification[] = [
+			'user_id' => $user,
+			'class_id' => $class,
+			'group_id' => $group,
+			'type' => $type,
+			'title' => $title,
+			'message' => $message,
+			'route' => $route,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+		];
+	}
+	if (count($notification) > 0) {
+		\App\Models\Notification::insert($notification);
+	}
+	return $notification;
+}
 function getNameofClassOrCourse($feeStructure)
 {
 	$response = '';

@@ -50,6 +50,7 @@ Route::post('/read', [NotificationController::class, 'notificationRead'])->name(
 Route::get('hr/notification', [NotificationController::class, 'logsNotification'])->name('logs.notification');
 Route::get('student/notification', [NotificationController::class, 'logsNotificationForStudentEvent'])->name('student.logs.notification');
 Route::get('teacher/notification', [NotificationController::class, 'logsNotificationForTeacher'])->name('teacher.logs.notification');
+Route::get('admin/notification', [NotificationController::class, 'logsNotificationForAdmin'])->name('logs.notification.admin');
 Route::post('hr/notification/readall', [NotificationController::class, 'notificationReadAll'])->name('logs.notification.readall');
 // Route::post('student/notification/readall', [NotificationController::class, 'studentNotificationReadAll'])->name('student.logs.notification.readall');
 

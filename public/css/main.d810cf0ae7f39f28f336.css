@@ -2038,3 +2038,23 @@ table.dataTable.no-footer {
 .swal2-icon .swal2-error .swal2-icon-show{
   display: none !important;
 }
+.vertical-timeline-element-icon {
+  left: 0;
+}
+.vertical-timeline-element-content {
+  position: relative;
+  margin-left: 28px;
+  font-size: .8rem;
+}
+.dropdown-menu-header .menu-header-content.text-left {
+  padding-left: 0;
+}
+.dropdown-menu-header .dropdown-menu-header-inner {
+  margin: -1px -1px 0;
+  padding: 1.5rem .5rem;
+  position: relative;
+  padding: 8px 9px;
+}
+.vertical-timeline-element-content .bounce-in a{
+  font-weight: 300;
+}

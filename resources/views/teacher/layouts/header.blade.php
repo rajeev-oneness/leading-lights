@@ -176,7 +176,6 @@
                                     <div class="dropdown-holder">
 
                                         @foreach ($notification as $noti)
-
                                             <div class="vertical-timeline-item vertical-timeline-element">
                                                 <div>
                                                     <span class="vertical-timeline-element-icon bounce-in">
@@ -189,7 +188,8 @@
                                                             class=" {{ $noti->read_flag == 0 ? 'unread' : 'read' }}"
                                                             onclick="readNotification('{{ $noti->id }}', '{{ $noti->route ? route($noti->route) : '' }}')">
                                                             <p>{{ $noti->title }}
-                                                                <span class="font-weight-bold">{{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}</span>
+                                                                <span
+                                                                    class="font-weight-bold">{{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}</span>
                                                             </p>
                                                         </a>
 
@@ -242,7 +242,7 @@
                         <div class="widget-content-left header-user-info">
                             <div class="widget-heading"> {{ Auth::user()->first_name }}
                                 {{ Auth::user()->last_name }}</div>
-                            <div class="widget-subheading"> Member Seance:
+                            <div class="widget-subheading"> Member Since:
                                 {{ Auth::user()->created_at ? date('Y', strtotime(Auth::user()->created_at)) : 'N/A' }}
                             </div>
                         </div>
@@ -274,7 +274,8 @@
                                                             <div class="widget-heading">
                                                                 {{ Auth::user()->first_name }}
                                                                 {{ Auth::user()->last_name }}</div>
-                                                            <div class="widget-subheading opacity-8">{{ Auth::user()->email }}</div>
+                                                            <div class="widget-subheading opacity-8">
+                                                                {{ Auth::user()->email }}</div>
                                                         </div>
                                                         <div class="widget-content-right mr-2">
 
@@ -358,38 +359,39 @@
                 }
             });
         }
-        function logOut() {
-        event.preventDefault();
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: 'btn btn-success',
-                cancelButton: 'btn btn-danger'
-            },
-            buttonsStyling: false
-        })
 
-        swalWithBootstrapButtons.fire({
-            title: 'Are you sure?',
-            text: "You want to logout!",
-            iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'Cancel',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                event.preventDefault();
-                document.getElementById('logout-form').submit();
-            } else if (
-                /* Read more about handling dismissals below */
-                result.dismiss === Swal.DismissReason.cancel
-            ) {
-                // swalWithBootstrapButtons.fire(
-                //     'Cancelled',
-                //     'Your data  is safe :)',
-                //     'error'
-                // )
-            }
-        })
-    }
+        function logOut() {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You want to logout!",
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    document.getElementById('logout-form').submit();
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    // swalWithBootstrapButtons.fire(
+                    //     'Cancelled',
+                    //     'Your data  is safe :)',
+                    //     'error'
+                    // )
+                }
+            })
+        }
     </script>

@@ -27,12 +27,12 @@
                             <div class="menu-header-content text-dark">
                                 <h5 class="menu-header-title">Notifications</h5>
                                 @if (count($notification) > 0)
-                                            You have
-                                            <b>{{ $notification->unreadCount }}</b> unread
-                                            {{ $notification->unreadCount == 1 ? 'notification' : 'notifications' }}
-                                        @else
-                                            No New Notification
-                                        @endif
+                                    You have
+                                    <b>{{ $notification->unreadCount }}</b> unread
+                                    {{ $notification->unreadCount == 1 ? 'notification' : 'notifications' }}
+                                @else
+                                    No New Notification
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -42,34 +42,20 @@
                                 <div class="dropdown-holder">
 
                                     @foreach ($notification as $noti)
-
                                         <div class="vertical-timeline-item vertical-timeline-element">
                                             <div>
                                                 <span class="vertical-timeline-element-icon bounce-in">
                                                     <i class="badge badge-dot badge-dot-xl badge-success"> </i>
                                                 </span>
                                                 <div class="vertical-timeline-element-content bounce-in">
-                                    {{-- <h4 class="timeline-title">All Hands Meeting</h4> --}}
-                                    @php
-                                        if(strpos($noti->title, ':') !== false){
-                                            $notification_title = explode(':',$noti->title);
-                                        }else {
-                                            $notification_title = '';
-                                        }
+                                                    {{-- <h4 class="timeline-title">All Hands Meeting</h4> --}}
 
-                                    @endphp
-
-                                    <a href="javascript:void(0)"
+                                                    <a href="javascript:void(0)"
                                                         class=" {{ $noti->read_flag == 0 ? 'unread' : 'read' }}"
                                                         onclick="readNotification('{{ $noti->id }}', '{{ $noti->route ? route($noti->route) : '' }}')">
-                                                        <p>
-                                                            @if ($notification_title !== '')
-                                                                {{ $notification_title[0] }} <span class="text-info">{{ $notification_title[1] }}</span>
-                                                            @else
-                                                                {{ $noti->title }}
-                                                            @endif
-
-                                                            <span class="font-weight-bold">{{ getAsiaTime($noti->created_at) }}</span>
+                                                        <p>{{ $noti->title }}
+                                                            <span
+                                                                class="font-weight-bold">{{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}</span>
                                                         </p>
                                                     </a>
 
@@ -78,10 +64,39 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                    {{-- <div class="vertical-timeline-item vertical-timeline-element">
+                                        <div>
+                                            <span class="vertical-timeline-element-icon bounce-in">
+                                                <i class="badge badge-dot badge-dot-xl badge-warning"> </i>
+                                            </span>
+                                            <div class="vertical-timeline-element-content bounce-in">
+                                                <p>Another meeting today, at <b class="text-danger">12:00 PM</b>
+                                                </p>
+                                                <p>Yet another one, at <span class="text-success">15:00 PM</span>
+                                                </p>
+                                                <span class="vertical-timeline-element-date"></span>
+                                            </div>
+                                        </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item-divider nav-item"></li>
+                        {{-- <li class="nav-item-btn text-center nav-item">
+                            <button class="btn-shadow btn-wide btn-pill btn btn-focus btn-sm">Close all<span
+                                    class="ml-2"><i class="fa fa-times-circle"
+                                        aria-hidden="true"></i> --}}
+
+                        {{-- </span></button> --}}
+                        {{-- @if (count($notification) > 0)
+                            <a href="{{ route('admin.logs.notification') }}"
+                                class="dropdown-item dropdown-footer">See
+                                All Notifications</a>
+                        @endif --}}
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -98,8 +113,7 @@
                     </div>
                     <div class="widget-content-left ml-3">
                         <div class="btn-group">
-                            <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                class="p-0 btn">
+                            <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
                                 {{-- <img width="42" class="rounded-circle"
                                     src="{{ Auth::user()->image ? asset(Auth::user()->image) : asset('frontend/assets/images/avatars/1.jpg') }}"
                                     alt=""> --}}
@@ -129,8 +143,7 @@
                                                     <div class="widget-content-right mr-2">
 
                                                         <a class="btn-pill btn-shadow btn-shine btn btn-focus"
-                                                            href="{{ route('logout') }}" onclick="event.preventDefault();
-                   document.getElementById('logout-form').submit();">
+                                                            href="{{ route('logout') }}" onclick="logOut()">
                                                             {{ __('Logout') }}
                                                         </a>
 
@@ -148,9 +161,14 @@
                                     <div>
                                         <ul class="nav flex-column">
                                             <li class="nav-item">
-                                                <p class="nav-link mb-0 pb-0"><b class="mr-2">Email:</b>{{ Auth::user()->email }} </p>
-                                                <p class="nav-link mb-0 pb-0"><b class="mr-2">Department:</b>{{ Auth::user()->role['name'] }}</p>
-                                                <p class="nav-link mb-0 pb-0"><b class="mr-2">Id:</b>{{ Auth::user()->id_no }}</p>
+                                                <p class="nav-link mb-0 pb-0"><b
+                                                        class="mr-2">Email:</b>{{ Auth::user()->email }}
+                                                </p>
+                                                <p class="nav-link mb-0 pb-0"><b
+                                                        class="mr-2">Department:</b>{{ Auth::user()->role['name'] }}
+                                                </p>
+                                                <p class="nav-link mb-0 pb-0"><b
+                                                        class="mr-2">Id:</b>{{ Auth::user()->id_no }}</p>
                                             </li>
                                         </ul>
                                     </div>
@@ -163,3 +181,39 @@
         </div>
     </div>
 </div>
+<script>
+    function logOut() {
+        event.preventDefault();
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You want to logout!",
+            iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                event.preventDefault();
+                document.getElementById('logout-form').submit();
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                // swalWithBootstrapButtons.fire(
+                //     'Cancelled',
+                //     'Your data  is safe :)',
+                //     'error'
+                // )
+            }
+        })
+    }
+</script>

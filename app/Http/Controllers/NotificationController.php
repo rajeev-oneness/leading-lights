@@ -38,6 +38,13 @@ class NotificationController extends Controller
         $notifications = Notification::where('user_id', '=', $user->id)->where('read_flag', '=', '0')->get();;
         return view('teacher.notification', compact('notifications'));
     }
+    public function logsNotificationForAdmin(Request $request)
+    {
+        $user = Auth::user();
+        // $data = Notification::where('user_id', $user->id)->latest();
+        $notifications = Notification::where('user_id', '=', $user->id)->where('read_flag', '=', '0')->get();;
+        return view('admin.notification', compact('notifications'));
+    }
 
     public function notificationReadAll(Request $request)
     {
