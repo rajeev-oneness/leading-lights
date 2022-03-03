@@ -18,27 +18,27 @@ use Illuminate\Support\Facades\Auth;
 class CommonController extends Controller
 {
     public function index(Request $request){
-        // if (Auth::check()) {
-        //     $redirectTo = 'user/profile';
-        //     switch (Auth::user()->role_id) {
-        //         case 1:
-        //             $redirectTo = 'admin/dashboard';
-        //             break;
-        //         case 2:
-        //             $redirectTo = 'hr/profile';
-        //             break;
-        //         case 3:
-        //             $redirectTo = 'teacher/profile';
-        //             break;
-        //         case 4:
-        //             $redirectTo = 'user/profile';
-        //             break;
-        //         case 5:
-        //             $redirectTo = 'admin/dashboard';
-        //             break;
-        //     }
-        //     return redirect($redirectTo);
-        // } else {
+        if (Auth::check()) {
+            $redirectTo = 'user/profile';
+            switch (Auth::user()->role_id) {
+                case 1:
+                    $redirectTo = 'admin/dashboard';
+                    break;
+                case 2:
+                    $redirectTo = 'hr/profile';
+                    break;
+                case 3:
+                    $redirectTo = 'teacher/profile';
+                    break;
+                case 4:
+                    $redirectTo = 'user/profile';
+                    break;
+                case 5:
+                    $redirectTo = 'admin/dashboard';
+                    break;
+            }
+            return redirect($redirectTo);
+        } else {
             $data['events'] = Event::latest()->take(3)->get();
             $data['notices'] = notice::latest()->get();
             $data['special_courses'] = SpecialCourse::where('class_id',null)->latest()->get();
@@ -48,7 +48,7 @@ class CommonController extends Controller
             $data['vlogs'] = VLOG::latest()->take(3)->get();
             $data['videos'] = Video::latest()->take(3)->get();
             return view('welcome')->with($data);
-        // }
+        }
     }
 
     public function availableCourses()
