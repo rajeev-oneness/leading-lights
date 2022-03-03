@@ -11,7 +11,12 @@
 <script src="{{ asset('frontend/js/owl.carousel.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('.includ_text p').prepend('<i class="far fa-arrow-alt-circle-right mr-2"></i>');
+        if( $('.includ_text p').length ){
+            $('.includ_text p').prepend('<i class="far fa-arrow-alt-circle-right mr-2"></i>');
+        }else{
+            $('.includ_text li').prepend('<i class="far fa-arrow-alt-circle-right mr-2"></i>');
+        }
+        
     });
     jQuery(document).ready(function($) {
         "use strict";
