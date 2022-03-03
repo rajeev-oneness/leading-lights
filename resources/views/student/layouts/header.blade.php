@@ -153,9 +153,13 @@
                                     style="background-image: url('assets/images/dropdown-header/city3.jpg');"></div>
                                 <div class="menu-header-content text-dark p-3">
                                     <h5 class="menu-header-title">Notifications</h5>
-                                    <h6 class="menu-header-subtitle">You have @if (count($notification) > 0)
+                                    <h6 class="menu-header-subtitle">
+                                        @if (count($notification) > 0)
+                                            You have
                                             <b>{{ $notification->unreadCount }}</b> unread
                                             {{ $notification->unreadCount == 1 ? 'notification' : 'notifications' }}
+                                        @else
+                                            No New Notification
                                         @endif
                                 </div>
                             </div>
@@ -166,7 +170,6 @@
                                     <div class="dropdown-holder">
 
                                         @foreach ($notification as $noti)
-
                                             <div class="vertical-timeline-item vertical-timeline-element">
                                                 <div>
                                                     <span class="vertical-timeline-element-icon bounce-in">
@@ -180,14 +183,16 @@
                                                             onclick="readNotification('{{ $noti->id }}', '{{ $noti->route ? route($noti->route) : '' }}')">
                                                             <p>{{ $noti->title }}
                                                                 @php
-                                                                if($noti->created_at == '')
-                                                                    $noti_date = date('Y-m-d H:i:s');
-                                                                else
-                                                                    $noti_date = $noti->created_at;
+                                                                    if ($noti->created_at == '') {
+                                                                        $noti_date = date('Y-m-d H:i:s');
+                                                                    } else {
+                                                                        $noti_date = $noti->created_at;
+                                                                    }
                                                                 @endphp
                                                                 {{-- <span class="font-weight-bold">{{ date('d-M-y',strtotime($noti_date)) }}, {{ date('h:i A',strtotime($noti_date)) }}</span> --}}
-                                                                <!--{{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}-->
-                                                                <span class="font-weight-bold">{{ date('d-M-y',strtotime($noti->created_at)) }}, {{ date('h:i A',strtotime(getAsiaTime24($noti->created_at))) }}</span>
+                                                                <span
+                                                                    class="font-weight-bold">{{ \carbon\carbon::parse($noti->created_at)->diffForHumans() }}</span>
+                                                                {{-- <span class="font-weight-bold">{{ date('d-M-y',strtotime($noti->created_at)) }}, {{ date('h:i A',strtotime(getAsiaTime24($noti->created_at))) }}</span> --}}
                                                             </p>
                                                         </a>
 
@@ -357,7 +362,8 @@
                                                             <div class="widget-heading">
                                                                 {{ Auth::user()->first_name }}
                                                                 {{ Auth::user()->last_name }}</div>
-                                                            <div class="widget-subheading opacity-8">{{ Auth::user()->email }}</div>
+                                                            <div class="widget-subheading opacity-8">
+                                                                {{ Auth::user()->email }}</div>
                                                         </div>
                                                         <div class="widget-content-right mr-2">
 
@@ -381,9 +387,9 @@
                                             <ul class="nav flex-column">
                                                 <li class="nav-item-header nav-item">Activity</li>
                                                 @php
-                                                  $checkPaymentStatus = checkPaymentStatus(Auth::user()->id);
+                                                    $checkPaymentStatus = checkPaymentStatus(Auth::user()->id);
                                                 @endphp
-                                                @if (Auth::user()->registration_type == 4 && $checkPaymentStatus == 1 )
+                                                @if (Auth::user()->registration_type == 4 && $checkPaymentStatus == 1)
                                                     <li class="nav-item">
                                                         <a href="{{ route('hr.profile') }}"
                                                             class="nav-link">Profile
@@ -407,7 +413,7 @@
                                                             Password</a>
                                                     </li>
                                                 @endif
-                                                
+
                                             </ul>
                                         </div>
                                     </div>
@@ -474,37 +480,37 @@
         }
 
         function logOut() {
-        event.preventDefault();
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: 'btn btn-success',
-                cancelButton: 'btn btn-danger'
-            },
-            buttonsStyling: false
-        })
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
 
-        swalWithBootstrapButtons.fire({
-            title: 'Are you sure?',
-            text: "You want to logout!",
-            iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'Cancel',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                event.preventDefault();
-                document.getElementById('logout-form').submit();
-            } else if (
-                /* Read more about handling dismissals below */
-                result.dismiss === Swal.DismissReason.cancel
-            ) {
-                // swalWithBootstrapButtons.fire(
-                //     'Cancelled',
-                //     'Your data  is safe :)',
-                //     'error'
-                // )
-            }
-        })
-    }
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You want to logout!",
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    document.getElementById('logout-form').submit();
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    // swalWithBootstrapButtons.fire(
+                    //     'Cancelled',
+                    //     'Your data  is safe :)',
+                    //     'error'
+                    // )
+                }
+            })
+        }
     </script>

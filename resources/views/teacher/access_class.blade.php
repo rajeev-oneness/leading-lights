@@ -448,7 +448,8 @@
         $('.datepicker').datepicker({
             format: 'yyyy-mm-dd',
             startDate: new Date,
-            daysOfWeekDisabled: [0]
+            daysOfWeekDisabled: [0],
+            autoclose: true
         });
 
         $('#class_name').on('click', function() {
@@ -458,13 +459,15 @@
                 $('.datepicker').datepicker('destroy').datepicker({
                     format: 'yyyy-mm-dd',
                     startDate: new Date(),
+                    autoclose: true
                     // daysOfWeekDisabled: [0]
                 });
             } else {
                 $('.datepicker').datepicker('destroy').datepicker({
                     format: 'yyyy-mm-dd',
                     startDate: new Date(),
-                    daysOfWeekDisabled: [0]
+                    daysOfWeekDisabled: [0],
+                    autoclose: true
                 });
             }
         })

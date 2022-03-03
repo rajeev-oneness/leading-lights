@@ -19,6 +19,7 @@
                     </div>
                 </div>
             </div>
+            @if (Auth::user()->registration_type == 1)
             <h5>Leading Lights School</h5>
             <div class="tabs-animation">
                 <div class="card mb-3">
@@ -136,6 +137,7 @@
                 </div>
 
             </div>
+            @endif
             <h5>Leading Lights Coaching</h5>
             <div class="tabs-animation">
                 <div class="card mb-3">

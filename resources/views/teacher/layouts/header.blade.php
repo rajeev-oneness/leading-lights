@@ -161,10 +161,13 @@
                                     style="background-image: url('assets/images/dropdown-header/city3.jpg');"></div>
                                 <div class="menu-header-content text-dark p-3">
                                     <h5 class="menu-header-title">Notifications</h5>
-                                    <h6 class="menu-header-subtitle">You have
+                                    <h6 class="menu-header-subtitle">
                                         @if (count($notification) > 0)
-                                            <b>{{ $notification->unreadCount }}</b> unread messages
+                                            You have
+                                            <b>{{ $notification->unreadCount }}</b> unread
                                             {{ $notification->unreadCount == 1 ? 'notification' : 'notifications' }}
+                                        @else
+                                            No New Notification
                                         @endif
                                     </h6>
                                 </div>

@@ -13,7 +13,8 @@
                     </div>
                 </div>
             </div>
-            <h5>Regular Classes</h5>
+            @if (Auth::user()->registration_type == 1)
+            <h5>Leading Lights School</h5>
             <div class="tabs-animation">
                 <div class="card mb-3">
                     <div class="card-body">
@@ -111,7 +112,8 @@
                 </div>
 
             </div>
-            <h5>Group Wise Classes</h5>
+            @endif
+            <h5>Leading Lights Coaching</h5>
             <div class="tabs-animation">
                 <div class="card mb-3">
                     <div class="card-body">

@@ -22,6 +22,7 @@
                             class="fa fa-download mr-2"></i>Report Card</a>
                 </div> --}}
             </div>
+            @if (Auth::user()->registration_type == 1)
             <h5>Leading Lights School
             </h5>
             <div class="tabs-animation">
@@ -159,7 +160,8 @@
                     </div>
                 </div>
 
-            </div>
+            </div>                
+            @endif
             <h5>Leading Lights Coaching
             </h5>
             <div class="tabs-animation">

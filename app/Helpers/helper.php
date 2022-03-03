@@ -271,7 +271,7 @@ function createNotification($user, $class = 0, $group = 0, $type)
 	return $notification;
 }
 
-function createNotificationForExam($user, $class = 0, $group = 0, $type,$examTime = '',$examDate = '',$teacherId){
+function createNotificationForSpecialCases($user, $class = 0, $group = 0, $type,$examDate = '',$examTime = '',$teacherId){
 	$title = '';
 	$message = '';
 	$route = '';
@@ -283,9 +283,9 @@ function createNotificationForExam($user, $class = 0, $group = 0, $type,$examTim
 			$route = 'admin.exams.index';
 			break;
 		case 'exam_scheduled_for_students':
-			$title = 'Exam  scheduled by '.$teacherDetails->first_name.' '.$teacherDetails->last_name;
+			$title = 'Exam  scheduled by '.$teacherDetails->first_name.' '.$teacherDetails->last_name.' in '.$examDate;
 			$message = 'Exam scheduled by '.$teacherDetails->first_name.' '.$teacherDetails->last_name.' at '.$examTime .' in '.$examDate;
-			$route = 'students.exam.index';
+			$route = 'user.exam.index';
 			break;
 	}
 	$notification = [];

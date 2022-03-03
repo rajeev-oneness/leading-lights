@@ -116,10 +116,14 @@ class ExamController extends Controller
              * Notification send to the Class users
              */
             if ($after_explode_class[1] === 'class') {
-                $all_students = User::where('class',$after_explode_class[0])->where('role_id',4)->get();
-                foreach ($all_students as $key => $student) {
-                    createNotificationForExam($student->id, $after_explode_class[0], 0, 'exam_scheduled_for_students',$exam_date,$request->start_time.'to'.$request->end_time,Auth::user()->id,);
-                }
+                    createNotificationForSpecialCases(Auth::user()->id, $after_explode_class[0], 0, 'exam_scheduled_for_students',date('d-M-Y',strtotime($exam_date)),$request->start_time.' to '.$request->end_time,Auth::user()->id);
+            }
+
+            /**
+             * Notification send to the Group users
+             */
+            if ($after_explode_class[1] === 'group') {
+                createNotificationForSpecialCases(Auth::user()->id, 0,$after_explode_class[0],'exam_scheduled_for_students',date('d-M-Y',strtotime($exam_date)),$request->start_time.' to '.$request->end_time,Auth::user()->id);
             }
 
             /**
@@ -127,7 +131,7 @@ class ExamController extends Controller
              */
             $all_admins = User::where('role_id',1)->get();
             foreach ($all_admins as $key => $admin) {
-                createNotificationForExam($admin->id, 0, 0, 'exam_scheduled',$exam_date,$request->start_time.'to'.$request->end_time,Auth::user()->id,);
+                createNotificationForSpecialCases($admin->id, 0, 0, 'exam_scheduled',date('d-M-Y',strtotime($exam_date)),$request->start_time.'to'.$request->end_time,Auth::user()->id,);
             }
             return redirect()->route('teacher.exam.index')->with('success', 'Exam upload successfully.You can now add questions.');
         } else {
