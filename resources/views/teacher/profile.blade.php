@@ -109,7 +109,8 @@
                                                 <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                                             @endforeach
                                     </select> --}}
-                                    <p><span id="subject">
+                                    <p>
+                                        <span id="subject">
                                         {{-- {{ $teacher->special_subject ? $teacher->special_subject : 'N/A' }} --}}
                                         @if ( $teacher->special_subject)
                                             @php

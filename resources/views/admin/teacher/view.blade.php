@@ -166,7 +166,22 @@
                                             <div class="card-header-title font-size-lg text-capitalize mb-4">
                                                 Expertise in Subject Area
                                             </div>
-                                            <p>Math / Physice / Chemistry<span class="ml-3"></span></p>
+                                            <span id="subject">
+                                                {{-- {{ $teacher->special_subject ? $teacher->special_subject : 'N/A' }} --}}
+                                                @if ( $teacher->special_subject)
+                                                    @php
+                                                        //get data from database table field
+                                                        $special_subjects = explode(',', $teacher->special_subject);
+                                                        foreach ($special_subjects as $key => $special_subject) {
+                                                            $subject_name = App\Models\Subject::find($special_subject)->name;
+                                                            echo $subject_name;
+                                                            echo ',';
+                                                        }
+                                                    @endphp
+                                                @else
+                                                    {{ 'N/A' }}
+                                                @endif
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

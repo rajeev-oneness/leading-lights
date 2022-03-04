@@ -138,7 +138,7 @@
                                             <label>Academic Qualification:</label>
                                         </div>
                                         <div class="col-lg-6 col-sm-7">
-                                            <p id="qualification">{{ $hr->qualification ? $hr->qualification : 'N/A' }}
+                                            <p id="qualification">{{ $hr->qualification ? $hr->qualification->name : 'N/A' }}
                                             </p>
                                         </div>
                                         <div class="col-lg-2 col-sm-2">
