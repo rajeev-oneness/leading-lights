@@ -2,11 +2,12 @@
 <html lang="en">
 
 <head>
-    <title>Leading Lights - Sign In Student</title>
+    <title>Leading Lights</title>
     <meta charset="utf-8">
     <link rel="icon" href="images/favicon.png" type="image/png" sizes="40x19">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="shortcut icon" href="{{ asset('img/logo.jpg') }}">
     {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css"> --}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     {{-- {{-- < src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></ --}}

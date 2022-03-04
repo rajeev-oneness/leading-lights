@@ -1,4 +1,7 @@
 @extends('teacher.layouts.master')
+@section('title')
+    Attendance
+@endsection
 @section('content')
     <div class="app-main__outer">
         <div class="app-main__inner">
@@ -171,16 +174,18 @@
                                             @elseif (isset($checked_attendance))
                                                 @foreach ($checked_attendance as $i => $attendance)
                                                     @php
-                                                        $no_of_working_hours1 = App\Models\Attendance::whereDate('date', '=', $attendance['date'])
-                                                            ->selectRaw("SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(logout_time,login_time) )) ) as 'total'")
-                                                            ->first();
+                                                        if ($attendance['login_time']) {
+                                                            $no_of_working_hours1 = App\Models\Attendance::whereDate('date', '=', $attendance['date'])
+                                                                ->selectRaw("SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(logout_time,login_time) )) ) as 'total'")
+                                                                ->first();
+                                                        }
                                                     @endphp
                                                     <tr class="bg-tr">
                                                         <td>{{ $i + 1 }}</td>
                                                         <td>{{ $attendance['date'] }}</td>
                                                         </td>
                                                         <td class="text-center">
-                                                            @if (isset($no_of_working_hours1))
+                                                            @if ($attendance['login_time'])
                                                                 <span>
                                                                     @if ($no_of_working_hours1->total)
                                                                         {{ $no_of_working_hours1->total  }}
@@ -191,14 +196,10 @@
                                                                         <a href="#"><i class="fa fa-info-circle mr-2" data-toggle="tooltip"
                                                                         data-placement="top" title="View All"></i></a>
                                                                         </span>
-                                                                    @else
-                                                                        <span class="mr-2"><i class="fa fa-exclamation-circle text-danger"></i></span>ABSENT
                                                                     @endif
                                                                 </span>
-                                                                
                                                             @else
-                                                                <span class="mr-2"><i
-                                                                        class="fa fa-check-circle text-success"></i></span>PRESENT
+                                                                <span class="mr-2"><i class="fa fa-exclamation-circle text-danger"></i></span>ABSENT
                                                             @endif
                                                         </td>
                                                     </tr>

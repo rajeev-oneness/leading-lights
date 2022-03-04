@@ -1,4 +1,7 @@
 @extends('teacher.layouts.master')
+@section('title')
+    Exam
+@endsection
 @section('content')
     <style>
         .popover,

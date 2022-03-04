@@ -1,4 +1,7 @@
 @extends('teacher.layouts.master')
+@section('title')
+    Home Task
+@endsection
 @section('content')
     <style>
         .popover,

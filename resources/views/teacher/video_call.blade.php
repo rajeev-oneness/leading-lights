@@ -1,4 +1,7 @@
 @extends('teacher.layouts.master')
+@section('title')
+    Video Call
+@endsection
 @section('content')
     <div class="app-main__outer">
         <div class="app-main__inner">

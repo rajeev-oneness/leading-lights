@@ -1,4 +1,7 @@
 @extends('student.layouts.master')
+@section('title')
+    Profile
+@endsection
 @section('content')
     <div class="app-main__outer">
         <div class="app-main__inner">

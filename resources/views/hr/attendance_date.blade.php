@@ -188,16 +188,18 @@
                                             @elseif (isset($checked_attendance))
                                                 @foreach ($checked_attendance as $i => $attendance)
                                                     @php
+                                                    if ($attendance['login_time']) {
                                                         $no_of_working_hours1 = App\Models\Attendance::whereDate('date', '=', $attendance['date'])
                                                             ->selectRaw("SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(logout_time,login_time) )) ) as 'total'")
                                                             ->first();
+                                                    }
                                                     @endphp
                                                     <tr class="bg-tr">
                                                         <td>{{ $i + 1 }}</td>
                                                         <td>{{ $attendance['date'] }}</td>
                                                         </td>
                                                         <td class="text-center">
-                                                            @if (isset($no_of_working_hours1))
+                                                            @if (isset($attendance['login_time']))
                                                                 <span>
                                                                     @if ($no_of_working_hours1->total)
                                                                         {{ $no_of_working_hours1->total  }}
@@ -208,14 +210,11 @@
                                                                         <a href="#"><i class="fa fa-info-circle mr-2" data-toggle="tooltip"
                                                                         data-placement="top" title="View All"></i></a>
                                                                         </span>
-                                                                    @else
-                                                                        <span class="mr-2"><i class="fa fa-exclamation-circle text-danger"></i></span>ABSENT
-                                                                    @endif
+                                                                   @endif
                                                                 </span>
 
                                                             @else
-                                                                <span class="mr-2"><i
-                                                                        class="fa fa-check-circle text-success"></i></span>PRESENT
+                                                                <span class="mr-2"><i class="fa fa-exclamation-circle text-danger"></i></span>ABSENT
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -228,7 +227,7 @@
                                                     <td> N/A </td>
                                                     <td>
                                                         <span class="mr-2"><i
-                                                                class="fa fa-check-circle text-danger"></i></span>ABSENT
+                                                                class="fa fa-exclamation-circle text-danger"></i></span>ABSENT
                                                     </td>
                                                 </tr>
                                             @endif

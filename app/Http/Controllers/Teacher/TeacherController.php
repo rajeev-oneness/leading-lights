@@ -172,9 +172,6 @@ class TeacherController extends Controller
                         ->first();
                     $data['specific_attendance'] = Attendance::where('user_id', Auth::user()->id)
                         ->whereDate('date', '=', $date)->latest()->take(4)->get();
-                    // dd($data);
-                    // dd($checked_attendance);
-                    // dd($data['no_of_working_hours']->total);
                 } else {
                     $this->validate($request, [
                         'start_date' => 'required|date',
@@ -183,22 +180,20 @@ class TeacherController extends Controller
                     if ($request->start_date > $request->end_date) {
                         return redirect()->back()->with('error', 'Please select valid range');
                     }
-                    $from = date($request->start_date);
-                    $to = date($request->end_date);
+                    $from = new DateTime($request->start_date);
+                    $to = new DateTime($request->end_date);
                     $data['start_date'] = $request->start_date;
                     $data['end_date'] = $request->end_date;
 
-                    // $available_att = Attendance::where('user_id',Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get();
-                    // dd( $available_att);
-
-                    for ($i = $from; $i <= $to ; $i++) {
+                    for ($i = $from; $i <= $to ; $i->modify('+1 day')) {
                        $attendance = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
                        if (empty($attendance)) {
-                           $absent_date[] = array(
-                               "date" => $i
+                        $present_date[] = array(
+                               "date" => $i->format("Y-m-d"),
+                               "login_time" => null
                            );
                        }else{
-                           $present_date[] = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
+                           $present_date[] = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i->format("Y-m-d"))->first();
                        }
                     }
                     if (empty($absent_date)) {
@@ -208,10 +203,7 @@ class TeacherController extends Controller
                     if (empty($present_date)) {
                         $present_date = [];
                     }
-                    $attendance = array_merge($absent_date,$present_date);
-                    // dd($attendance);
-
-                    // $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', Auth::user()->id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
+                    $attendance = $present_date;
                     $data['checked_attendance'] = $attendance;
                 }
                 if (isset($data['specific_attendance'])) {
@@ -222,15 +214,7 @@ class TeacherController extends Controller
                         return view('teacher.attendance', compact('absent_date'));
                     }
                 } elseif (isset($data['checked_attendance'])) {
-                    // if ($data['checked_attendance']->count() > 0) {
-                        return view('teacher.attendance')->with($data);
-                    // } else {
-                    //     $attendance = [];
-                    //     $attendance['date'] = $date;
-                    //     $attendance['login_time'] = 'N/A';
-                    //     $attendance['logout_time'] = 'N/A';
-                    //     return view('teacher.attendance')->with($attendance);
-                    // }
+                    return view('teacher.attendance')->with($data);
                 }
             } else {
                 $attendance = Attendance::find($request->attendance_id);

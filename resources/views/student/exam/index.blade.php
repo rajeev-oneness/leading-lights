@@ -1,4 +1,7 @@
 @extends('student.layouts.master')
+@section('title')
+    Exam
+@endsection
 <style>
     .table thead th {
         font-size: 14px !important;

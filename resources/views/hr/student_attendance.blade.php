@@ -1,4 +1,7 @@
 @extends('hr.layouts.master')
+@section('title')
+   Student Attendance
+@endsection
 @section('content')
     <div class="app-main__outer">
         <div class="app-main__inner">
@@ -156,7 +159,7 @@
                                                         <td>
                                                             @if ($specific_attendance['attendance_status'] == 0)
                                                             <span class="mr-2"><i
-                                                                class="fa fa-check-circle text-danger"></i></span>ABSENT
+                                                                class="fa fa-exclamation-circle text-danger"></i></span>ABSENT
                                                             @else
                                                             <span class="mr-2"><i
                                                                 class="fa fa-check-circle text-success"></i></span>PRESENT
@@ -172,7 +175,7 @@
                                                         <td>
                                                             @if ($attendance['attendance_status'] == 0)
                                                             <span class="mr-2"><i
-                                                                class="fa fa-check-circle text-danger"></i></span>ABSENT
+                                                                class="fa fa-exclamation-circle text-danger"></i></span>ABSENT
                                                             @else
                                                             <span class="mr-2"><i
                                                                 class="fa fa-check-circle text-success"></i></span>PRESENT
@@ -188,7 +191,7 @@
                                                     <td> N/A </td>
                                                     <td>
                                                         <span class="mr-2"><i
-                                                                class="fa fa-check-circle text-danger"></i></span>ABSENT
+                                                                class="fa fa-exclamation-circle text-danger"></i></span>ABSENT
                                                     </td>
                                                 </tr>
                                             @endif

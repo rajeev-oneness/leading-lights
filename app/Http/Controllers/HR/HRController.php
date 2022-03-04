@@ -14,6 +14,7 @@ use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\StudentGalary;
+use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -183,22 +184,23 @@ class HRController extends Controller
                     if ($request->start_date > $request->end_date) {
                         return redirect()->back()->with('error', 'Please select valid range');
                     }
-                    $from = date($request->start_date);
-                    $to = date($request->end_date);
+                    $from = new DateTime($request->start_date);
+                    $to = new DateTime($request->end_date);
                     $data['start_date'] = $request->start_date;
                     $data['end_date'] = $request->end_date;
                     $data['user_id'] = $request->user_id;
                     // $available_att = Attendance::where('user_id',$user_id)->whereBetween('date', [$from, $to])->latest()->get();
                     // dd( $available_att);
 
-                    for ($i = $from; $i <= $to ; $i++) {
+                    for ($i = $from; $i <= $to ; $i->modify('+1 day')) {
                        $attendance = Attendance::where('user_id',$user_id)->whereDate('date', $i)->first();
                        if (empty($attendance)) {
-                           $absent_date[] = array(
-                               "date" => $i
+                        $present_date[] = array(
+                               "date" => $i->format("Y-m-d"),
+                               "login_time" => null
                            );
                        }else{
-                           $present_date[] = Attendance::where('user_id',$user_id)->whereDate('date', $i)->first();
+                           $present_date[] = Attendance::where('user_id',$data['user_id'])->whereDate('date', $i->format("Y-m-d"))->first();
                        }
                     }
                     if (empty($absent_date)) {
@@ -208,7 +210,7 @@ class HRController extends Controller
                     if (empty($present_date)) {
                         $present_date = [];
                     }
-                    $attendance = array_merge($absent_date,$present_date);
+                    $attendance = $present_date;
                     // dd($attendance);
 
                     // $data['checked_attendance'] = Attendance::selectRaw('*')->where('user_id', $user_id)->whereBetween('date', [$from, $to])->latest()->get()->groupBy('date');
@@ -291,30 +293,21 @@ class HRController extends Controller
                     return redirect()->back();
                     return redirect()->route('hr.studentAttendanceDetails')->with('error', 'Please select valid range');
                 }
-                $from = date($request->start_date);
-                $to = date($request->end_date);
+                $from = new DateTime($request->start_date);
+                $to = new DateTime($request->end_date);
                 $data['start_date'] = $request->start_date;
                 $data['end_date'] = $request->end_date;
 
-                $start = strtotime($from);
-                $end = strtotime($to);
-
-                $days_between = floor(abs($end - $start) / 86400);
-                // dd($days_between);
-                if ($days_between  > 30) {
-                    return redirect()->route('hr.studentAttendanceDetails')->with('error', 'You can view 30 days attendence');
-                }
-
-                for ($i = $from; $i <= $to ; $i++) {
+                for ($i = $from; $i <= $to ; $i->modify('+1 day')) {
                    $attendance = Attendance::where('user_id',$user_id)->whereDate('date', $i)->first();
                    if (empty($attendance)) {
-                       $absent_date[] = array(
-                           "date" => $i,
+                       $present_date[] = array(
+                           "date" => $i->format("Y-m-d"),
                            "attendance_status" => 0
                        );
                    }else{
                        $present_date[] = array(
-                        "date" => $i,
+                        "date" => $i->format("Y-m-d"),
                         "attendance_status" => 1
                     );
                    }
@@ -326,7 +319,7 @@ class HRController extends Controller
                 if (empty($present_date)) {
                     $present_date = [];
                 }
-                $attendance = array_merge($absent_date,$present_date);
+                $attendance = $present_date;
                 $data['checked_attendance'] = $attendance;
             }
             if (isset($data['specific_attendance'])) {

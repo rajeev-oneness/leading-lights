@@ -26,6 +26,7 @@ use App\Models\Payment;
 use App\Models\SpecialCourse;
 use App\Models\Testimonial;
 use App\Models\VLOG;
+use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -480,21 +481,21 @@ class UserController extends Controller
                     if ($request->start_date > $request->end_date) {
                         return redirect()->back()->with('error', 'Please select valid range');
                     }
-                    $from = date($request->start_date);
-                    $to = date($request->end_date);
+                    $from = new DateTime($request->start_date);
+                    $to = new DateTime($request->end_date);
                     $data['start_date'] = $request->start_date;
                     $data['end_date'] = $request->end_date;
 
-                    for ($i = $from; $i <= $to ; $i++) {
+                    for ($i = $from; $i <= $to ; $i->modify('+1 day')) {
                        $attendance = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
                        if (empty($attendance)) {
-                           $absent_date[] = array(
-                               "date" => $i,
+                           $present_date[] = array(
+                               "date" => $i->format("Y-m-d"),
                                "attendance_status" => 0
                            );
                        }else{
                            $present_date[] = array(
-                            "date" => $i,
+                            "date" => $i->format("Y-m-d"),
                             "attendance_status" => 1
                         );
                        }
@@ -506,7 +507,7 @@ class UserController extends Controller
                     if (empty($present_date)) {
                         $present_date = [];
                     }
-                    $attendance = array_merge($absent_date,$present_date);
+                    $attendance = $present_date;
                     $data['checked_attendance'] = $attendance;
                 }
                 if (isset($data['specific_attendance'])) {

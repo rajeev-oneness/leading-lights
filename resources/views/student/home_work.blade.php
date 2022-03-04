@@ -1,4 +1,7 @@
 @extends('student.layouts.master')
+@section('title')
+    Home Task
+@endsection
 @section('content')
     <style>
         .table thead th {
