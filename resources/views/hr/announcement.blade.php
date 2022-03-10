@@ -52,9 +52,8 @@
                                         <div class="justify-content-between align-items-center">
                                             <label><i class="fa fa-circle color-icon mr-2"></i>Class<span
                                                     class="text-danger">*</span></label>
-                                            <select class="w-89" id="choices-multiple-remove-button" multiple
-                                                name="class_id[]">
-                                                {{-- <option value="all">All Students</option> --}}
+                                            <select class="w-89 form-control" name="class_id">
+                                                <option value="all">All Students</option>
                                                 @foreach ($classes as $class)
                                                     <option value="{{ $class->id }}">{{ $class->name }}</option>
                                                 @endforeach
@@ -178,7 +177,8 @@
         $('.datepicker').datepicker({
             format: 'yyyy-mm-dd',
             startDate: new Date(),
-            daysOfWeekDisabled: [0]
+            daysOfWeekDisabled: [0],
+            autoclose : true
         });
     </script>
 

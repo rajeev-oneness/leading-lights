@@ -277,7 +277,8 @@
         $('.datepicker').datepicker({
             format: 'yyyy-mm-dd',
             startDate: new Date(),
-            daysOfWeekDisabled: [0]
+            daysOfWeekDisabled: [0],
+            autoclose: true
         });
     </script>
 @endsection

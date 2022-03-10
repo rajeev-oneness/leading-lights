@@ -31,6 +31,12 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+    if ($('.active-sidebar').length > 0) {
+        $(document).ready(function () {
+            window.scrollTo(0,9999);
+        });
+    }
+    
 </script>
 </body>
 
