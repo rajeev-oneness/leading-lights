@@ -85,8 +85,9 @@
                         @endif
                         <div class="row">
                             <div class="col-lg-3">
-                                <img src="{{ asset($student->image ? $student->image : 'frontend/assets/images/avata3.jpg') }}"
-                                    class="img-fluid mx-auto">
+                                <div class="profile-pic">
+                                    <img src="{{ asset($student->image ? $student->image : 'frontend/assets/images/avata3.jpg') }}">
+                                </div>
                             </div>
                             <div class="col-lg-4 not2">
                                 <p>{{ date('d-m-Y', strtotime($student->created_at)) }}</p>

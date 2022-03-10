@@ -439,7 +439,7 @@
         });
        	$('.datepicker').datepicker({
             format: 'dd-M-yyyy',
-            endDate: '-60d',
+            endDate: '-1d',
             autoclose: true,
             clearBtn: true,
             // daysOfWeekDisabled: [0]

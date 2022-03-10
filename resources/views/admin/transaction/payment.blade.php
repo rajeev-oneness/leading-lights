@@ -162,7 +162,7 @@
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <form action="{!! route('payment.capture') !!}" method="POST" id="payment_form">
+                                                            {{-- <form action="{!! route('payment.capture') !!}" method="POST" id="payment_form">
                                                                 @csrf
                                                                 <input type="hidden" name="redirectURL" value="{{route('admin.razorpaypayment',[$duePayment->id,$data->user_details->id])}}">
                                                                 <script src="https://checkout.razorpay.com/v1/checkout.js"
@@ -173,7 +173,8 @@
                                                                         data-image="{{ asset('img/logo.jpg') }}"
                                                                         data-theme.color="#F0FFF0">
                                                                 </script>
-                                                            </form>
+                                                            </form> --}}
+                                                            <a href="{{route('admin.razorpaypayment',[$duePayment->id,$data->user_details->id])}}" class="mb-2 mr-2 btn-pill btn btn-primary btn-lg" onclick="rejectAccount()" id="pay_now">Pay Now</a>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -193,7 +194,55 @@
                         order : []
                     });
                 });
-                $('.razorpay-payment-button').addClass('mb-2 mr-2 btn-pill btn btn-primary btn-lg');
+
+            // For payment
+            function rejectAccount() {
+                event.preventDefault();
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                })
+
+                swalWithBootstrapButtons.fire({
+                    title: 'Are you sure?',
+                    iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        event.preventDefault();
+                        let url = $("#pay_now").attr('href');
+                        console.log(url);
+                        $.ajax({
+                            url: url,
+                            type: "get",
+                            success: function(response) {
+                                if (response.data === 'rejected') {
+                                    location.reload();
+                                }
+                                location.reload();
+                            }
+                        })
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) 
+                    {
+                        // swalWithBootstrapButtons.fire(
+                        //     'Cancelled',
+                        //     'This account status remain same :)',
+                        //     'error'
+                        // )
+                    }
+                })
+
+
+            }
             </script>
 
 @endsection

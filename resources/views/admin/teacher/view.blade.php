@@ -86,8 +86,9 @@
                             @endif
                             <div class="row">
                                 <div class="col-lg-5 col-sm-4">
-                                    <img src="{{ asset($teacher->image ? $teacher->image : 'frontend/assets/images/avata3.jpg') }}"
-                                        class="img-fluid mx-auto" width="60%" height="100%">
+                                    <div class="profile-pic">
+                                        <img src="{{ asset($teacher->image ? $teacher->image : 'frontend/assets/images/avata3.jpg') }}">
+                                    </div>
                                 </div>
                                 <div class="col-lg-7 col-sm-8 not2">
                                     <p>Joined-

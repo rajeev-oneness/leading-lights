@@ -58,7 +58,7 @@
 								</div>
 							</div>
 							<div class="form-group d-flex justify-content-end">
-								<button type="submit" class="actionbutton">SAVE</button>
+								<button type="submit" class="actionbutton">Proceed</button>
 							</div>
 						</form>
 				</div>

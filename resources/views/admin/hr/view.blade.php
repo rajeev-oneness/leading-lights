@@ -81,9 +81,11 @@
                                 <h6 class="">Document has been uploaded, please verify that!</h6>
                             @endif
                             <div class="row">
-                                <div class="col-lg-5 col-sm-4">
-                                    <img src="{{ asset($hr->image ? $hr->image : 'frontend/assets/images/avata2.jpg') }}"
-                                        class="img-fluid mx-auto">
+                                <div class="col-lg-4 col-sm-4">
+                                    <div class="profile-pic">
+                                        <img src="{{ asset($hr->image ? $hr->image : 'frontend/assets/images/avata2.jpg') }}">
+                                    </div>
+                                    
                                 </div>
                                 <div class="col-lg-7 col-sm-8 not2">
                                     <p>Joined-
