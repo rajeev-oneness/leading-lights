@@ -285,7 +285,8 @@
         $('.datepicker').datepicker({
             format: 'yyyy-mm-dd',
             startDate: '+1 day',
-            daysOfWeekDisabled: [0]
+            daysOfWeekDisabled: [0],
+            autoclose: true
         });
 
         $('#btn_submit').on('click', function(e) {

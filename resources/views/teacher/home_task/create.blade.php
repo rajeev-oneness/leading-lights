@@ -234,7 +234,8 @@
         $('.datepicker').datepicker({
             format: 'yyyy-mm-dd',
             startDate: '+2d',
-            daysOfWeekDisabled: [0]
+            daysOfWeekDisabled: [0],
+            autoclose: true
         });
         $('.clockpicker').clockpicker({
             placement: 'bottom',
