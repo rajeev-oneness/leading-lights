@@ -150,7 +150,7 @@
                                                     @endphp
                                                     <tr class="bg-tr">
                                                         <td>{{ $i + 1 }}</td>
-                                                        <td>{{ $attendance->date }}</td>
+                                                        <td>{{ date('d-M-Y',strtotime($attendance->date)) }}</td>
                                                         <td>{{ $attendance->login_time }}</td>
                                                         <td>{{ $attendance->logout_time ? $attendance->logout_time : 'N/A' }}
                                                         </td>
@@ -182,7 +182,7 @@
                                                     @endphp
                                                     <tr class="bg-tr">
                                                         <td>{{ $i + 1 }}</td>
-                                                        <td>{{ $attendance['date'] }}</td>
+                                                        <td>{{ date('d-M-Y',strtotime($attendance['date'])) }}</td>
                                                         </td>
                                                         <td class="text-center">
                                                             @if ($attendance['login_time'])
@@ -315,7 +315,7 @@
 
         }
         $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
+            format: 'dd-M-yyyy',
             endDate: new Date,
             autoclose: true
             // daysOfWeekDisabled: [0]
@@ -324,6 +324,9 @@
         $('.openBtn').on('click', function() {
 
             var date = $(this).data('id');
+            var months = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+            var datearray = date.split("-");
+            var newdate = datearray[2] + '-' + months[datearray[1]-1] + '-' + datearray[0];
             var fragment = "";
             $.ajax({
                     type: 'POST',
@@ -350,7 +353,7 @@
                             " </td><td>" + value.logout_time + "</td> </tr>";
                     })
                     $("#myTable").append(fragment);
-                    $("#attendance_level").html(`Attendance Details: <strong>${date}</strong>`);
+                    $("#attendance_level").html(`Attendance Details: <strong>${newdate}</strong>`);
                 })
                 .catch(error => {
                     var xhr = $.ajax();

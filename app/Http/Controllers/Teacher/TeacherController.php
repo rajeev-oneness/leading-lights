@@ -155,7 +155,7 @@ class TeacherController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $specific_attendance = Attendance::where('user_id', Auth::user()->id)
                 ->where('date', date('Y-m-d'))->latest()->take(4)->get();
-            $specific_date = date('Y-m-d');
+            $specific_date = date('d-M-Y');
             return view('teacher.attendance', compact('specific_attendance', 'specific_date'));
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -165,8 +165,8 @@ class TeacherController extends Controller
                     $this->validate($request, [
                         'date' => 'required|'
                     ]);
-                    $date = $request->date;
-                    $data['specific_date'] = $date;
+                    $date = date('Y-m-d',strtotime($request->date));
+                    $data['specific_date'] = $request->date;
                     $data['no_of_working_hours'] = Attendance::whereDate('date', $date)
                         ->selectRaw("SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(logout_time,login_time) )) ) as 'total'")
                         ->first();
@@ -189,11 +189,11 @@ class TeacherController extends Controller
                        $attendance = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
                        if (empty($attendance)) {
                         $present_date[] = array(
-                               "date" => $i->format("Y-m-d"),
+                               "date" => $i->format("d-M-Y"),
                                "login_time" => null
                            );
                        }else{
-                           $present_date[] = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i->format("Y-m-d"))->first();
+                           $present_date[] = Attendance::where('user_id',Auth::user()->id)->whereDate('date', $i)->first();
                        }
                     }
                     if (empty($absent_date)) {
@@ -204,6 +204,7 @@ class TeacherController extends Controller
                         $present_date = [];
                     }
                     $attendance = $present_date;
+                    // dd($attendance);
                     $data['checked_attendance'] = $attendance;
                 }
                 if (isset($data['specific_attendance'])) {
