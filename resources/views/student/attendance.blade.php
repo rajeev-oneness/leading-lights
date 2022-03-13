@@ -149,7 +149,7 @@
                                                 @foreach ($checked_attendance as $i => $attendance)
                                                     <tr class="bg-tr">
                                                         <td>{{ $i + 1 }}</td>
-                                                        <td>{{ $attendance['date'] }}</td>
+                                                        <td>{{ date('d-M-Y',strtotime($attendance['date'])) }}</td>
                                                         </td>
                                                         <td class="text-center">
                                                             @if ($attendance['attendance_status'] == 0)
@@ -271,7 +271,7 @@
 
         }
         $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
+            format: 'dd-M-yyyy',
             endDate: new Date,
             autoclose: true
             // daysOfWeekDisabled: [0]

@@ -164,7 +164,7 @@
                                                     @endphp
                                                     <tr class="bg-tr">
                                                         <td>{{ $i + 1 }}</td>
-                                                        <td>{{ $attendance->date }}</td>
+                                                        <td>{{ date('d-M-Y',strtotime($attendance->date)) }}</td>
                                                         <td>{{ $attendance->login_time }}</td>
                                                         <td>{{ $attendance->logout_time ? $attendance->logout_time : 'N/A' }}
                                                         </td>
@@ -196,7 +196,7 @@
                                                     @endphp
                                                     <tr class="bg-tr">
                                                         <td>{{ $i + 1 }}</td>
-                                                        <td>{{ $attendance['date'] }}</td>
+                                                        <td>{{ date('d-M-Y',strtotime($attendance['date'])) }}</td>
                                                         </td>
                                                         <td class="text-center">
                                                             @if (isset($attendance['login_time']))
@@ -330,7 +330,7 @@
 
         // }
         $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
+            format: 'dd-M-yyyy',
             endDate: new Date,
             autoclose: true
             // daysOfWeekDisabled: [0]

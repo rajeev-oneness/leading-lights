@@ -239,7 +239,7 @@
                         <div class="widget-content-left header-user-info">
                             <div class="widget-heading"> {{ Auth::user()->first_name }}
                                 {{ Auth::user()->last_name }}</div>
-                            <div class="widget-subheading"> Member Seance:
+                            <div class="widget-subheading"> Member Since:
                                 {{ Auth::user()->created_at ? date('Y', strtotime(Auth::user()->created_at)) : 'N/A' }}
                             </div>
                         </div>

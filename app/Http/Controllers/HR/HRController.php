@@ -121,7 +121,7 @@ class HRController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $specific_attendance = Attendance::where('user_id', $user_id)
                 ->where('date', date('Y-m-d'))->latest()->take(4)->get();
-            $specific_date = date('Y-m-d');
+            $specific_date = date('d-M-Y');
             return view('hr.attendance_date', compact('specific_attendance', 'specific_date', 'user_id'));
         }
         if ($request->ajax()) {
@@ -153,7 +153,7 @@ class HRController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $specific_attendance = Attendance::where('user_id', $user_id)
                 ->where('date', date('Y-m-d'))->latest()->take(4)->get();
-            $specific_date = date('Y-m-d');
+            $specific_date = date('d-M-Y');
             return view('hr.attendance_date', compact('specific_attendance', 'specific_date'));
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -163,8 +163,8 @@ class HRController extends Controller
                     $this->validate($request, [
                         'date' => 'required|'
                     ]);
-                    $date = $request->date;
-                    $data['specific_date'] = $date;
+                    $date = date('Y-m-d',strtotime($request->date));
+                    $data['specific_date'] = $request->date;
                     $data['no_of_working_hours'] = Attendance::whereDate('date', $date)
                         ->selectRaw("SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(logout_time,login_time) )) ) as 'total'")
                         ->first();
@@ -271,8 +271,8 @@ class HRController extends Controller
                 $this->validate($request, [
                     'date' => 'required|'
                 ]);
-                $date = $request->date;
-                $data['specific_date'] = $date;
+                $date = date('Y-m-d',strtotime($request->date));
+                $data['specific_date'] = $request->date;
                 $attendance = Attendance::where('user_id', $user_id)
                 ->where('date', $date)->first();
                 if (empty($attendance)) {

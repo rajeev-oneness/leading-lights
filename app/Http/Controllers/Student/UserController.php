@@ -449,7 +449,7 @@ class UserController extends Controller
                 $attendance_status = 1;
             }
             $specific_attendance = array(
-                "date" => date('Y-m-d'),
+                "date" => date('d-M-Y'),
                 "attendance_status" => $attendance_status
             );
             return view('student.attendance', compact('specific_attendance'));
@@ -461,7 +461,7 @@ class UserController extends Controller
                     $this->validate($request, [
                         'date' => 'required|'
                     ]);
-                    $date = $request->date;
+                    $date = date('Y-m-d',strtotime($request->date));
                     $attendance = Attendance::where('user_id', Auth::user()->id)
                     ->where('date', $date)->first();
                     if (empty($attendance)) {
@@ -470,7 +470,7 @@ class UserController extends Controller
                         $attendance_status = 1;
                     }
                     $data['specific_attendance'] = array(
-                        "date" => $date,
+                        "date" => $request->date,
                         "attendance_status" => $attendance_status
                     );
                 } else {
