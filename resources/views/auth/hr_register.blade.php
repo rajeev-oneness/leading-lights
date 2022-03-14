@@ -494,34 +494,40 @@
                     $('#mobile').focus();
                     document.getElementById("btn_submit").disabled = true;
                     document.getElementById("btn_submit").style.cursor = 'no-drop';
-                } else if (mobile.length == 10) {
-                    $.ajax({
-                        url: "{{ route('checkMobileNoExistence') }}",
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            mobile: mobile
-                        },
-                        dataType: 'json',
-                        type: 'post',
-                        beforeSend: function() {
-                            $(".mobile-success").html('Loading....');
-                        },
-                        success: function(response) {
-                            if (response.msg == 'success') {
-                                $('.mobile-err').html('');
-                                $('.mobile-success').html('Available');
-                                document.getElementById("btn_submit").disabled = false;
-                                document.getElementById("btn_submit").style.cursor = 'pointer';
-
-                            } else {
-                                $(".mobile-success").html('');
-                                $(".mobile-err").html('Already exist!!');
-                                document.getElementById("btn_submit").disabled = true;
-                                document.getElementById("btn_submit").style.cursor = 'no-drop';
-                            }
-                        }
-                    });
+                } 
+                else{
+                    $('.mobile-err').html('');
+                    document.getElementById("btn_submit").disabled = false;
+                    document.getElementById("btn_submit").style.cursor = 'pointer';
                 }
+                // else if (mobile.length == 10) {
+                //     $.ajax({
+                //         url: "{{ route('checkMobileNoExistence') }}",
+                //         data: {
+                //             _token: "{{ csrf_token() }}",
+                //             mobile: mobile
+                //         },
+                //         dataType: 'json',
+                //         type: 'post',
+                //         beforeSend: function() {
+                //             $(".mobile-success").html('Loading....');
+                //         },
+                //         success: function(response) {
+                //             if (response.msg == 'success') {
+                //                 $('.mobile-err').html('');
+                //                 $('.mobile-success').html('Available');
+                //                 document.getElementById("btn_submit").disabled = false;
+                //                 document.getElementById("btn_submit").style.cursor = 'pointer';
+
+                //             } else {
+                //                 $(".mobile-success").html('');
+                //                 $(".mobile-err").html('Already exist!!');
+                //                 document.getElementById("btn_submit").disabled = true;
+                //                 document.getElementById("btn_submit").style.cursor = 'no-drop';
+                //             }
+                //         }
+                //     });
+                // }
             } else {
                 $(".email-success").html('');
                 $(".email-err").html('');
