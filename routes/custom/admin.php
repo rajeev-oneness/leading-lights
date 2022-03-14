@@ -99,4 +99,8 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::any('report/details', [ReportController::class, 'report_details'])->name('report_details');
     Route::get('download-report/{exam_id}', [ReportController::class, 'downLoadReport'])->name('downLoadReport');
 
+    //Teacher Role Management
+    Route::get('teacher/role',[TeacherRoleManagement::class,'index'])->name('teacher.role.index');
+    Route::put('teacher/role/update',[TeacherRoleManagement::class,'updateRole'])->name('teacher.role.update');
+
 });

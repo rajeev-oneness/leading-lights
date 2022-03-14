@@ -72,6 +72,10 @@
                 <a href="{{ route('admin.groups.index') }}"><i class="fas fa-users"></i>Student Group
                     Management</a>
             </li>
+            <li class="{{ Request::is('admin/teacher/role*') ? 'active' : '' }}">
+                <a href="{{ route('admin.teacher.role.index') }}"><i class="fas fa-users"></i>Teacher Role
+                    Management</a>
+            </li>
             <li class="{{ Request::is('admin/qualification*') ? 'active' : '' }}">
                 <a href="{{ route('admin.qualifications.index') }}"><i class="fas fa-chalkboard"></i>Academic
                     Qualification
