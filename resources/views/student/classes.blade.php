@@ -46,7 +46,7 @@
                                             @endphp
                                             <td>{{ $subject_details->name }}</td>
                                             <td>{{ $class_details->name }}</td>
-                                            <td>{{ $available_class->date }}</td>
+                                            <td>{{ date('d-M-Y',strtotime($available_class->date)) }}</td>
                                             <td>{{ date('h:i A', strtotime($available_class->start_time)) }}</td>
                                             <td>{{ date('h:i A', strtotime($available_class->end_time)) }}</td>
                                             <td>
@@ -149,7 +149,7 @@
                                                     {{ $group_details->name }}
                                                 @endif
                                             </td>
-                                            <td>{{ $available_class->date }}</td>
+                                            <td>{{ date('d-M-Y',strtotime($available_class->date)) }}</td>
                                             <td>{{ date('h:i A', strtotime($available_class->start_time)) }}</td>
                                             <td>{{ date('h:i A', strtotime($available_class->end_time)) }}</td>
                                             <td>

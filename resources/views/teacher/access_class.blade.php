@@ -62,7 +62,7 @@
                                         @endif
                                         {{-- {{ $arrange_class->class ?  $arrange_class->class : $group_details->name}} --}}
                                     </td>
-                                    <td>{{ $arrange_class->date }}</td>
+                                    <td>{{ date('d-M-Y',strtotime($arrange_class->date)) }}</td>
                                     <td>{{ date('h:i A', strtotime($arrange_class->start_time)) }}</td>
                                     <td>{{ date('h:i A', strtotime($arrange_class->end_time)) }}</td>
                                     <td>
@@ -179,7 +179,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="date">Date</label>
-                                    <input type="text" class="form-control datepicker" name="date" id="date">
+                                    <input type="text" class="form-control datepicker" name="date" id="date" autocomplete="off">
                                     <span class="text-danger" id="date_error"></span>
                                 </div>
                             </div>
@@ -449,7 +449,7 @@
         }
 
         $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
+            format: 'dd-M-yyyy',
             startDate: new Date,
             daysOfWeekDisabled: [0],
             autoclose: true
@@ -460,14 +460,14 @@
             var after_split = class_name.split("-")[1];
             if (after_split === 'group') {
                 $('.datepicker').datepicker('destroy').datepicker({
-                    format: 'yyyy-mm-dd',
+                    format: 'dd-M-yyyy',
                     startDate: new Date(),
                     autoclose: true
                     // daysOfWeekDisabled: [0]
                 });
             } else {
                 $('.datepicker').datepicker('destroy').datepicker({
-                    format: 'yyyy-mm-dd',
+                    format: 'dd-M-yyyy',
                     startDate: new Date(),
                     daysOfWeekDisabled: [0],
                     autoclose: true

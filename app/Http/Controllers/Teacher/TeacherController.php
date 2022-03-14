@@ -227,9 +227,13 @@ class TeacherController extends Controller
     }
     public function class()
     {
+        $data = array();
         $data['groups'] = Group::latest()->where('teacher_id', Auth::user()->id)->get();
-        // dd($data['groups']);
-        $data['classes'] = Classes::orderBy('name')->get();
+        if (Auth::user()->class_access == 1) {
+            $data['classes'] = Classes::latest()->get();
+        }else{
+            $data['classes'] = [];
+        }
         $data['subjects'] = Subject::latest()->get();
         $data['arrange_classes'] = ArrangeClass::where('user_id', Auth::user()->id)->latest()->get();
         return view('teacher.access_class')->with($data);
@@ -298,7 +302,7 @@ class TeacherController extends Controller
         $class = $request->class;
         // dd($group);
         $after_explode_class = explode('-', $class);
-        $date = $request->date;
+        $date = date('Y-m-d',strtotime($request->date));
         $start_time = $request->start_time;
         $end_time = $request->end_time;
 

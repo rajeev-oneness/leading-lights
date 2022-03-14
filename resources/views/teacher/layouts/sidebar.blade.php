@@ -41,7 +41,7 @@
                         <i class="metismenu-icon fa fa-text-height"></i>Teachers Profile
                     </a>
                 </li>
-                @if (Auth::user()->is_special_approved == 1)
+                @if (Auth::user()->group_access == 1 || Auth::user()->class_access == 1)
 
                 <li class="{{ Request::is('teacher/attendance') ? 'mm-active' : '' }}">
                     <a href="{{ route('teacher.attendance') }}">

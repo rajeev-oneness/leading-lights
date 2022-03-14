@@ -101,6 +101,7 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
 
     //Teacher Role Management
     Route::get('teacher/role',[TeacherRoleManagement::class,'index'])->name('teacher.role.index');
-    Route::put('teacher/role/update',[TeacherRoleManagement::class,'updateRole'])->name('teacher.role.update');
+    Route::put('teacher/role/group/update',[TeacherRoleManagement::class,'groupAccessUpdate'])->name('teacher.role.group.update');
+    Route::put('teacher/role/class/update',[TeacherRoleManagement::class,'classAccessUpdate'])->name('teacher.role.class.update');
 
 });

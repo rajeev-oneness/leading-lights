@@ -66,7 +66,7 @@
                                                 $subject_details = App\Models\Subject::find($home_work->subject);
                                             @endphp
                                             <td>{{ $subject_details->name }}</td>
-                                            <td>{{ $home_work->submission_date }}</td>
+                                            <td>{{ date('d-M-Y',strtotime($home_work->submission_date)) }}</td>
                                             <td>{{ $home_work->submission_time }}</td>
                                             <td><a href="{{ asset($home_work->upload_file) }}" download="">
                                                 <button class="btn-pill btn btn-primary mb-1"><i
@@ -190,7 +190,7 @@
                                             @endphp
                                             <td><span class="badge badge-info">{{ $group_details->name }}</span></td>
                                             <td>{{ $subject_details->name }}</td>
-                                            <td>{{ $home_work->submission_date }}</td>
+                                            <td>{{ date('d-M-Y',strtotime($home_work->submission_date)) }}</td>
                                             <td>{{ $home_work->submission_time }}</td>
                                             <td><a href="{{ asset($home_work->upload_file) }}" download="">
                                                     <button class="btn-pill btn btn-primary mb-1"><i

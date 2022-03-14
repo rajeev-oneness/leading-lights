@@ -97,7 +97,7 @@
                                         <p class="des  mr-2"><span class="mr-2"><i
                                                     class="fa fa-circle"></i></span>Submission Date</p>
                                         <input type="text" name="submission_date" id="datepicker"
-                                            class="form-control datepicker" value="{{ old('submission_date') }}">
+                                            class="form-control datepicker" value="{{ old('submission_date') }}" autocomplete="off">
 
                                     </div>
                                     <div class="d-sm-flex align-items-baseline">
@@ -232,7 +232,7 @@
             $("#choose_file").html(`One file chosen: <span class="text-info">${file_name}</span>`);
         });
         $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
+            format: 'dd-M-yyyy',
             startDate: '+2d',
             daysOfWeekDisabled: [0],
             autoclose: true

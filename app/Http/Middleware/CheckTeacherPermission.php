@@ -19,7 +19,7 @@ class CheckTeacherPermission
     {
         $user = Auth::user();
         if ($user && $user->role_id == 3) {
-            if($user->is_special_approved == 1){
+            if($user->group_access == 1 || $user->class_access == 1){
                 return $next($request);
             }
             return redirect()->route('teacher.profile');

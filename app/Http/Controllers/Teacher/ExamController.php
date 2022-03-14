@@ -29,12 +29,17 @@ class ExamController extends Controller
     {
         $data['groups'] = Group::latest()->where('teacher_id', Auth::user()->id)->get();
         $data['subjects'] = Subject::latest()->get();
-        $data['classes'] = Classes::latest()->get();
+        if (Auth::user()->class_access == 1) {
+            $data['classes'] = Classes::latest()->get();
+        }else{
+            $data['classes'] = [];
+        }
         return view('teacher.exam.create')->with($data);
     }
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $this->validate($request, [
             'class' => 'required',
             'subject' => 'required',
@@ -51,12 +56,13 @@ class ExamController extends Controller
            'exam_type.required' => 'Exam category field is required'
         ]);
 
+        $request_date = date('Y-m-d',strtotime($request->date));
         $exam_start_time = date('H:i', strtotime($request->start_time));
         $exam_end_time = date('H:i', strtotime($request->end_time));
 
         $minutes_to_add = 180;
         $current_time = getAsiaTime24(date('Y-m-d H:i:s'));
-        $time = new DateTime($request->date . $request->start_time);
+        $time = new DateTime($request_date . $request->start_time);
         $time->add(new DateInterval('PT' . $minutes_to_add . 'M'));
 
         $new_time = $time->format('H:i');
@@ -68,12 +74,12 @@ class ExamController extends Controller
         $after_explode_class = explode('-', $request->class);
 
         $arrange_exam = ArrangeExam::where('class', $after_explode_class[0])
-        ->where('date', $request->date)
+        ->where('date', $request_date)
         ->whereTime('start_time', '<=', $exam_start_time)
         ->whereTime('end_time', '>=', $exam_start_time)
         ->count();
         $group_arrange_exam = ArrangeExam::where('group_id', $after_explode_class[0])
-        ->where('date', $request->date)
+        ->where('date', $request_date)
         ->whereTime('start_time', '<=', $exam_start_time)
         ->whereTime('end_time', '>=', $exam_start_time)
         ->count();
@@ -87,7 +93,7 @@ class ExamController extends Controller
             $class = $request->class;
             $after_explode_class = explode('-', $class);
 
-            $exam_date = $request->date;
+            $exam_date = $request_date;
             $result_date = date('Y-m-d', strtotime($exam_date. ' + 15 days'));
 
             $exam = new ArrangeExam();
@@ -110,6 +116,8 @@ class ExamController extends Controller
             $exam->negative_marks = $request->negative_marks;
             $exam->exam_type = $request->exam_type;
             $exam->type_of_exam = $request->type_of_exam;
+            $exam->name_of_exam = $request->name_of_exam;
+            $exam->selected_session = $request->selected_term;
             $exam->save();
 
             /**

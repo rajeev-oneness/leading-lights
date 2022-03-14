@@ -34,8 +34,8 @@
                                 <th>Serial No</th>
                                 <th>Teacher Name</th>
                                 <th>Employee Id</th>
-                                <th>Full Access</th>
-                                <th style="width:100px">Action</th>
+                                <th>Group Access</th>
+                                <th>Organization Access</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,31 +45,42 @@
                                     <td>{{ \Illuminate\Support\Str::limit($teacher->first_name.' '.$teacher->last_name,50) }}</td>
                                     <td>{{ $teacher->id_no }}</td>
                                     <td>
-                                        @if ($teacher->is_special_approved == 0)
+                                        @if ($teacher->group_access == 0)
                                             <span class="text-danger">No</span>
                                         @else
                                             <span class="text-success">Yes</span>
                                         @endif
-                                    </td>
-                                    <td>
+
                                         <div class="custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input" id="role_update_{{ $teacher->id }}"  {{ $teacher->is_special_approved == 1 ? 'checked' : '' }} onclick="updateRole({{ $teacher->id }})">
-                                                <label class="custom-control-label" for="role_update_{{ $teacher->id }}"></label>
+                                            <span data-toggle="tooltip" data-placement="top" title="Change Status">
+                                            <input type="checkbox" class="custom-control-input" id="group_access_update_{{ $teacher->id }}"  {{ $teacher->group_access == 1 ? 'checked' : '' }} onclick="updateGroupAccess({{ $teacher->id }})">
+                                                <label class="custom-control-label" for="group_access_update_{{ $teacher->id }}"></label>
+                                            </span>
                                         </div>
-                                        {{-- <a href="javascript:void(0);" class="ml-2" data-toggle="modal"
-                                            data-target="#exampleModal" onclick="updateRole({{ $teacher->id }})"><i
-                                                class="far fa-edit text-danger"></i></a> --}}
-                                        <form action="{{ route('admin.teacher.role.update') }}" id="role_form_{{ $teacher->id }}" method="POST">
+                                        <form action="{{ route('admin.teacher.role.group.update') }}" id="group_form_{{ $teacher->id }}" method="POST">
                                             @csrf
                                             @method('PUT')
-                                            {{-- <div class="custom-control custom-switch"> --}}
                                                 <input type="hidden" name="teacher_id" value="{{ $teacher->id }}">
-                                                
-                                            {{-- </div> --}}
-                                               
-                                            
                                         </form>
                                     </td>
+                                    <td>
+                                        @if ($teacher->class_access == 0)
+                                        <span class="text-danger">No</span>
+                                        @else
+                                            <span class="text-success">Yes</span>
+                                        @endif
+
+                                        <div class="custom-control custom-switch">
+                                            <span data-toggle="tooltip" data-placement="top" title="Change Status">
+                                            <input type="checkbox" class="custom-control-input" id="class_access_update_{{ $teacher->id }}"  {{ $teacher->class_access == 1 ? 'checked' : '' }} onclick="updateClassAccess({{ $teacher->id }})">
+                                                <label class="custom-control-label" for="class_access_update_{{ $teacher->id }}"></label>
+                                            </span>
+                                        </div>
+                                        <form action="{{ route('admin.teacher.role.class.update') }}" id="class_form_{{ $teacher->id }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                                <input type="hidden" name="teacher_id" value="{{ $teacher->id }}">
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
@@ -84,7 +95,7 @@
             $('#teacher_table').DataTable();
         });
 
-        function updateRole(id) {
+        function updateGroupAccess(id) {
             event.preventDefault();
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
@@ -104,7 +115,41 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     event.preventDefault();
-                    document.getElementById('role_form_' + id).submit();
+                    document.getElementById('group_form_' + id).submit();
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    // swalWithBootstrapButtons.fire(
+                    //     'Cancelled',
+                    //     'Your data  is safe :)',
+                    //     'error'
+                    // )
+                }
+            })
+        }
+
+        function updateClassAccess(id) {
+            event.preventDefault();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.preventDefault();
+                    document.getElementById('class_form_' + id).submit();
                 } else if (
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel

@@ -21,9 +21,14 @@ class HomeTaskController extends Controller
 
     public function create()
     {
+        $data = array();
+        if (Auth::user()->class_access == 1) {
+            $data['classes'] = Classes::latest()->get();
+        }else{
+            $data['classes'] = [];
+        }
         $data['groups'] = Group::latest()->where('teacher_id', Auth::user()->id)->get();
         $data['subjects'] = Subject::latest()->get();
-        $data['classes'] = Classes::latest()->get();
         return view('teacher.home_task.create')->with($data);
     }
 
@@ -65,7 +70,7 @@ class HomeTaskController extends Controller
             createNotification($user_id, 0, $after_explode_class[0], 'teacher_upload_homework');
         }
         $homeTask->subject = $request->subject;
-        $homeTask->submission_date = $request->submission_date;
+        $homeTask->submission_date = date('Y-m-d',strtotime($request->submission_date));
         $homeTask->submission_time = $request->submission_time;
         $homeTask->upload_file = $fileName;
         $homeTask->save();

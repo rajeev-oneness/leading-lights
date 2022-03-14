@@ -39,26 +39,70 @@ class ReportController extends Controller
                 //     'student_id' => 'required',
                 //     'class_name' => 'required'
                 // ]);
-
+                // dd($request->all());
+                // dd($request->selected_term1);
                 Validator::make($request->all(), [
                     'student_id' => 'required',
-                    'class_name' => 'required'
+                    'class_name' => 'required',
+                    'selected_term1' => 'required',
                 ], $messages = [
                     'student_id.required' => 'This field is required.',
                     'class_name.required' => 'This field is required.',
+                    'selected_term1.required' => 'This field is required.',
                 ])->validate();
 
                 $student_id = $request->student_id;
                 $data['user_details'] = User::where('id', $student_id)->first();
                 $data['all_result'] = Result::where('results.user_id', $student_id)
+                    ->where('arrange_exams.selected_session',$request->selected_term1)
                     ->where('total_marks', '!=', '')
                     ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
                     ->get();
                 $data['total_marks'] = Result::where('results.user_id', $student_id)
+                    ->where('arrange_exams.selected_session',$request->selected_term1)
                     ->where('total_marks', '!=', '')
                     ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
                     ->sum('total_marks');
                 $data['total_full_marks'] = Result::where('results.user_id', $student_id)
+                    ->where('arrange_exams.selected_session',$request->selected_term1)
+                    ->where('full_marks', '!=', '')
+                    ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
+                    ->sum('full_marks');
+                // dd($data);
+                $pdf = PDF::loadView('student.report', $data);
+                return $pdf->download($data['user_details']['id_no'] . '.pdf');
+            }
+            if (isset($_POST['student_monthly_wise_result'])) {
+                // $this->validate($request, [
+                //     'student_id' => 'required',
+                //     'class_name' => 'required'
+                // ]);
+                // dd($request->all());
+                // dd($request->selected_term1);
+                Validator::make($request->all(), [
+                    'student_id1' => 'required',
+                    'class_name1' => 'required',
+                    'selected_term' => 'required',
+                ], $messages = [
+                    'student_id1.required' => 'This field is required.',
+                    'class_name1.required' => 'This field is required.',
+                    'selected_term.required' => 'This field is required.',
+                ])->validate();
+
+                $student_id = $request->student_id;
+                $data['user_details'] = User::where('id', $student_id)->first();
+                $data['all_result'] = Result::where('results.user_id', $student_id)
+                    ->where('arrange_exams.selected_session',$request->selected_term1)
+                    ->where('total_marks', '!=', '')
+                    ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
+                    ->get();
+                $data['total_marks'] = Result::where('results.user_id', $student_id)
+                    ->where('arrange_exams.selected_session',$request->selected_term1)
+                    ->where('total_marks', '!=', '')
+                    ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
+                    ->sum('total_marks');
+                $data['total_full_marks'] = Result::where('results.user_id', $student_id)
+                    ->where('arrange_exams.selected_session',$request->selected_term1)
                     ->where('full_marks', '!=', '')
                     ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
                     ->sum('full_marks');
