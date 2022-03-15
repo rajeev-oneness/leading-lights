@@ -279,7 +279,7 @@
 
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                text: "You want to approve this account!",
                 // icon: 'warning',
                 iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
@@ -314,11 +314,11 @@
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
                 ) {
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'This account status remain same :)',
-                        'error'
-                    )
+                    // swalWithBootstrapButtons.fire(
+                    //     'Cancelled',
+                    //     'This account status remain same :)',
+                    //     'error'
+                    // )
                 }
             })
 
@@ -338,7 +338,7 @@
 
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                text: "You want to deactivate this account!",
                 // icon: 'warning',
                 iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
@@ -373,11 +373,11 @@
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
                 ) {
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'This account status remain ACTIVE :)',
-                        'error'
-                    )
+                    // swalWithBootstrapButtons.fire(
+                    //     'Cancelled',
+                    //     'This account status remain ACTIVE :)',
+                    //     'error'
+                    // )
                 }
             })
 
@@ -397,7 +397,7 @@
 
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                text: "You want to activate this account!",
                 // icon: 'warning',
                 iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
@@ -432,11 +432,11 @@
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
                 ) {
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'This account status remain DEACTIVATE :)',
-                        'error'
-                    )
+                    // swalWithBootstrapButtons.fire(
+                    //     'Cancelled',
+                    //     'This account status remain DEACTIVATE :)',
+                    //     'error'
+                    // )
                 }
             })
 
@@ -455,7 +455,7 @@
 
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                text: "You want to reject this account!",
                 // icon: 'warning',
                 iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
@@ -487,11 +487,11 @@
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
                 ) {
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'This account status remain same :)',
-                        'error'
-                    )
+                    // swalWithBootstrapButtons.fire(
+                    //     'Cancelled',
+                    //     'This account status remain same :)',
+                    //     'error'
+                    // )
                 }
             })
 

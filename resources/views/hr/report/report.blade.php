@@ -72,7 +72,7 @@
                                         <span>Mixed(MCQ & Desc.)</span>
                                     @endif
                                 </td>
-                                <td>{{ $exam->created_at->format('d-m-Y') }}</td>
+                                <td>{{ $exam->created_at->format('d-M-Y') }}</td>
                                 <td>
                                     @if ($exam->total_marks >= 0 && $total_marks)
                                         <span>
@@ -93,7 +93,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    {{ $exam->result_date }}
+                                    {{ date('d-M-Y',strtotime($exam->result_date)) }}
                                 </td>
                             </tr>
                         @endforeach

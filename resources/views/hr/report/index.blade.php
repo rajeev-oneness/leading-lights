@@ -180,7 +180,7 @@
                                     <div class="d-sm-flex align-items-top justify-content-between">
                                         <div class="responsive-error">
                                             <label for="name">Select Class<span class="text-danger">*</span></label>
-                                            <select name="class_name2" id="class_wise_combo" class="form-control">
+                                            <select name="class_name2" id="class_wise_combo1" class="form-control">
                                                 <option value="">Select Class</option>
                                                 {{-- @foreach ($groups as $group)
 												<option value="{{ $group->id . '-group' }}" class="text-info">
@@ -199,7 +199,7 @@
                                         </div>
                                         <div class="responsive-error">
                                             <label for="name">Select Student<span class="text-danger">*</span></label>
-                                            <select class="form-control" name="student_id1" id="student_id">
+                                            <select class="form-control" name="student_id1" id="student_id1">
                                                 <option value="">Select Student</option>
                                                 @foreach ($users as $user)
                                                     <option value="{{ $user->id }}">{{ $user->first_name }}
@@ -324,6 +324,37 @@
                         $("#student_id").append(option);
                     } else {
                         $("#student_id").html('<option value="">No Student Found</option>');
+                    }
+                }
+            });
+        });
+        $('#class_wise_combo1').on('change', function() {
+            let class_id = $('#class_wise_combo1').val();
+            $.ajax({
+                url: "{{ route('getStudentByClass') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    class_id: class_id
+                },
+                dataType: 'json',
+                type: 'post',
+                beforeSend: function() {
+                    $("#student_id1").html('<option value="">** Loading....</option>');
+                },
+                success: function(response) {
+                    if (response) {
+                        $("#student_id1").html('');
+                        var option = '';
+                        $.each(response, function(i) {
+                            option += '<option value="' + response[i].id + '">' +
+                                response[i].first_name + ' ' + response[i].last_name + '-' +
+                                response[i].id_no +
+                                '</option>';
+                        });
+
+                        $("#student_id1").append(option);
+                    } else {
+                        $("#student_id1").html('<option value="">No Student Found</option>');
                     }
                 }
             });

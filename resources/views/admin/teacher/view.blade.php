@@ -158,6 +158,17 @@
                                         <div class="col-lg-2 col-sm-2">
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-sm-3">
+                                            <label>Joining Date:</label>
+                                        </div>
+                                        <div class="col-lg-6 col-sm-7">
+                                            <p id="qualification">
+                                                {{ $teacher->doj ? date('d-M-Y',strtotime($teacher->doj)) : 'N/A' }}</p>
+                                        </div>
+                                        <div class="col-lg-2 col-sm-2">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mt-4">
@@ -257,7 +268,7 @@
 
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                text: "You want to approve this account!",
                 iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -291,11 +302,11 @@
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
                 ) {
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'This account status remain same :)',
-                        'error'
-                    )
+                    // swalWithBootstrapButtons.fire(
+                    //     'Cancelled',
+                    //     'This account status remain same :)',
+                    //     'error'
+                    // )
                 }
             })
 
@@ -315,7 +326,7 @@
 
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                text: "You want to deactivate this account!",
                 iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -349,11 +360,11 @@
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
                 ) {
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'This account status remain ACTIVE :)',
-                        'error'
-                    )
+                    // swalWithBootstrapButtons.fire(
+                    //     'Cancelled',
+                    //     'This account status remain ACTIVE :)',
+                    //     'error'
+                    // )
                 }
             })
 
@@ -373,7 +384,7 @@
 
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                text: "You want to activate this account!",
                 iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -407,11 +418,11 @@
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
                 ) {
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'This account status remain DEACTIVATE :)',
-                        'error'
-                    )
+                    // swalWithBootstrapButtons.fire(
+                    //     'Cancelled',
+                    //     'This account status remain DEACTIVATE :)',
+                    //     'error'
+                    // )
                 }
             })
 
@@ -430,7 +441,7 @@
 
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                text: "You want to reject this account!",
                 iconHtml: '<img src="{{ asset('img/logo.jpg') }}">',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -461,11 +472,11 @@
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
                 ) {
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'This account status remain same :)',
-                        'error'
-                    )
+                    // swalWithBootstrapButtons.fire(
+                    //     'Cancelled',
+                    //     'This account status remain same :)',
+                    //     'error'
+                    // )
                 }
             })
 

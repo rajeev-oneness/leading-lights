@@ -390,8 +390,10 @@ class HRController extends Controller
         }
 
         $event->title = $request->title;
-        $event->start_date = $request->start_date;
-        $event->end_date = $request->end_date;
+        $event->start_date = date('Y-m-d',strtotime($request->start_date));
+        if ($request->end_date) {
+            $event->end_date = date('Y-m-d',strtotime($request->end_date));
+        }
         $event->start_time = $request->start_time;
         $event->end_time = $request->end_time;
         $event->desc = $request->desc;
@@ -506,7 +508,7 @@ class HRController extends Controller
     public function Announcement(Request $request)
     {
         $classes = Classes::orderBy('name')->get();
-        $announcements = Announcement::where('user_id', Auth::user()->id)->paginate(2);
+        $announcements = Announcement::where('user_id', Auth::user()->id)->latest()->paginate(2);
         // dd($announcements);
         return view('hr.announcement', compact('classes', 'announcements'));
     }
@@ -537,7 +539,7 @@ class HRController extends Controller
         }
 
         $announcement->title = $request->title;
-        $announcement->date = $request->date;
+        $announcement->date = date('Y-m-d',strtotime($request->date));
         $announcement->description = $request->desc;
         $announcement->save();
 

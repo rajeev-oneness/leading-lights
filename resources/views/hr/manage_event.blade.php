@@ -102,7 +102,7 @@
                                                     class="fa fa-circle color-icon mr-2 mb-2"></i>Start Date<span
                                                     class="text-danger">*</span></span>
                                             <input type="text" id="start_date" name="start_date"
-                                                class="form-control datepicker" value="{{ old('start_date') }}">
+                                                class="form-control datepicker" value="{{ old('start_date') }}" autocomplete="off">
                                             @error('start_date')
                                                 <span class="text-danger">
                                                     {{ $message }}
@@ -113,7 +113,7 @@
                                             <span for="end_date" class="des dec"><i
                                                     class="fa fa-circle color-icon mr-2 mb-2"></i>End Date</span>
                                             <input type="text" id="end_date" name="end_date" class="form-control datepicker"
-                                                value="{{ old('end_date') }}">
+                                                value="{{ old('end_date') }}" autocomplete="off">
                                             @error('end_date')
                                                 <span class="text-danger">
                                                     {{ $message }}
@@ -251,13 +251,14 @@
             var after_split = class_name.split("-")[1];
             if (after_split === 'group') {
                 $('.datepicker').datepicker('destroy').datepicker({
-                    format: 'yyyy-mm-dd',
+                    format: 'dd-M-yyyy',
                     startDate: new Date(),
+                    autoclose: true,
                     // daysOfWeekDisabled: [0]
                 });
             } else {
                 $('.datepicker').datepicker('destroy').datepicker({
-                    format: 'yyyy-mm-dd',
+                    format: 'dd-M-yyyy',
                     startDate: new Date(),
                     daysOfWeekDisabled: [0]
                 });
@@ -275,7 +276,7 @@
             // autoclose: true,
         });
         $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
+            format: 'dd-M-yyyy',
             startDate: new Date(),
             daysOfWeekDisabled: [0],
             autoclose: true

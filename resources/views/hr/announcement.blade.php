@@ -73,7 +73,7 @@
                                             </label>
 
                                             <input type="text" name="date" class="form-control datepicker"
-                                                value="{{ old('date') }}">
+                                                value="{{ old('date') }}" autocomplete="off">
                                             @error('date')
                                                 <span class="text-danger">
                                                     {{ $message }}
@@ -175,7 +175,7 @@
 
 
         $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
+            format: 'dd-M-yyyy',
             startDate: new Date(),
             daysOfWeekDisabled: [0],
             autoclose : true

@@ -90,11 +90,11 @@
                                         Mixed(MCQ & Desc)
                                     @endif
                                 <td>{{ $exam->full_marks }}</td>
-                                <td>{{ $exam->date }}</td>
+                                <td>{{ date('d-M-Y',strtotime($exam->date)) }}</td>
                                 <td>{{ date('h:i A', strtotime($exam->start_time)) }} <span
                                         class="text-success">to</span>
                                     {{ date('h:i A', strtotime($exam->end_time)) }}</td>
-                                <td>{{ $exam->result_date }}</td>
+                                <td>{{ date('d-M-Y',strtotime($exam->result_date)) }}</td>
                                 <td>
                                     @if ($exam->date >= date('Y-m-d'))
                                         @if ($exam->exam_type == 1)

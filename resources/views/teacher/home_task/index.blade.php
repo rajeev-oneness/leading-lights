@@ -75,7 +75,7 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $subject_details->name }}</td>
-                                                <td>{{ $task->submission_date }}</td>
+                                                <td>{{ date('d-M-Y',strtotime($task->submission_date)) }}</td>
                                                 <td>{{ date('h:i A',strtotime($task->submission_time)) }}</td>
                                             </tr>
                                         @endforeach

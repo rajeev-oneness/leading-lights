@@ -84,7 +84,7 @@
                                                     <span>Mixed(MCQ & Desc.)</span>
                                                 @endif
                                             </td>
-                                            <td>{{ $exam->date }}</td>
+                                            <td>{{ date('d-M-Y',strtotime($exam->date)) }}</td>
                                             <td>{{ date('h:i A', strtotime($exam->start_time)) }} <span
                                                     class="text-success">to</span>
                                                 {{ date('h:i A', strtotime($exam->end_time)) }}</td>
@@ -145,7 +145,7 @@
                                                             class="text-info">{{ $exam->full_marks }}</span></span>
                                                 @endif
                                             </td>
-                                            <td>{{ $exam->result_date }}</td>
+                                            <td>{{ date('d-M-Y',strtotime($exam->result_date)) }}</td>
                                             {{-- <td>
                                                 @if ($already_upload && $already_upload->comment)
                                                     <span data-toggle="tooltip" data-placement="top"
