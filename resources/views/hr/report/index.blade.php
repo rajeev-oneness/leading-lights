@@ -180,7 +180,7 @@
                                     <div class="d-sm-flex align-items-top justify-content-between">
                                         <div class="responsive-error">
                                             <label for="name">Select Class<span class="text-danger">*</span></label>
-                                            <select name="class_name1" id="class_wise_combo" class="form-control">
+                                            <select name="class_name2" id="class_wise_combo" class="form-control">
                                                 <option value="">Select Class</option>
                                                 {{-- @foreach ($groups as $group)
 												<option value="{{ $group->id . '-group' }}" class="text-info">
@@ -192,9 +192,9 @@
                                                         {{ $class->name }}</option>
                                                 @endforeach
                                             </select>
-                                            @if ($errors->has('class_name1'))
+                                            @if ($errors->has('class_name2'))
                                                 <span
-                                                    style="color: red;width: 100%">{{ $errors->first('class_name1') }}</span>
+                                                    style="color: red;width: 100%">{{ $errors->first('class_name2') }}</span>
                                             @endif
                                         </div>
                                         <div class="responsive-error">
@@ -227,8 +227,8 @@
                                                 <option value="11">November</option>
                                                 <option value="12">December</option>
                                             </select>
-                                            @if ($errors->has('selected_term'))
-                                                <span style="color: red;">{{ $errors->first('selected_term') }}</span>
+                                            @if ($errors->has('select_month'))
+                                                <span style="color: red;">{{ $errors->first('select_month') }}</span>
                                             @endif
                                         </div>
                                     </div>

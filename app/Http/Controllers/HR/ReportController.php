@@ -81,28 +81,28 @@ class ReportController extends Controller
                 // dd($request->selected_term1);
                 Validator::make($request->all(), [
                     'student_id1' => 'required',
-                    'class_name1' => 'required',
-                    'selected_term' => 'required',
+                    'class_name2' => 'required',
+                    'select_month' => 'required',
                 ], $messages = [
                     'student_id1.required' => 'This field is required.',
-                    'class_name1.required' => 'This field is required.',
-                    'selected_term.required' => 'This field is required.',
+                    'class_name2.required' => 'This field is required.',
+                    'select_month.required' => 'This field is required.',
                 ])->validate();
 
-                $student_id = $request->student_id;
+                $student_id = $request->student_id1;
                 $data['user_details'] = User::where('id', $student_id)->first();
                 $data['all_result'] = Result::where('results.user_id', $student_id)
-                    ->where('arrange_exams.selected_session',$request->selected_term1)
+                    ->whereMonth('arrange_exams.date',$request->select_month)
                     ->where('total_marks', '!=', '')
                     ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
                     ->get();
                 $data['total_marks'] = Result::where('results.user_id', $student_id)
-                    ->where('arrange_exams.selected_session',$request->selected_term1)
+                    ->whereMonth('arrange_exams.date',$request->select_month)
                     ->where('total_marks', '!=', '')
                     ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
                     ->sum('total_marks');
                 $data['total_full_marks'] = Result::where('results.user_id', $student_id)
-                    ->where('arrange_exams.selected_session',$request->selected_term1)
+                    ->whereMonth('arrange_exams.date',$request->select_month)
                     ->where('full_marks', '!=', '')
                     ->join('arrange_exams', 'arrange_exams.id', '=', 'results.exam_id')
                     ->sum('full_marks');
