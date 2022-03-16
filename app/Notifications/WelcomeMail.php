@@ -11,14 +11,16 @@ class WelcomeMail extends Notification
 {
     use Queueable;
     public $user;
+    public $password;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user,$password)
     {
         $this->user = $user;
+        $this->password = $password;
     }
 
     /**
@@ -41,7 +43,6 @@ class WelcomeMail extends Notification
     public function toMail($notifiable)
     {
         $user_type = $this->user['role_id'];
-        $password = 'Welcome'.date('Y',strtotime($this->user['created_at']));
         switch ($user_type) {
             case 1:
                 $url = route('admin_login');
@@ -66,7 +67,7 @@ class WelcomeMail extends Notification
                     ->line('You can now access leading light web portal.')
                     ->line('Your login credential is: ')
                     ->line('User id : '.$this->user['email'])
-                    ->line('Password : '.$password)
+                    ->line('Password : '.$this->password)
                     ->action('Login', $url)
                     ->line('Thank you for using our application!');
     }

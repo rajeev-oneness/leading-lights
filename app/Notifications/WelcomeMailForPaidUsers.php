@@ -11,15 +11,17 @@ class WelcomeMailForPaidUsers extends Notification
 {
     use Queueable;
     public $user;
+    public $password;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user,$password)
     {
         $this->user = $user;
+        $this->password = $password;
     }
 
     /**
@@ -50,7 +52,7 @@ class WelcomeMailForPaidUsers extends Notification
                         ->line('You can now access leading light web portal.')
                         ->line('Your login credential is: ')
                         ->line('User id : '.$this->user['email'])
-                        ->line('Password : '.$password)
+                        ->line('Password : '.$this->password)
                         ->action('Login', $url)
                         ->line('Thank you for using our application!');
     }

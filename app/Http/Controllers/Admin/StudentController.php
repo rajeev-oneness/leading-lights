@@ -316,12 +316,14 @@ class StudentController extends Controller
 
     public function approval($id)
     {
+        $password = generatePassword(6);
         $user = User::findOrFail($id);
         if ($user->status == 0) {
             $user->status = 1;
             $user->rejected = 0;
+            $user->password =  Hash::make($password);
             $user->save();
-            Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
+            Notification::route('mail', $user->email)->notify(new WelcomeMail($user, $password));
             return response()->json(['success' => true, 'data' => 'activated']);
         }
     }
@@ -390,13 +392,15 @@ class StudentController extends Controller
             $student_count = User::where('role_id', 4)->count();
             $num_padded = sprintf("%05d", ($student_count + 1));
             $id_no = 'LLST' . $num_padded;
+
+            $password = generatePassword(6);
                 
             // $password = Str::random(10);
             $student = new User;
             $student->first_name = $request->first_name;
             $student->last_name = $request->last_name;
             $student->email = $request->email;
-            $student->password = Hash::make('Welcome'.date('Y'));
+            $student->password = Hash::make($password);
             $student->id_no = $id_no;
             $student->class = $request->class;
             $student->role_id = 4;
@@ -408,7 +412,7 @@ class StudentController extends Controller
 
             $user_id = $student->id;
             createNotification($user_id, 0, 0, 'student_registration');
-            Notification::route('mail', $student->email)->notify(new WelcomeMailForPaidUsers($student));
+            Notification::route('mail', $student->email)->notify(new WelcomeMailForPaidUsers($student,$password));
     
             // Fee generate
             $feedata = [];
@@ -462,6 +466,8 @@ class StudentController extends Controller
             $num_padded = sprintf("%05d", ($student_count + 1));
             $id_no = 'LLST' . $num_padded;
 
+            $password = generatePassword(6);
+
             if (isset($request['special_course_ids'])) {
                 $special_course_ids = implode(',', $request['special_course_ids']);
                 $admission_type = 2;
@@ -476,7 +482,7 @@ class StudentController extends Controller
             $user->email = $request['email'];
             $user->id_no =  $id_no;
             $user->class = $request['class'];
-            $user->password = Hash::make('Welcome'.date('Y'));
+            $user->password = Hash::make($password);
             $user->special_course_ids = $special_course_ids;
             $user->registration_type = $admission_type;
             $user->save();
@@ -487,7 +493,7 @@ class StudentController extends Controller
 
             $user_id = $user->id;
             createNotification($user_id, 0, 0, 'student_registration');
-            Notification::route('mail', $user->email)->notify(new WelcomeMailForPaidUsers($user));
+            Notification::route('mail', $user->email)->notify(new WelcomeMailForPaidUsers($user,$password));
 
             // Fee generate
             $feedata = [];
@@ -540,12 +546,14 @@ class StudentController extends Controller
             $num_padded = sprintf("%05d", ($student_count + 1));
             $id_no = 'LLST' . $num_padded;
 
+            $password = generatePassword(6);
+
             // Store student details
             $user = new User();
             $user->first_name = $request['first_name'];
             $user->last_name = $request['last_name'];
             $user->email = $request['email'];
-            $user->password = Hash::make('Welcome'.date('Y'));
+            $user->password = Hash::make($password);
             $user->flash_course_id = $request['class'];
             $user->registration_type = 3;
             $user->id_no =  $id_no;
@@ -558,7 +566,7 @@ class StudentController extends Controller
             $user->save();
 
             createNotification($user_id, 0, 0, 'student_registration');
-            Notification::route('mail', $user->email)->notify(new WelcomeMailForPaidUsers($user));
+            Notification::route('mail', $user->email)->notify(new WelcomeMailForPaidUsers($user,$password));
 
             // Fee generate
             $feedata = [];
@@ -606,11 +614,13 @@ class StudentController extends Controller
             $num_padded = sprintf("%05d", ($student_count + 1));
             $id_no = 'LLST' . $num_padded;
 
+            $password = generatePassword(6);
+
             $user = new User();
             $user->first_name = $request['first_name'];
             $user->last_name = $request['last_name'];
             $user->email = $request['email'];
-            $user->password = Hash::make('Welcome'.date('Y'));
+            $user->password = Hash::make($password);
             $user->video_id = $request['class'];
             $user->registration_type = 4;
             $user->id_no =  $id_no;
@@ -621,7 +631,7 @@ class StudentController extends Controller
 
             $user_id = $user->id;
 
-            Notification::route('mail', $user->email)->notify(new WelcomeMailForPaidUsers($user));
+            Notification::route('mail', $user->email)->notify(new WelcomeMailForPaidUsers($user,$password));
             createNotification($user_id, 0, 0, 'student_registration');
 
             // Fee generate

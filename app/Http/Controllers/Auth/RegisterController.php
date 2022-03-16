@@ -89,7 +89,7 @@ class RegisterController extends Controller
             'gender' => ['required'],
             // 'class' => ['required'],
             'image' => ['required', 'mimes:png,jpg,jpeg'],
-            'mobile' => ['required','unique:users'],
+            'mobile' => ['required'],
             'certificate' => ['required', 'mimes:pdf']
         ]);
     }
@@ -272,7 +272,7 @@ class RegisterController extends Controller
                 'doj' => ['required', 'date'],
                 'gender' => ['required'],
                 'image' => ['required','mimes:png,jpg'],
-                'mobile' => ['required','unique:users'],
+                'mobile' => ['required'],
                 'qualification' => ['required']
             ]);
 
@@ -368,7 +368,7 @@ class RegisterController extends Controller
                 'doj' => ['required', 'date'],
                 'gender' => ['required'],
                 'image' => ['required','mimes:png,jpg'],
-                'mobile' => ['required','unique:users'],
+                'mobile' => ['required'],
                 'qualification' => ['required']
             ]);
 
@@ -466,7 +466,7 @@ class RegisterController extends Controller
                 'dob' => ['required', 'date'],
                 'gender' => ['required'],
                 'image' => ['required', 'mimes:png,jpg,jpeg'],
-                'mobile' => ['required','unique:users'],
+                'mobile' => ['required'],
                 'certificate' => ['required', 'mimes:pdf']
             ]);
             DB::beginTransaction();
@@ -571,7 +571,7 @@ class RegisterController extends Controller
                 'dob' => ['required', 'date'],
                 'gender' => ['required'],
                 // 'image' => 'required| mimes:png,jpg,jpeg',
-                'mobile' => ['required','unique:users'],
+                'mobile' => ['required'],
                 // 'certificate' => ['required', 'mimes:pdf']
             ]);
             DB::beginTransaction();
@@ -579,6 +579,8 @@ class RegisterController extends Controller
             $student_count = User::where('role_id', 4)->count();
             $num_padded = sprintf("%05d", ($student_count + 1));
             $id_no = 'LLST' . $num_padded;
+
+            $password = generatePassword(6);
 
             $image = $request['image'];
             // $imageName = imageUpload($image, 'profile_image');
@@ -592,7 +594,7 @@ class RegisterController extends Controller
             $user->id_no =  $id_no;
             $user->dob = $request['dob'];
             $user->gender = $request['gender'];
-            $user->password = Hash::make('Welcome'.date('Y'));
+            $user->password = Hash::make($password);
             // $user->image = $imageName;
             $user->video_id = $request['class'];
             $user->registration_type = 4;
@@ -610,7 +612,7 @@ class RegisterController extends Controller
             /**
              * Notification sent to inform about credential
              */
-            systemNotification::route('mail', $user->email)->notify(new WelcomeMailForPaidUsers($user));
+            systemNotification::route('mail', $user->email)->notify(new WelcomeMailForPaidUsers($user,$password));
             createNotification($user_id, 0, 0, 'student_registration');
 
             // Fee generate

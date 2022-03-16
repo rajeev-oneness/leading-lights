@@ -459,3 +459,22 @@ function checkPaymentStatus($student_id)
 		return $special_courses;
 	}
  }
+
+ /**
+  * Generate random password
+  */
+ function generatePassword($length = 8) {
+	$digits    = array_flip(range('0', '9'));
+	$lowercase = array_flip(range('a', 'z'));
+	$uppercase = array_flip(range('A', 'Z')); 
+	$special   = array_flip(str_split('@#$%'));
+	$combined  = array_merge($digits, $lowercase, $uppercase, $special);
+
+	$password  = str_shuffle(array_rand($digits) .
+							array_rand($lowercase) .
+							array_rand($uppercase) . 
+							array_rand($special) . 
+							implode(array_rand($combined, rand(4, 8))));
+
+    return $password;
+}

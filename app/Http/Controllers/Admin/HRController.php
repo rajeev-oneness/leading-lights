@@ -60,11 +60,13 @@ class HRController extends Controller
         $num_padded = sprintf("%05d", ($hr_count + 1));
         $id_no = 'LLHR' . $num_padded;
 
+        $password = generatePassword(6);
+
         $hr = new User;
         $hr->first_name = $request->first_name;
         $hr->last_name = $request->last_name;
         $hr->email = $request->email;
-        $hr->password = Hash::make($id_no);
+        $hr->password = Hash::make($password);
         $hr->doj = $request->doj;
         $hr->role_id = 2;
         $hr->id_no = $id_no;
@@ -77,7 +79,7 @@ class HRController extends Controller
 
         //Send notification
 
-        Notification::route('mail', $request->email)->notify(new WelcomeMail($hr,$request->password));
+        Notification::route('mail', $request->email)->notify(new WelcomeMail($hr,$password));
         return redirect()->route('admin.hr.index')->with('success','HR added');
     }
 
@@ -174,11 +176,13 @@ class HRController extends Controller
     }
 
     public function approval($id){
+        $password = generatePassword(6);
         $user = User::find($id);
         if ($user->status == 0) {
             $user->status = 1;
+            $user->password =  Hash::make($password);
             $user->save();
-            Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
+            Notification::route('mail', $user->email)->notify(new WelcomeMail($user,$password));
             return response()->json(['success' => true,'data' => 'activated']);
         }
         if ($user->status == 1) {

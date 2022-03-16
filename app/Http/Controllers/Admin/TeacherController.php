@@ -59,11 +59,13 @@ class TeacherController extends Controller
         $num_padded = sprintf("%05d", ($teacher_count + 1));
         $id_no = 'LLTR' . $num_padded;
 
+        $password = generatePassword(6);
+
         $teacher = new User;
         $teacher->first_name = $request->first_name;
         $teacher->last_name = $request->last_name;
         $teacher->email = $request->email;
-        $teacher->password = Hash::make('Welcome'.date('Y'));
+        $teacher->password = Hash::make($password);
         $teacher->doj = $request->doj;
         $teacher->role_id = 3;
         $teacher->id_no = $id_no;
@@ -76,7 +78,7 @@ class TeacherController extends Controller
         createNotification($user_id, 0, 0, 'student_registration');
         //Send notification
 
-        Notification::route('mail', $request->email)->notify(new WelcomeMail($teacher,$request->password));
+        Notification::route('mail', $request->email)->notify(new WelcomeMail($teacher,$password));
         return redirect()->route('admin.teachers.index')->with('success','Teacher added');
     }
 
@@ -171,11 +173,13 @@ class TeacherController extends Controller
     }
 
     public function approval($id){
+        $password = generatePassword(6);
         $user = User::find($id);
         if ($user->status == 0) {
             $user->status = 1;
+            $user->password =  Hash::make($password);
             $user->save();
-            Notification::route('mail', $user->email)->notify(new WelcomeMail($user));
+            Notification::route('mail', $user->email)->notify(new WelcomeMail($user,$password));
             return response()->json(['success' => true,'data' => 'activated']);
         }
         if ($user->status == 1) {
