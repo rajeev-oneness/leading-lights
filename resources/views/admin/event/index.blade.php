@@ -59,9 +59,9 @@
                                         
                                      @endphp</td>
                                     <td>{{ \Illuminate\Support\Str::limit($event->title, 15) }}</td>
-                                    <td>{{ $event->start_date }} <span class="text-success">
+                                    <td>{{ date('d-M-Y',strtotime($event->start_date)) }} <span class="text-success">
                                         @if ($event->end_date)
-                                            to </span> {{ $event->end_date }}</td>
+                                            to </span> {{ date('d-M-Y',strtotime($event->end_date)) }}</td>
                                         @endif
                                     <td>{{ date('h:i A', strtotime($event->start_time)) }} <span class="text-success"> to </span> {{ date('h:i A', strtotime($event->end_time)) }}</td>
                                     {{-- <td>{{ $event->fees }}</td> --}}

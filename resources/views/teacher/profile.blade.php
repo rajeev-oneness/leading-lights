@@ -19,11 +19,13 @@
             <div class="tabs-animation">
                 <div class="bg-edit2 p-4">
                     <div class="row">
-                        <div class="col-lg-5 col-sm-4">
+                        <div class="col-lg-2 col-sm-3">
+                            <div class="profile__img__wrapper">
                             <img src="{{ asset($teacher->image ? $teacher->image : 'frontend/assets/images/avata3.jpg') }}"
                                 class="img-fluid mx-auto">
+                            </div>
                         </div>
-                        <div class="col-lg-7 col-sm-8 not2">
+                        <div class="col-lg-10 col-sm-9 not2">
                             <p>Joined-
                                 {{ Auth::user()->created_at ? date('d-m-Y', strtotime(Auth::user()->created_at)) : 'N/A' }}
                             </p>
@@ -243,14 +245,14 @@
                         </div>
                     @endif
                 </div>
-                <div class="row mt-5">
+                <div class="row mt-md-5 mt-3">
                     <div class="col-lg-7">
                         <div class="card">
                             <div class="card-body">
                                 <div class="card-header-title font-size-lg text-capitalize ">
                                     My Classes
                                 </div>
-                                <div class="row mt-5">
+                                <div class="row mt-md-5 mt-3">
                                     @forelse($classes as $class)
                                         <div class="col-md-12 col-lg-6 col-xl-6">
                                             <div class="card-shadow-primary profile-responsive card-border mb-3 card">
@@ -274,7 +276,7 @@
                                                                 </div>
 
                                                                 <div
-                                                                    class="widget-content-left d-sm-flex align-items-center">
+                                                                    class="widget-content-left d-flex align-items-center">
                                                                     <div class="widget-heading text-dark"><img
                                                                             src="{{ asset('frontend/assets/images/calander.png') }}"
                                                                             class="img-fluid mx-auto"></div>
@@ -331,7 +333,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-lg-5">
+                    <div class="col-sm-12 col-lg-5 mt-md-0 mt-3">
                         <div class="card-hover-shadow-2x mb-3 card bg-card">
                             <div class="card-header-tab card-header">
                                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal not">
@@ -347,7 +349,7 @@
                                                 <li class="list-group-item">
 
                                                     <div class="widget-content p-0">
-                                                        <div class="d-sm-flex align-items-center not">
+                                                        <div class="d-flex align-items-center not">
                                                             <div class="">
                                                                 <img src="
                                                                                                     {{ asset('frontend/assets/images/alart.png') }}"

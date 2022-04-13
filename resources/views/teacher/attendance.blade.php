@@ -17,8 +17,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="card mb-3 col-lg-6">
-                    <div class="card-body">
+                <div class="mb-3 col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="card-header-title mb-4">
@@ -56,9 +57,11 @@
                             </div>
                         </div>
                     </div>
+                    </div>
                 </div>
-                <div class="card mb-3 col-lg-6">
-                    <div class="card-body">
+                <div class="mb-3 col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="card-header-title mb-4">
@@ -119,6 +122,7 @@
                                 </form>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>

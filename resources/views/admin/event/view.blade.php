@@ -35,8 +35,14 @@
                         <div class="form-group">
                             <label for="title">Class Name</label>
                             <input type="text" id="title" value="@php
-                            $class = App\Models\Classes::where('id',$event_details->class_id)->first();
-                            echo $class->name;@endphp" readonly>
+                            if($event_details->class_id){
+                                $class = App\Models\Classes::where('id',$event_details->class_id)->first();
+                                echo $class->name;
+                            }
+                            else{
+                                echo "All students";
+                            }
+                            @endphp" readonly>
                         </div>
                     </div>
                     <div class="col-lg-3">

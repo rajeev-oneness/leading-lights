@@ -165,7 +165,7 @@
                                 </form>
                             </div>
                             <div class="col-lg-4">
-                                <div class="card-header-title mb-4">
+                                <div class="card-header-title section__title mb-sm-4">
                                     Recent Event </div>
                                 @if ($events->count() > 0)
                                 @foreach ($events as $event)

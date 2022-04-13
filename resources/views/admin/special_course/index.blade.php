@@ -57,7 +57,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $course->class_id ? $course->class_details->name : 'N/A'  }}</td>
                                     <td>{{ $course->title }}</td>
-                                    <td>{{ $course->start_date }}</td>
+                                    <td>{{ date('d-M-Y',strtotime($course->start_date)) }}</td>
                                     <td>&#x20B9;{{ $course->monthly_fees }}</td>
                                     <td>
                                         {{-- <a href="{{ route('admin.courses.show', $course->id) }}"><i

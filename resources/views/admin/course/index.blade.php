@@ -49,7 +49,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $course->title }}</td>
-                                    <td>{{ $course->start_date }}</td>
+                                    <td>{{ date('d-M-Y',strtotime($course->start_date)) }}</td>
                                     <td>{{ $course->sessions }}</td>
                                     <td>{{ $course->fees }}</td>
                                     <td>

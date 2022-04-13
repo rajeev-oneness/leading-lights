@@ -47,7 +47,7 @@
 						<tr>
 							<td>{{ $key + 1 }}</td>
 							<td>{{ \Illuminate\Support\Str::limit($vlog->title,50) }}</td>
-                            <td>{{ date('Y-m-d',strtotime($vlog->created_at)) }}</td>
+                            <td>{{ date('d-M-Y',strtotime($vlog->created_at)) }}</td>
 							<td>
 								<a href="{{ route('admin.vlog.show',$vlog->id) }}"><i class="far fa-eye"></i></a>
 								<a href="{{ route('admin.vlog.edit',$vlog->id) }}" class="ml-2"><i class="far fa-edit"></i></a>

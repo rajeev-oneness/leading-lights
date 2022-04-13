@@ -49,7 +49,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $testimonial->user->first_name }} {{ $testimonial->user->last_name }}</td>
                                     <td>{{ \Illuminate\Support\Str::limit($testimonial->content,50) }}</td>
-                                    <td>{{ date('Y-m-d',strtotime($testimonial->created_at)) }}</td>
+                                    <td>{{ date('d-M-Y',strtotime($testimonial->created_at)) }}</td>
                                     <td>
                                         @if ($testimonial->status == "0")
                                             <span class="badge badge-warning">Pending</span>

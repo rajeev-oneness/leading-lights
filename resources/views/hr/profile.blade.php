@@ -93,8 +93,10 @@
                     <div class="bg-edit2 p-4">
                         <div class="row">
                             <div class="col-lg-5">
-                                <img src="{{ asset($hr->image ? $hr->image : 'frontend/assets/images/avata2.jpg') }}"
+                                <div class="profile__img__wrapper">
+                                    <img src="{{ asset($hr->image ? $hr->image : 'frontend/assets/images/avata2.jpg') }}"
                                     class="img-fluid mx-auto rounded">
+                                </div>
                             </div>
                             <div class="col-lg-7 not2">
                                 <p>Joined- {{ $hr->doj ? $hr->doj : 'N/A' }}</p>

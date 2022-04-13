@@ -39,7 +39,7 @@
                                                         name="role_id">Teacher
                                                 </label>
                                             </div>
-                                            <div class="form-check ml-3">
+                                            <div class="form-check ml-sm-3">
                                                 <label class="form-check-label">
                                                     <input type="radio" class="form-check-input" value="4"
                                                         name="role_id">Student

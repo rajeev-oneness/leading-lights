@@ -2073,3 +2073,7 @@ table.dataTable.no-footer {
 .active-sidebar{
   background: #00b2ff !important;
 }
+
+.text-sec{
+    width: calc(100% - 42px);
+}

@@ -47,7 +47,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ \Illuminate\Support\Str::limit($notice->title,50) }}</td>
-                                    <td>{{ date('Y-m-d',strtotime($notice->created_at)) }}</td>
+                                    <td>{{ date('d-M-Y',strtotime($notice->created_at)) }}</td>
                                     <td>
                                         <a href="{{ route('admin.notice.show', $notice->id) }}"
                                             class="ml-2"><i class="far fa-eye"></i></a>

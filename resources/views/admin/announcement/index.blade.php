@@ -57,7 +57,7 @@
                                         }
                                      @endphp</td>
                                     <td>{{ $announcement->title }}</td>
-                                    <td>{{ $announcement->date }}</td>
+                                    <td>{{ date('d-M-Y',strtotime($announcement->date)) }}</td>
                                     <td>
                                         {{-- <a href="{{ route('admin.announcement.show', $announcement->id) }}"><i
                                                 class="far fa-eye"></i></a>

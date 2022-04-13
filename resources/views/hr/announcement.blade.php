@@ -101,7 +101,7 @@
                             {{-- <button class="btn-pill btn btn-dark mt-4">Submit Now</button> --}}
                         </div>
                         <div class="col-lg-5">
-                            <div class="card-header-title mb-4">
+                            <div class="card-header-title section__title mb-sm-4">
                                 Recent Announcement </div>
                             @if ($announcements->count() > 0)
                             @foreach ($announcements as $announcement)

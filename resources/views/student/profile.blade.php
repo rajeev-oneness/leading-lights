@@ -19,11 +19,13 @@
             <div class="tabs-animation">
                 <div class="bg-edit p-4">
                     <div class="row">
-                        <div class="col-lg-3">
-                            <img src="{{ asset($student->image ? $student->image : 'frontend/assets/images/avata1.jpg') }}"
+                        <div class="col-lg-2">
+                            <div class="profile__img__wrapper">
+                                <img src="{{ asset($student->image ? $student->image : 'frontend/assets/images/avata1.jpg') }}"
                                 class="img-fluid mx-auto">
+                            </div>
                         </div>
-                        <div class="col-lg-4 not2">
+                        <div class="col-lg-5 not2">
                             <h4 class="mb-4">{{ Auth::user()->first_name }}
                                 {{ Auth::user()->last_name }}<span class="ml-3">
                                     <!-- <img src="assets/images/edit.png" class="img-fluid mx-auto"> -->

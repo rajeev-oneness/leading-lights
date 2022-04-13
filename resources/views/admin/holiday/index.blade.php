@@ -47,7 +47,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $holiday->name }}</td>
-                                    <td>{{ $holiday->date }}</td>
+                                    <td>{{ date('d-M-Y',strtotime($holiday->date)) }}</td>
                                     <td>
                                         <a href="{{ route('admin.holidays.edit', $holiday->id) }}"
                                             class="ml-2"><i class="far fa-edit"></i></a>
