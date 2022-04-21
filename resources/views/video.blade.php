@@ -13,7 +13,7 @@
             <div class="row m-0">
                 @foreach ($videos as $video)
                 <div class="col-12 col-lg-4 mb-3">
-                    <div class="card border-0 shadow-sm">
+                    <div class="card border-0 shadow-sm h-100">
                         <a href="{{ route('video_details',$video->id) }}">
                             @php
                                     $file_path = $video->video;

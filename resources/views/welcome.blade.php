@@ -631,7 +631,7 @@
                 @if ($vlogs->count() > 1)
                     @foreach ($vlogs as $vlog)
                     <div class="col-12 col-lg-4 mb-3 mb-lg-0">
-                        <div class="card border-0 shadow-sm">
+                        <div class="card border-0 shadow-sm h-100">
                             <a href="{{ route('vlogDetails',$vlog->id) }}">
                                 @php
                                         $file_path = $vlog->file_path;
@@ -692,7 +692,7 @@
                 @if ($videos->count() > 0)
                     @foreach ($videos as $video)
                         <div class="col-12 col-lg-4 mb-3 mb-lg-0">
-                            <div class="card border-0 shadow-sm">
+                            <div class="card border-0 shadow-sm h-100">
                                 <a href="{{ route('video_details',$video->id) }}">
                                     @php
                                             $file_path = $video->video;
