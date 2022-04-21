@@ -36,6 +36,17 @@
                         </div>
                     </div>
 
+                    <div class="col-lg-12">
+                        <div class="form-group edit-box">
+                            <label for="title">Video Link<span class="text-danger">*</span></label>
+                            <input type="text" name="video_link" class="form-control" id="video_link"
+                                value="{{ old('video_link') }}">
+                            @if($errors->has('video_link'))
+                                <span style="color: red;">{{ $errors->first('video_link') }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    
                     <div class="col-lg-6">
                         <div class="form-group edit-box">
                             <label for="video">Video<span class="text-danger">*</span></label>

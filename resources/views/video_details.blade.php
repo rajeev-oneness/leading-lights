@@ -27,10 +27,11 @@
                     </div>
                     @else
                     <div class="bl_img">
-                        <video class="img-fluid mx-auto" controls>
+                        {{-- <video class="img-fluid mx-auto" controls>
                             <source src="{{ asset($file_path) }}" type="video/{{ $file_extension }}">
                         Your browser does not support the video tag.
-                        </video>
+                        </video> --}}
+                        <iframe width="100%" height="315" src="{{$videoDetails->video_link}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                     @endif
                     </div>

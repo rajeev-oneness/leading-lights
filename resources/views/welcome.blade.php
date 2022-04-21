@@ -698,22 +698,29 @@
                                             $file_path = $video->video;
                                             $file_extension= explode('.',$file_path)[1];
                                     @endphp
-                                    @if ($file_extension === 'jpg' || $file_extension === 'jpeg' || $file_extension === 'png')
+                                    {{-- if ($file_extension === 'jpg' || $file_extension === 'jpeg' || $file_extension === 'png')
                                     <div class="bl_img">
                                         <img src="{{ asset($file_path) }}" alt="" class="img-fluid mx-auto">
                                     </div>
-                                    @else
+                                    else
                                     <div class="bl_img">
                                         <video class="img-fluid mx-auto" controls>
                                             <source src="{{ asset($file_path) }}" type="video/{{ $file_extension }}">
                                         Your browser does not support the video tag.
                                         </video>
                                     </div>
-                                    @endif
+                                    endif --}}
                                     {{-- <div class="bl_img">
                                         <img src="{{ asset('frontend/images/blog1.jpg') }}" class="img-fluid mx-auto">
 
                                     </div> --}}
+                                    <div class="bl_img">
+                                        {{-- <video class="img-fluid mx-auto" controls>
+                                            <source src="{{$video->video_link}}" type="video/{{ $file_extension }}">
+                                        Your browser does not support the video tag.
+                                        </video> --}}
+                                        <iframe width="100%" height="315" src="{{$video->video_link}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
                                     <div class="card-body">
                                         <div class="date-sec">
                                             <i class="far fa-calendar-alt"></i>{{ date('M',strtotime($video->created_at)) }} <span>{{ date('d',strtotime($video->created_at)) }}</span>, {{ date('Y',strtotime($video->created_at)) }}
